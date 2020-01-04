@@ -7,8 +7,8 @@
 
 package frc.team670.robot.commands;
 
-import edu.wpi.first.wpilibj.command.InstantCommand;
-import frc.team670.robot.OI;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.team670.robot.constants.OI;
 
 /**
  * Sets the rumble on the driver and operator controllers
@@ -29,9 +29,8 @@ public class RumbleDriverController extends InstantCommand {
     this.time = time;
   }
 
-  // Called once when the command executes
-  @Override
-  protected void initialize() {
+
+  public void initialize() {
     oi.rumbleDriverController(power, time);
   }
 

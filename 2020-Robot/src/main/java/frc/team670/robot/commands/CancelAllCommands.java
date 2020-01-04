@@ -7,28 +7,17 @@
 
 package frc.team670.robot.commands;
 
-import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team670.robot.subsystems.Arm;
-import frc.team670.robot.subsystems.BaseIntake;
-import frc.team670.robot.subsystems.Claw;
-import frc.team670.robot.subsystems.Climber;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.robot.subsystems.DriveBase;
 
 public class CancelAllCommands extends InstantCommand {
 
-  public CancelAllCommands(DriveBase driveBase, Arm arm, BaseIntake intake, Claw claw) {
-    requires(driveBase);
-    requires(arm.getElbow());
-    requires(arm.getExtension());
-    requires(arm.getWrist());
-    requires(intake);
-    requires(claw);
+  public CancelAllCommands(DriveBase driveBase) {
+    addRequirements(driveBase);
   }
 
-  // Called just before this Command runs the first time
-  @Override
-  protected void initialize() {
+  public void initialize() {
     SmartDashboard.putString("current-command", "CancelAllCommands");
   }
 
