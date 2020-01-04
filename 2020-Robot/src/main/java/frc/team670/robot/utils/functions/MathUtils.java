@@ -8,7 +8,6 @@
 package frc.team670.robot.utils.functions;
 
 import frc.team670.robot.constants.RobotConstants;
-import jaci.pathfinder.Pathfinder;
 
 /**
  * Provides useful math-related functions.
