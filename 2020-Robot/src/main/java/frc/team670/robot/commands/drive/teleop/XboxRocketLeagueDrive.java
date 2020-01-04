@@ -39,13 +39,16 @@ public class XboxRocketLeagueDrive extends InstantCommand {
     // by -1 to reverse that because we want right trigger to correspond to forward.
     double speed = -1 * (RobotContainer.oi.getDriverController().getLeftTriggerAxis() - RobotContainer.oi.getDriverController().getRightTriggerAxis()); 
     double steer = RobotContainer.oi.getDriverController().getLeftStickX(); 
+   
 
-    // Decides whether or not to smooth the Steering and Trigger. Smoothing helps reduce jerkiness when driving.
-    // tankDrive actually does this for us automatically, so npo need to do it ourselves
+    // Decides whether or not to smooth the Steering and Trigger. Smoothing helps
+    // reduce jerkiness when driving.
+    // tankDrive actually does this for us automatically, so npo need to do it
+    // ourselves
     steer = JoystickUtils.smoothInput(steer);
     speed = JoystickUtils.smoothInput(speed);
 
-    if(isReversed) {
+    if (isReversed) {
       steer *= -1;
       speed *= -1;
     }

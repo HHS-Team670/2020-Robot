@@ -34,6 +34,7 @@ public class RobotContainer {
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   public static OI oi;
 
+  public final DriveBase m_driveBase = new DriveBase();
 
 
   /**
