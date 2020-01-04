@@ -1,7 +1,7 @@
 package frc.team670.robot.commands.cameras;
 
-import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.robot.Robot;
 
 /**
@@ -20,8 +20,7 @@ public class FlipCamera extends InstantCommand{
     }
 
     // called once when the command executes
-    @Override
-    protected void initialize(){
+    public void initialize(){
         flipCameraDirection();
         Robot.oi.rumbleDriverController(0.7, 0.2);
     }

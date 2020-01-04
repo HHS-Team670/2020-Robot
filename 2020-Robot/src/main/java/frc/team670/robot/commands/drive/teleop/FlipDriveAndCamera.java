@@ -1,7 +1,7 @@
 package frc.team670.robot.commands.drive.teleop;
 
-import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.robot.Robot;
 import frc.team670.robot.commands.cameras.FlipCamera;
 import frc.team670.robot.utils.Logger;
@@ -12,8 +12,7 @@ public class FlipDriveAndCamera extends InstantCommand {
         super();
     }
 
-    @Override
-    protected void initialize() {
+    public void initialize() {
       SmartDashboard.putString("current-command", "FlipDriveAndCamera");
       boolean isReversed = XboxRocketLeagueDrive.isDriveReversed();
 
