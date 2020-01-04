@@ -10,8 +10,12 @@ package frc.team670.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.team670.robot.commands.ExampleCommand;
+import frc.team670.robot.constants.OI;
+import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.team670.robot.dataCollection.MustangSensors;
+
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -21,9 +25,14 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  public static MustangSensors sensors = new MustangSensors();
+
+
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  public static DriveBase driveBase = new DriveBase();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  public static OI oi;
 
 
 

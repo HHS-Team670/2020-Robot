@@ -10,6 +10,7 @@ package frc.team670.robot.commands.drive.teleop;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.robot.Robot;
+import frc.team670.robot.RobotContainer;
 import frc.team670.robot.utils.functions.JoystickUtils;
 
  
@@ -28,16 +29,16 @@ public class XboxRocketLeagueDrive extends InstantCommand {
     SMOOTH_ROCKET_LEAGUE_STEER = true;
     SMOOTH_ROCKET_LEAGUE_TRIGGER = true;
     isReversed = false;
-    requires(Robot.driveBase);
+    addRequirements(RobotContainer.driveBase);
   }
 
   // Called once when the command executes
   @Override
-  protected void initialize() {
+  public void initialize() {
     // Sets the speed to the reading given by the trigger axes on the controller. Left is positive, but we multiply
     // by -1 to reverse that because we want right trigger to correspond to forward.
-    double speed = -1 * (Robot.oi.getDriverController().getLeftTriggerAxis() - Robot.oi.getDriverController().getRightTriggerAxis()); 
-    double steer = Robot.oi.getDriverController().getLeftStickX(); 
+    double speed = -1 * (RobotContainer.oi.getDriverController().getLeftTriggerAxis() - RobotContainer.oi.getDriverController().getRightTriggerAxis()); 
+    double steer = RobotContainer.oi.getDriverController().getLeftStickX(); 
 
     // Decides whether or not to smooth the Steering and Trigger. Smoothing helps reduce jerkiness when driving.
     // tankDrive actually does this for us automatically, so npo need to do it ourselves
@@ -49,37 +50,37 @@ public class XboxRocketLeagueDrive extends InstantCommand {
       speed *= -1;
     }
 
-    if(Robot.oi.isQuickTurnPressed()){
+    if(RobotContainer.oi.isQuickTurnPressed()){
 
       if(speed < -0.0001) {
         if(!isReversed) {
-          Robot.driveBase.curvatureDrive(speed, -1 * steer, Robot.oi.isQuickTurnPressed());
+          RobotContainer.driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
         }
         else {
-          Robot.driveBase.curvatureDrive(speed, -1 * steer, Robot.oi.isQuickTurnPressed());
+          RobotContainer.driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
         }
       }
       else if (speed > 0.0001){
         if(!isReversed) {
-          Robot.driveBase.curvatureDrive(speed, steer, Robot.oi.isQuickTurnPressed());
+          RobotContainer.driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
         }
         else {
-          Robot.driveBase.curvatureDrive(speed, steer, Robot.oi.isQuickTurnPressed());
+          RobotContainer.driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
         }
       } else {
         if(!isReversed) {
-          Robot.driveBase.curvatureDrive(speed, steer, Robot.oi.isQuickTurnPressed());
+          RobotContainer.driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
         }
         else {
-          Robot.driveBase.curvatureDrive(speed, -1 * steer, Robot.oi.isQuickTurnPressed());
+          RobotContainer.driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
         }
       }
     }
     else {
       if (speed < -0.0001){
-        Robot.driveBase.curvatureDrive(speed, -1 * steer, Robot.oi.isQuickTurnPressed());
+        RobotContainer.driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
       } else {
-        Robot.driveBase.curvatureDrive(speed, steer, Robot.oi.isQuickTurnPressed());
+        RobotContainer.driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
       }
     }
   }

@@ -9,6 +9,8 @@ package frc.team670.robot.commands.drive.teleop;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.robot.Robot;
+import frc.team670.robot.RobotContainer;
+import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.utils.Logger;
 
 /**
@@ -23,13 +25,13 @@ public class FlipDriveDirection extends InstantCommand {
   // Called once when the command executes
   public void initialize() {
     boolean isReversed = XboxRocketLeagueDrive.isDriveReversed();
-    if (!isReversed) {
-      Robot.leds.setReverseData(true);
-    } else {
-      Robot.leds.setForwardData(true);
-    }
+    // if (!isReversed) {
+    //   Robot.leds.setReverseData(true);
+    // } else {
+    //   Robot.leds.setForwardData(true);
+    // }
     XboxRocketLeagueDrive.setDriveReversed(!isReversed);
-    Robot.oi.rumbleDriverController(0.7, 0.2);
+    RobotContainer.oi.rumbleDriverController(0.7, 0.2);
     Logger.consoleLog("Flipped Drive: %s", (!isReversed));
   }
 

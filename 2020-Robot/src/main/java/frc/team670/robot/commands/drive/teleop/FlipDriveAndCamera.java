@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.robot.Robot;
 import frc.team670.robot.commands.cameras.FlipCamera;
 import frc.team670.robot.utils.Logger;
+import frc.team670.robot.RobotContainer;
 
 public class FlipDriveAndCamera extends InstantCommand {
 
@@ -27,13 +28,13 @@ public class FlipDriveAndCamera extends InstantCommand {
             }
         }
 
-      if (!isReversed) {
-        Robot.leds.setReverseData(true);
-      } else {
-        Robot.leds.setForwardData(true);
-      }
+      // if (!isReversed) {
+      //   Robot.leds.setReverseData(true);
+      // } else {
+      //   Robot.leds.setForwardData(true);
+      // }
       XboxRocketLeagueDrive.setDriveReversed(!isReversed);
-      Robot.oi.rumbleDriverController(0.7, 0.2);
+      RobotContainer.oi.rumbleDriverController(0.7, 0.2);
       Logger.consoleLog("Flipped Drive: %s", (!isReversed));
     }
 

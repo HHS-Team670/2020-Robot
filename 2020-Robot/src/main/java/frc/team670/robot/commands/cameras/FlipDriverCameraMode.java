@@ -9,7 +9,7 @@ package frc.team670.robot.commands.cameras;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.team670.robot.Robot;
+import frc.team670.robot.RobotContainer;
 
 /**
  * Flips between single camera and double camera on the dashboard
@@ -30,7 +30,7 @@ public class FlipDriverCameraMode extends InstantCommand {
   public void initialize() {
     doubleCamera = !doubleCamera;
     SmartDashboard.putString("driver-camera-mode", doubleCamera ? "double" : "single");
-    Robot.oi.rumbleDriverController(0.7, 0.2);
+    RobotContainer.oi.rumbleDriverController(0.7, 0.2);
   }
 
 }

@@ -33,6 +33,9 @@ public class RobotConstants {
     public static final double DERIVATIVE = 5*KU*TU/40;
     public static final double WHEEL_BASE = 25.662; //measured 1/26/19
 
+    public static final double DRIVEBASE_METERS_PER_ROTATION = (1/DRIVEBASE_GEAR_RATIO) * DRIVE_BASE_WHEEL_DIAMETER * Math.PI * 0.0254;
+
+
     //Elbow constants
     public static final int PEAK_AMPS = 0; // check the peak limit and set again
     public static final int TIMEOUT_MS = 0; //  

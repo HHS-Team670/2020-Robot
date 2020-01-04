@@ -30,7 +30,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
-import frc.tean670.robot.utils.*;
+import frc.team670.robot.utils.*;
+import frc.team670.robot.dataCollection.sensors.NavX;
 
 /**
  * Represents a tank drive base.
@@ -46,7 +47,7 @@ public class DriveBase extends SubsystemBase {
   private DifferentialDrive driveTrain;
   private List<CANSparkMax> leftControllers, rightControllers;
   private List<CANSparkMax> allMotors;
-  private MustangDriveBaseEncoder leftMustangEncoder, rightMustangEncoder;
+  // private MustangDriveBaseEncoder leftMustangEncoder, rightMustangEncoder;
   private Encoder leftDIOEncoder, rightDIOEncoder;
   private CANEncoder leftEncoder, rightEncoder;
 
@@ -165,8 +166,8 @@ public class DriveBase extends SubsystemBase {
       // rightDIOEncoder.setReverseDirection(true);
     }
 
-    leftMustangEncoder = new MustangDriveBaseEncoder(null, left1.getEncoder(), false);
-    rightMustangEncoder = new MustangDriveBaseEncoder(null, right1.getEncoder(), true);
+    // leftMustangEncoder = new MustangDriveBaseEncoder(null, left1.getEncoder(), false);
+    // rightMustangEncoder = new MustangDriveBaseEncoder(null, right1.getEncoder(), true);
 
   }
 
@@ -576,84 +577,84 @@ public class DriveBase extends SubsystemBase {
   /**
    * Returns the MustangDriveBaseEncoder used for the left motors
    */
-  public MustangDriveBaseEncoder getLeftMustangDriveBaseEncoder() {
-    return leftMustangEncoder;
-  }
+  // public MustangDriveBaseEncoder getLeftMustangDriveBaseEncoder() {
+  //   return leftMustangEncoder;
+  // }
 
-  /**
-   * Returns the MustangDriveBaseEncoder used for the right motors
-   */
-  public MustangDriveBaseEncoder getRightMustangDriveBaseEncoder() {
-    return rightMustangEncoder;
-  }
+  // /**
+  //  * Returns the MustangDriveBaseEncoder used for the right motors
+  //  */
+  // public MustangDriveBaseEncoder getRightMustangDriveBaseEncoder() {
+  //   return rightMustangEncoder;
+  // }
 
-  /**
-   * Returns the position of the MustangDriveBaseEncoder used for the left motors
-   * in ticks
-   */
-  public int getLeftMustangEncoderPositionInTicks() {
-    return leftMustangEncoder.getPositionTicks();
-  }
+  // /**
+  //  * Returns the position of the MustangDriveBaseEncoder used for the left motors
+  //  * in ticks
+  //  */
+  // public int getLeftMustangEncoderPositionInTicks() {
+  //   return leftMustangEncoder.getPositionTicks();
+  // }
 
-  /**
-   * Returns the position of the MustangDriveBaseEncoder used for the right motors
-   * in ticks
-   */
-  public int getRightMustangEncoderPositionInTicks() {
-    return rightMustangEncoder.getPositionTicks();
-  }
+  // /**
+  //  * Returns the position of the MustangDriveBaseEncoder used for the right motors
+  //  * in ticks
+  //  */
+  // public int getRightMustangEncoderPositionInTicks() {
+  //   return rightMustangEncoder.getPositionTicks();
+  // }
 
-  /**
-   * Returns the position of the MustangDriveBaseEncoder used for the left motors
-   * in inches
-   */
-  public double getLeftMustangEncoderPositionInInches() {
-    return leftMustangEncoder.getPositionInches();
-  }
+  // /**
+  //  * Returns the position of the MustangDriveBaseEncoder used for the left motors
+  //  * in inches
+  //  */
+  // public double getLeftMustangEncoderPositionInInches() {
+  //   return leftMustangEncoder.getPositionInches();
+  // }
 
-  /**
-   * Returns the position of the MustangDriveBaseEncoder used for the right motors
-   * in inches
-   */
-  public double getRightMustangEncoderPositionInInches() {
-    return rightMustangEncoder.getPositionInches();
-  }
+  // /**
+  //  * Returns the position of the MustangDriveBaseEncoder used for the right motors
+  //  * in inches
+  //  */
+  // public double getRightMustangEncoderPositionInInches() {
+  //   return rightMustangEncoder.getPositionInches();
+  // }
 
-  /**
-   * Returns the velocity of the MustangDriveBaseEncoder used for the left motors
-   * in ticks/second
-   */
-  public double getLeftMustangEncoderVelocityInTicksPerSecond() {
-    return leftMustangEncoder.getVelocityTicks();
-  }
+  // /**
+  //  * Returns the velocity of the MustangDriveBaseEncoder used for the left motors
+  //  * in ticks/second
+  //  */
+  // public double getLeftMustangEncoderVelocityInTicksPerSecond() {
+  //   return leftMustangEncoder.getVelocityTicks();
+  // }
 
-  public void initCoastMode() {
-    setMotorsNeutralMode(IdleMode.kCoast);
-  }
+  // public void initCoastMode() {
+  //   setMotorsNeutralMode(IdleMode.kCoast);
+  // }
 
-  /**
-   * Returns the velocity of the MustangDriveBaseEncoder used for the right motors
-   * in ticks/second
-   */
-  public double getRightMustangEncoderVelocityInTicksPerSecond() {
-    return rightMustangEncoder.getVelocityTicks();
-  }
+  // /**
+  //  * Returns the velocity of the MustangDriveBaseEncoder used for the right motors
+  //  * in ticks/second
+  //  */
+  // public double getRightMustangEncoderVelocityInTicksPerSecond() {
+  //   return rightMustangEncoder.getVelocityTicks();
+  // }
 
-  /**
-   * Returns the velocity of the MustangDriveBaseEncoder used for the left motors
-   * in inches/second
-   */
-  public double getLeftMustangEncoderVelocityInInchesPerSecond() {
-    return leftMustangEncoder.getVelocityInches();
-  }
+  // /**
+  //  * Returns the velocity of the MustangDriveBaseEncoder used for the left motors
+  //  * in inches/second
+  //  */
+  // public double getLeftMustangEncoderVelocityInInchesPerSecond() {
+  //   return leftMustangEncoder.getVelocityInches();
+  // }
 
-  /**
-   * Returns the velocity of the MustangDriveBaseEncoder used for the right motors
-   * in inches/second
-   */
-  public double getRightMustangEncoderVelocityInInchesPerSecond() {
-    return rightMustangEncoder.getVelocityInches();
-  }
+  // /**
+  //  * Returns the velocity of the MustangDriveBaseEncoder used for the right motors
+  //  * in inches/second
+  //  */
+  // public double getRightMustangEncoderVelocityInInchesPerSecond() {
+  //   return rightMustangEncoder.getVelocityInches();
+  // }
 
   public void sendEncoderDataToDashboard() {
     // if (leftDIOEncoder != null) {
@@ -670,16 +671,16 @@ public class DriveBase extends SubsystemBase {
     // if (rightDIOEncoder == null) {
     //   SmartDashboard.putNumber("Right Encoder:", rightMustangEncoder.getPositionInches());
     // }
-    if(leftMustangEncoder != null) {
-      SmartDashboard.putString("Left Encoder Inches", leftMustangEncoder.getPositionInches() + "");
-    } else {
-      SmartDashboard.putString("Left Encoder Inches", "null");
-    }
-    if(rightMustangEncoder != null) {
-      SmartDashboard.putString("Right Encoder Inches", rightMustangEncoder.getPositionInches() + "");
-    } else {
-      SmartDashboard.putString("Left Encoder Inches", "null");
-    }
+    // if(leftMustangEncoder != null) {
+    //   SmartDashboard.putString("Left Encoder Inches", leftMustangEncoder.getPositionInches() + "");
+    // } else {
+    //   SmartDashboard.putString("Left Encoder Inches", "null");
+    // }
+    // if(rightMustangEncoder != null) {
+    //   SmartDashboard.putString("Right Encoder Inches", rightMustangEncoder.getPositionInches() + "");
+    // } else {
+    //   SmartDashboard.putString("Left Encoder Inches", "null");
+    // }
 
     SmartDashboard.putString("Left M Position Ticks", "0"); //leftEncoder.getPosition(); + "");
     SmartDashboard.putString("Left M Velocity Ticks", "0"); //left1.getEncoder().getVelocity() + "");
