@@ -3,7 +3,6 @@ package frc.team670.robot.dataCollection.sensors;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Ultrasonic;
-import frc.team670.robot.Robot;
 import frc.team670.robot.RobotContainer;
 /**
  *  import com.pi4j.io.gpio.*;

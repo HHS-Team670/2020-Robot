@@ -28,15 +28,17 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team670.robot.commands.drive.teleop.XboxRocketLeagueDrive;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.*;
+import frc.team670.robot.dataCollection.sensors.MustangDriveBaseEncoder;
 import frc.team670.robot.dataCollection.sensors.NavX;
 
 /**
  * Represents a tank drive base.
  * 
- * @author ctychen
+ * @author lakshbhambhani, ctychen
  */
 public class DriveBase extends SubsystemBase {
 
@@ -47,11 +49,12 @@ public class DriveBase extends SubsystemBase {
   private DifferentialDrive driveTrain;
   private List<CANSparkMax> leftControllers, rightControllers;
   private List<CANSparkMax> allMotors;
-  // private MustangDriveBaseEncoder leftMustangEncoder, rightMustangEncoder;
+  private MustangDriveBaseEncoder leftMustangEncoder, rightMustangEncoder;
   private Encoder leftDIOEncoder, rightDIOEncoder;
-  private CANEncoder leftEncoder, rightEncoder;
+  private CANEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
 
-  private DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), new Pose2d(0, 0, new Rotation2d())) ;
+  private DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
+      new Pose2d(0, 0, new Rotation2d()));
   private NavX navXMicro;
 
   private static final double drivebaseGearRatio = 8.45;
@@ -67,21 +70,22 @@ public class DriveBase extends SubsystemBase {
     right1 = new CANSparkMax(RobotMap.SPARK_RIGHT_MOTOR_1, CANSparkMaxLowLevel.MotorType.kBrushless);
     right2 = new CANSparkMax(RobotMap.SPARK_RIGHT_MOTOR_2, CANSparkMaxLowLevel.MotorType.kBrushless);
 
-  left1.restoreFactoryDefaults();
+    left1.restoreFactoryDefaults();
     left2.restoreFactoryDefaults();
     right1.restoreFactoryDefaults();
     right2.restoreFactoryDefaults();
 
-
-    leftEncoder = left1.getEncoder();
-    rightEncoder = right1.getEncoder();
+    left1Encoder = left1.getEncoder();
+    right1Encoder = right1.getEncoder();
+    left2Encoder = left2.getEncoder();
+    right2Encoder = right2.getEncoder();
 
     LogLeftMotorInfo();
     LogRightMotorInfo();
-    
-    double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;//(double)RobotConstants.SPARK_TICKS_PER_ROTATION;
+
+    double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;// (double)RobotConstants.SPARK_TICKS_PER_ROTATION;
     left1.getEncoder().setVelocityConversionFactor(sparkMaxVelocityConversionFactor);
-    right1.getEncoder().setVelocityConversionFactor(sparkMaxVelocityConversionFactor); //Do not invert for right side
+    right1.getEncoder().setVelocityConversionFactor(sparkMaxVelocityConversionFactor); // Do not invert for right side
     left2.getEncoder().setVelocityConversionFactor(sparkMaxVelocityConversionFactor);
     right2.getEncoder().setVelocityConversionFactor(sparkMaxVelocityConversionFactor);
     // these are commented cuuz library being used is
@@ -146,8 +150,8 @@ public class DriveBase extends SubsystemBase {
     }
 
     try {
-      // rightDIOEncoder = new Encoder(RobotMap.RIGHT_ENCODER_CHANNEL_A, RobotMap.RIGHT_ENCODER_CHANNEL_B, false,
-          // EncodingType.k4X);
+      rightDIOEncoder = new Encoder(RobotMap.RIGHT_ENCODER_CHANNEL_A, RobotMap.RIGHT_ENCODER_CHANNEL_B, false,
+          EncodingType.k4X);
       rightDIOEncoder = null;
     } catch (RuntimeException ex) {
       DriverStation.reportError("Error Instantiating rightDIOEncoder: " + ex.getMessage(), true);
@@ -162,12 +166,12 @@ public class DriveBase extends SubsystemBase {
       leftDIOEncoder.setReverseDirection(true);
     }
     if (rightDIOEncoder != null) {
-      // rightDIOEncoder.setDistancePerPulse(distancePerPulse);
-      // rightDIOEncoder.setReverseDirection(true);
+      rightDIOEncoder.setDistancePerPulse(distancePerPulse);
+      rightDIOEncoder.setReverseDirection(true);
     }
 
-    // leftMustangEncoder = new MustangDriveBaseEncoder(null, left1.getEncoder(), false);
-    // rightMustangEncoder = new MustangDriveBaseEncoder(null, right1.getEncoder(), true);
+    leftMustangEncoder = new MustangDriveBaseEncoder(null, left1.getEncoder(), false);
+    rightMustangEncoder = new MustangDriveBaseEncoder(null, right1.getEncoder(), true);
 
   }
 
@@ -265,8 +269,6 @@ public class DriveBase extends SubsystemBase {
         + right2.getAppliedOutput();
     return output;
   }
-
-
 
   /**
    * Returns the left DIO Encoder
@@ -464,18 +466,17 @@ public class DriveBase extends SubsystemBase {
   }
 
   public void initDefaultCommand() {
-    
+    setDefaultCommand(new XboxRocketLeagueDrive());
   }
 
   /**
    * Returns the velocity of the right side of the drivebase in inches/second from
    * the Spark Encoder
    */
-  // public double getLeftSparkEncoderVelocityInches() {
-  // return
-  // (DriveBase.convertDriveBaseTicksToInches(left1.getEncoder().getVelocity() /
-  // RobotConstants.SPARK_TICKS_PER_ROTATION) / 60);
-  // }
+  public double getLeftSparkEncoderVelocityInches() {
+    return (DriveBase.convertDriveBaseTicksToInches(
+        left1.getEncoder().getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION) / 60);
+  }
 
   /**
    * Returns the velocity of the right side of the drivebase in ticks/second from
@@ -489,11 +490,10 @@ public class DriveBase extends SubsystemBase {
    * Returns the velocity of the right side of the drivebase in inches/second from
    * the Spark Encoder
    */
-  // public double getRightSparkEncoderVelocityInches() {
-  // return
-  // (DriveBase.convertDriveBaseTicksToInches(right1.getEncoder().getVelocity() /
-  // RobotConstants.SPARK_TICKS_PER_ROTATION) / 60);
-  // }
+  public double getRightSparkEncoderVelocityInches() {
+    return (DriveBase.convertDriveBaseTicksToInches(
+        right1.getEncoder().getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION) / 60);
+  }
 
   /**
    * Returns the velocity of the right side of the drivebase in ticks/second from
@@ -577,131 +577,102 @@ public class DriveBase extends SubsystemBase {
   /**
    * Returns the MustangDriveBaseEncoder used for the left motors
    */
-  // public MustangDriveBaseEncoder getLeftMustangDriveBaseEncoder() {
-  //   return leftMustangEncoder;
-  // }
-
-  // /**
-  //  * Returns the MustangDriveBaseEncoder used for the right motors
-  //  */
-  // public MustangDriveBaseEncoder getRightMustangDriveBaseEncoder() {
-  //   return rightMustangEncoder;
-  // }
-
-  // /**
-  //  * Returns the position of the MustangDriveBaseEncoder used for the left motors
-  //  * in ticks
-  //  */
-  // public int getLeftMustangEncoderPositionInTicks() {
-  //   return leftMustangEncoder.getPositionTicks();
-  // }
-
-  // /**
-  //  * Returns the position of the MustangDriveBaseEncoder used for the right motors
-  //  * in ticks
-  //  */
-  // public int getRightMustangEncoderPositionInTicks() {
-  //   return rightMustangEncoder.getPositionTicks();
-  // }
-
-  // /**
-  //  * Returns the position of the MustangDriveBaseEncoder used for the left motors
-  //  * in inches
-  //  */
-  // public double getLeftMustangEncoderPositionInInches() {
-  //   return leftMustangEncoder.getPositionInches();
-  // }
-
-  // /**
-  //  * Returns the position of the MustangDriveBaseEncoder used for the right motors
-  //  * in inches
-  //  */
-  // public double getRightMustangEncoderPositionInInches() {
-  //   return rightMustangEncoder.getPositionInches();
-  // }
-
-  // /**
-  //  * Returns the velocity of the MustangDriveBaseEncoder used for the left motors
-  //  * in ticks/second
-  //  */
-  // public double getLeftMustangEncoderVelocityInTicksPerSecond() {
-  //   return leftMustangEncoder.getVelocityTicks();
-  // }
-
-  // public void initCoastMode() {
-  //   setMotorsNeutralMode(IdleMode.kCoast);
-  // }
-
-  // /**
-  //  * Returns the velocity of the MustangDriveBaseEncoder used for the right motors
-  //  * in ticks/second
-  //  */
-  // public double getRightMustangEncoderVelocityInTicksPerSecond() {
-  //   return rightMustangEncoder.getVelocityTicks();
-  // }
-
-  // /**
-  //  * Returns the velocity of the MustangDriveBaseEncoder used for the left motors
-  //  * in inches/second
-  //  */
-  // public double getLeftMustangEncoderVelocityInInchesPerSecond() {
-  //   return leftMustangEncoder.getVelocityInches();
-  // }
-
-  // /**
-  //  * Returns the velocity of the MustangDriveBaseEncoder used for the right motors
-  //  * in inches/second
-  //  */
-  // public double getRightMustangEncoderVelocityInInchesPerSecond() {
-  //   return rightMustangEncoder.getVelocityInches();
-  // }
-
-  public void sendEncoderDataToDashboard() {
-    // if (leftDIOEncoder != null) {
-    //   SmartDashboard.putNumber("Left DIO Encoder: ", leftMustangEncoder.getPositionInches());
-    // }
-
-    // if (rightDIOEncoder != null) {
-    //   SmartDashboard.putNumber("Right Encoder: ", rightDIOEncoder.get());
-    // }
-
-    // if (leftDIOEncoder == null) {
-    //   SmartDashboard.putString("Left DIO Encoder:", "LEFT DIO ENCODER IS NULL!");
-    // }
-    // if (rightDIOEncoder == null) {
-    //   SmartDashboard.putNumber("Right Encoder:", rightMustangEncoder.getPositionInches());
-    // }
-    // if(leftMustangEncoder != null) {
-    //   SmartDashboard.putString("Left Encoder Inches", leftMustangEncoder.getPositionInches() + "");
-    // } else {
-    //   SmartDashboard.putString("Left Encoder Inches", "null");
-    // }
-    // if(rightMustangEncoder != null) {
-    //   SmartDashboard.putString("Right Encoder Inches", rightMustangEncoder.getPositionInches() + "");
-    // } else {
-    //   SmartDashboard.putString("Left Encoder Inches", "null");
-    // }
-
-    SmartDashboard.putString("Left M Position Ticks", "0"); //leftEncoder.getPosition(); + "");
-    SmartDashboard.putString("Left M Velocity Ticks", "0"); //left1.getEncoder().getVelocity() + "");
-    SmartDashboard.putString("Left S Position Ticks", "0"); //left2.getEncoder().getPosition() + "");
-    SmartDashboard.putString("Left S Velocity Ticks", "0"); //left2.getEncoder().getVelocity() + "");
-    SmartDashboard.putString("Right M Position Ticks", "0"); //right1.getEncoder().getPosition() + "");
-    SmartDashboard.putString("Right M Velocity Ticks", "0"); //right1.getEncoder().getVelocity() + "");
-    SmartDashboard.putString("Right S Position Ticks", "0"); //right2.getEncoder().getPosition() + "");
-    SmartDashboard.putString("Right S Velocity Ticks", "0"); //right2.getEncoder().getVelocity() + "");
-    leftEncoder.getPosition();
-    leftEncoder.getVelocity();
-    rightEncoder.getPosition();
-    rightEncoder.getVelocity();
+  public MustangDriveBaseEncoder getLeftMustangDriveBaseEncoder() {
+    return leftMustangEncoder;
   }
 
-    
+  /**
+   * Returns the MustangDriveBaseEncoder used for the right motors
+   */
+  public MustangDriveBaseEncoder getRightMustangDriveBaseEncoder() {
+    return rightMustangEncoder;
+  }
+
+  /**
+   * Returns the position of the MustangDriveBaseEncoder used for the left motors
+   * in ticks
+   */
+  public int getLeftMustangEncoderPositionInTicks() {
+    return leftMustangEncoder.getPositionTicks();
+  }
+
+  /**
+   * Returns the position of the MustangDriveBaseEncoder used for the right motors
+   * in ticks
+   */
+  public int getRightMustangEncoderPositionInTicks() {
+    return rightMustangEncoder.getPositionTicks();
+  }
+
+  /**
+   * Returns the position of the MustangDriveBaseEncoder used for the left motors
+   * in inches
+   */
+  public double getLeftMustangEncoderPositionInInches() {
+    return leftMustangEncoder.getPositionInches();
+  }
+
+  /**
+   * Returns the position of the MustangDriveBaseEncoder used for the right motors
+   * in inches
+   */
+  public double getRightMustangEncoderPositionInInches() {
+    return rightMustangEncoder.getPositionInches();
+  }
+
+  /**
+   * Returns the velocity of the MustangDriveBaseEncoder used for the left motors
+   * in ticks/second
+   */
+  public double getLeftMustangEncoderVelocityInTicksPerSecond() {
+    return leftMustangEncoder.getVelocityTicks();
+  }
+
+  public void initCoastMode() {
+    setMotorsNeutralMode(IdleMode.kCoast);
+  }
+
+  /**
+   * Returns the velocity of the MustangDriveBaseEncoder used for the right motors
+   * in ticks/second
+   */
+  public double getRightMustangEncoderVelocityInTicksPerSecond() {
+    return rightMustangEncoder.getVelocityTicks();
+  }
+
+  /**
+   * Returns the velocity of the MustangDriveBaseEncoder used for the left motors
+   * in inches/second
+   */
+  public double getLeftMustangEncoderVelocityInInchesPerSecond() {
+    return leftMustangEncoder.getVelocityInches();
+  }
+
+  /**
+   * Returns the velocity of the MustangDriveBaseEncoder used for the right motors
+   * in inches/second
+   */
+  public double getRightMustangEncoderVelocityInInchesPerSecond() {
+    return rightMustangEncoder.getVelocityInches();
+  }
+
+  public void sendEncoderDataToDashboard() {
+    SmartDashboard.putNumber("Left M Position Ticks", left1Encoder.getPosition());
+    SmartDashboard.putNumber("Left M Velocity Ticks", left1Encoder.getVelocity());
+    SmartDashboard.putNumber("Left S Position Ticks", left2Encoder.getPosition());
+    SmartDashboard.putNumber("Left S Velocity Ticks", left2Encoder.getVelocity());
+    SmartDashboard.putNumber("Right M Position Ticks", right1Encoder.getPosition());
+    SmartDashboard.putNumber("Right M Velocity Ticks", right1Encoder.getVelocity());
+    SmartDashboard.putNumber("Right S Position Ticks", right2Encoder.getPosition());
+    SmartDashboard.putNumber("Right S Velocity Ticks", right2Encoder.getVelocity());
+  }
+
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
-   // Logger.consoleLog("LeftEncoderVelocity: %s, RightEncoderVelocity: %s", getLeftEncoder().getVelocity(), getRightEncoder().getVelocity());
-    m_odometry.update(Rotation2d.fromDegrees(getHeading()), leftEncoder.getPosition(), rightEncoder.getPosition());                
+    // Logger.consoleLog("LeftEncoderVelocity: %s, RightEncoderVelocity: %s",
+    // getLeftEncoder().getVelocity(), getRightEncoder().getVelocity());
+    m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
   }
 
   /**
@@ -722,13 +693,14 @@ public class DriveBase extends SubsystemBase {
     m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
   }
 
-  public void resetOdometry(){
-    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()), new Pose2d(0, 0, new Rotation2d()));
+  public void resetOdometry() {
+    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
+        new Pose2d(0, 0, new Rotation2d()));
     zeroHeading();
-    leftEncoder.setPosition(0);
-    rightEncoder.setPosition(0);
+    left1Encoder.setPosition(0);
+    right1Encoder.setPosition(0);
   }
-  
+
   /**
    * Zeroes the heading of the robot.
    */
@@ -745,20 +717,22 @@ public class DriveBase extends SubsystemBase {
     return Math.IEEEremainder(navXMicro.getAngle(), 360) * (RobotConstants.kNavXReversed ? -1. : 1.);
   }
 
-  public void LogLeftMotorInfo(){
-    Logger.consoleLog("ClosedLoopRampRate1 %s, OpenLoopRampRate1 %s", left1.getClosedLoopRampRate(), left1.getOpenLoopRampRate());
-    Logger.consoleLog("ClosedLoopRampRate2 %s, OpenLoopRampRate2 %s", left2.getClosedLoopRampRate(), left2.getClosedLoopRampRate());
+  public void LogLeftMotorInfo() {
+    Logger.consoleLog("ClosedLoopRampRate1 %s, OpenLoopRampRate1 %s", left1.getClosedLoopRampRate(),
+        left1.getOpenLoopRampRate());
+    Logger.consoleLog("ClosedLoopRampRate2 %s, OpenLoopRampRate2 %s", left2.getClosedLoopRampRate(),
+        left2.getClosedLoopRampRate());
   }
 
-  public void LogRightMotorInfo(){
-    Logger.consoleLog("ClosedLoopRampRate1 %s, OpenLoopRampRate1 %s", right1.getClosedLoopRampRate(), right1.getOpenLoopRampRate());
-    Logger.consoleLog("ClosedLoopRampRate2 %s, OpenLoopRampRate2 %s", right2.getClosedLoopRampRate(), right2.getClosedLoopRampRate());
+  public void LogRightMotorInfo() {
+    Logger.consoleLog("ClosedLoopRampRate1 %s, OpenLoopRampRate1 %s", right1.getClosedLoopRampRate(),
+        right1.getOpenLoopRampRate());
+    Logger.consoleLog("ClosedLoopRampRate2 %s, OpenLoopRampRate2 %s", right2.getClosedLoopRampRate(),
+        right2.getClosedLoopRampRate());
   }
 
-  public DifferentialDriveWheelSpeeds getWheelSpeeds(){
-    return new DifferentialDriveWheelSpeeds(leftEncoder.getVelocity(), rightEncoder.getVelocity());
+  public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+    return new DifferentialDriveWheelSpeeds(left1Encoder.getVelocity(), right1Encoder.getVelocity());
   }
-
-
 
 }

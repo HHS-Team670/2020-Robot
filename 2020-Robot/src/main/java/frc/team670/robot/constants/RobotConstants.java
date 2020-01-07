@@ -25,39 +25,12 @@ public class RobotConstants {
     // Vision Constants
     public static final double VISION_ERROR_CODE = -99999;
 
-    // Pathfinder Constants (DriveMotionProfile)
-    public static final double KU = 0.275; //Original P value
-    public static final double TU = 4.46; //Oscillation in seconds
-    public static final double PROPORTION = 0.2*KU;
-    public static final double INTEGRAL = 0;//0.05*KU/TU;
-    public static final double DERIVATIVE = 5*KU*TU/40;
     public static final double WHEEL_BASE = 25.662; //measured 1/26/19
 
     public static final double DRIVEBASE_METERS_PER_ROTATION = (1/DRIVEBASE_GEAR_RATIO) * DRIVE_BASE_WHEEL_DIAMETER * Math.PI * 0.0254;
 
-
-    //Elbow constants
-    public static final int PEAK_AMPS = 0; // check the peak limit and set again
-    public static final int TIMEOUT_MS = 0; //  
-    public static final int PEAK_TIME_MS = 0; //  Duration after current exceed peak current to trigger current limit
-
-    // Climbing Current Limits
-    public static final int CLIMB_CURRENT_LIMIT = 10; // TODO figure required limited current
-    public static final int NORMAL_CURRENT_LIMIT = 0; // TODO figure out normal current
-
-    //Extension constants
-    public static final int EXTENSION_ENCODER_OUT = 0;
-    public static final double DEFAULT_EXTENSION_POWER = 0; 
-    public static final double INCHES_TO_TRAVEL_ONTO_PLATFORM = 4;
-
-    //Arm PID Constants
-    public static final int kPIDLoopIdx = 0;
+    //Talon PID Constants
     public static final int kTimeoutMs = 0;
-    public static final int ALLOWABLE_PID_ERROR = 0;
-
-    // Different values/encoder positions to set arm to
-    public static int ARM_RESET_TIMEOUTMS = 0;
-
 
     public static final double ksVolts = 0.11; //0.224;
     public static final double kvVoltSecondsPerMeter = 2.27; //2.22;
@@ -67,9 +40,6 @@ public class RobotConstants {
     public static final double kTrackwidthInches = WHEEL_BASE;
     public static final double kTrackwidthMeters = WHEEL_BASE * 0.0254;
 
-    // Example value only - as above, this must be tuned for your drive!
-    // public static final DifferentialDriveKinematics kDriveKinematics =
-    //     new DifferentialDriveKinematics(kTrackwidthMeters);
     public static final double kPDriveVel = 4;
     public static final double kIDriveVel = 0.00;
     public static final double kDDriveVel = 0.0;
@@ -78,10 +48,6 @@ public class RobotConstants {
 
     public static final double kMaxSpeedMetersPerSecond = 0.75;//1; //0.305;
     public static final double kMaxAccelerationMetersPerSecondSquared = 0.75;//1; //0.305;
-
-    // public static final DifferentialDriveKinematicsConstraint kAutoPathConstraints =
-    //     new DifferentialDriveKinematicsConstraint(kDriveKinematics,
-    //                                               kMaxSpeedMetersPerSecond);
 
     // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
     public static final double kRamseteB = 2;

@@ -9,7 +9,6 @@ package frc.team670.robot.commands.drive.teleop;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.team670.robot.Robot;
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.utils.functions.JoystickUtils;
 
