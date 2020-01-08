@@ -53,9 +53,10 @@ public class DriveBase extends SubsystemBase {
   private Encoder leftDIOEncoder, rightDIOEncoder;
   private CANEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
 
-  private DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
-      new Pose2d(0, 0, new Rotation2d()));
   private NavX navXMicro;
+
+
+  private DifferentialDriveOdometry m_odometry;
 
   private static final double drivebaseGearRatio = 8.45;
 
@@ -173,7 +174,14 @@ public class DriveBase extends SubsystemBase {
     leftMustangEncoder = new MustangDriveBaseEncoder(null, left1.getEncoder(), false);
     rightMustangEncoder = new MustangDriveBaseEncoder(null, right1.getEncoder(), true);
 
+    navXMicro = new NavX(RobotMap.NAVX_PORT);
+
+    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
+      new Pose2d(0, 0, new Rotation2d()));
+
+
   }
+
 
   /**
    * 
