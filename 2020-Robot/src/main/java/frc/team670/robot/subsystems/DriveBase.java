@@ -15,11 +15,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel;
-import com.revrobotics.ControlType;
 
-import edu.wpi.first.wpilibj.CounterBase.EncodingType;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -28,11 +24,10 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.team670.robot.commands.drive.teleop.XboxRocketLeagueDrive;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
-import frc.team670.robot.utils.*;
-import frc.team670.robot.dataCollection.sensors.MustangDriveBaseEncoder;
 import frc.team670.robot.dataCollection.sensors.NavX;
 
 /**
@@ -42,21 +37,19 @@ import frc.team670.robot.dataCollection.sensors.NavX;
  */
 public class DriveBase extends SubsystemBase {
 
-  private static final int VELOCITY_PID_SLOT = 1, ENCODERS_PID_SLOT = 2;
-
   private CANSparkMax left1, left2, right1, right2;
-  private SpeedControllerGroup left, right;
-  private DifferentialDrive driveTrain;
-  private List<CANSparkMax> leftControllers, rightControllers;
-  private List<CANSparkMax> allMotors;
-  private MustangDriveBaseEncoder leftMustangEncoder, rightMustangEncoder;
-  private Encoder leftDIOEncoder, rightDIOEncoder;
   private CANEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
 
-  private DifferentialDriveOdometry m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
-      new Pose2d(0, 0, new Rotation2d()));
-  private NavX navXMicro;
+  private SpeedControllerGroup left, right;
+  private DifferentialDrive driveTrain;
 
+  private List<CANSparkMax> leftControllers, rightControllers;
+  private List<CANSparkMax> allMotors = new ArrayList<CANSparkMax>();;
+
+  private NavX navXMicro;
+  private DifferentialDriveOdometry m_odometry;
+
+  private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
   private static final double drivebaseGearRatio = 8.45;
 
   private final double P_P = 0.1, P_I = 1E-4, P_D = 1, P_FF = 0; // Position PID Values. Set based off the default in
@@ -79,33 +72,26 @@ public class DriveBase extends SubsystemBase {
     right1Encoder = right1.getEncoder();
     left2Encoder = left2.getEncoder();
     right2Encoder = right2.getEncoder();
+    
+    left1Encoder.setVelocityConversionFactor(sparkMaxVelocityConversionFactor);
+    left2Encoder.setVelocityConversionFactor(sparkMaxVelocityConversionFactor); // Do not invert for right side
+    right1Encoder.setVelocityConversionFactor(sparkMaxVelocityConversionFactor);
+    right2Encoder.setVelocityConversionFactor(sparkMaxVelocityConversionFactor);
 
-    LogLeftMotorInfo();
-    LogRightMotorInfo();
-
-    double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;// (double)RobotConstants.SPARK_TICKS_PER_ROTATION;
-    left1.getEncoder().setVelocityConversionFactor(sparkMaxVelocityConversionFactor);
-    right1.getEncoder().setVelocityConversionFactor(sparkMaxVelocityConversionFactor); // Do not invert for right side
-    left2.getEncoder().setVelocityConversionFactor(sparkMaxVelocityConversionFactor);
-    right2.getEncoder().setVelocityConversionFactor(sparkMaxVelocityConversionFactor);
-    // these are commented cuuz library being used is
-    allMotors = new ArrayList<CANSparkMax>();
     leftControllers = Arrays.asList(left1, left2);
     rightControllers = Arrays.asList(right1, right2);
     allMotors.addAll(leftControllers);
     allMotors.addAll(rightControllers);
 
     setMotorsInvert(leftControllers, false);
-
-    // Invert this so it will work properly with the CANPIDController
-    // and then invert the SpeedController to compensate for automatic inversion.
-    setMotorsInvert(rightControllers, true);
+    setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController and then invert the SpeedController to compensate for automatic inversion.
 
     left2.follow(left1);
     right2.follow(right1);
 
     left = new SpeedControllerGroup(left1, left2);
     right = new SpeedControllerGroup(right1, right2);
+    
     // The DifferentialDrive inverts the right side automatically, however we want
     // to invert straight from the Spark so that we can
     // still use it properly with the CANPIDController, so we need to reverse the
@@ -115,65 +101,15 @@ public class DriveBase extends SubsystemBase {
     driveTrain = new DifferentialDrive(left, right);
     driveTrain.setMaxOutput(1.0);
 
-    // Set PID Values
-    left1.getPIDController().setP(P_P, ENCODERS_PID_SLOT);
-    left1.getPIDController().setI(P_I, ENCODERS_PID_SLOT);
-    left1.getPIDController().setD(P_D, ENCODERS_PID_SLOT);
-    left1.getPIDController().setFF(P_FF, ENCODERS_PID_SLOT);
-    left1.getPIDController().setOutputRange(-1, 1);
-
-    left1.getPIDController().setP(V_P, VELOCITY_PID_SLOT);
-    left1.getPIDController().setI(V_I, VELOCITY_PID_SLOT);
-    left1.getPIDController().setD(V_D, VELOCITY_PID_SLOT);
-    left1.getPIDController().setFF(V_FF, VELOCITY_PID_SLOT);
-
-    right1.getPIDController().setP(V_P, VELOCITY_PID_SLOT);
-    right1.getPIDController().setI(V_I, VELOCITY_PID_SLOT);
-    right1.getPIDController().setD(V_D, VELOCITY_PID_SLOT);
-    right1.getPIDController().setFF(V_FF, VELOCITY_PID_SLOT);
-
-    right1.getPIDController().setP(P_P, ENCODERS_PID_SLOT);
-    right1.getPIDController().setI(P_I, ENCODERS_PID_SLOT);
-    right1.getPIDController().setD(P_D, ENCODERS_PID_SLOT);
-    right1.getPIDController().setFF(P_FF, ENCODERS_PID_SLOT);
-    right1.getPIDController().setOutputRange(-1, 1);
-
     setRampRate(allMotors, 0.36); // Will automatically cook some Cheezy Poofs
 
-    // DIO Encoders
-    try {
-      leftDIOEncoder = new Encoder(RobotMap.LEFT_ENCODER_CHANNEL_A, RobotMap.LEFT_ENCODER_CHANNEL_B, false,
-          EncodingType.k4X);
-    } catch (RuntimeException ex) {
-      DriverStation.reportError("Error Instantiating leftDIOEncoder: " + ex.getMessage(), true);
-      leftDIOEncoder = null;
-    }
-
-    try {
-      rightDIOEncoder = new Encoder(RobotMap.RIGHT_ENCODER_CHANNEL_A, RobotMap.RIGHT_ENCODER_CHANNEL_B, false,
-          EncodingType.k4X);
-      rightDIOEncoder = null;
-    } catch (RuntimeException ex) {
-      DriverStation.reportError("Error Instantiating rightDIOEncoder: " + ex.getMessage(), true);
-      rightDIOEncoder = null;
-    }
-
-    double distancePerPulse = (1 / RobotConstants.DIO_TICKS_PER_ROTATION)
-        * (Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER);
-
-    if (leftDIOEncoder != null) {
-      leftDIOEncoder.setDistancePerPulse(distancePerPulse);
-      leftDIOEncoder.setReverseDirection(true);
-    }
-    if (rightDIOEncoder != null) {
-      rightDIOEncoder.setDistancePerPulse(distancePerPulse);
-      rightDIOEncoder.setReverseDirection(true);
-    }
-
-    leftMustangEncoder = new MustangDriveBaseEncoder(null, left1.getEncoder(), false);
-    rightMustangEncoder = new MustangDriveBaseEncoder(null, right1.getEncoder(), true);
+    // initialized NavX and sets Odometry
+    navXMicro = new NavX(RobotMap.NAVX_PORT);
+    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
+      new Pose2d(0, 0, new Rotation2d()));
 
   }
+
 
   /**
    * 
@@ -187,10 +123,6 @@ public class DriveBase extends SubsystemBase {
    */
   public void tankDrive(double leftSpeed, double rightSpeed) {
     tankDrive(leftSpeed, rightSpeed, false);
-  }
-
-  public void initBrakeMode() {
-    setMotorsBrakeMode(allMotors, IdleMode.kBrake);
   }
 
   /**
@@ -253,6 +185,13 @@ public class DriveBase extends SubsystemBase {
     tankDrive(0, 0);
   }
 
+  /**
+   * Sets all motors to Brake Mode
+   */
+  public void initBrakeMode() {
+    setMotorsBrakeMode(allMotors, IdleMode.kBrake);
+  }
+
   /*
    * Gets the input voltage of all the motor controllers on the robot
    */
@@ -271,49 +210,6 @@ public class DriveBase extends SubsystemBase {
   }
 
   /**
-   * Returns the left DIO Encoder
-   */
-  public Encoder getLeftDIOEncoder() {
-    return leftDIOEncoder;
-  }
-
-  /**
-   * Returns the right DIO Encoder
-   */
-  public Encoder getRightDIOEncoder() {
-    return rightDIOEncoder;
-  }
-
-  /**
-   * Sets the PIDControllers setpoints for the left and right side motors to the
-   * given positions in ticks forward.
-   * 
-   * @param deltaLeft  The desired change in left position in encoder ticks
-   * @param deltaRight The desired change in right position in encoder ticks
-   */
-  public void setSparkEncodersControl(double deltaLeft, double deltaRight) {
-    left1.getPIDController().setReference(getLeftSparkEncoderPosition() + deltaLeft, ControlType.kPosition,
-        ENCODERS_PID_SLOT);
-    right1.getPIDController().setReference(getRightSparkEncoderPosition() + deltaRight, ControlType.kPosition,
-        ENCODERS_PID_SLOT);
-  }
-
-  /**
-   * Sets the velocities of the left and right motors of the robot.
-   * 
-   * @param leftVel  Velocity for left motors in inches/sec
-   * @param rightVel Velocity for right motors in inches/sec
-   */
-  public void setSparkVelocityControl(double leftVel, double rightVel) {
-    leftVel = convertInchesPerSecondToDriveBaseRoundsPerMinute(convertInchesToDriveBaseTicks(leftVel));
-    rightVel = convertInchesPerSecondToDriveBaseRoundsPerMinute(convertInchesToDriveBaseTicks(rightVel));
-    // System.out.println("LeftVel: " + leftVel);
-    // System.out.println("RightVel: " + rightVel);
-    left1.getPIDController().setReference(leftVel, ControlType.kVelocity, VELOCITY_PID_SLOT);
-    right1.getPIDController().setReference(rightVel, ControlType.kVelocity, VELOCITY_PID_SLOT);
-  }
-
-  /**
    * Gets the encoder position of the front left motor in ticks.
    */
   public int getLeftSparkEncoderPosition() {
@@ -325,20 +221,6 @@ public class DriveBase extends SubsystemBase {
    */
   public int getRightSparkEncoderPosition() {
     return (int) (right1.getEncoder().getPosition() / RobotConstants.SPARK_TICKS_PER_ROTATION);
-  }
-
-  /**
-   * Gets the encoder position of the front left motor in ticks.
-   */
-  public int getLeftDIOEncoderPosition() {
-    return leftDIOEncoder.get();
-  }
-
-  /**
-   * Gets the tick count of the right encoder
-   */
-  public int getRightDIOEncoderPosition() {
-    return rightDIOEncoder.get();
   }
 
   /**
@@ -503,18 +385,46 @@ public class DriveBase extends SubsystemBase {
     return (right1.getEncoder().getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION / 60);
   }
 
-  public double getLeftDIODistanceInches() {
-    return leftDIOEncoder.getDistance();
+  /**
+   * Returns the Spark Max Encoder for the Left Main Motor
+   */
+  public CANEncoder getLeftMainEncoder(){
+    return left1Encoder;
   }
 
-  public double getRightDIODistanceInches() {
-    return rightDIOEncoder.getDistance();
+  /**
+   * Returns the Spark Max Encoder for the Left Follower Motor
+   */
+  public CANEncoder getLeftFollowerEncoder(){
+    return left2Encoder;
   }
 
+  /**
+   * Returns the Spark Max Encoder for the Right Main Motor
+   */
+  public CANEncoder getRightMainEncoder(){
+    return right1Encoder;
+  }
+
+  /**
+   * Returns the Spark Max Encoder for the Right Follower Motor
+   */
+  public CANEncoder getRightFollowerEncoder(){
+    return right2Encoder;
+  }
+
+  /**
+   * Returns the Left Motor Controllers
+   * @return The list of the motor controller on the left side of the robot
+   */
   public List<CANSparkMax> getLeftControllers() {
     return leftControllers;
   }
 
+  /**
+   * Returns the Right Motor Controller
+   * @return The list of hte motor controller on the right side of the robot
+   */
   public List<CANSparkMax> getRightControllers() {
     return rightControllers;
   }
@@ -539,7 +449,7 @@ public class DriveBase extends SubsystemBase {
 
   public static double convertSparkRevolutionsToInches(double revolutions) {
     // rev * 2piR in / rev
-    return revolutions * Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER / drivebaseGearRatio;
+    return revolutions * Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER / RobotConstants.DRIVEBASE_GEAR_RATIO;
   }
 
   /**
@@ -574,86 +484,8 @@ public class DriveBase extends SubsystemBase {
     return inchesPerSecond * 60 / (Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER);
   }
 
-  /**
-   * Returns the MustangDriveBaseEncoder used for the left motors
-   */
-  public MustangDriveBaseEncoder getLeftMustangDriveBaseEncoder() {
-    return leftMustangEncoder;
-  }
-
-  /**
-   * Returns the MustangDriveBaseEncoder used for the right motors
-   */
-  public MustangDriveBaseEncoder getRightMustangDriveBaseEncoder() {
-    return rightMustangEncoder;
-  }
-
-  /**
-   * Returns the position of the MustangDriveBaseEncoder used for the left motors
-   * in ticks
-   */
-  public int getLeftMustangEncoderPositionInTicks() {
-    return leftMustangEncoder.getPositionTicks();
-  }
-
-  /**
-   * Returns the position of the MustangDriveBaseEncoder used for the right motors
-   * in ticks
-   */
-  public int getRightMustangEncoderPositionInTicks() {
-    return rightMustangEncoder.getPositionTicks();
-  }
-
-  /**
-   * Returns the position of the MustangDriveBaseEncoder used for the left motors
-   * in inches
-   */
-  public double getLeftMustangEncoderPositionInInches() {
-    return leftMustangEncoder.getPositionInches();
-  }
-
-  /**
-   * Returns the position of the MustangDriveBaseEncoder used for the right motors
-   * in inches
-   */
-  public double getRightMustangEncoderPositionInInches() {
-    return rightMustangEncoder.getPositionInches();
-  }
-
-  /**
-   * Returns the velocity of the MustangDriveBaseEncoder used for the left motors
-   * in ticks/second
-   */
-  public double getLeftMustangEncoderVelocityInTicksPerSecond() {
-    return leftMustangEncoder.getVelocityTicks();
-  }
-
   public void initCoastMode() {
     setMotorsNeutralMode(IdleMode.kCoast);
-  }
-
-  /**
-   * Returns the velocity of the MustangDriveBaseEncoder used for the right motors
-   * in ticks/second
-   */
-  public double getRightMustangEncoderVelocityInTicksPerSecond() {
-    return rightMustangEncoder.getVelocityTicks();
-  }
-
-  /**
-   * Returns the velocity of the MustangDriveBaseEncoder used for the left motors
-   * in inches/second
-   */
-  public double getLeftMustangEncoderVelocityInInchesPerSecond() {
-    return leftMustangEncoder.getVelocityInches();
-  }
-
-  /**
-   * Returns the velocity of the MustangDriveBaseEncoder used for the right motors
-   * in inches/second
-   */
-  public double getRightMustangEncoderVelocityInInchesPerSecond() {
-    return rightMustangEncoder.getVelocityInches();
   }
 
   public void sendEncoderDataToDashboard() {
@@ -670,8 +502,6 @@ public class DriveBase extends SubsystemBase {
   @Override
   public void periodic() {
     // Update the odometry in the periodic block
-    // Logger.consoleLog("LeftEncoderVelocity: %s, RightEncoderVelocity: %s",
-    // getLeftEncoder().getVelocity(), getRightEncoder().getVelocity());
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
   }
 
@@ -717,20 +547,9 @@ public class DriveBase extends SubsystemBase {
     return Math.IEEEremainder(navXMicro.getAngle(), 360) * (RobotConstants.kNavXReversed ? -1. : 1.);
   }
 
-  public void LogLeftMotorInfo() {
-    Logger.consoleLog("ClosedLoopRampRate1 %s, OpenLoopRampRate1 %s", left1.getClosedLoopRampRate(),
-        left1.getOpenLoopRampRate());
-    Logger.consoleLog("ClosedLoopRampRate2 %s, OpenLoopRampRate2 %s", left2.getClosedLoopRampRate(),
-        left2.getClosedLoopRampRate());
-  }
-
-  public void LogRightMotorInfo() {
-    Logger.consoleLog("ClosedLoopRampRate1 %s, OpenLoopRampRate1 %s", right1.getClosedLoopRampRate(),
-        right1.getOpenLoopRampRate());
-    Logger.consoleLog("ClosedLoopRampRate2 %s, OpenLoopRampRate2 %s", right2.getClosedLoopRampRate(),
-        right2.getClosedLoopRampRate());
-  }
-
+  /**
+   * Returns the wheel speeds of the leftMain Motor and rightMainMotor
+   */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(left1Encoder.getVelocity(), right1Encoder.getVelocity());
   }
