@@ -530,11 +530,11 @@ public class DriveBase extends SubsystemBase {
   }
 
   public void resetOdometry() {
-    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(0, 0, new Rotation2d()));
     zeroHeading();
     left1Encoder.setPosition(0);
     right1Encoder.setPosition(0);
+    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
+        new Pose2d(0, 0, new Rotation2d()));
   }
 
   /**
