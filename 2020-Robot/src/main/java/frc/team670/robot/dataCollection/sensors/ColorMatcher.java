@@ -33,10 +33,10 @@ public class ColorMatcher {
    * Note: Any example colors should be calibrated as the user needs, these are
    * here as a basic example.
    */
-  public static final Color kBlueTarget = ColorMatch.makeColor(0.143, 0.427, 0.429);
-  public static final Color kGreenTarget = ColorMatch.makeColor(0.197, 0.561, 0.240);
-  public static final Color kRedTarget = ColorMatch.makeColor(0.561, 0.232, 0.114);
-  public static final Color kYellowTarget = ColorMatch.makeColor(0.361, 0.524, 0.113);
+  public static final Color kBlueTarget = ColorMatch.makeColor(0.136, 0.412, 0.450);
+  public static final Color kGreenTarget = ColorMatch.makeColor(0.196, 0.557, 0.246);
+  public static final Color kRedTarget = ColorMatch.makeColor(0.475, 0.371, 0.153);
+  public static final Color kYellowTarget = ColorMatch.makeColor(0.293, 0.561, 0.144);
 
   private ColorMatchResult matchedResult = new ColorMatchResult(Color.kBlack, 0);
 
