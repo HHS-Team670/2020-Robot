@@ -735,8 +735,4 @@ public class DriveBase extends SubsystemBase {
     return new DifferentialDriveWheelSpeeds(left1Encoder.getVelocity(), right1Encoder.getVelocity());
   }
 
-  public NavX getNavX() {
-    return navXMicro;
-  }
-
 }
