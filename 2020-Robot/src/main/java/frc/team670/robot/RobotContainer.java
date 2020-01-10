@@ -14,7 +14,6 @@ import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.team670.robot.dataCollection.MustangSensors;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 
 
@@ -26,7 +25,6 @@ import frc.team670.robot.dataCollection.sensors.ColorMatcher;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public static MustangSensors sensors = new MustangSensors();
   public static ColorMatcher colorMatch = new ColorMatcher();
 
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
