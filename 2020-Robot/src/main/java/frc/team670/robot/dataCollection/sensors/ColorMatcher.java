@@ -47,7 +47,7 @@ public class ColorMatcher {
   // red 0.561, 0.232, 0.114
   // yellow 0.361, 0.524, 0.113
 
-  public void Init() {
+  public void init() {
     m_colorMatcher.addColorMatch(kBlueTarget);
     m_colorMatcher.addColorMatch(kGreenTarget);
     m_colorMatcher.addColorMatch(kRedTarget);
@@ -56,7 +56,7 @@ public class ColorMatcher {
     m_colorMatcher.setConfidenceThreshold(0.80);
   }
 
-  public void Periodic() {
+  public void periodic() {
     /**
      * The method GetColor() returns a normalized color value from the sensor and
      * can be useful if outputting the color to an RGB LED or similar. To read the
