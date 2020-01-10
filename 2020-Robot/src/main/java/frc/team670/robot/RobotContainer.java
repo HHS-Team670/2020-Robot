@@ -14,6 +14,8 @@ import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.team670.robot.dataCollection.sensors.ColorMatcher;
+
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -23,14 +25,13 @@ import edu.wpi.first.wpilibj2.command.Command;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  public static ColorMatcher colorMatch = new ColorMatcher();
 
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public static DriveBase driveBase = new DriveBase();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   public static OI oi;
-
-  public final DriveBase m_driveBase = new DriveBase();
 
 
   /**
