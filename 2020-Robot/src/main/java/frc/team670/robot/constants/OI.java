@@ -13,7 +13,6 @@ public class OI {
     private MustangController driverController;
 
     private JoystickButton toggleReverseDrive, toggleDriverCameraMode;
-    private JoystickButton armToNeutral;  
 
     public OI() {
         driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);

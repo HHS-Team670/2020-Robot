@@ -10,9 +10,11 @@ package frc.team670.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.team670.robot.constants.OI;
+import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.subsystems.DriveBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
+import frc.team670.robot.dataCollection.sensors.NavX;
 
 
 /**
@@ -24,6 +26,7 @@ import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static ColorMatcher colorMatch = new ColorMatcher();
+  public static NavX navXMicro = new NavX(RobotMap.NAVX_PORT);
 
   public static DriveBase driveBase = new DriveBase();
 
