@@ -27,14 +27,13 @@ import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static MustangSensors sensors = new MustangSensors();
-
   public static ColorMatcher colorMatch = new ColorMatcher();
+
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public static DriveBase driveBase = new DriveBase();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   public static OI oi;
-
 
 
   /**

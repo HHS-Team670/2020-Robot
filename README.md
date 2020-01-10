@@ -2,8 +2,7 @@
 Code for FRC Team 670's 2020 Robot
 
 ## Branching and Workflow on this Repository
-[Refer to this document for our team's procedures for contributing code on Github.]
-(https://docs.google.com/document/d/1vO_dtVTDw3-l0x0BabiAE5C45O6bJlQeLL1Uy9McOcQ/edit?usp=sharing)
+[Refer to this document for our team's procedures for contributing code on Github.](https://docs.google.com/document/d/1vO_dtVTDw3-l0x0BabiAE5C45O6bJlQeLL1Uy9McOcQ/edit?usp=sharing)
 
 **Note that you cannot commit directly to master or dev!**
 

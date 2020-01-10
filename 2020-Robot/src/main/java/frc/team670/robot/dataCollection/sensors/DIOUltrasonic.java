@@ -3,11 +3,6 @@ package frc.team670.robot.dataCollection.sensors;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Ultrasonic;
-import frc.team670.robot.RobotContainer;
-/**
- *  import com.pi4j.io.gpio.*;
- *  ^ importing this would be useful
- */
 
 
 public class DIOUltrasonic {
@@ -17,16 +12,12 @@ public class DIOUltrasonic {
     private Ultrasonic ultrasonic;
     public static final double ULTRASONIC_ERROR_CODE = 99999;
 
-    private double horizontalOffset; // horizontal offset from the center of the robot on the side it is on. Left is negative, right is positive.
-
     /**
      * @param horizontalOffset horizontal offset from the center of the robot on the side it is on. Left is negative, right is positive.
      */
-    public DIOUltrasonic(int tPin, int ePin, double horizontalOffset){
+    public DIOUltrasonic(int tPin, int ePin){
         triggerPin = new DigitalOutput(tPin);
         echoPin = new DigitalInput(ePin);
-
-        this.horizontalOffset = horizontalOffset;
 
         ultrasonic = new Ultrasonic(triggerPin, echoPin);
     }
@@ -38,9 +29,7 @@ public class DIOUltrasonic {
      */
     public double getDistance(){
         double distance = getUnadjustedDistance();
-        // Untested Math below
-        double phi = RobotContainer.sensors.getAngleToTarget();
-        distance = distance + (horizontalOffset * Math.tan(Math.toRadians(phi)));
+        //Math here to adjust the distance based on requirements
         return distance;
     }
 

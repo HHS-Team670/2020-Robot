@@ -1,22 +1,29 @@
 package frc.team670.robot.dataCollection.sensors;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * Used to get inputs from an IR Sensor
+ * @author lakshbhambhani
+ */
 public class IRSensor{
 
-    private DigitalInput m_IR;
+    private static DigitalInput dio;
 
-    public IRSensor(int channel){
-        m_IR = new DigitalInput(channel);
+    /**
+     * Used to declare an IR Sensor on a specific port
+     * @param dioPort The port on which the sensor is
+     */
+    public IRSensor(int dioPort){
+        dio = new DigitalInput(dioPort);
     }
 
-    public boolean getIRSensorOutput(){
-          return m_IR.get(); 
-      }
+    /**
+     * Used to check if the IR Sensor is triggered or not
+     * @return boolean isTriggered True if the ir sensor is triggered
+     */
+    public boolean isTriggered(){
+        return (!dio.get());
+    }
 
-
-    public void sendIRDataToDashboard() {
-          SmartDashboard.putString("IR Sensor:", getIRSensorOutput() + "");
-        }
 }
