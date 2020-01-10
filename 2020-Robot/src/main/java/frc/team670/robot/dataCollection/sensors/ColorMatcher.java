@@ -3,6 +3,7 @@ package frc.team670.robot.dataCollection.sensors;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.team670.robot.utils.Logger;
 
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorMatchResult;
@@ -95,6 +96,9 @@ public class ColorMatcher {
     SmartDashboard.putNumber("Blue", detectedColor.blue);
     SmartDashboard.putNumber("Confidence", match.confidence);
     SmartDashboard.putString("Detected Color", colorString);
+
+    // System.out.println(colorString);
+
   }
 
   public ColorMatchResult getResult() {
