@@ -23,6 +23,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("P", 0);
     SmartDashboard.putNumber("I", 0);
     SmartDashboard.putNumber("D", 0);
+    SmartDashboard.putNumber("F", 0);
     setPID();
   }
   public void shoot() {
@@ -37,6 +38,7 @@ public class Shooter extends SubsystemBase {
     shooterTalon.config_kP(0, SmartDashboard.getNumber("P", 0.0));
     shooterTalon.config_kI(0, SmartDashboard.getNumber("I", 0.0));
     shooterTalon.config_kD(0, SmartDashboard.getNumber("D", 0.0));
+    shooterTalon.config_kF(0, SmartDashboard.getNumber("F", 0.0));
   }
   
   public void setSpeed() {
