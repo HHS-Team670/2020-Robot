@@ -21,15 +21,15 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("speed", 0);
   }
   public void shoot() {
-    shooterTalon.set(ControlMode.PercentOutput,0.5);
+    shooterTalon.set(ControlMode.Velocity,16000);
   }
 
   public void off() {
-    shooterTalon.set(ControlMode.PercentOutput,0);
+    shooterTalon.set(ControlMode.Velocity,0);
   }
   
   public void setSpeed() {
-    shooterTalon.set(ControlMode.PercentOutput,SmartDashboard.getNumber("speed", 0));
+    shooterTalon.set(ControlMode.Velocity,SmartDashboard.getNumber("speed", 0));
     
   }
 
