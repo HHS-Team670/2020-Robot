@@ -10,6 +10,8 @@ package frc.team670.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
+import frc.team670.robot.commands.drive.straight.TimedDrive;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -68,7 +70,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+    CommandScheduler.getInstance().schedule(new TimedDrive(3));
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -98,6 +100,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    CommandScheduler.getInstance().run();
   }
 
   @Override
