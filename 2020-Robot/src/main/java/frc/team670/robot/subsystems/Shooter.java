@@ -24,7 +24,9 @@ public class Shooter extends SubsystemBase {
     shooterTalon.set(ControlMode.PercentOutput,0.5);
   }
 
-
+  public void off() {
+    shooterTalon.set(ControlMode.PercentOutput,0);
+  }
   
   public void setSpeed() {
     shooterTalon.set(ControlMode.PercentOutput,SmartDashboard.getNumber("speed", 0));
