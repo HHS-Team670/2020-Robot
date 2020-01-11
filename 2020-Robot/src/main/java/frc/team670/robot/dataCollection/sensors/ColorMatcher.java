@@ -41,6 +41,8 @@ public class ColorMatcher {
 
   private ColorMatchResult matchedResult = new ColorMatchResult(Color.kBlack, 0);
 
+  public String colorSeen = "";
+
   // Rev Color threshold
   // blue 0.143, 0.427, 0.429
   // green 0.197, 0.561, 0.240
@@ -87,6 +89,8 @@ public class ColorMatcher {
     } else {
       colorString = "Unknown";
     }
+
+    colorSeen = colorString;
 
     /**
      * Open Smart Dashboard or Shuffleboard to see the color detected by the sensor.
