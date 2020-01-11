@@ -13,27 +13,22 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 public class Shooter extends SubsystemBase {
-  /**
-   * Creates a new ExampleSubsystem.
-   */
 
   private TalonSRX shooterTalon;
 
-  public Shooter(){
-    shooterTalon = new TalonSRX(1);
+  public Shooter(int CANId){
+    shooterTalon = new TalonSRX(CANId); //TODO set with the constant
     SmartDashboard.putNumber("speed", 0);
   }
-
-	public void shoot() {
-		shooterTalon.set(ControlMode.Velocity,1);
+  public void shoot() {
+		shooterTalon.set(ControlMode.PercentOutput,1);
   }
   
-	public void setSpeed(double speed) {
-		shooterTalon.set(ControlMode.Velocity,SmartDashboard.getNumber("speed", 0));
+  public void setSpeed() {
+		shooterTalon.set(ControlMode.PercentOutput,SmartDashboard.getNumber("speed", 0));
   }
 
-  
-  
-  
-
+  public void periodic(){
+    setSpeed();
+  }
 }

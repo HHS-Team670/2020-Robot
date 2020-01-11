@@ -13,8 +13,10 @@ import frc.team670.robot.commands.ExampleCommand;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.ExampleSubsystem;
+import frc.team670.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team670.robot.dataCollection.MustangSensors;
+import frc.team670.robot.constants.RobotMap;
 
 
 /**
@@ -33,6 +35,7 @@ public class RobotContainer {
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   public static OI oi;
+  public static Shooter shooter = new Shooter(RobotMap.ShooterID);
 
 
 
