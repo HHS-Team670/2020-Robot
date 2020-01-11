@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import frc.team670.robot.commands.drive.straight.TimedDrive;
+import frc.team670.robot.commands.drive.teleop.XboxRocketLeagueDrive;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -100,6 +101,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    CommandScheduler.getInstance().schedule(new XboxRocketLeagueDrive());
     CommandScheduler.getInstance().run();
   }
 
