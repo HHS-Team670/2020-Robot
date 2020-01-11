@@ -2,6 +2,8 @@ package frc.team670.robot.constants;
 
 public class RobotConstants {
 
+    public static final int COLOR_WHEEL_MOTOR_CAN_ID = 10;
+
     // Robot Dimensions
     public static final double ROBOT_LENGTH = 30, ROBOT_WIDTH = 30, DRIVEBASE_TO_GROUND = 2.162;
 
