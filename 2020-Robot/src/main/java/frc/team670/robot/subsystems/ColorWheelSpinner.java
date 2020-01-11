@@ -27,9 +27,8 @@ public class ColorWheelSpinner extends SubsystemBase {
 
 
     public void periodic() {
-
         if (rotationControlTriggered) {
-            if (RobotContainer.colorMatch.colorSeen == referenceColor) {
+            if (RobotContainer.colorMatch.colorSeen.equals(referenceColor)) {
                 sawColor = true;
             }
 
