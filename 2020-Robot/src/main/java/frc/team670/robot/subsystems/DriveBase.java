@@ -51,12 +51,6 @@ public class DriveBase extends SubsystemBase {
   private DifferentialDriveOdometry m_odometry;
 
   private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
-  private static final double drivebaseGearRatio = 8.45;
-
-  private final double P_P = 0.1, P_I = 1E-4, P_D = 1, P_FF = 0; // Position PID Values. Set based off the default in
-                                                                 // REV Robotics example code.
-  private final double V_P = 10, V_I = 1E-6, V_D = 0, V_FF = 0; // Velocity PID Values. Set based off the default in
-                                                                // REV Robotics example code.
 
   public DriveBase() {
     left1 = new CANSparkMax(RobotMap.SPARK_LEFT_MOTOR_1, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -109,12 +103,7 @@ public class DriveBase extends SubsystemBase {
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
       new Pose2d(0, 0, new Rotation2d()));
 
-    navXMicro = new NavX(RobotMap.NAVX_PORT);
-
-    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
-      new Pose2d(0, 0, new Rotation2d()));
-
-
+    initDefaultCommand();
   }
 
 
@@ -236,16 +225,6 @@ public class DriveBase extends SubsystemBase {
   private void setMotorsInvert(List<CANSparkMax> motorGroup, boolean invert) {
     for (CANSparkMax m : motorGroup) {
       m.setInverted(invert);
-    }
-  }
-
-  /**
-   * Sets array of motors to be brushless
-   */
-
-  private void setMotorsBrushless(List<CANSparkMax> motorGroup) {
-    for (CANSparkMax m : motorGroup) {
-      m.setMotorType(CANSparkMaxLowLevel.MotorType.kBrushless);
     }
   }
 
