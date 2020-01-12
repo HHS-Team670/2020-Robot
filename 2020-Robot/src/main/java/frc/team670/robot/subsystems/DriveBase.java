@@ -29,6 +29,7 @@ import frc.team670.robot.commands.drive.teleop.XboxRocketLeagueDrive;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.sensors.NavX;
+import edu.wpi.first.wpilibj.RobotController;
 
 /**
  * Represents a tank drive base.
@@ -558,6 +559,10 @@ public class DriveBase extends SubsystemBase {
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(left1Encoder.getVelocity(), right1Encoder.getVelocity());
+  }
+
+  public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
+    tankDrive(leftVoltage / RobotController.getBatteryVoltage(), rightVoltage / RobotController.getBatteryVoltage());
   }
 
 }

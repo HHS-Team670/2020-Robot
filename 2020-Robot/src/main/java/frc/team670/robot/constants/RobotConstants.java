@@ -1,5 +1,7 @@
 package frc.team670.robot.constants;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+
 public class RobotConstants {
 
     // Robot Dimensions
@@ -40,6 +42,8 @@ public class RobotConstants {
     public static final double kTrackwidthInches = WHEEL_BASE;
     public static final double kTrackwidthMeters = WHEEL_BASE * 0.0254;
 
+    public static final DifferentialDriveKinematics kDriveKinematics =
+    new DifferentialDriveKinematics(kTrackwidthMeters);
     public static final double kPDriveVel = 4;
     public static final double kIDriveVel = 0.00;
     public static final double kDDriveVel = 0.0;
