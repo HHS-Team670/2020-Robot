@@ -43,7 +43,7 @@ public class BallIndexer extends WaitCommand {
   @Override
   public void end(boolean interrupted) {
     super.end(interrupted);
-    shooter.off();
+    shooter.stop();
   }
 
   // Returns true when the command should end.
