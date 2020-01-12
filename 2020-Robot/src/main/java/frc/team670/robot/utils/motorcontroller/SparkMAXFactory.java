@@ -1,5 +1,6 @@
 package frc.team670.robot.utils.motorcontroller;
 
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.ControlType;
 
@@ -37,12 +38,18 @@ public class SparkMAXFactory{
     }
 
 
-    public static SparkMAXSetup buildFactorySparkMAX(int deviceID){
+    public static CANSparkMax buildFactorySparkMAX(int deviceID){
         return buildSparkMAX(deviceID, defaultConfig);
     }
 
-    public static SparkMAXSetup buildSparkMAX(int deviceID, Config config) {
-        SparkMAXSetup sparkMax = new SparkMAXSetup(deviceID);
+    public static CANSparkMax setPermanentFollower(int deviceID, CANSparkMax master){
+        CANSparkMax sparkMax = buildSparkMAX(deviceID, defaultFollowerConfig);
+        sparkMax.follow(master);
+        return sparkMax;
+    }
+
+    public static CANSparkMax buildSparkMAX(int deviceID, Config config) {
+        SparkMAXLite sparkMax = new SparkMAXLite(deviceID);
         sparkMax.set(ControlType.kDutyCycle, 0.0);
         sparkMax.setInverted(config.INVERTED);
         return sparkMax;

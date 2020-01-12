@@ -6,14 +6,18 @@ import com.revrobotics.ControlType;
 /**
  * Wrapper class for a SparkMAX for reducing CAN bus overhead by skipping duplicate set
  * commands.
+ * @author ctychen
  */
-public final class SparkMAXSetup extends CANSparkMax{
+public final class SparkMAXLite extends CANSparkMax{
 
     protected double lastSet = Double.NaN;
     protected ControlType lastControlType = null;
     protected CANSparkMax master = null;
 
-    public SparkMAXSetup(int id){
+    /**
+     * Creates a SparkMAX on a given ID. Defaults to brushless motor.
+     */
+    public SparkMAXLite(int id){
         super(id, MotorType.kBrushless);
     }
 

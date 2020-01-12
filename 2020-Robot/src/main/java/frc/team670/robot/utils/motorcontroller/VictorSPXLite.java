@@ -1,19 +1,20 @@
 package frc.team670.robot.utils.motorcontroller;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 /**
- * Wrapper class for a TalonSRX for reducing CAN bus overhead by skipping duplicate set
+ * Wrapper class for a VictorSPX for reducing CAN bus overhead by skipping duplicate set
  * commands.
+ * @author ctychen
  */
 
-public class TalonSRXSetup extends TalonSRX {
+public class VictorSPXLite extends VictorSPX {
 
     protected double lastSet = Double.NaN;
     protected ControlMode lastControlMode = null;
 
-    public TalonSRXSetup(int id) {
+    public VictorSPXLite(int id) {
         super(id);
     }
 
