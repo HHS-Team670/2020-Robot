@@ -35,7 +35,7 @@ public class RobotContainer {
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   public static OI oi;
-  public static Shooter shooter = new Shooter(RobotMap.ShooterID);
+  public static Shooter shooter = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
 
 
 

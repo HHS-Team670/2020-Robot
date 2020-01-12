@@ -22,7 +22,8 @@ public class RobotMap{
   public static final int RIGHT_ENCODER_CHANNEL_B = 3;
 
   public final static Port NAVX_PORT = SerialPort.Port.kUSB;  
-  public final static int ShooterID = 11;
+  public final static int SHOOTER_ID_MAIN = 11;
+  public final static int SHOOTER_ID_FOLLWOER = 12;
   
 
 }
