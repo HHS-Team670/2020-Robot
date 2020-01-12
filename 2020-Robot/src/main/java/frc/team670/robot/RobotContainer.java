@@ -9,14 +9,16 @@ package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.team670.robot.commands.ExampleCommand;
 import frc.team670.robot.constants.OI;
+import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.robot.subsystems.ExampleSubsystem;
 import frc.team670.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team670.robot.dataCollection.MustangSensors;
 import frc.team670.robot.constants.RobotMap;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.team670.robot.dataCollection.sensors.ColorMatcher;
+import frc.team670.robot.dataCollection.sensors.NavX;
 
 
 /**
@@ -27,16 +29,12 @@ import frc.team670.robot.constants.RobotMap;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public static MustangSensors sensors; //= new MustangSensors();
-
-
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public static DriveBase driveBase;// = new DriveBase();
+  public static ColorMatcher colorMatch;// = new ColorMatcher();
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+
   public static OI oi;
   public static Shooter shooter = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
-
 
 
   /**
@@ -64,6 +62,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return m_autoCommand;
+    return null;
   }
 }
