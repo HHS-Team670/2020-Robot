@@ -15,11 +15,11 @@ public class ColorWheelSpinner extends SubsystemBase {
         victor.set(ControlMode.PercentOutput, motorSpeed);
     }
 
-    public String detectColor() {
+    public int detectColor() {
         return RobotContainer.colorMatch.detectColor();
     }
 
     public ColorWheelSpinner() {
-        victor = new VictorSPX(RobotConstants.COLOR_WHEEL_MOTOR_CAN_ID); //TODO: Constructor takes in CAN ID
+        victor = new VictorSPX(RobotConstants.COLOR_WHEEL_MOTOR_CAN_ID); // Constructor takes in CAN ID
     }
 }

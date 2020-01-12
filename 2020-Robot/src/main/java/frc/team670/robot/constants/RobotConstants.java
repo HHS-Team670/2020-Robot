@@ -4,6 +4,11 @@ public class RobotConstants {
 
     public static final int COLOR_WHEEL_MOTOR_CAN_ID = 10;
 
+    public static final int BLUE_COLOR_NUMBER = 1;
+    public static final int RED_COLOR_NUMBER = 2;
+    public static final int GREEN_COLOR_NUMBER = 3;
+    public static final int YELLOW_COLOR_NUMBER = 4;
+
     // Robot Dimensions
     public static final double ROBOT_LENGTH = 30, ROBOT_WIDTH = 30, DRIVEBASE_TO_GROUND = 2.162;
 

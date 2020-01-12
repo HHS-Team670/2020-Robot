@@ -3,6 +3,7 @@ package frc.team670.robot.dataCollection.sensors;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.utils.Logger;
 
 import com.revrobotics.ColorSensorV3;
@@ -34,14 +35,20 @@ public class ColorMatcher {
    * Note: Any example colors should be calibrated as the user needs, these are
    * here as a basic example.
    */
-  public static final Color kBlueTarget = ColorMatch.makeColor(0.136, 0.412, 0.450);
-  public static final Color kGreenTarget = ColorMatch.makeColor(0.196, 0.557, 0.246);
-  public static final Color kRedTarget = ColorMatch.makeColor(0.475, 0.371, 0.153);
-  public static final Color kYellowTarget = ColorMatch.makeColor(0.293, 0.561, 0.144);
+  public static final Color BLUE_TARGET = ColorMatch.makeColor(0.136, 0.412, 0.450);
+  public static final Color GREEN_TARGET = ColorMatch.makeColor(0.196, 0.557, 0.246);
+  public static final Color RED_TARGET = ColorMatch.makeColor(0.475, 0.371, 0.153);
+  public static final Color YELLOW_TARGET = ColorMatch.makeColor(0.293, 0.561, 0.144);
+
+  public static final int BLUE_COLOR_NUMBER = 1;
+  public static final int RED_COLOR_NUMBER = 2;
+  public static final int GREEN_COLOR_NUMBER = 3;
+  public static final int YELLOW_COLOR_NUMBER = 4;
+
 
   private ColorMatchResult matchedResult = new ColorMatchResult(Color.kBlack, 0);
 
-  public String colorSeen = "";
+  public int colorNumber;
 
   // Rev Color threshold
   // blue 0.143, 0.427, 0.429
@@ -50,15 +57,15 @@ public class ColorMatcher {
   // yellow 0.361, 0.524, 0.113
 
   public void Init() {
-    m_colorMatcher.addColorMatch(kBlueTarget);
-    m_colorMatcher.addColorMatch(kGreenTarget);
-    m_colorMatcher.addColorMatch(kRedTarget);
-    m_colorMatcher.addColorMatch(kYellowTarget);
+    m_colorMatcher.addColorMatch(BLUE_TARGET);
+    m_colorMatcher.addColorMatch(GREEN_TARGET);
+    m_colorMatcher.addColorMatch(RED_TARGET);
+    m_colorMatcher.addColorMatch(YELLOW_TARGET);
 
     m_colorMatcher.setConfidenceThreshold(0.80);
   }
 
-  public String detectColor() {
+  public int detectColor() {
     /**
      * The method GetColor() returns a normalized color value from the sensor and
      * can be useful if outputting the color to an RGB LED or similar. To read the
@@ -74,23 +81,26 @@ public class ColorMatcher {
     /**
      * Run the color match algorithm on our detected color
      */
-    String colorString;
+    // String colorString;
     ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
     matchedResult = match;
 
-    if (match.color == kBlueTarget) {
-      colorString = "Blue";
-    } else if (match.color == kRedTarget) {
-      colorString = "Red";
-    } else if (match.color == kGreenTarget) {
-      colorString = "Green";
-    } else if (match.color == kYellowTarget) {
-      colorString = "Yellow";
+    if (match.color == BLUE_TARGET) {
+      // colorString = "Blue";
+      colorNumber = RobotConstants.BLUE_COLOR_NUMBER;
+    } else if (match.color == RED_TARGET) {
+      // colorString = "Red";
+      colorNumber = RobotConstants.RED_COLOR_NUMBER;
+    } else if (match.color == GREEN_TARGET) {
+      // colorString = "Green";
+      colorNumber = RobotConstants.GREEN_COLOR_NUMBER;
+    } else if (match.color == YELLOW_TARGET) {
+      // colorString = "Yellow";
+      colorNumber = RobotConstants.YELLOW_COLOR_NUMBER;
     } else {
-      colorString = "Unknown";
+      // colorString = "Unknown";
+      colorNumber = 0;
     }
-
-    colorSeen = colorString;
 
     /**
      * Open Smart Dashboard or Shuffleboard to see the color detected by the sensor.
@@ -99,8 +109,9 @@ public class ColorMatcher {
     SmartDashboard.putNumber("Green", detectedColor.green);
     SmartDashboard.putNumber("Blue", detectedColor.blue);
     SmartDashboard.putNumber("Confidence", match.confidence);
-    SmartDashboard.putString("Detected Color", colorString);
+    // SmartDashboard.putString("Detected Color", colorString);
+    SmartDashboard.putNumber("Detected Color Number", colorNumber);
 
-    return colorString;
+    return colorNumber;
   }
 }

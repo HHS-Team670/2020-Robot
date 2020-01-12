@@ -23,4 +23,7 @@ public class RobotMap{
 
   public final static Port NAVX_PORT = SerialPort.Port.kUSB;  
 
+  // Motors
+  public static final int COLOR_WHEEL_MOTOR_CAN_ID = 10;
+
 }

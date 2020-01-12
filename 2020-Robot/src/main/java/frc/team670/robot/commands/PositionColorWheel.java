@@ -13,21 +13,16 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /**
  * An example command that uses an example subsystem.
  */
-public class SpinColorWheel extends CommandBase {
+public class PositionColorWheel extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ColorWheelSpinner m_spinner;
-
-  private double motorSpeed = 0.5;
-  private int referenceColorNumber;
-  private boolean sawColor;
-  public int sawColorCount = 0;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public SpinColorWheel(ColorWheelSpinner spinner) {
+  public PositionColorWheel(ColorWheelSpinner spinner) {
     m_spinner = spinner;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(spinner);
@@ -36,42 +31,24 @@ public class SpinColorWheel extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_spinner.setSpeed(motorSpeed);
-    referenceColorNumber = m_spinner.detectColor();
-    sawColorCount = 0;
-    sawColor = false;
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-  
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_spinner.setSpeed(0.0);
+      
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    int detectedColorNumber = m_spinner.detectColor();
-
-    if (detectedColorNumber == referenceColorNumber) {
-      sawColor = true;
-    }
-
-    if (sawColor && detectedColorNumber != referenceColorNumber) {
-      sawColorCount ++;
-      sawColor = false;
-    }
-
-    if (sawColorCount == 7) { // 7 means 3+1/8 rotations and sawColorCount adds 1 once a 1/8 rotation is completed  
-      return true;      
-    }
-
     return false;
   }
 }
