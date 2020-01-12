@@ -32,7 +32,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    CommandScheduler.getInstance().schedule(new SpinColorWheel(RobotContainer.wheelSpinner));
 
   }
 
@@ -74,6 +73,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    // m_robotContainer.getSpinWheelCommand().schedule();
+    // m_robotContainer.getPositionWheelCommand().schedule();
   }
 
   /**
@@ -81,6 +83,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    CommandScheduler.getInstance().run();
   }
 
   @Override
