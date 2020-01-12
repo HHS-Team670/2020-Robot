@@ -14,11 +14,7 @@ import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.team670.robot.dataCollection.MustangSensors;
-import frc.team670.robot.constants.RobotMap;
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
-import frc.team670.robot.dataCollection.sensors.NavX;
 
 
 /**
@@ -29,12 +25,12 @@ import frc.team670.robot.dataCollection.sensors.NavX;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public static DriveBase driveBase;// = new DriveBase();
-  public static ColorMatcher colorMatch;// = new ColorMatcher();
+  private static DriveBase driveBase;// = new DriveBase();
+  private static ColorMatcher colorMatch;// = new ColorMatcher();
 
 
-  public static OI oi;
-  public static Shooter shooter = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
+  private static OI oi;
+  private static Shooter shooter = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
 
 
   /**
