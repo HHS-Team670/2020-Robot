@@ -92,6 +92,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    RobotContainer.driveBase.initDefaultCommand();
   }
 
   /**
@@ -99,7 +100,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    CommandScheduler.getInstance().schedule(new XboxRocketLeagueDrive());
     CommandScheduler.getInstance().run();
   }
 

@@ -26,7 +26,6 @@ import frc.team670.robot.dataCollection.sensors.NavX;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static ColorMatcher colorMatch;// = new ColorMatcher();
-  public static NavX navXMicro;// = new NavX(RobotMap.NAVX_PORT);
 
   public static DriveBase driveBase = new DriveBase();
 

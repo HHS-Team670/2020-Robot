@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import frc.team670.robot.commands.drive.teleop.XboxRocketLeagueDrive;
 import frc.team670.robot.constants.RobotConstants;
@@ -354,7 +355,7 @@ public class DriveBase extends SubsystemBase {
   }
 
   public void initDefaultCommand() {
-    setDefaultCommand(new XboxRocketLeagueDrive());
+    CommandScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive());
   }
 
   /**
