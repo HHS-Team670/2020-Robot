@@ -15,10 +15,16 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 public class Shooter extends SubsystemBase {
 
+   //Practice Values
+   public static final double kPTalon =0.24;
+   public static final double kITalon =0.0;
+   public static final double kDTalon =9.670;
+   public static final double kFTalon =0.033818;
+
   private TalonSRX shooterTalon;
 
   public Shooter(int CANId){
-    shooterTalon = new TalonSRX(CANId); //TODO set with the constant
+    shooterTalon = new TalonSRX(CANId);
     SmartDashboard.putNumber("speed", 0);
     SmartDashboard.putNumber("P", 0);
     SmartDashboard.putNumber("I", 0);

@@ -54,10 +54,4 @@ public class RobotConstants {
     public static final double kRamseteZeta = .7;
     public static final boolean kNavXReversed = true;
 
-    //Practice Values
-    public static final double kPTalon =0.24;
-    public static final double kITalon =0.0;
-    public static final double kDTalon =9.670;
-    public static final double kFTalon =0.033818;
-
 }
