@@ -2,49 +2,27 @@ package frc.team670.robot.subsystems;
 
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team670.robot.RobotContainer;
-import frc.team670.robot.constants.RobotConstants;
+import frc.team670.robot.constants.RobotMap;
+import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 public class ColorWheelSpinner extends SubsystemBase {
 
+    private static ColorMatcher colorMatch;
     private VictorSPX victor;
+
+    public ColorWheelSpinner() {
+        colorMatch = new ColorMatcher();
+        victor = new VictorSPX(RobotMap.COLOR_WHEEL_MOTOR_CAN_ID); // Constructor takes in CAN ID
+    }
     
     public void setSpeed(double motorSpeed) {
         victor.set(ControlMode.PercentOutput, motorSpeed);
     }
 
     public int detectColor() {
-        return RobotContainer.colorMatch.detectColor();
-    }
-
-    public void moveToColor(String color) {
-        setSpeed(0.5);
-        while (!detectColor().equals(color)) {}
-        setSpeed(0);
-    }
-
-    public void rotate(int rotations) {
-        String c = detectColor();
-        int i = 1;
-        setSpeed(0.5);
-        while (i < rotations*2)  {
-            if (detectColor().equals(c))
-                i++;
-        }
-        setSpeed(0);
-    }
-
-    // public void rotateSection(int sections) { //comment out for testing
-    //     String c = detectColor();
-    //     int i = 0;
-    //     while(detectColor().equals(c)) {
-    //     }
-    // }
-
-    public ColorWheelSpinner() {
-        victor = new VictorSPX(RobotConstants.COLOR_WHEEL_MOTOR_CAN_ID); // Constructor takes in CAN ID
-    }
+        return colorMatch.detectColor();
+    }    
 }
