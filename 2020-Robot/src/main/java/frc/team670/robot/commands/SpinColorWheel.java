@@ -17,10 +17,10 @@ public class SpinColorWheel extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ColorWheelSpinner m_spinner;
 
-  private double motorSpeed = 0.5;
+  private double motorSpeed = 1.0;
   private int referenceColorNumber;
-  private boolean sawColor;
-  public int sawColorCount = 0;
+  private boolean isColorDetected;
+  private int colorDetectedCount = 0;
 
   /**
    * Creates a new ExampleCommand.
@@ -38,8 +38,8 @@ public class SpinColorWheel extends CommandBase {
   public void initialize() {
     m_spinner.setSpeed(motorSpeed);
     referenceColorNumber = m_spinner.detectColor();
-    sawColorCount = 0;
-    sawColor = false;
+    colorDetectedCount = 0;
+    isColorDetected = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -60,15 +60,15 @@ public class SpinColorWheel extends CommandBase {
     int detectedColorNumber = m_spinner.detectColor();
 
     if (detectedColorNumber == referenceColorNumber) {
-      sawColor = true;
+      isColorDetected = true;
     }
 
-    if (sawColor && detectedColorNumber != referenceColorNumber) {
-      sawColorCount ++;
-      sawColor = false;
+    if (isColorDetected && detectedColorNumber != referenceColorNumber) {
+      colorDetectedCount ++;
+      isColorDetected = false;
     }
 
-    if (sawColorCount == 7) { // 7 means 3+1/8 rotations and sawColorCount adds 1 once a 1/8 rotation is completed  
+    if (colorDetectedCount == 7) { // 7 means 3+1/8 rotations and sawColorCount adds 1 once a 1/8 rotation is completed  
       return true;      
     }
 

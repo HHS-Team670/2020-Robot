@@ -56,7 +56,7 @@ public class ColorMatcher {
   // red 0.561, 0.232, 0.114
   // yellow 0.361, 0.524, 0.113
 
-  public void Init() {
+  public void init() {
     m_colorMatcher.addColorMatch(BLUE_TARGET);
     m_colorMatcher.addColorMatch(GREEN_TARGET);
     m_colorMatcher.addColorMatch(RED_TARGET);

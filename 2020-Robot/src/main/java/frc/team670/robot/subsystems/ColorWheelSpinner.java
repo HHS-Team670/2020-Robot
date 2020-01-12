@@ -15,6 +15,7 @@ public class ColorWheelSpinner extends SubsystemBase {
 
     public ColorWheelSpinner() {
         colorMatch = new ColorMatcher();
+        colorMatch.init();
         victor = new VictorSPX(RobotMap.COLOR_WHEEL_MOTOR_CAN_ID); // Constructor takes in CAN ID
     }
     
