@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.team670.robot.commands.ExampleCommand;
 import frc.team670.robot.constants.OI;
+import frc.team670.robot.subsystems.ColorWheelSpinner;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,6 +28,7 @@ public class RobotContainer {
 
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public static DriveBase driveBase = new DriveBase();
+  public static ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   public static OI oi;
