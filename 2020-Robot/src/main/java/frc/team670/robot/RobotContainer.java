@@ -7,6 +7,9 @@
 
 package frc.team670.robot;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.team670.robot.constants.OI;
@@ -15,6 +18,7 @@ import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
+import frc.team670.robot.subsystems.MustangSubsystem;
 
 
 /**
@@ -27,11 +31,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private static DriveBase driveBase;// = new DriveBase();
   private static ColorMatcher colorMatch;// = new ColorMatcher();
-
-
   private static OI oi;
-  private static Shooter shooter = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
+  private static Shooter shooter = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLOWER);
 
+  private static List<MustangSubsystem> allSubsystems = new ArrayList<MustangSubsystem>();
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -40,6 +43,11 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
   }
+
+  public static void addSubsystem(MustangSubsystem subsystem){
+    allSubsystems.add(subsystem);
+  }
+
 
   /**
    * Use this method to define your button->command mappings.  Buttons can be created by
