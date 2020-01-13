@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.team670.robot.commands.drive.straight.TimedDrive;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.subsystems.DriveBase;
@@ -66,6 +67,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    return null;
+    return new TimedDrive(driveBase, 3);
   }
 }

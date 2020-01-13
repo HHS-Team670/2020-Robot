@@ -9,26 +9,31 @@ package frc.team670.robot.commands.drive.teleop;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.team670.robot.RobotContainer;
 import frc.team670.robot.utils.functions.JoystickUtils;
-
+import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.constants.OI;
  
 
 /**
  * Drives the Robot using Xbox controls like the game Rocket League. Triggers control speed, stick is for steering.
- * @author lakshbhambhani
+ * @author lakshbhambhani, ctychen
  */
 public class XboxRocketLeagueDrive extends InstantCommand {
 
    private final boolean SMOOTH_ROCKET_LEAGUE_STEER, SMOOTH_ROCKET_LEAGUE_TRIGGER;
    private static boolean isReversed;
+   private DriveBase driveBase;
+   private OI oi;
 
-  public XboxRocketLeagueDrive() {
+
+  public XboxRocketLeagueDrive(DriveBase driveBase, OI oi) {
     super();
     SMOOTH_ROCKET_LEAGUE_STEER = true;
     SMOOTH_ROCKET_LEAGUE_TRIGGER = true;
     isReversed = false;
-    addRequirements(RobotContainer.driveBase);
+    this.driveBase = driveBase;
+    this.oi = oi;
+    addRequirements(driveBase);
   }
 
   // Called once when the command executes
@@ -36,8 +41,8 @@ public class XboxRocketLeagueDrive extends InstantCommand {
   public void initialize() {
     // Sets the speed to the reading given by the trigger axes on the controller. Left is positive, but we multiply
     // by -1 to reverse that because we want right trigger to correspond to forward.
-    double speed = -1 * (RobotContainer.oi.getDriverController().getLeftTriggerAxis() - RobotContainer.oi.getDriverController().getRightTriggerAxis()); 
-    double steer = RobotContainer.oi.getDriverController().getLeftStickX(); 
+    double speed = -1 * (oi.getDriverController().getLeftTriggerAxis() - oi.getDriverController().getRightTriggerAxis()); 
+    double steer = oi.getDriverController().getLeftStickX(); 
    
 
     // Decides whether or not to smooth the Steering and Trigger. Smoothing helps
@@ -52,37 +57,37 @@ public class XboxRocketLeagueDrive extends InstantCommand {
       speed *= -1;
     }
 
-    if(RobotContainer.oi.isQuickTurnPressed()){
+    if(oi.isQuickTurnPressed()){
 
       if(speed < -0.0001) {
         if(!isReversed) {
-          RobotContainer.driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
+          driveBase.curvatureDrive(speed, -1 * steer, oi.isQuickTurnPressed());
         }
         else {
-          RobotContainer.driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
+          driveBase.curvatureDrive(speed, -1 * steer, oi.isQuickTurnPressed());
         }
       }
       else if (speed > 0.0001){
         if(!isReversed) {
-          RobotContainer.driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
+          driveBase.curvatureDrive(speed, steer, oi.isQuickTurnPressed());
         }
         else {
-          RobotContainer.driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
+          driveBase.curvatureDrive(speed, steer, oi.isQuickTurnPressed());
         }
       } else {
         if(!isReversed) {
-          RobotContainer.driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
+          driveBase.curvatureDrive(speed, steer, oi.isQuickTurnPressed());
         }
         else {
-          RobotContainer.driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
+          driveBase.curvatureDrive(speed, -1 * steer, oi.isQuickTurnPressed());
         }
       }
     }
     else {
       if (speed < -0.0001){
-        RobotContainer.driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
+        driveBase.curvatureDrive(speed, -1 * steer, oi.isQuickTurnPressed());
       } else {
-        RobotContainer.driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
+        driveBase.curvatureDrive(speed, steer, oi.isQuickTurnPressed());
       }
     }
   }

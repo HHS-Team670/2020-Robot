@@ -8,31 +8,32 @@
 package frc.team670.robot.commands.drive.straight;
 
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.team670.robot.RobotContainer;
-import frc.team670.robot.utils.Logger;;
+import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.utils.Logger;
 
 
 
 public class TimedDrive extends WaitCommand {
 
+  private DriveBase driveBase;
 
-
-  public TimedDrive(int seconds) {
+  public TimedDrive(DriveBase driveBase, int seconds) {
     super(seconds);
-    addRequirements(RobotContainer.driveBase);
+    this.driveBase = driveBase;
+    addRequirements(this.driveBase);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
-    RobotContainer.driveBase.tankDrive(0.5, 0.5);
+    driveBase.tankDrive(0.5, 0.5);
   }
 
   // Called once after isFinished returns true
   @Override
   public void end(boolean isInteruppted) {
-    RobotContainer.driveBase.stop();
-    Logger.consoleLog("reeeeeeeeeeeeeeeeeeeeeeeee");
+    driveBase.stop();
+    Logger.consoleLog("Drivebase stopped");
   }
 
 }
