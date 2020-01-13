@@ -19,7 +19,6 @@ public class ManualSpinColorWheel extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ColorWheelSpinner m_spinner;
 
-  private boolean isButtonToggled = false;
   private double motorSpeed = 0.5;
 
   /**
@@ -41,26 +40,13 @@ public class ManualSpinColorWheel extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    /* if (buttononcontrollerispressed) {
-      if (!isButtonToggled) {
-        isButtonToggled = true;
-      }
-      else if (isButtonToggled) {
-        isButtonToggled = false;
-      }
-    }
-  
-    if (isButtonToggled) {
-      m_spinner.setSpeed(motorSpeed);
-    }
-    else if (!isButtonToggled) {
-      m_spinner.setSpeed(0.0);
-    } */
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    
   }
 
   // Returns true when the command should end.
