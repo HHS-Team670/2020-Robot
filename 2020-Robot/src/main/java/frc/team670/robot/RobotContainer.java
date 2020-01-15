@@ -32,7 +32,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private static DriveBase driveBase;// = new DriveBase();
   private static ColorMatcher colorMatch;// = new ColorMatcher();
-  private static OI oi;
+  public static OI oi;
   private static Shooter shooter = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLOWER);
 
   private static List<MustangSubsystem> allSubsystems = new ArrayList<MustangSubsystem>();
