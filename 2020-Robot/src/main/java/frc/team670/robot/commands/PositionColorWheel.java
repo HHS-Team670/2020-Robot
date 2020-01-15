@@ -19,8 +19,8 @@ public class PositionColorWheel extends CommandBase {
   private final ColorWheelSpinner m_spinner;
 
   private double motorSpeed = 1.0;
-  private double targetColorNumber;
-  private int offsetSize = 3;
+  private int resultColorNumber;
+  // private final static int OFFSET_SIZE = 3;
 
   /**
    * Creates a new ExampleCommand.
@@ -37,6 +37,10 @@ public class PositionColorWheel extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {    
+    int targetColorNumber = (int)SmartDashboard.getNumber("Target Color Number", 0);
+
+    resultColorNumber = (targetColorNumber + 3) % 4;
+
     m_spinner.setSpeed(motorSpeed);
   }
 
@@ -55,17 +59,9 @@ public class PositionColorWheel extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    targetColorNumber = SmartDashboard.getNumber("Target Color Number", 0);
-    
     int detectedColorNumber = m_spinner.detectColor();
 
-    int resultColorNumber = detectedColorNumber + offsetSize;
-    if (resultColorNumber > 4) {
-      int difference = (resultColorNumber - detectedColorNumber) - 1;
-      resultColorNumber = 1 + difference;
-    }
-
-    if (detectedColorNumber == targetColorNumber) {
+    if (detectedColorNumber == resultColorNumber) {
       return true;
     }
 
