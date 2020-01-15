@@ -334,7 +334,7 @@ public class DriveBase extends SubsystemBase {
   }
 
   public void initDefaultCommand() {
-    CommandScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive());
+    CommandScheduler.getInstance().schedule(new XboxRocketLeagueDrive(this));
   }
 
   /**

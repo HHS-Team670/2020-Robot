@@ -25,12 +25,12 @@ import frc.team670.robot.dataCollection.sensors.ColorMatcher;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public static DriveBase driveBase;// = new DriveBase();
+  public static DriveBase driveBase = new DriveBase();
   public static ColorMatcher colorMatch;// = new ColorMatcher();
 
 
   public static OI oi;
-  public static Shooter shooter = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
+  public static Shooter shooter;// = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
 
 
   /**
