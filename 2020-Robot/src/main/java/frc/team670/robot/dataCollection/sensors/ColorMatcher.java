@@ -39,10 +39,10 @@ public class ColorMatcher {
   public static final Color RED_TARGET = ColorMatch.makeColor(0.475, 0.371, 0.153);
   public static final Color GREEN_TARGET = ColorMatch.makeColor(0.196, 0.557, 0.246);  
 
-  public static final int BLUE_COLOR_NUMBER = 1;
-  public static final int YELLOW_COLOR_NUMBER = 2;
-  public static final int RED_COLOR_NUMBER = 3;
-  public static final int GREEN_COLOR_NUMBER = 4;
+  public static final int BLUE_COLOR_NUMBER = 0;
+  public static final int YELLOW_COLOR_NUMBER = 1;
+  public static final int RED_COLOR_NUMBER = 2;
+  public static final int GREEN_COLOR_NUMBER = 3;
 
 
   private ColorMatchResult matchedResult = new ColorMatchResult(Color.kBlack, 0);
