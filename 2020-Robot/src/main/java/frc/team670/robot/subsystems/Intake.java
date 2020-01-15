@@ -12,22 +12,26 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Intake extends SubsystemBase {
     private Compressor comp;
     private Solenoid deployer;
-    private TalonSRX axleMotor;
-    public boolean isDeployed, isSpinning;
+    private TalonSRX roller;
+    private boolean isDeployed;
 
     public Intake() {
         comp = new Compressor(RobotMap.PCMODULE);
         comp.setClosedLoopControl(true);
-        axleMotor = new TalonSRX(RobotMap.INTAKE);
-        deployer = new Solenoid(RobotMap.PCMODULE, RobotMap.DEPLOYER);
+        roller = new TalonSRX(RobotMap.INTAKE_ROLLER);
+        deployer = new Solenoid(RobotMap.PCMODULE, RobotMap.INTAKE_DEPLOYER);
     }
 
-    public void spinIntake(double speed) {
-        axleMotor.set(ControlMode.PercentOutput, speed);
-    }
-
-    public void deployIntake(boolean deploy) {
+    public void setDeploy(boolean deploy) {
         isDeployed = deploy;
-        deployer.set();
+        deployer.set(deploy);
+    }
+    
+    public void rollIntake(double speed) {
+        roller.set(ControlMode.PercentOutput, speed);
+    }
+
+    public boolean isDeployed() {
+        return isDeployed;
     }
 }
