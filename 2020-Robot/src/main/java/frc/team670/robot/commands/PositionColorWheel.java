@@ -29,7 +29,7 @@ public class PositionColorWheel extends CommandBase {
    */
   public PositionColorWheel(ColorWheelSpinner spinner) {
     m_spinner = spinner;
-    SmartDashboard.putNumber("Target Color Number", 0);
+    SmartDashboard.putNumber("Target Color Number", -1);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(spinner);
   }
@@ -37,10 +37,10 @@ public class PositionColorWheel extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {    
-    int targetColorNumber = (int)SmartDashboard.getNumber("Target Color Number", 0);
+    int targetColorNumber = (int)SmartDashboard.getNumber("Target Color Number", -1);
 
-    resultColorNumber = ((targetColorNumber - 1) + OFFSET_SIZE) % 4;
-
+    resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % 4);
+    SmartDashboard.putNumber("result color number", resultColorNumber);
     m_spinner.setSpeed(motorSpeed);
   }
 

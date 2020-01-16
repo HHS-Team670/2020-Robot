@@ -7,6 +7,8 @@
 
 package frc.team670.robot.commands;
 
+import frc.team670.robot.RobotContainer;
+import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.ColorWheelSpinner;
 import frc.team670.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.util.Color;
@@ -40,7 +42,9 @@ public class ManualSpinColorWheel extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+    if (RobotContainer.oi.isAPressed()) {
+      m_spinner.setSpeed(motorSpeed);
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -52,6 +56,9 @@ public class ManualSpinColorWheel extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (!RobotContainer.oi.isAPressed()) {
+      m_spinner.setSpeed(0.0);
+    }
     return false;
   }
 }

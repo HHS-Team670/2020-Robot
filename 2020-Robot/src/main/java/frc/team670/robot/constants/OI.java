@@ -29,6 +29,10 @@ public class OI {
         return driverController.getRightBumper();
       }
 
+      public boolean isAPressed() {
+        return driverController.getAButton();
+      }
+
 
       /**
    * Sets the rumble on the driver controller

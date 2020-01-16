@@ -10,6 +10,7 @@ package frc.team670.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.team670.robot.commands.ExampleCommand;
+import frc.team670.robot.commands.ManualSpinColorWheel;
 import frc.team670.robot.commands.PositionColorWheel;
 import frc.team670.robot.commands.SpinColorWheel;
 import frc.team670.robot.constants.OI;
@@ -35,6 +36,7 @@ public class RobotContainer {
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   private final SpinColorWheel spinForRotations = new SpinColorWheel(wheelSpinner);
   private final PositionColorWheel rotateToColor = new PositionColorWheel(wheelSpinner);
+  private final ManualSpinColorWheel manualSpinForRotations = new ManualSpinColorWheel(wheelSpinner);
   public static OI oi;
 
 
@@ -72,5 +74,9 @@ public class RobotContainer {
 
   public Command getPositionWheelCommand() {
     return rotateToColor;
+  }
+
+  public Command getManualSpinWheelCommand() {
+    return manualSpinForRotations;
   }
 }
