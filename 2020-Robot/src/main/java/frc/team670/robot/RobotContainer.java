@@ -13,6 +13,10 @@ import java.nio.file.Paths;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
+
+import frc.team670.robot.constants.OI;
+import frc.team670.robot.constants.RobotMap;
+
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
@@ -20,10 +24,10 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import frc.team670.robot.commands.ExampleCommand;
-import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotConstants;
+
 import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.robot.subsystems.ExampleSubsystem;
+import frc.team670.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
@@ -37,13 +41,12 @@ import frc.team670.robot.dataCollection.sensors.ColorMatcher;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public static ColorMatcher colorMatch = new ColorMatcher();
-
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   public static DriveBase driveBase = new DriveBase();
+  public static ColorMatcher colorMatch;// = new ColorMatcher();
 
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+
   public static OI oi;
+  public static Shooter shooter;// = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
 
   private Trajectory trajectory;
 

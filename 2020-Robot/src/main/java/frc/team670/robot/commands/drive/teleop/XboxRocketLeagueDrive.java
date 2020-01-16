@@ -9,6 +9,10 @@ package frc.team670.robot.commands.drive.teleop;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.utils.functions.JoystickUtils;
 
@@ -18,17 +22,13 @@ import frc.team670.robot.utils.functions.JoystickUtils;
  * Drives the Robot using Xbox controls like the game Rocket League. Triggers control speed, stick is for steering.
  * @author lakshbhambhani
  */
-public class XboxRocketLeagueDrive extends InstantCommand {
+public class XboxRocketLeagueDrive extends CommandBase {
 
-   private final boolean SMOOTH_ROCKET_LEAGUE_STEER, SMOOTH_ROCKET_LEAGUE_TRIGGER;
-   private static boolean isReversed;
+  private static boolean isReversed;
 
-  public XboxRocketLeagueDrive() {
-    super();
-    SMOOTH_ROCKET_LEAGUE_STEER = true;
-    SMOOTH_ROCKET_LEAGUE_TRIGGER = true;
+  public XboxRocketLeagueDrive(Subsystem subsystem) {
     isReversed = false;
-    addRequirements(RobotContainer.driveBase);
+    addRequirements(subsystem);
   }
 
   // Called once when the command executes
@@ -47,7 +47,7 @@ public class XboxRocketLeagueDrive extends InstantCommand {
     steer = JoystickUtils.smoothInput(steer);
     speed = JoystickUtils.smoothInput(speed);
 
-    if (isReversed) {
+    if (XboxRocketLeagueDrive.isDriveReversed()) {
       steer *= -1;
       speed *= -1;
     }
@@ -55,7 +55,7 @@ public class XboxRocketLeagueDrive extends InstantCommand {
     if(RobotContainer.oi.isQuickTurnPressed()){
 
       if(speed < -0.0001) {
-        if(!isReversed) {
+        if(!XboxRocketLeagueDrive.isDriveReversed()) {
           RobotContainer.driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
         }
         else {
@@ -63,14 +63,14 @@ public class XboxRocketLeagueDrive extends InstantCommand {
         }
       }
       else if (speed > 0.0001){
-        if(!isReversed) {
+        if(!XboxRocketLeagueDrive.isDriveReversed()) {
           RobotContainer.driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
         }
         else {
           RobotContainer.driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
         }
       } else {
-        if(!isReversed) {
+        if(!XboxRocketLeagueDrive.isDriveReversed()) {
           RobotContainer.driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
         }
         else {

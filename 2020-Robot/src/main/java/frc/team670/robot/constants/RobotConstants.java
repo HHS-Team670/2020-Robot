@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 public class RobotConstants {
 
     // Robot Dimensions
-    public static final double ROBOT_LENGTH = 30, ROBOT_WIDTH = 30, DRIVEBASE_TO_GROUND = 2.162;
+    public static final double ROBOT_LENGTH = 29.5, ROBOT_WIDTH = 30.3, DRIVEBASE_TO_GROUND = 2.03;
 
-    // Drive Base Dimensions TODO set these
+    // Drive Base Gearing
     public static final double DRIVEBASE_GEAR_RATIO = 8.45; // 8.45 if low gear, 10.71 if high gear. TODO check which
                                                             // one it is
     /** Drive Base Wheel Diameter in Inches */
