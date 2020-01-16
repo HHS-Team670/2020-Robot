@@ -12,9 +12,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Turret extends RotatingSubsystem
 {
 
-    public Turret(TalonSRX rotatorTalon, double arbitraryFeedForwardConstant, int forwardSoftLimit, int reverseSoftLimit, boolean timeout, int quadEncoderMin, int quadEncoderMax, int continuousCurrentLimit, int peakCurrentLimit, int offsetFromEncoderZero)
+
+    public Turret(TalonSRX rotator, int mainCANId)
     {
-        super(rotatorTalon,  arbitraryFeedForwardConstant,  forwardSoftLimit,  reverseSoftLimit,  timeout,  quadEncoderMin,  quadEncoderMax,  continuousCurrentLimit,  peakCurrentLimit,  offsetFromEncoderZero);
+        super(rotator, 0, 180, 0, true, 0, 0, 0, 0, 0); //TODO Complete this
     }
 
     
