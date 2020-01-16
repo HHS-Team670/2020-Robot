@@ -6,16 +6,18 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANEncoder;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Turret extends RotatingSubsystem
 {
+    private CANEncoder encoder;
 
-
-    public Turret(TalonSRX rotator, int mainCANId)
+    public Turret(TalonSRX rotator, int mainCANId, CANEncoder encoder)
     {
         super(rotator, 0, 180, 0, true, 0, 0, 0, 0, 0); //TODO Complete this
+        this.encoder = encoder;
     }
 
     
@@ -33,6 +35,11 @@ public class Turret extends RotatingSubsystem
         return 0.0;
     }
 
+    public double getTicksInDegrees()
+    {
+        return getEncoder().getCountsPerRevolution();
+    }
+
      /**
      * Sets the setpoint for motion magic (in ticks)
      */
@@ -41,5 +48,9 @@ public class Turret extends RotatingSubsystem
         setpoint = (int)(angle*(11.0 + 17.0/45.0));
     }
 
+    public CANEncoder getEncoder()
+    {
+        return encoder;
+    }
 
 }
