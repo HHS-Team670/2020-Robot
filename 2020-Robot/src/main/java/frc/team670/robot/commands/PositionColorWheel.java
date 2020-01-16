@@ -39,7 +39,7 @@ public class PositionColorWheel extends CommandBase {
   public void initialize() {    
     int targetColorNumber = (int)SmartDashboard.getNumber("Target Color Number", 0);
 
-    resultColorNumber = (targetColorNumber + OFFSET_SIZE) % 4;
+    resultColorNumber = ((targetColorNumber - 1) + OFFSET_SIZE) % 4;
 
     m_spinner.setSpeed(motorSpeed);
   }
