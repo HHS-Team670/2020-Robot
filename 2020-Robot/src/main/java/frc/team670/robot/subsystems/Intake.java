@@ -12,11 +12,10 @@ import frc.team670.robot.dataCollection.sensors.IRSensor;
 
 
 public class Intake extends SubsystemBase {
-
     private Compressor comp;
 	private Solenoid deployer;
     private TalonSRX rollers;
-    private IRSensor sensor;
+    private IRSensor irSensor;
     private double rollerSpeed;
 	private boolean isDeployed, isRolling;
 
@@ -25,7 +24,7 @@ public class Intake extends SubsystemBase {
         comp.setClosedLoopControl(true);
         deployer = new Solenoid(RobotMap.PCMODULE, RobotMap.INTAKE_SOLENOID);
         rollers = new TalonSRX(RobotMap.INTAKE_ROLLERS);
-        sensor = new IRSensor(RobotMap.INTAKE_IRSENSOR);
+        irSensor = new IRSensor(RobotMap.INTAKE_IRSENSOR);
     }
 
     public void setDeploy(boolean dep) {
@@ -36,12 +35,12 @@ public class Intake extends SubsystemBase {
     public void setRolling(boolean roll) {
         isRolling = roll;
         if(isRolling)
-            rollers.set(ControlMode.PercentOutput,rollerSpeed);
+            rollers.set(ControlMode.PercentOutput, rollerSpeed);
         else
-        rollers.set(ControlMode.PercentOutput,0);
+            rollers.set(ControlMode.PercentOutput, 0);
     }
 
-    public boolean getSensor() {
+    public boolean getSensor() { // check if irsensor detects anything(needs to be modified in future for certain distance or such)
         return sensor.isTriggered();
     }
 
@@ -56,5 +55,4 @@ public class Intake extends SubsystemBase {
     public boolean isRolling() {
         return isRolling;
     }
-    
 }
