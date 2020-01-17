@@ -61,7 +61,7 @@ public class ColorMatcher {
     m_colorMatcher.addColorMatch(RED_TARGET);
     m_colorMatcher.addColorMatch(GREEN_TARGET);   
 
-    m_colorMatcher.setConfidenceThreshold(0.80);
+    m_colorMatcher.setConfidenceThreshold(0.85);
   }
 
   public int detectColor() {

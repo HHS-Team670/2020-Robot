@@ -75,7 +75,7 @@ public class Robot extends TimedRobot {
     }
 
     // m_robotContainer.getSpinWheelCommand().schedule();
-    m_robotContainer.getPositionWheelCommand().schedule();
+    // m_robotContainer.getPositionWheelCommand().schedule();
   }
 
   /**

@@ -8,6 +8,7 @@
 package frc.team670.robot.commands;
 
 import frc.team670.robot.subsystems.ColorWheelSpinner;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -45,7 +46,7 @@ public class SpinColorWheel extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-  
+    
   }
 
   // Called once the command ends or is interrupted.
@@ -65,7 +66,8 @@ public class SpinColorWheel extends CommandBase {
 
     if (isColorDetected && detectedColorNumber != referenceColorNumber) {
       colorDetectedCount ++;
-      isColorDetected = false;
+      isColorDetected = false;   
+      SmartDashboard.putNumber("color detected count", colorDetectedCount);   
     }
 
     if (colorDetectedCount == 7) { // 7 means 3+1/8 rotations and sawColorCount adds 1 once a 1/8 rotation is completed  

@@ -15,12 +15,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  * An example command that uses an example subsystem.
  */
 public class PositionColorWheel extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final ColorWheelSpinner m_spinner;
 
   private double motorSpeed = 1.0;
   private int resultColorNumber;
-  private final static int OFFSET_SIZE = 3;
+  private final static int OFFSET_SIZE = 2; // note that if they offset is three or one, the program will only work if the color sensor is at a certain position
 
   /**
    * Creates a new ExampleCommand.
@@ -36,8 +36,8 @@ public class PositionColorWheel extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {    
-    int targetColorNumber = (int)SmartDashboard.getNumber("Target Color Number", -1);
+  public void initialize() {
+    int targetColorNumber = (int) SmartDashboard.getNumber("Target Color Number", -1);
 
     resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % 4);
     SmartDashboard.putNumber("result color number", resultColorNumber);
@@ -47,13 +47,13 @@ public class PositionColorWheel extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+    m_spinner.detectColor();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-      m_spinner.setSpeed(0.0);
+    m_spinner.setSpeed(0.0);
   }
 
   // Returns true when the command should end.
