@@ -36,7 +36,7 @@ import frc.team670.robot.dataCollection.sensors.NavX;
  * 
  * @author lakshbhambhani, ctychen
  */
-public class DriveBase extends MustangSubsystem {
+public class DriveBase extends MustangSubsystemBase {
 
   private CANSparkMax left1, left2, right1, right2;
   private CANEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;

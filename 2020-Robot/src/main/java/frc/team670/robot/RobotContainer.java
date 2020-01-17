@@ -19,7 +19,7 @@ import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
-import frc.team670.robot.subsystems.MustangSubsystem;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
 
 
 /**
@@ -35,7 +35,7 @@ public class RobotContainer {
   public static OI oi;
   private static Shooter shooter = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLOWER);
 
-  private static List<MustangSubsystem> allSubsystems = new ArrayList<MustangSubsystem>();
+  private static List<MustangSubsystemBase> allSubsystems = new ArrayList<MustangSubsystemBase>();
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -45,7 +45,7 @@ public class RobotContainer {
     configureButtonBindings();
   }
 
-  public static void addSubsystem(MustangSubsystem subsystem){
+  public static void addSubsystem(MustangSubsystemBase subsystem){
     allSubsystems.add(subsystem);
   }
 

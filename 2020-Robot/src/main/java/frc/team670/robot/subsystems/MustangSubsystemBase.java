@@ -8,17 +8,35 @@ import frc.team670.robot.commands.MustangCommandBase;
 import frc.team670.robot.RobotContainer;
 
 
-public abstract class MustangSubsystem extends SubsystemBase{
+public abstract class MustangSubsystemBase extends SubsystemBase{
 
     private HealthState lastHealthState;
 
-    public MustangSubsystem(){
+    public MustangSubsystemBase(){
         RobotContainer.addSubsystem(this);
     }
 
     
+    /**
+     * Represents possible conditions a MustangSubsystem can be in.
+     * Each MustangSubsystem should define what the States mean for it specifically.
+     */
     public enum HealthState{
-        GREEN, YELLOW, RED;
+        GREEN(0), YELLOW(1), RED(2);
+
+        private final int ID;
+
+        HealthState(int id) {
+          ID = id;
+        }
+    
+        /**
+         * Gets the ID of the state. 
+         */
+        public int getId() {
+          return ID;
+        }
+
     }
 
     public HealthState getHealth(){

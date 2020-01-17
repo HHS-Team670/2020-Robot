@@ -10,6 +10,9 @@ package frc.team670.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.commands.MustangCommandBase;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -31,6 +34,18 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    CommandScheduler.getInstance().onCommandInitialize(command -> checkCommandsHealth(command));
+  }
+
+  public static void checkCommandsHealth(Command command){
+
+    if (command instanceof MustangCommandBase){
+      for (MustangSubsystemBase s: ((MustangCommandBase)command).getHealthRequirements().keySet()){
+        if (s.getHealth().getId() > ((MustangCommandBase)command).getHealthRequirements().get(s).getId()){
+          CommandScheduler.getInstance().cancel(command);
+        }
+      }
+    }
   }
 
   /**
