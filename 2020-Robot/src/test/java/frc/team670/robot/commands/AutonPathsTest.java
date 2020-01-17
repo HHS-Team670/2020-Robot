@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import edu.wpi.first.wpilibj.Filesystem;
 
@@ -33,12 +34,12 @@ public class AutonPathsTest {
         pathname = Filesystem.getDeployDirectory() + "";
 
         System.out.println(pathname);
+        Path path = Paths.get(pathname + "/../src/main/deploy/straight.wpilib.json");
 
         try {
-            trajectory = TrajectoryUtil.fromPathweaverJson(
-             Paths.get(pathname + "/straight.wpilib.json"));
+            trajectory = TrajectoryUtil.fromPathweaverJson(path);
          } catch (IOException e) {
-             throw new RuntimeException("path name is " + pathname, e);
+             throw new RuntimeException("path is " + path, e);
          }
 
          for (int i = 0; i < trajectory.getStates().size(); i++) {
