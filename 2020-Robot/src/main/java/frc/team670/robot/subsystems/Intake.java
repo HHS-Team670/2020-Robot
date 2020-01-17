@@ -41,7 +41,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean getSensor() { // check if irsensor detects anything(needs to be modified in future for certain distance or such)
-        return sensor.isTriggered();
+        return irSensor.isTriggered();
     }
 
     public void setRollerSpeed(double percent) {
