@@ -1,43 +1,60 @@
 package frc.team670.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team670.robot.constants.RobotMap;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team670.robot.dataCollection.sensors.IRSensor;
 
-// import com.ctre.phoenix.motorcontrol.ControlMode;
-// import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel;
 
 public class Intake extends SubsystemBase {
+
     private Compressor comp;
-    private Solenoid deployer;
-    // private TalonSRX roller;
-    private CANSparkMax roller;
-    private boolean isDeployed;
+	private Solenoid deployer;
+    private TalonSRX rollers;
+    private IRSensor sensor;
+    private double rollerSpeed;
+	private boolean isDeployed, isRolling;
 
     public Intake() {
-        comp = new Compressor(RobotMap.PCMODULE);
+        comp = new Compressor(RobotMap.PCMODULE); // may need to edit RobotMap to update ports
         comp.setClosedLoopControl(true);
-        // roller = new TalonSRX(RobotMap.INTAKE_ROLLER);
-        roller = new CANSparkMax(RobotMap.INTAKE_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
-        deployer = new Solenoid(RobotMap.PCMODULE, RobotMap.INTAKE_DEPLOYER);
+        deployer = new Solenoid(RobotMap.PCMODULE, RobotMap.INTAKE_SOLENOID);
+        rollers = new TalonSRX(RobotMap.INTAKE_ROLLERS);
+        sensor = new IRSensor(RobotMap.INTAKE_IRSENSOR);
     }
 
-    public void setDeploy(boolean deploy) {
-        isDeployed = deploy;
-        deployer.set(deploy);
+    public void setDeploy(boolean dep) {
+        isDeployed = dep;
+        deployer.set(isDeployed);
     }
-    
-    public void rollIntake(double speed) {
-        // roller.set(ControlMode.PercentOutput, speed);
-        roller.set(speed);
+
+    public void setRolling(boolean roll) {
+        isRolling = roll;
+        if(isRolling)
+            rollers.set(ControlMode.PercentOutput,rollerSpeed);
+        else
+        rollers.set(ControlMode.PercentOutput,0);
+    }
+
+    public boolean getSensor() {
+        return sensor.isTriggered();
+    }
+
+    public void setRollerSpeed(double percent) {
+        rollerSpeed = percent;
     }
 
     public boolean isDeployed() {
         return isDeployed;
     }
+
+    public boolean isRolling() {
+        return isRolling;
+    }
+    
 }
