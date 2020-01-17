@@ -7,29 +7,13 @@
 
 package frc.team670.robot;
 
-import java.io.IOException;
-import java.nio.file.Paths;
-
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.team670.robot.constants.OI;
-import frc.team670.robot.constants.RobotMap;
-
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import frc.team670.robot.constants.RobotConstants;
-
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 
 
@@ -40,16 +24,14 @@ import frc.team670.robot.dataCollection.sensors.ColorMatcher;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  public static DriveBase driveBase = new DriveBase();
-  public static ColorMatcher colorMatch;// = new ColorMatcher();
-
 
   public static OI oi = new OI();
+
+  public static DriveBase driveBase = new DriveBase();
+
+  public static ColorMatcher colorMatch;// = new ColorMatcher();
+
   public static Shooter shooter;// = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
-
-  // private Trajectory trajectory;
-
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.

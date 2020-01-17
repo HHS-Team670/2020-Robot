@@ -25,12 +25,12 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.RobotController;
 
 import frc.team670.robot.commands.drive.teleop.XboxRocketLeagueDrive;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.sensors.NavX;
-import edu.wpi.first.wpilibj.RobotController;
 
 /**
  * Represents a tank drive base.
@@ -48,8 +48,8 @@ public class DriveBase extends SubsystemBase {
   private List<CANSparkMax> leftControllers, rightControllers;
   private List<CANSparkMax> allMotors = new ArrayList<CANSparkMax>();;
 
-  // private NavX navXMicro;
-  // private DifferentialDriveOdometry m_odometry;
+  private NavX navXMicro;
+  private DifferentialDriveOdometry m_odometry;
 
   private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
 
@@ -100,9 +100,9 @@ public class DriveBase extends SubsystemBase {
     setRampRate(allMotors, 0.36); // Will automatically cook some Cheezy Poofs
 
     // initialized NavX and sets Odometry
-    // navXMicro = new NavX(RobotMap.NAVX_PORT);
-    // m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
-    //   new Pose2d(0, 0, new Rotation2d()));
+    navXMicro = new NavX(RobotMap.NAVX_PORT);
+    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
+      new Pose2d(0, 0, new Rotation2d()));
   }
 
 
@@ -484,53 +484,53 @@ public class DriveBase extends SubsystemBase {
     SmartDashboard.putNumber("Right S Velocity Ticks", right2Encoder.getVelocity());
   }
 
-  // @Override
-  // public void periodic() {
-  //   // Update the odometry in the periodic block
-  //   m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
-  // }
+  @Override
+  public void periodic() {
+    // Update the odometry in the periodic block
+    m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
+  }
 
-  // /**
-  //  * Returns the currently-estimated pose of the robot.
-  //  *
-  //  * @return The pose.
-  //  */
-  // public Pose2d getPose() {
-  //   return m_odometry.getPoseMeters();
-  // }
+  /**
+   * Returns the currently-estimated pose of the robot.
+   *
+   * @return The pose.
+   */
+  public Pose2d getPose() {
+    return m_odometry.getPoseMeters();
+  }
 
-  // /**
-  //  * Resets the odometry to the specified pose.
-  //  *
-  //  * @param pose The pose to which to set the odometry.
-  //  */
-  // public void resetOdometry(Pose2d pose) {
-  //   m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
-  // }
+  /**
+   * Resets the odometry to the specified pose.
+   *
+   * @param pose The pose to which to set the odometry.
+   */
+  public void resetOdometry(Pose2d pose) {
+    m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+  }
 
-  // public void resetOdometry() {
-  //   zeroHeading();
-  //   left1Encoder.setPosition(0);
-  //   right1Encoder.setPosition(0);
-  //   m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
-  //       new Pose2d(0, 0, new Rotation2d()));
-  // }
+  public void resetOdometry() {
+    zeroHeading();
+    left1Encoder.setPosition(0);
+    right1Encoder.setPosition(0);
+    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
+        new Pose2d(0, 0, new Rotation2d()));
+  }
 
-  // /**
-  //  * Zeroes the heading of the robot.
-  //  */
-  // public void zeroHeading() {
-  //   navXMicro.reset();
-  // }
+  /**
+   * Zeroes the heading of the robot.
+   */
+  public void zeroHeading() {
+    navXMicro.reset();
+  }
 
-  // /**
-  //  * Returns the heading of the robot.
-  //  *
-  //  * @return the robot's heading in degrees, from 180 to 180
-  //  */
-  // public double getHeading() {
-  //   return Math.IEEEremainder(navXMicro.getAngle(), 360) * (RobotConstants.kNavXReversed ? -1. : 1.);
-  // }
+  /**
+   * Returns the heading of the robot.
+   *
+   * @return the robot's heading in degrees, from 180 to 180
+   */
+  public double getHeading() {
+    return Math.IEEEremainder(navXMicro.getAngle(), 360) * (RobotConstants.kNavXReversed ? -1. : 1.);
+  }
 
   /**
    * Returns the wheel speeds of the leftMain Motor and rightMainMotor

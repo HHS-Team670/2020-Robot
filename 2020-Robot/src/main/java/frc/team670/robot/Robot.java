@@ -20,6 +20,7 @@ import frc.team670.robot.utils.Logger;
  * project.
  */
 public class Robot extends TimedRobot {
+  
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
@@ -67,9 +68,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    System.out.println("hi");
+    Logger.consoleLog("Autonomous Init");
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    CommandScheduler.getInstance().schedule(new TimedDrive(3));
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -86,13 +86,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
+    // This makes sure that the autonomous stops running when teleop starts running. 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    Logger.consoleLog("Autonomous Init");
     RobotContainer.driveBase.initDefaultCommand();
   }
 
@@ -115,5 +113,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
+    CommandScheduler.getInstance().run();
   }
 }
