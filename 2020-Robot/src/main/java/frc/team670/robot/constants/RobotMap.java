@@ -23,11 +23,11 @@ public class RobotMap {
     // NavX
     public final static Port NAVX_PORT = SerialPort.Port.kUSB;  
 
-    // PCModule
-    public final static int PCMODULE = 2;
+    // PC Module
+    public static final int PCMODULE = 2;
 
     // Intake
-    public final static int INTAKE_SOLENOID = 0;
-    public final static int INTAKE_ROLLERS = 4;
-    public final static int INTAKE_IRSENSOR = 5;
+    public static final int INTAKE_DEPLOYER = 0;
+    public static final int INTAKE_ROLLER = 4;
+    public static final int INTAKE_SENSOR = 5;
 }
