@@ -1,17 +1,18 @@
 package frc.team670.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.sensors.IRSensor;
-
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 // import com.ctre.phoenix.motorcontrol.ControlMode;
 // import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.Solenoid;
+
 
 public class Intake extends SubsystemBase {
     private Compressor comp;
@@ -23,7 +24,7 @@ public class Intake extends SubsystemBase {
     private double rollingSpeed;
 
     public Intake() {
-        comp = new Compressor(RobotMap.PCMODULE);
+        comp = new Compressor(RobotMap.PCMODULE); // may need to edit RobotMap to update ports
         comp.setClosedLoopControl(true);
         deployer = new Solenoid(RobotMap.PCMODULE, RobotMap.INTAKE_DEPLOYER);
         // roller = new TalonSRX(RobotMap.INTAKE_ROLLER);
@@ -31,9 +32,9 @@ public class Intake extends SubsystemBase {
         sensor = new IRSensor(RobotMap.INTAKE_SENSOR);
     }
 
-    public void setDeploy(boolean deploy) {
-        isDeployed = deploy;
-        deployer.set(deploy);
+    public void setDeploy(boolean dep) {
+        isDeployed = dep;
+        deployer.set(isDeployed);
     }
     
     public void setRolling(boolean roll) {
