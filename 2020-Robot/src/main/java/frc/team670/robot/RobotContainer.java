@@ -9,6 +9,7 @@ package frc.team670.robot;
 
 import java.io.IOException;
 import java.nio.file.FileSystem;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import edu.wpi.first.wpilibj.Filesystem;
@@ -78,56 +79,57 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // // Create a voltage constraint to ensure we don't accelerate too fast
-    // var autoVoltageConstraint =
-    //     new DifferentialDriveVoltageConstraint(
-    //         new SimpleMotorFeedforward(RobotConstants.ksVolts,
-    //                                    RobotConstants.kvVoltSecondsPerMeter,
-    //                                    RobotConstants.kaVoltSecondsSquaredPerMeter),
-    //         RobotConstants.kDriveKinematics,
-    //         10);
+    // Create a voltage constraint to ensure we don't accelerate too fast
+    var autoVoltageConstraint =
+        new DifferentialDriveVoltageConstraint(
+            new SimpleMotorFeedforward(RobotConstants.ksVolts,
+                                       RobotConstants.kvVoltSecondsPerMeter,
+                                       RobotConstants.kaVoltSecondsSquaredPerMeter),
+            RobotConstants.kDriveKinematics,
+            10);
 
-    // // Create config for trajectory
-    // TrajectoryConfig config =
-    //     new TrajectoryConfig(RobotConstants.kMaxSpeedMetersPerSecond,
-    //                          RobotConstants.kMaxAccelerationMetersPerSecondSquared)
-    //         // Add kinematics to ensure max speed is actually obeyed
-    //         .setKinematics(RobotConstants.kDriveKinematics)
-    //         // Apply the voltage constraint
-    //         .addConstraint(autoVoltageConstraint);
+    // Create config for trajectory
+    TrajectoryConfig config =
+        new TrajectoryConfig(RobotConstants.kMaxSpeedMetersPerSecond,
+                             RobotConstants.kMaxAccelerationMetersPerSecondSquared)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(RobotConstants.kDriveKinematics)
+            // Apply the voltage constraint
+            .addConstraint(autoVoltageConstraint);
 
-    pathname = Filesystem.getDeployDirectory() + "";
+            pathname = Filesystem.getDeployDirectory() + "";
 
+            System.out.println(pathname);
+            Path path = Paths.get(pathname + "/straight.wpilib.json");
+    
             try {
-               trajectory = TrajectoryUtil.fromPathweaverJson(
-                Paths.get(pathname + "\\straight.wpilib.json"));
-            } catch (IOException e) {
-              // TODO Auto-generated catch block
-              e.printStackTrace();
-            }
-
-
-          for (int i = 0; i < trajectory.getStates().size(); i++) {
-            System.out.println(trajectory.getStates().get(i));
-         }
-    // RamseteCommand ramseteCommand = new RamseteCommand(
-    //     trajectory,
-    //     driveBase::getPose,
-    //     new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
-    //     new SimpleMotorFeedforward(RobotConstants.ksVolts,
-    //       RobotConstants.kvVoltSecondsPerMeter,
-    //       RobotConstants.kaVoltSecondsSquaredPerMeter),
-    //       RobotConstants.kDriveKinematics,
-    //     driveBase::getWheelSpeeds,
-    //     new PIDController(RobotConstants.kPDriveVel, RobotConstants.kIDriveVel, RobotConstants.kDDriveVel),
-    //     new PIDController(RobotConstants.kPDriveVel, RobotConstants.kIDriveVel, RobotConstants.kDDriveVel),
-    //     // RamseteCommand passes volts to the callback
-    //     driveBase::tankDriveVoltage,
-    //     driveBase
-    // );
+                trajectory = TrajectoryUtil.fromPathweaverJson(path);
+             } catch (IOException e) {
+               path = Paths.get(pathname + "/../src/main/deploy/straight.wpilib.json");
+                 try {
+                  trajectory = TrajectoryUtil.fromPathweaverJson(path);
+                } catch (IOException e2) {
+                  throw new RuntimeException("path is " + path, e2);
+                }
+             }
+             
+    RamseteCommand ramseteCommand = new RamseteCommand(
+        trajectory,
+        driveBase::getPose,
+        new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
+        new SimpleMotorFeedforward(RobotConstants.ksVolts,
+          RobotConstants.kvVoltSecondsPerMeter,
+          RobotConstants.kaVoltSecondsSquaredPerMeter),
+          RobotConstants.kDriveKinematics,
+        driveBase::getWheelSpeeds,
+        new PIDController(RobotConstants.kPDriveVel, RobotConstants.kIDriveVel, RobotConstants.kDDriveVel),
+        new PIDController(RobotConstants.kPDriveVel, RobotConstants.kIDriveVel, RobotConstants.kDDriveVel),
+        // RamseteCommand passes volts to the callback
+        driveBase::tankDriveVoltage,
+        driveBase
+    );
 
     // Run path following command, then stop at the end.
-    // return ramseteCommand.andThen(() -> driveBase.tankDrive(0, 0));
-    return null;
+    return ramseteCommand.andThen(() -> driveBase.tankDrive(0, 0));
   }
 }
