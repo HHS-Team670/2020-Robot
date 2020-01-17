@@ -32,20 +32,18 @@ public class AutonPathsTest {
 
         pathname = Filesystem.getDeployDirectory() + "";
 
-        // System.out.println(pathnme);
+        System.out.println(pathname);
+
         try {
             trajectory = TrajectoryUtil.fromPathweaverJson(
-             Paths.get(pathname + "\\straight.wpilib.json"));
+             Paths.get(pathname + "/straight.wpilib.json"));
          } catch (IOException e) {
-           // TODO Auto-generated catch block
-           e.printStackTrace();
+             throw new RuntimeException("path name is " + pathname, e);
          }
 
          for (int i = 0; i < trajectory.getStates().size(); i++) {
             System.out.println(trajectory.getStates().get(i));
          }
-
-         assertEquals(1,0, 0.1);
 
     }
 }
