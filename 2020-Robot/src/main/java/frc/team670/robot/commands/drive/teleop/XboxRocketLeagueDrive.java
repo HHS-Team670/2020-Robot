@@ -31,12 +31,13 @@ public class XboxRocketLeagueDrive extends CommandBase {
 
   // Called once when the command executes
   @Override
-  public void initialize() {
+  public void execute() {
     // Sets the speed to the reading given by the trigger axes on the controller. Left is positive, but we multiply
     // by -1 to reverse that because we want right trigger to correspond to forward.
     double speed = -1 * (RobotContainer.oi.getDriverController().getLeftTriggerAxis() - RobotContainer.oi.getDriverController().getRightTriggerAxis()); 
     double steer = RobotContainer.oi.getDriverController().getLeftStickX(); 
-   
+    System.out.println(speed);
+
 
     // Decides whether or not to smooth the Steering and Trigger. Smoothing helps
     // reduce jerkiness when driving.

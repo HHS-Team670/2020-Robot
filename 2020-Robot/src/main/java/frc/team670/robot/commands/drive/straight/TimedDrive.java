@@ -25,6 +25,7 @@ public class TimedDrive extends WaitCommand {
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
+    Logger.consoleLog("Hello");
     RobotContainer.driveBase.tankDrive(0.5, 0.5);
   }
 
