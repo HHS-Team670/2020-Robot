@@ -15,8 +15,6 @@ import frc.team670.robot.utils.Logger;;
 
 public class TimedDrive extends WaitCommand {
 
-
-
   public TimedDrive(int seconds) {
     super(seconds);
     addRequirements(RobotContainer.driveBase);
@@ -25,7 +23,7 @@ public class TimedDrive extends WaitCommand {
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
-    Logger.consoleLog("TimedDrive start");
+    Logger.consoleLog("TimedDrive executed");
     RobotContainer.driveBase.tankDrive(0.5, 0.5);
   }
 

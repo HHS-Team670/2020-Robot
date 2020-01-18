@@ -102,16 +102,18 @@ public class RobotContainer {
             System.out.println(pathname);
             Path path = Paths.get(pathname + "/straight.wpilib.json");
     
+      // Trying two different file paths
+      try {
+          trajectory = TrajectoryUtil.fromPathweaverJson(path);
+        } catch (IOException e) {
+          path = Paths.get(pathname + "/../src/main/deploy/straight.wpilib.json");
+
             try {
-                trajectory = TrajectoryUtil.fromPathweaverJson(path);
-             } catch (IOException e) {
-               path = Paths.get(pathname + "/../src/main/deploy/straight.wpilib.json");
-                 try {
-                  trajectory = TrajectoryUtil.fromPathweaverJson(path);
-                } catch (IOException e2) {
-                  throw new RuntimeException("path is " + path, e2);
-                }
-             }
+              trajectory = TrajectoryUtil.fromPathweaverJson(path);
+            } catch (IOException e2) {
+              throw new RuntimeException("path is " + path, e2);
+            }
+       }
              
     RamseteCommand ramseteCommand = new RamseteCommand(
         trajectory,
