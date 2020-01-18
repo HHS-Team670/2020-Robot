@@ -72,6 +72,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().schedule(new TimedDrive(3));
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
+      Logger.consoleLog("start autonomousCommand");
       m_autonomousCommand.schedule();
     }
   }
@@ -81,6 +82,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    CommandScheduler.getInstance().run();
   }
 
   @Override
