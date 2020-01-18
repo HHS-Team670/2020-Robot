@@ -37,8 +37,9 @@ public class Intake extends SubsystemBase {
         deployer.set(isDeployed);
     }
     
-    public void setRolling(boolean roll) {
+    public void setRolling(double speed, boolean roll) {
         isRolling = roll;
+        rollingSpeed = speed;
         if(isRolling) {
             // roller.set(ControlMode.PercentOutput, rollingSpeed);
             roller.set(rollingSpeed);

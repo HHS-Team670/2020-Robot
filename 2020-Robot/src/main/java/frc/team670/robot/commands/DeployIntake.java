@@ -13,7 +13,7 @@ public class DeployIntake extends InstantCommand {
   private Intake intake;
 	
 	/*
-	 * @param isDeploy true if it has to deploy, false if it is to pick up
+	 * @param isDeploy true if it is to deploy, false if it is to pick up
 	 */
     public DeployIntake(boolean isDeploy, Intake intake) {
       this.isDeploy = isDeploy;
@@ -24,6 +24,7 @@ public class DeployIntake extends InstantCommand {
     public void initialize() {
       Logger.consoleLog("Intake deploying");
       intake.setDeploy(isDeploy);
+      Logger.consoleLog("Intake deployed");
     }
 
     // Called once after isFinished returns true
