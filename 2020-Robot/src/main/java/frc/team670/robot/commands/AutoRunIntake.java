@@ -22,16 +22,18 @@ public class AutoRunIntake extends CommandBase {
   private Intake intake;
   private IRSensor sensors;
 
-  private boolean hasBeenTriggered;
+  private boolean hasBeenTriggered, roll;
+  private double speed;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public AutoRunIntake(Intake intake, IRSensor sensors) {
+  public AutoRunIntake(Intake intake, IRSensor sensors, double speed) {
     this.intake = intake;
     this.sensors = sensors;
+    this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
   }
@@ -47,6 +49,11 @@ public class AutoRunIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    hasBeenTriggered = sensors.isTriggered();
+    roll = intake.isDeployed();
+    if (hasBeenTriggered) {
+      intake.setRolling(speed, roll);
+    }
   }
 
   // Called once the command ends or is interrupted.
