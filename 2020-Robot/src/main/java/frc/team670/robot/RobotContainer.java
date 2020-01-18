@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 
 
@@ -31,7 +30,6 @@ public class RobotContainer {
 
   public static ColorMatcher colorMatch;// = new ColorMatcher();
 
-  public static Shooter shooter;// = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
