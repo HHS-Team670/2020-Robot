@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
 
     if (command instanceof MustangCommandBase){
       for (MustangSubsystemBase s: ((MustangCommandBase)command).getHealthRequirements().keySet()){
-        if (s.getHealth().getId() > ((MustangCommandBase)command).getHealthRequirements().get(s).getId()){
+        if (s.getHealth(true).getId() > ((MustangCommandBase)command).getHealthRequirements().get(s).getId()){
           CommandScheduler.getInstance().cancel(command);
         }
       }

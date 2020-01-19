@@ -2,27 +2,38 @@ package frc.team670.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SelectCommand;
 import frc.team670.robot.commands.MustangCommandBase;
 import frc.team670.robot.RobotContainer;
 
-
+/**
+ * Basic framework for a subsystem of the robot with defined levels of system Health.
+ * MustangSubsystems are state machines with a target state and an actual
+ * state; its state of health affects what Commands the Robot is able to run.
+ * Each MustangSubsystem is responsible for instantiating its components, as well as running a routine
+ * to zero any sensors it requires.
+ * 
+ * @author ctychen
+ */
 public abstract class MustangSubsystemBase extends SubsystemBase{
 
-    private HealthState lastHealthState;
+    protected HealthState lastHealthState;
 
+    /**
+     * Creates a new MustangSubsystemBase. By default, the subsystem's initial health state is UNKNOWN (ID 0).
+     */
     public MustangSubsystemBase(){
         RobotContainer.addSubsystem(this);
+        this.lastHealthState = HealthState.UNKNOWN;
     }
 
     
     /**
-     * Represents possible conditions a MustangSubsystem can be in.
-     * Each MustangSubsystem should define what the States mean for it specifically.
+     * Represents possible conditions a MustangSubsystemBase can be in.
+     * Each MustangSubsystemBase should define what the States mean for it specifically.
+     * The default state is UNKNOWN, before the subsystem is first "used".
      */
     public enum HealthState{
-        GREEN(0), YELLOW(1), RED(2);
+        UNKNOWN(0), GREEN(1), YELLOW(2), RED(3);
 
         private final int ID;
 
@@ -39,15 +50,29 @@ public abstract class MustangSubsystemBase extends SubsystemBase{
 
     }
 
-    public HealthState getHealth(){
+    /**
+     * 
+     * @param check Whether or not the subsystem's health should be (re)calculated. 
+     * If false, this method simply returns the last recorded health state. If true, the method will
+     * re-evaluate the subsystem's current health.
+     * Note that before the first time the subsystem is "used", by default its state is UNKNOWN, and thus
+     * its health will be calculated at this time.
+     * @return The latest known state of this subsystem: GREEN, YELLOW, or RED.
+     */
+    public HealthState getHealth(boolean check){
+        if (lastHealthState == HealthState.UNKNOWN || check) lastHealthState = checkHealth();
         return this.lastHealthState;
     }
 
-    protected abstract HealthState checkHealth();
+    /**
+     * Calculates the current state of the subsystem.
+     */
+    public abstract HealthState checkHealth();
 
-    public void setHealthState(){
-        lastHealthState = checkHealth();
-    }
+    /**
+     * Routine for zeroing all sensors associated with this subsystem
+     */
+    public abstract void zeroSensors();
 
     public void initDefaultCommand(MustangCommandBase command){
         CommandScheduler.getInstance().setDefaultCommand(this, command);
