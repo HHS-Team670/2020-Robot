@@ -3,6 +3,7 @@ package frc.team670.robot.subsystems;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team670.robot.dataCollection.sensors.BeamBreak;
 import frc.team670.robot.utils.Logger;
@@ -13,81 +14,90 @@ import frc.team670.robot.utils.Logger;
  */
 public class Indexer extends SubsystemBase{
 
-
-    private BeamBreak[] sensors;
+    private BeamBreak frontSensor, backSensor;
     private CANSparkMax SM;
     private CANEncoder encoder;
     private double speed;
-    private boolean sendingBalls;
+    private int totalNumBalls;
+    private boolean lastSensorCheck, rotating, sending, fixing;
+    private double rotationGoal;
 
-    public Indexer(BeamBreak BB1, BeamBreak BB2, BeamBreak BB3, BeamBreak BB4, BeamBreak BB5, CANSparkMax SM) {
-        sensors = new BeamBreak[5];
-        sensors[0] = BB1;
-        sensors[1] = BB2;
-        sensors[2] = BB3;
-        sensors[3] = BB4;
-        sensors[4]= BB5;
+    public Indexer(BeamBreak frontSensor, BeamBreak backSensor, CANSparkMax SM) {
+        this.frontSensor = frontSensor;
+        this.backSensor = backSensor;
         this.SM = SM;
         encoder = SM.getEncoder();
         speed = 0.9;
-        sendingBalls = false;
-        //Logger.consoleLog("Encoder rotations upon instantiation (should be zero): " + encoder.getPosition());
+        totalNumBalls = 0;
+        sending = false;
+        lastSensorCheck = false;
+        fixing = false;
+        rotationGoal = 0;
     }
 
     public int totalNumOfBalls() {
-        int totalNum = 0;
-        for (BeamBreak BB: sensors) {
-            if (BB.isTriggered()) {
-                totalNum++;
-            }
-        }
-        return totalNum;
-    }
-
-
-    /**
-     * Returns array of booleans length 5, indexes correspond to order of sensors passed in, true means there's a ball in that sensor
-     */
-    public boolean[] positionOfBalls() {
-        boolean[] positions = new boolean[5];
-        for (int i = 0; i < sensors.length; i++) {
-            if (sensors[i].isTriggered()) {
-                positions[i] = true;
-            }
-        }
-        return positions;
-    }
-
-    public void sendAllToShooter() {
-        if (totalNumOfBalls() != 0) {
-
-            SM.set(speed);
-            sendingBalls = true;
-            
-        } else {
-            Logger.consoleLog("Tried to send balls to shooter, zero balls");
-        }
+        return totalNumBalls;
     }
 
     public void periodic() {
 
-        if (sendingBalls) {
-            boolean stillHaveBallsToSend = false;
-            for (int i = 1; i < sensors.length; i++) {
-                if (sensors[i].isTriggered()) {
-                    stillHaveBallsToSend = true;
-                }
+        if (frontSensor.isTriggered()) {
+            lastSensorCheck = true;
+        } else {
+            if (lastSensorCheck == true) {
+                totalNumBalls++;
+                rotateOneCompartment();
             }
-
-            if (!stillHaveBallsToSend) {
-                double errorOffset = 0.95;
-                if (encoder.getPosition() % 1 > errorOffset) {
-                    SM.set(0);
-                }
-            }
-
         }
 
+        if (rotating) {
+            SM.set(speed);
+            if (encoder.getPosition() > rotationGoal - 0.01) {
+                rotating = false;
+                SM.set(0);
+                
+            }
+        }
+
+        if (sending) {
+            SM.set(speed);
+
+ 
+            if (encoder.getPosition() > rotationGoal - 0.01) {
+                sending = false;
+                SM.set(0);
+
+
+                
+                //Means the rotation has been offset too much and needs to be reset
+                if (encoder.getPosition() % 0.2 < 0.17 && encoder.getPosition() % 0.2 > 0.3) {
+                    fixing = true;
+                }
+            }
+        }
+
+        if (fixing) {
+            SM.set(0.5);
+            if (encoder.getPosition() % 0.2 > 0.19 || encoder.getPosition() % 2 < 0.1) {
+                fixing = false;
+                SM.set(0);
+            }
+        }
+
+    }
+
+    private void rotateOneCompartment() {
+        rotating = true;
+        rotationGoal = encoder.getPosition() + 0.2;
+    }
+
+
+    /**
+     * Must also activate the conveyor belt when calling this method
+     */
+    public void sendAllToShooter() {
+        sending = true;
+        rotationGoal = encoder.getPosition() + 1;
     }
 
 
