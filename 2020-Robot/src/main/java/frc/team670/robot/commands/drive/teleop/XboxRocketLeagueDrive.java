@@ -13,12 +13,13 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.utils.functions.JoystickUtils;
-
+import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.constants.OI;
  
 
 /**
  * Drives the Robot using Xbox controls like the game Rocket League. Triggers control speed, stick is for steering.
- * @author lakshbhambhani
+ * @author lakshbhambhani, ctychen
  */
 public class XboxRocketLeagueDrive extends CommandBase {
 
@@ -51,14 +52,14 @@ public class XboxRocketLeagueDrive extends CommandBase {
       speed *= -1;
     }
 
-    if(RobotContainer.oi.isQuickTurnPressed()){
+    if(oi.isQuickTurnPressed()){
 
       if(speed < -0.0001) {
         if(!XboxRocketLeagueDrive.isDriveReversed()) {
           RobotContainer.driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
         }
         else {
-          RobotContainer.driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
+          driveBase.curvatureDrive(speed, -1 * steer, oi.isQuickTurnPressed());
         }
       }
       else if (speed > 0.0001){
@@ -66,22 +67,22 @@ public class XboxRocketLeagueDrive extends CommandBase {
           RobotContainer.driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
         }
         else {
-          RobotContainer.driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
+          driveBase.curvatureDrive(speed, steer, oi.isQuickTurnPressed());
         }
       } else {
         if(!XboxRocketLeagueDrive.isDriveReversed()) {
           RobotContainer.driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
         }
         else {
-          RobotContainer.driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
+          driveBase.curvatureDrive(speed, -1 * steer, oi.isQuickTurnPressed());
         }
       }
     }
     else {
       if (speed < -0.0001){
-        RobotContainer.driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
+        driveBase.curvatureDrive(speed, -1 * steer, oi.isQuickTurnPressed());
       } else {
-        RobotContainer.driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
+        driveBase.curvatureDrive(speed, steer, oi.isQuickTurnPressed());
       }
     }
   }

@@ -10,6 +10,9 @@ package frc.team670.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.commands.MustangCommandBase;
 import frc.team670.robot.commands.drive.straight.TimedDrive;
 import frc.team670.robot.utils.Logger;
 
@@ -34,6 +37,18 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    CommandScheduler.getInstance().onCommandInitialize(command -> Robot.checkCommandsHealth(command));
+  }
+
+  public static void checkCommandsHealth(Command command){
+
+    if (command instanceof MustangCommandBase){
+      for (MustangSubsystemBase s: ((MustangCommandBase)command).getHealthRequirements().keySet()){
+        if (s.getHealth(true).getId() > ((MustangCommandBase)command).getHealthRequirements().get(s).getId()){
+          CommandScheduler.getInstance().cancel(command);
+        }
+      }
+    }
   }
 
   /**
@@ -72,7 +87,8 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+      //m_autonomousCommand.schedule();
+      CommandScheduler.getInstance().schedule(m_autonomousCommand);
     }
   }
 
