@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.RobotController;
 
 import frc.team670.robot.commands.drive.teleop.XboxRocketLeagueDrive;
 import frc.team670.robot.constants.RobotConstants;
@@ -102,8 +103,6 @@ public class DriveBase extends MustangSubsystemBase {
     navXMicro = new NavX(RobotMap.NAVX_PORT);
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
       new Pose2d(0, 0, new Rotation2d()));
-
-    initDefaultCommand();
   }
 
 
@@ -334,7 +333,7 @@ public class DriveBase extends MustangSubsystemBase {
   }
 
   public void initDefaultCommand() {
-    CommandScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive(this, RobotContainer.oi));
+    CommandScheduler.getInstance().schedule(new XboxRocketLeagueDrive(this));
   }
 
   /**
@@ -548,6 +547,9 @@ public class DriveBase extends MustangSubsystemBase {
 
   public void zeroSensors(){
     
+  }  
+  public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
+    tankDrive(leftVoltage / RobotController.getBatteryVoltage(), rightVoltage / RobotController.getBatteryVoltage());
   }
 
 }
