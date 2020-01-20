@@ -42,9 +42,9 @@ public class SparkMAXFactory{
         return buildSparkMAX(deviceID, defaultConfig);
     }
 
-    public static CANSparkMax setPermanentFollower(int deviceID, CANSparkMax master){
+    public static CANSparkMax setPermanentFollower(int deviceID, CANSparkMax leader){
         CANSparkMax sparkMax = buildSparkMAX(deviceID, defaultFollowerConfig);
-        sparkMax.follow(master);
+        sparkMax.follow(leader);
         return sparkMax;
     }
 
