@@ -16,6 +16,8 @@ import frc.team670.robot.commands.MustangCommandBase;
 import frc.team670.robot.commands.drive.straight.TimedDrive;
 import frc.team670.robot.utils.Logger;
 
+import java.util.Map;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -43,8 +45,9 @@ public class Robot extends TimedRobot {
   public static void checkCommandsHealth(Command command){
 
     if (command instanceof MustangCommandBase){
-      for (MustangSubsystemBase s: ((MustangCommandBase)command).getHealthRequirements().keySet()){
-        if (s.getHealth(true).getId() > ((MustangCommandBase)command).getHealthRequirements().get(s).getId()){
+      Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> requirements = ((MustangCommandBase)(command)).getHealthRequirements();
+      for (MustangSubsystemBase s: requirements.keySet()){
+        if (s.getHealth(false).getId() > requirements.get(s).getId()){
           CommandScheduler.getInstance().cancel(command);
         }
       }
