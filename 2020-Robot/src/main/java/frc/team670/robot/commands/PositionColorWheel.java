@@ -30,6 +30,7 @@ public class PositionColorWheel extends CommandBase {
   public PositionColorWheel(ColorWheelSpinner spinner) {
     m_spinner = spinner;
     SmartDashboard.putNumber("Target Color Number", -1);
+    SmartDashboard.putBoolean("isSpinning", false);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(spinner);
   }
@@ -41,19 +42,21 @@ public class PositionColorWheel extends CommandBase {
 
     resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % 4);
     SmartDashboard.putNumber("result color number", resultColorNumber);
-    m_spinner.setSpeed(motorSpeed);
+    // m_spinner.setSpeed(motorSpeed);
+    SmartDashboard.putBoolean("isSpinning", true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_spinner.detectColor();
+    
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_spinner.setSpeed(0.0);
+    // m_spinner.setSpeed(0.0);
+    SmartDashboard.putBoolean("isSpinning", false);
   }
 
   // Returns true when the command should end.
