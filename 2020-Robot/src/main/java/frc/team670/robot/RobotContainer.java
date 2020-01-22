@@ -20,6 +20,15 @@ import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.team670.robot.constants.OI;
+import frc.team670.robot.dataCollection.sensors.ColorMatcher;
+import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Shooter;
+
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -42,6 +51,9 @@ public class RobotContainer {
   public static ColorMatcher colorMatch;// = new ColorMatcher();
 
   public static Shooter shooter;// = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
+
+  private Trajectory trajectory;
+  private String pathname;
 
 
   /**
