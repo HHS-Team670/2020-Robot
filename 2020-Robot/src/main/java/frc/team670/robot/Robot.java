@@ -112,84 +112,7 @@ public class Robot extends TimedRobot {
       //m_autonomousCommand.schedule();
       CommandScheduler.getInstance().schedule(m_autonomousCommand);
     }
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    // Logger.consoleLog("about to start TimedDrive");
-    // CommandScheduler.getInstance().schedule(new TimedDrive(3));
-    // schedule the autonomous command (example)
-    // if (m_autonomousCommand != null) {
-    //   Logger.consoleLog("start autonomousCommand");
-    //   m_autonomousCommand.schedule();
-    // }
-
-    PIDController leftPIDController = new PIDController(RobotConstants.kPDriveVel, RobotConstants.kIDriveVel, RobotConstants.kDDriveVel);
-    PIDController rightPIDController = new PIDController(RobotConstants.kPDriveVel, RobotConstants.kIDriveVel, RobotConstants.kDDriveVel);
-
-    double leftSetPoint = leftPIDController.getSetpoint();
-    double rightSetPoint = rightPIDController.getSetpoint();
-
-    DifferentialDriveWheelSpeeds wheelSpeeds = driveBase.getWheelSpeeds();
-    
-    Trajectory trajectory;
-    String pathname;
-
-    // Create a voltage constraint to ensure we don't accelerate too fast
-    var autoVoltageConstraint =
-        new DifferentialDriveVoltageConstraint(
-            new SimpleMotorFeedforward(RobotConstants.ksVolts,
-                                       RobotConstants.kvVoltSecondsPerMeter,
-                                       RobotConstants.kaVoltSecondsSquaredPerMeter),
-            RobotConstants.kDriveKinematics,
-            10);
-
-    // Create config for trajectory
-    TrajectoryConfig config =
-        new TrajectoryConfig(RobotConstants.kMaxSpeedMetersPerSecond,
-                             RobotConstants.kMaxAccelerationMetersPerSecondSquared)
-            // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(RobotConstants.kDriveKinematics)
-            // Apply the voltage constraint
-            .addConstraint(autoVoltageConstraint);
-
-            pathname = Filesystem.getDeployDirectory() + "";
-
-            // Reading off of roboRIO
-            Path path = Paths.get(pathname + "/straight.wpilib.json");
-    
-      // Trying two different file paths
-      try {
-          trajectory = TrajectoryUtil.fromPathweaverJson(path);
-        } catch (IOException e) {
-
-          // Reading off of computer file path
-          path = Paths.get(pathname + "/../src/main/deploy/straight.wpilib.json");
-
-            try {
-              trajectory = TrajectoryUtil.fromPathweaverJson(path);
-            } catch (IOException e2) {
-              throw new RuntimeException("path is " + path, e2);
-            }
-       }
-
-       RamseteCommand ramseteCommand = new RamseteCommand(
-        trajectory,
-        driveBase::getPose,
-        new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
-        new SimpleMotorFeedforward(RobotConstants.ksVolts,
-          RobotConstants.kvVoltSecondsPerMeter,
-          RobotConstants.kaVoltSecondsSquaredPerMeter),
-          RobotConstants.kDriveKinematics,
-        driveBase::getWheelSpeeds,
-        leftPIDController,
-        rightPIDController,
-        // RamseteCommand passes volts to the callback
-        driveBase::tankDriveVoltage,
-        driveBase
-    );
-
-    Logger.consoleLog("LeftSetPoint: %s, RightSetPoint: %s, %s ", leftSetPoint, rightSetPoint, wheelSpeeds.toString());
-
-    autonomousCommand = ramseteCommand.andThen(() -> driveBase.tankDrive(0, 0));
-    autonomousCommand.schedule();
+    m_autonomousCommand.schedule();
   }
 
   /**
@@ -202,15 +125,15 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopInit() 
+  public void teleopInit(){
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    if (autonomousCommand != null) {
-      autonomousCommand.cancel();
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.cancel();
     }
-    Logger.consoleLog("Autonomous Init");
+    Logger.consoleLog("Teleop Init");
     RobotContainer.driveBase.initDefaultCommand();
   }
 
