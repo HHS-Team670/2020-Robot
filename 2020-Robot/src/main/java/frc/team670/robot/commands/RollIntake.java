@@ -1,59 +1,45 @@
+package frc.team670.robot.commands;
 
-import java.util.HashMap;
-
-import org.usfirst.frc.team670.robot.Robot;
-import org.usfirst.frc.team670.robot.commands.LoggingCommand;
-
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.utils.Logger;
 
 /**
  *
  */
-public class RollIntake extends LoggingCommand {
+public class RollIntake extends InstantCommand {
 
-	private double speed, seconds;
-	
-    public RollIntake(double speed, double seconds) {
-    	this.speed = speed;
-    	this.seconds = seconds;
-    	requires(Robot.intake);
+	private double speed;
+	private Intake intake;
+	private boolean isDeployed, roll;
+
+	public RollIntake(double speed, Intake intake) {
+		this.speed = speed;
+		this.intake = intake;
+		addRequirements(intake);
     }
 
-    // Called just before this Command runs the first time
-    protected void initialize() {
-        setTimeout(seconds);
-		logInitialize(new HashMap<String, Object>() {{
-			put("Speed", speed);
-			put("Seconds", seconds);
-		}});
-    }
-
-    // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    	Robot.intake.rollIntake(speed);
-		logExecute(new HashMap<String, Object>() {{
-			put("Speed", speed);
-			put("Seconds", seconds);
-		}});
-    }
-
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-    	return isTimedOut();
-    }
+    // Called just before this Command runs the first time and executes once
+	public void initialize() {
+		isDeployed = intake.isDeployed();
+		if (isDeployed) {
+			roll = true;
+		}
+		intake.setRolling(speed, roll);
+		Logger.consoleLog("Speed", speed);
+	}
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.intake.driveIntake(0);
-    	logFinished(new HashMap<String, Object>() {{
-			put("Speed", speed);
-			put("Seconds", seconds);
-		}});
+    	intake.setRollingSpeed(0);
+		Logger.consoleLog("Speed", speed);
+
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	Robot.intake.driveIntake(0);
+    	end();
     }
 }
 
