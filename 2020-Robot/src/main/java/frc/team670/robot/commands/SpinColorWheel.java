@@ -41,7 +41,7 @@ public class SpinColorWheel extends CommandBase {
     isColorDetected = false;
     SmartDashboard.putNumber("color detected count", 0);   
     referenceColorNumber = m_spinner.detectColor();
-    // m_spinner.setSpeed(motorSpeed);
+    m_spinner.setSpeed(motorSpeed);
     SmartDashboard.putBoolean("isSpinning", true);    
   }
 
@@ -54,7 +54,7 @@ public class SpinColorWheel extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // m_spinner.setSpeed(0.0);
+    m_spinner.setSpeed(0.0);
     SmartDashboard.putBoolean("isSpinning", false);
   }
 
@@ -63,40 +63,20 @@ public class SpinColorWheel extends CommandBase {
   public boolean isFinished() {
     int detectedColorNumber = m_spinner.detectColor();
 
-    if (detectedColorNumber == referenceColorNumber) {
+    if (detectedColorNumber == referenceColorNumber) { // when it detects the reference color(which is whatever color it sees first)
       isColorDetected = true;
     }
 
-    if (isColorDetected && detectedColorNumber != referenceColorNumber) {
+    if (isColorDetected && detectedColorNumber != referenceColorNumber) { // has detected ref. color; the wheel is at the next color 
       colorDetectedCount ++;
       isColorDetected = false;   
       SmartDashboard.putNumber("color detected count", colorDetectedCount);   
     }
 
-    if (colorDetectedCount == 7) { // 7 means 3+1/8 rotations and 1 is added to colorDetectedCount once a 1/8 rotation is completed  
+    if (colorDetectedCount == 7) { // 7 means 3+(1/8) rotations and 1 is added to colorDetectedCount once 1/8 of a rotation is completed  
       return true;      
     }    
 
     return false;
-
-
-    // alternate code for same task, different logic
-    /* if (detectedColorNumber == referenceColorNumber) {
-      isColorDetected = true;
-    }
-
-    if (isColorDetected && detectedColorNumber != referenceColorNumber) {
-      colorDetectedCount ++;
-      referenceColorNumber = m_spinner.detectColor();
-      isColorDetected = false;   
-      SmartDashboard.putNumber("color detected count", colorDetectedCount);   
-    }    
-
-    if (colorDetectedCount == 25) { // 25 means 3+1/8 rotations and 1 is added to colorDetectedCount once a 1/8 rotation is completed  
-      return true;      
-    } 
-    
-    return false;
-    */
   }
 }

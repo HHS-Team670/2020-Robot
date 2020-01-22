@@ -40,9 +40,9 @@ public class PositionColorWheel extends CommandBase {
   public void initialize() {
     int targetColorNumber = (int) SmartDashboard.getNumber("Target Color Number", -1);
 
-    resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % 4);
+    resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % 4); // calculates offset color number since the robot color sensor is in a different place than the frc sensor on the color wheel;
     SmartDashboard.putNumber("result color number", resultColorNumber);
-    // m_spinner.setSpeed(motorSpeed);
+    m_spinner.setSpeed(motorSpeed);
     SmartDashboard.putBoolean("isSpinning", true);
   }
 
@@ -55,7 +55,7 @@ public class PositionColorWheel extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // m_spinner.setSpeed(0.0);
+    m_spinner.setSpeed(0.0);
     SmartDashboard.putBoolean("isSpinning", false);
   }
 
