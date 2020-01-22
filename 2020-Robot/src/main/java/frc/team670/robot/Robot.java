@@ -125,13 +125,15 @@ public class Robot extends TimedRobot {
 
             pathname = Filesystem.getDeployDirectory() + "";
 
-            System.out.println(pathname);
+            // Reading off of roboRIO
             Path path = Paths.get(pathname + "/straight.wpilib.json");
     
       // Trying two different file paths
       try {
           trajectory = TrajectoryUtil.fromPathweaverJson(path);
         } catch (IOException e) {
+
+          // Reading off of computer file path
           path = Paths.get(pathname + "/../src/main/deploy/straight.wpilib.json");
 
             try {

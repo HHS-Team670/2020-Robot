@@ -104,7 +104,6 @@ public class DriveBase extends SubsystemBase {
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
       new Pose2d(0, 0, new Rotation2d()));
 
-    initDefaultCommand();
   }
 
 
