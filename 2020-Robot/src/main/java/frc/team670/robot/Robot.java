@@ -44,9 +44,6 @@ import frc.team670.robot.utils.Logger;
 public class Robot extends TimedRobot {
   
   private Command m_autonomousCommand;
-
-  private static DriveBase driveBase = new DriveBase();
-
   private RobotContainer m_robotContainer;
 
   /**
@@ -120,7 +117,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    Robot.driveBase.periodic();
+    RobotContainer.driveBase.periodic();
     CommandScheduler.getInstance().run();
   }
 
