@@ -31,8 +31,7 @@ public class ColorMatcher {
   private final ColorMatch m_colorMatcher = new ColorMatch();
 
   /**
-   * Note: Any example colors should be calibrated as the user needs, these are
-   * here as a basic example.
+   * Note: Colors should be calibrated as the user needs.
    */
   public static final Color BLUE_TARGET = ColorMatch.makeColor(0.136, 0.412, 0.450);
   public static final Color YELLOW_TARGET = ColorMatch.makeColor(0.293, 0.561, 0.144);

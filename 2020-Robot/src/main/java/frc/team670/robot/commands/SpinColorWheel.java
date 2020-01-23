@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
- * An example command that uses an example subsystem.
+ * An SpinColorWheel command that uses an ColorWheelSpinner subsystem.
  */
 public class SpinColorWheel extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
@@ -24,9 +24,9 @@ public class SpinColorWheel extends CommandBase {
   private int colorDetectedCount = 0;
 
   /**
-   * Creates a new ExampleCommand.
+   * Creates a new SpinColorWheel command.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param ColorWheelSpinner The subsystem used by this command.
    */
   public SpinColorWheel(ColorWheelSpinner spinner) {
     m_spinner = spinner;
