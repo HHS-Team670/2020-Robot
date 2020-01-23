@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class TestCommand extends MustangCommandBase{
 
+    protected boolean ended, exe;
+
     private Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> healthRequirements;
 
     public TestCommand(MustangSubsystemBase a, MustangSubsystemBase b, MustangSubsystemBase c){
@@ -16,16 +18,27 @@ public class TestCommand extends MustangCommandBase{
         healthRequirements = new HashMap<MustangSubsystemBase, MustangSubsystemBase.HealthState>();
         healthRequirements.put(a, MustangSubsystemBase.HealthState.GREEN);
         healthRequirements.put(b, MustangSubsystemBase.HealthState.GREEN);
-        healthRequirements.put(c, MustangSubsystemBase.HealthState.YELLOW);
+        healthRequirements.put(c, MustangSubsystemBase.HealthState.GREEN);
     }
 
     public Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> getHealthRequirements(){
         return healthRequirements;
     }
 
-    public void initialize(){
-        
+    public void setRunning(boolean exe){
+        this.exe = exe;
     }
 
+    @Override
+    public void end(boolean cancelled){
+        if (cancelled) this.ended = false;
+    }
 
+    public boolean isRunning(){
+        return this.exe;
+    }
+
+    public boolean isEnded(){
+        return this.ended;
+    }
 }

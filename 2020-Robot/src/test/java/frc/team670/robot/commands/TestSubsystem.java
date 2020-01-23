@@ -11,7 +11,8 @@ public class TestSubsystem extends MustangSubsystemBase{
     }
 
     public HealthState checkHealth(){
-        if (c%4 == 1) return HealthState.GREEN;
+        if (c%4 == 0) return HealthState.UNKNOWN;
+        else if (c%4 == 1) return HealthState.GREEN;
         else if (c%4 == 2) return HealthState.YELLOW;
         else return HealthState.RED;
     }
