@@ -23,8 +23,6 @@ public class Intake extends SubsystemBase {
     private boolean isDeployed, isRolling;
     private double rollingSpeed;
 
-    private double changingRollingSpeed = 0.8;
-
     public Intake() {
         comp = new Compressor(RobotMap.PCMODULE); // may need to edit RobotMap to update ports
         comp.setClosedLoopControl(true);
@@ -68,20 +66,4 @@ public class Intake extends SubsystemBase {
         return isRolling;
     }
 
-    // autonomous commands
-    public void a_deploy() { // uses ir sensor to detect ball to deploy then roll/spin motorz(autonomous deploy)
-        if(!isDeployed() && getSensor()) {
-            setDeploy(true);
-            if(isDeployed()) {
-                setRollingSpeed(changingRollingSpeed); // unsure if this is the correct motor speed
-                setRolling(true);
-            }
-        }
-    }
-
-    public void m_deploy() {
-        if(!isDeployed()) {
-            
-        }
-    }
 }

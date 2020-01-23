@@ -9,7 +9,6 @@ package frc.team670.robot.commands;
 
 import frc.team670.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.team670.robot.dataCollection.sensors.IRSensor;
 import frc.team670.robot.utils.Logger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -20,9 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class AutoRunIntake extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private Intake intake;
-  private IRSensor sensors;
-
-  private boolean hasBeenTriggered, roll;
   private double speed;
 
   /**
@@ -30,9 +26,8 @@ public class AutoRunIntake extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public AutoRunIntake(Intake intake, IRSensor sensors, double speed) {
+  public AutoRunIntake(Intake intake, double speed) {
     this.intake = intake;
-    this.sensors = sensors;
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
@@ -42,28 +37,40 @@ public class AutoRunIntake extends CommandBase {
   @Override
   public void initialize() {
     SmartDashboard.putString("current-command", "AutoRunIntake");
-    hasBeenTriggered = false;
     Logger.consoleLog();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
+  // uses ir sensor to detect ball to deploy then roll/spin motorz(autonomous deploy)
   @Override
   public void execute() {
-    hasBeenTriggered = sensors.isTriggered();
-    roll = intake.isDeployed();
-    if (hasBeenTriggered) {
-      intake.setRolling(speed, roll);
+    if (!intake.isDeployed() && intake.getSensor()) {
+      intake.setDeploy(true);
+      intake.setRolling(speed, true); 
+ 
     }
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (!intake.getSensor()) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  // Called once the command ends or is interrupted.
+  public void end() {
+    intake.setRolling(0, true);
+    Logger.consoleLog();
+  }
+
+  // Called when another command which requires one or more of the same
+  // subsystems is scheduled to run
+  protected void interrupted() {
+    end();
   }
 }
