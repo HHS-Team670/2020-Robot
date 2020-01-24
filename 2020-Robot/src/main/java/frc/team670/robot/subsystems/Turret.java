@@ -33,8 +33,6 @@ public class Turret extends RotatingSubsystem {
         
     }
 
-    
-
     /**
      * 
      * @return the position of the turret in degrees
@@ -150,7 +148,7 @@ public class Turret extends RotatingSubsystem {
      * @param amount the amount (in degrees) the turret should rotate
      */
     public void rotateTurretAmount(double amount) {
-        if(Math.abs(getPositionInDegrees() + amount) > SOFT_LIMIT_IN_DEGREES)
+        if(Math.abs(getAngleInDegrees() + amount) > SOFT_LIMIT_IN_DEGREES)
         {
             return;
         }
