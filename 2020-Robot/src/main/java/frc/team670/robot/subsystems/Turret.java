@@ -13,6 +13,7 @@ import com.revrobotics.CANAnalog.AnalogMode;
 import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team670.robot.RobotContainer;
+import frc.team670.robot.constants.RobotMap;
 
 public class Turret extends RotatingSubsystem
 {
@@ -59,31 +60,31 @@ public class Turret extends RotatingSubsystem
         return getEncoder().getPulseWidthPosition();
     }
 
-    /**
-     * motor health condition: 
-     *          indicates the current working capabilities, 
-     *                  raises flag when turret motor is not functioning properly. 
-     * 
-     * @return
-     */
-    public boolean motorHealthConditions() {
-        // talonControl 
+//     /**
+//      * motor health condition: 
+//      *          indicates the current working capabilities, 
+//      *                  raises flag when turret motor is not functioning properly. 
+//      * 
+//      * @return
+//      */
+//     public boolean motorHealthConditions() {
+//         // talonControl 
 
-        //  This function is apparently depreciated
-//        double currentAmps = talonControl.getOutputCurrent();
+//         //  This function is apparently depreciated
+// //        double currentAmps = talonControl.getOutputCurrent();
 
-        double currentAmps = talonControl.getSupplyCurrent();   // OR
-//        double currentAmps = talonControl.getStatorCurrent();
+//         double currentAmps = talonControl.getSupplyCurrent();   // OR
+// //        double currentAmps = talonControl.getStatorCurrent();
 
-        double outputVoltage = talonControl.getMotorOutputVoltage();
-        double busV = talonControl.getBusVoltage();
+//         double outputVoltage = talonControl.getMotorOutputVoltage();
+//         double busV = talonControl.getBusVoltage();
         
-        /**
-         * double quadEncoderPos = talonControl.getSelectedSensorPosition();
-         * 
-         */
+//         /**
+//          * double quadEncoderPos = talonControl.getSelectedSensorPosition();
+//          * 
+//          */
 
-    }
+//     }
 
     /**
      * 
@@ -148,3 +149,4 @@ public class Turret extends RotatingSubsystem
     {
         return null;                    // TODO FIX THIS
     }
+}
