@@ -115,7 +115,7 @@ public abstract class RotatingSubsystem extends SubsystemBase implements Tunable
      */
     public synchronized void updateArbitraryFeedForward(){
         if(setpoint != NO_SETPOINT) {
-            double value = getArbitraryFeedForwardAngleMultiplier() * arbitraryFeedForwardConstant;
+            double value = /*getArbitraryFeedForwardAngleMultiplier() * */arbitraryFeedForwardConstant;
             rotator.set(ControlMode.MotionMagic, setpoint, DemandType.ArbitraryFeedForward, value);
           }
     }
@@ -140,7 +140,7 @@ public abstract class RotatingSubsystem extends SubsystemBase implements Tunable
     /**
      * Gets the multiplier for updating the arbitrary feed forward based on angle and subsystem
      */
-    protected abstract double getArbitraryFeedForwardAngleMultiplier();
+    // protected abstract double getArbitraryFeedForwardAngleMultiplier();
 
      /**
      * Sets the setpoint for motion magic (in ticks)
