@@ -16,25 +16,30 @@ import frc.team670.robot.RobotContainer;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.motorcontroller.*;
 
-public class Turret extends RotatingSubsystem
-{
+public class Turret extends RotatingSubsystem {
     private final TalonSRX talonControl;
-    private final int TICKS_PER_REVOLUTION = 4096; //ticks per revolution
-    private final int TURRET_LIMIT = (int)((TICKS_PER_REVOLUTION * 160.0)/360.0);                  // assuming the turret's soft limit will be 1820 ticks = 160 degrees both ways from ceter as 0 degrees. 
-    private final int REFERENCE_POINT;
+    private final int TICKS_PER_REVOLUTION = 4096;; //ticks per revolution
+    // unused private final int TURRET_LIMIT = (int)((TICKS_PER_REVOLUTION * 160.0)/360.0);                  // assuming the turret's soft limit will be 1820 ticks = 160 degrees both ways from center as 0 degrees.           
+    private final int REFERENCE_POINT =  super.getPositionTicks();
+    private final double SOFT_LIMIT_IN_DEGREES = 160.0;
+    private final double HARD_LIMIT_IN_DEGREES = 180.0;
 
-    public Turret(/*int mainCANId,*/ )
-    {
+    public Turret(/*int mainCANId,*/ ) {
         // NOTE ignore error, will deal with this later. 
         // NOTE May not be Talon control, if not talon control, then we will need to change the TalonSRX 
         super(TalonSRXFactory.buildFactoryTalonSRX(RobotMap.TALON_TURRET), 0, 180, 0, true, 0, 0, 0, 0, 0);         //TODO Complete this
         this.talonControl = super.rotator;
-        REFERENCE_POINT =  super.getPositionTicks();
+        
         
     }
 
-    public double getAngleInDegrees()
-    {
+    
+
+    /**
+     * 
+     * @return the position of the turret in degrees
+     */
+    public double getAngleInDegrees() {
         //define degrees
         
         //there are 4096 ticks in a circle, so one degree is 11 17/45 ticks.
@@ -98,16 +103,13 @@ public class Turret extends RotatingSubsystem
 
     /**
      * 
-     * take in degrees, 
+     * Takes in degrees and rotates the turret to that position
      * 
-     * move that turret the amount of degrees, 
-     *      -   Convention:     positive is clockwise. 
      * 
-     * @param degrees
-     *      possibly amount of degrees needed to turn clockwise, 
-     *          this could also rather be in radians or can be some set ticks to rotate the motor. 
+     * @param degrees the position in degrees the turret should move
+     *      
      */
-    public void rotateTurret(/*double degrees*/) {
+    public void rotateTurretTo(double degrees) {
 
         /**
          * taking soft limit is 20 degrees
@@ -125,14 +127,15 @@ public class Turret extends RotatingSubsystem
          * 
          */
 
+         if(Math.abs(degrees) > SOFT_LIMIT_IN_DEGREES) {
+             return;
+         }
 
-        /**
-         * 
-         */
-        if (Math.abs(setpoint) >= TURRET_LIMIT && Math.abs(super.getPositionTicks()) >= TURRET_LIMIT) 
-        {
-            return;
-        }
+        setpoint = (int)(degrees*getTicksPerDegree());
+
+        // if (Math.abs(setpoint) >= HARD_LIMIT && Math.abs(super.getPositionTicks()) >= HARD_LIMIT) {
+        //     return;
+        // }
 
         
 
@@ -141,6 +144,19 @@ public class Turret extends RotatingSubsystem
         // TODO research this and make changes, this section is not complete. 
      }
 
+
+    /**
+     * Rotates the turret amount amount.
+     * @param amount the amount (in degrees) the turret should rotate
+     */
+    public void rotateTurretAmount(double amount) {
+        if(Math.abs(getPositionInDegrees() + amount) > SOFT_LIMIT_IN_DEGREES)
+        {
+            return;
+        }
+        double amountInTicks = amount*getTicksPerDegree();
+        talonControl.set((ControlMode.Position), amountInTicks);
+    }
     /**
      * 
      * get encoder ticks
@@ -187,13 +203,11 @@ public class Turret extends RotatingSubsystem
      /**
      * Sets the setpoint for motion magic (in ticks)
      */
-    public void setMotionMagicSetpointAngle(final double angle)
-    {
+    public void setMotionMagicSetpointAngle(final double angle) {
         setpoint = (int)(angle*(getTicksPerDegree()));
     }
 
-    public SensorCollection getEncoder() //   TODO This is not CANEncoder, this has to be changed later. 
-    {
+    public SensorCollection getEncoder() { //   TODO This is not CANEncoder, this has to be changed later.
         return this.talonControl.getSensorCollection();                    // TODO FIX THIS
     }
 
