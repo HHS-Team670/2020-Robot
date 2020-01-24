@@ -8,6 +8,7 @@
 package frc.team670.robot.commands;
 
 import frc.team670.robot.subsystems.ColorWheelSpinner;
+import frc.team670.robot.utils.Logger;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -15,7 +16,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  * An example command that uses an example subsystem.
  */
 public class SpinColorWheel extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final ColorWheelSpinner m_spinner;
 
   private double motorSpeed = 1.0;
@@ -43,12 +44,39 @@ public class SpinColorWheel extends CommandBase {
     referenceColorNumber = m_spinner.detectColor();
     m_spinner.setSpeed(motorSpeed);
     SmartDashboard.putBoolean("isSpinning", true);    
+  
+    String gameData;
+    gameData = DriverStation.getInstance().getGameSpecificMessage();
+    if(gameData.length() > 0)
+    {
+      switch (gameData.charAt(0))
+      {
+        case 'B' :
+          
+          break;
+        case 'G' :
+          //Green case code
+          break;
+        case 'R' :
+          //Red case code
+          break;
+        case 'Y' :
+          //Yellow case code
+          break;
+        default :
+          Logger.consoleLog("This is corrupt data")
+          break;
+      }
+    } else {
+      
+    }
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+
   }
 
   // Called once the command ends or is interrupted.
@@ -63,19 +91,22 @@ public class SpinColorWheel extends CommandBase {
   public boolean isFinished() {
     int detectedColorNumber = m_spinner.detectColor();
 
-    if (detectedColorNumber == referenceColorNumber) { // when it detects the reference color(which is whatever color it sees first)
+    if (detectedColorNumber == referenceColorNumber) { // when it detects the reference color(which is whatever color it
+                                                       // sees first)
       isColorDetected = true;
     }
 
-    if (isColorDetected && detectedColorNumber != referenceColorNumber) { // has detected ref. color; the wheel is at the next color 
-      colorDetectedCount ++;
-      isColorDetected = false;   
-      SmartDashboard.putNumber("color detected count", colorDetectedCount);   
+    if (isColorDetected && detectedColorNumber != referenceColorNumber) { // has detected ref. color; the wheel is at
+                                                                          // the next color
+      colorDetectedCount++;
+      isColorDetected = false;
+      SmartDashboard.putNumber("color detected count", colorDetectedCount);
     }
 
-    if (colorDetectedCount == 7) { // 7 means 3+(1/8) rotations and 1 is added to colorDetectedCount once 1/8 of a rotation is completed  
-      return true;      
-    }    
+    if (colorDetectedCount == 7) { // 7 means 3+(1/8) rotations and 1 is added to colorDetectedCount once 1/8 of a
+                                   // rotation is completed
+      return true;
+    }
 
     return false;
   }

@@ -20,7 +20,8 @@ public class PositionColorWheel extends CommandBase {
 
   private double motorSpeed = 1.0;
   private int resultColorNumber;
-  private final static int OFFSET_SIZE = 2; // note that if they offset is three or one, the program will only work if the color sensor is at a certain position
+  private final static int OFFSET_SIZE = 2; // note that if they offset is three or one, the program will only work if
+                                            // the color sensor is at a certain position
 
   /**
    * Creates a new ExampleCommand.
@@ -40,7 +41,37 @@ public class PositionColorWheel extends CommandBase {
   public void initialize() {
     int targetColorNumber = (int) SmartDashboard.getNumber("Target Color Number", -1);
 
-    resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % 4); // calculates offset color number since the robot color sensor is in a different place than the frc sensor on the color wheel;
+    String gameData;
+    gameData = DriverStation.getInstance().getGameSpecificMessage();
+    if (gameData.length() > 0) {
+      switch (gameData.charAt(0)) {
+      case 'B':
+        // Blue case code
+        targetColorNumber = 3;
+        break;
+      case 'G':
+        // Green case code
+        targetColorNumber = 2;
+        break;
+      case 'R':
+        // Red case code
+        targetColorNumber = 1;
+        break;
+      case 'Y':
+        // Yellow case code
+        targetColorNumber = 0;
+        break;
+      default:
+        // This is corrupt data
+        break;
+      }
+    } else {
+      // Code for no data received yet
+    }
+
+    resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % 4); // calculates offset color number since the robot
+                                                                   // color sensor is in a different place than the frc
+                                                                   // sensor on the color wheel;
     SmartDashboard.putNumber("result color number", resultColorNumber);
     m_spinner.setSpeed(motorSpeed);
     SmartDashboard.putBoolean("isSpinning", true);
@@ -49,7 +80,7 @@ public class PositionColorWheel extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+
   }
 
   // Called once the command ends or is interrupted.
