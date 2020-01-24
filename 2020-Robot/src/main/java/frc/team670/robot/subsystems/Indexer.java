@@ -3,102 +3,71 @@ package frc.team670.robot.subsystems;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.wpilibj.DigitalInput;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team670.robot.dataCollection.sensors.BeamBreak;
-import frc.team670.robot.utils.Logger;
 
 /**
- * 
- * @author el
+ *
  */
 public class Indexer extends SubsystemBase{
 
-    private BeamBreak frontSensor, backSensor;
     private CANSparkMax SM;
     private CANEncoder encoder;
-    private double speed;
     private int totalNumBalls;
-    private boolean lastSensorCheck, rotating, sending, fixing;
-    private double rotationGoal;
+    
 
-    public Indexer(BeamBreak frontSensor, BeamBreak backSensor, CANSparkMax SM) {
-        this.frontSensor = frontSensor;
-        this.backSensor = backSensor;
+    public Indexer(CANSparkMax SM) {
         this.SM = SM;
         encoder = SM.getEncoder();
-        speed = 0.9;
         totalNumBalls = 0;
-        sending = false;
-        lastSensorCheck = false;
-        fixing = false;
-        rotationGoal = 0;
     }
 
     public int totalNumOfBalls() {
         return totalNumBalls;
     }
 
-    public void periodic() {
-
-        if (frontSensor.isTriggered()) {
-            lastSensorCheck = true;
-        } else {
-            if (lastSensorCheck == true) {
-                totalNumBalls++;
-                rotateOneCompartment();
-            }
-        }
-
-        if (rotating) {
-            SM.set(speed);
-            if (encoder.getPosition() > rotationGoal - 0.01) {
-                rotating = false;
-                SM.set(0);
-                
-            }
-        }
-
-        if (sending) {
-            SM.set(speed);
-
- 
-            if (encoder.getPosition() > rotationGoal - 0.01) {
-                sending = false;
-                SM.set(0);
-
-
-                
-                //Means the rotation has been offset too much and needs to be reset
-                if (encoder.getPosition() % 0.2 < 0.17 && encoder.getPosition() % 0.2 > 0.3) {
-                    fixing = true;
-                }
-            }
-        }
-
-        if (fixing) {
-            SM.set(0.5);
-            if (encoder.getPosition() % 0.2 > 0.19 || encoder.getPosition() % 2 < 0.1) {
-                fixing = false;
-                SM.set(0);
-            }
-        }
-
+    public void setNumBalls(int num) {
+        totalNumBalls = num;
     }
 
-    private void rotateOneCompartment() {
-        rotating = true;
-        rotationGoal = encoder.getPosition() + 0.2;
+    public boolean isZeroed() {
+        //Probably hall sensor?
+        return false;
     }
 
+    public boolean ballIn() {
+        //FSR maybe?
+        return false;
+    }
 
     /**
-     * Must also activate the conveyor belt when calling this method
+     * Sets speed of the motor controlling the revolver
      */
-    public void sendAllToShooter() {
-        sending = true;
-        rotationGoal = encoder.getPosition() + 1;
+    public void setSpeed(double speed) {
+        SM.set(speed);
     }
+
+    public double getSpeed() {
+        return SM.get();
+    }
+
+
+    public double getPosition() {
+        return encoder.getPosition();
+    }
+
+    /**
+     * -1 for negative direction, 1 for positive direction
+     */
+    public int directionToTurn () {
+        if (encoder.getPosition() % 1.0 < 0.5) {
+            return -1;
+        } else {
+            return 1;
+        }
+    }
+
+
 
 
 }

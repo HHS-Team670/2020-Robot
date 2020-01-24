@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 
 
@@ -29,6 +30,8 @@ public class RobotContainer {
   public static DriveBase driveBase = new DriveBase();
 
   public static ColorMatcher colorMatch;// = new ColorMatcher();
+
+  public static Indexer indexer;
 
 
   /**
