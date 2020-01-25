@@ -45,13 +45,7 @@ public class Turret extends RotatingSubsystem {
         // verify if this is counts per revolution as the input of get ticks in degrees. 
     }
 
-    // /**
-    //  * TODO: implement this method
-    //  */
-    // protected double getArbitraryFeedForwardAngleMultiplier()
-    // {
-    //     return 0.0;
-    // }
+
 
     /**
      * angular speed, not linear speed
@@ -71,33 +65,6 @@ public class Turret extends RotatingSubsystem {
     public int getEncoderPos() {
         return getEncoder().getPulseWidthPosition();
     }
-
-//     /**
-//      * motor health condition: 
-//      *          indicates the current working capabilities, 
-//      *                  raises flag when turret motor is not functioning properly. 
-//      * 
-//      * @return
-//      */
-//     public boolean motorHealthConditions() {
-//         // talonControl 
-
-//         //  This function is apparently depreciated
-// //        double currentAmps = talonControl.getOutputCurrent();
-
-//         final double currentAmps = talonControl.getSupplyCurrent();   // OR
-// //        double currentAmps = talonControl.getStatorCurrent();
-
-//         final double outputVoltage = talonControl.getMotorOutputVoltage();
-//         final double busV = talonControl.getBusVoltage();
-        
-//         /**
-//          * double quadEncoderPos = talonControl.getSelectedSensorPosition();
-//          * 
-//          */
-
-//         return false;
-//     }
 
     /**
      * 
@@ -147,14 +114,78 @@ public class Turret extends RotatingSubsystem {
      * Rotates the turret amount amount.
      * @param amount the amount (in degrees) the turret should rotate
      */
-    public void rotateTurretAmount(double amount) {
+    public void rotateTurretAdditionalAmount(double amount) {
         if(Math.abs(getAngleInDegrees() + amount) > SOFT_LIMIT_IN_DEGREES)
         {
             return;
         }
         double amountInTicks = amount*getTicksPerDegree();
-        talonControl.set((ControlMode.Position), amountInTicks);
+        talonControl.set((ControlMode.Position), super.getPositionTicks() + amountInTicks);
     }
+
+    public double getTicksPerDegree() { //int numberOfTicks) {
+        return TICKS_PER_REVOLUTION / 360;//((numberOfTicks / TICKS_PER_REVOLUTION) * 360);
+    }
+
+    public double getTicks(double degrees) {
+        return degrees * getTicksPerDegree();
+    }
+
+    public double getDegrees(double ticks) {
+        return ticks / getTicksPerDegree();
+    }
+
+     /**
+     * Sets the setpoint for motion magic (in ticks)
+     */
+    public void setMotionMagicSetpointAngle(final double angle) {
+        setpoint = (int)(angle*(getTicksPerDegree()));
+    }
+
+    public SensorCollection getEncoder() { //   TODO This is not CANEncoder, this has to be changed later.
+        return this.talonControl.getSensorCollection();                    // TODO FIX THIS
+    }
+
+
+
+    //  Unused methods for potential later use. 
+
+
+    // /**
+    //  * TODO: implement this method
+    //  */
+    // protected double getArbitraryFeedForwardAngleMultiplier()
+    // {
+    //     return 0.0;
+    // }
+
+    //     /**
+//      * motor health condition: 
+//      *          indicates the current working capabilities, 
+//      *                  raises flag when turret motor is not functioning properly. 
+//      * 
+//      * @return
+//      */
+//     public boolean motorHealthConditions() {
+//         // talonControl 
+
+//         //  This function is apparently depreciated
+// //        double currentAmps = talonControl.getOutputCurrent();
+
+//         final double currentAmps = talonControl.getSupplyCurrent();   // OR
+// //        double currentAmps = talonControl.getStatorCurrent();
+
+//         final double outputVoltage = talonControl.getMotorOutputVoltage();
+//         final double busV = talonControl.getBusVoltage();
+        
+//         /**
+//          * double quadEncoderPos = talonControl.getSelectedSensorPosition();
+//          * 
+//          */
+
+//         return false;
+//     }
+
     /**
      * 
      * get encoder ticks
@@ -186,27 +217,5 @@ public class Turret extends RotatingSubsystem {
     
     // }
 
-    public double getTicksPerDegree() { //int numberOfTicks) {
-        return TICKS_PER_REVOLUTION / 360;//((numberOfTicks / TICKS_PER_REVOLUTION) * 360);
-    }
-
-    public double getTicks(double degrees) {
-        return degrees * getTicksPerDegree();
-    }
-
-    public double getDegrees(double ticks) {
-        return ticks / getTicksPerDegree();
-    }
-
-     /**
-     * Sets the setpoint for motion magic (in ticks)
-     */
-    public void setMotionMagicSetpointAngle(final double angle) {
-        setpoint = (int)(angle*(getTicksPerDegree()));
-    }
-
-    public SensorCollection getEncoder() { //   TODO This is not CANEncoder, this has to be changed later.
-        return this.talonControl.getSensorCollection();                    // TODO FIX THIS
-    }
 
 }
