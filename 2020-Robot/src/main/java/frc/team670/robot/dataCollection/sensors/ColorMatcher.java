@@ -36,13 +36,12 @@ public class ColorMatcher {
   public static final Color BLUE_TARGET = ColorMatch.makeColor(0.136, 0.412, 0.450);
   public static final Color YELLOW_TARGET = ColorMatch.makeColor(0.293, 0.561, 0.144);
   public static final Color RED_TARGET = ColorMatch.makeColor(0.475, 0.371, 0.153);
-  public static final Color GREEN_TARGET = ColorMatch.makeColor(0.196, 0.557, 0.246);  
+  public static final Color GREEN_TARGET = ColorMatch.makeColor(0.196, 0.557, 0.246);
 
   public static final int BLUE_COLOR_NUMBER = 0;
   public static final int YELLOW_COLOR_NUMBER = 1;
   public static final int RED_COLOR_NUMBER = 2;
   public static final int GREEN_COLOR_NUMBER = 3;
-
 
   private ColorMatchResult matchedResult = new ColorMatchResult(Color.kBlack, 0);
 
@@ -58,7 +57,7 @@ public class ColorMatcher {
     m_colorMatcher.addColorMatch(BLUE_TARGET);
     m_colorMatcher.addColorMatch(YELLOW_TARGET);
     m_colorMatcher.addColorMatch(RED_TARGET);
-    m_colorMatcher.addColorMatch(GREEN_TARGET);   
+    m_colorMatcher.addColorMatch(GREEN_TARGET);
 
     m_colorMatcher.setConfidenceThreshold(0.85);
   }
@@ -112,4 +111,7 @@ public class ColorMatcher {
 
     return colorNumber;
   }
+
+  public void periodic() {
+
 }

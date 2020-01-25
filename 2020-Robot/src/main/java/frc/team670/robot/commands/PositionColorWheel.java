@@ -20,7 +20,8 @@ public class PositionColorWheel extends CommandBase {
 
   private double motorSpeed = 1.0;
   private int resultColorNumber;
-  private final static int OFFSET_SIZE = 2; // note that if they offset is three or one, the program will only work if the color sensor is at a certain position
+  private final static int OFFSET_SIZE = 2; // note that if they offset is three or one, the program will only work if
+                                            // the color sensor is at a certain position
 
   /**
    * Creates a new PositionColorWheel command.
@@ -41,7 +42,9 @@ public class PositionColorWheel extends CommandBase {
     int targetColorNumber = m_spinner.targetColorNumber;
     // int targetColorNumber = (int) SmartDashboard.getNumber("Target Color Number", -1);
 
-    resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % 4); // calculates offset color number since the robot color sensor is in a different place than the frc sensor on the color wheel;
+    resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % 4); // calculates offset color number since the robot
+                                                                   // color sensor is in a different place than the frc
+                                                                   // sensor on the color wheel;
     SmartDashboard.putNumber("result color number", resultColorNumber);
     m_spinner.setSpeed(motorSpeed);
     // SmartDashboard.putBoolean("isSpinning", true);
@@ -50,7 +53,7 @@ public class PositionColorWheel extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+
   }
 
   // Called once the command ends or is interrupted.
