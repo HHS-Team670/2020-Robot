@@ -545,9 +545,11 @@ public class DriveBase extends MustangSubsystemBase {
     return null;
   }
 
+  @Override
   public void zeroSensors(){
     
   }  
+
   public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
     tankDrive(leftVoltage / RobotController.getBatteryVoltage(), rightVoltage / RobotController.getBatteryVoltage());
   }

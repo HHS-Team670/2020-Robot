@@ -3,13 +3,14 @@ package frc.team670.robot.commands;
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.commands.MustangCommandBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.utils.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class TestCommand extends MustangCommandBase{
 
-    protected boolean ended, exe;
+    protected boolean ended, exe, cancelled;
 
     private Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> healthRequirements;
 
@@ -25,13 +26,23 @@ public class TestCommand extends MustangCommandBase{
         return healthRequirements;
     }
 
-    public void setRunning(boolean exe){
-        this.exe = exe;
+    @Override
+    public void initialize() {
+        this.exe = true;
+        Logger.consoleLog("Initialized");
     }
 
     @Override
     public void end(boolean cancelled){
-        if (cancelled) this.ended = false;
+        if (cancelled) this.ended = true;
+    }
+
+    public void cancel() {
+        this.cancelled = true;
+    }
+
+    public boolean wasCancelled() {
+        return this.cancelled;
     }
 
     public boolean isRunning(){

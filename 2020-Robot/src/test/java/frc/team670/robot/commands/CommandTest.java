@@ -13,6 +13,7 @@ import frc.team670.robot.RobotContainer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.utils.Logger;
 import frc.team670.robot.commands.MustangCommandBase;
+import frc.team670.robot.commands.MustangScheduler;
 
 import frc.team670.robot.commands.TestCommand;
 import frc.team670.robot.commands.TestSubsystem;
@@ -31,42 +32,28 @@ import frc.team670.robot.commands.TestSubsystem;
     @Test
     public void testMC(){
         RobotContainer rc = new RobotContainer();
+        MustangScheduler ms = new MustangScheduler();
 
-        TestSubsystem test1 = new TestSubsystem(1);
-        TestSubsystem test2 = new TestSubsystem(2);
-        TestSubsystem test3 = new TestSubsystem(3);
-        TestSubsystem test4 = new TestSubsystem(1);
-        TestSubsystem test5 = new TestSubsystem(1);
-        TestSubsystem test6 = new TestSubsystem(1);
+        TestSubsystem testSub1 = new TestSubsystem(1); // g
+        TestSubsystem testSub2 = new TestSubsystem(2); // y
+        TestSubsystem testSub3 = new TestSubsystem(3); // r
+        TestSubsystem testSub4 = new TestSubsystem(1); // g
+        TestSubsystem testSub5 = new TestSubsystem(1); // g
+        TestSubsystem testSub6 = new TestSubsystem(1); // g
         
-      //  TestCommand tc1 = new TestCommand(test1, test2, test3); 
-        TestCommand tc2 = new TestCommand(test4, test5, test6);
+        TestCommand tc1 = new TestCommand(testSub1, testSub2, testSub3); 
+        TestCommand tc2 = new TestCommand(testSub4, testSub5, testSub6);
         
-        CommandScheduler.getInstance().onCommandInitialize(command -> CommandTest.checkCommandsHealth(command));
-        CommandScheduler.getInstance().onCommandExecute(command -> ((TestCommand)(command)).setRunning(true));
+        ms.schedule(tc1); //this one should fail
+        ms.schedule(tc2); //this one should pass
+        ms.run();
 
-       // CommandScheduler.getInstance().schedule(tc1);
-        CommandScheduler.getInstance().schedule(tc2);
-        CommandScheduler.getInstance().run();
-       
-       // assertTrue(tc1.isEnded());
-        assertTrue(tc2.isRunning());
+      //  assertTrue(tc1.isEnded());
+        assertFalse(tc1.isScheduled());
+        assertTrue(ms.getCurrentlyScheduled().equals(tc2));
+        assertTrue(tc2.isScheduled());
 
     }
 
-
-    // This is the same logic as what is run in Robot.java for each command required.
-    public static void checkCommandsHealth(Command command){
-        if (command instanceof MustangCommandBase){
-          for (MustangSubsystemBase s: ((MustangCommandBase)command).getHealthRequirements().keySet()){
-            if (s.getHealth(false).getId() > ((MustangCommandBase)command).getHealthRequirements().get(s).getId()){
-                CommandScheduler.getInstance().cancel(command);
-                Logger.consoleLog("Canceled command");
-                Logger.consoleLog("Target state: " + ((MustangCommandBase)command).getHealthRequirements().get(s));
-                Logger.consoleLog("Actual state: " + s.getHealth(true));
-            }
-          }
-        }
-    }
 
   }
