@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
- * An example command that uses an example subsystem.
+ * An PositionColorWheel command that uses an ColorWheelSpinner subsystem.
  */
 public class PositionColorWheel extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
@@ -24,9 +24,9 @@ public class PositionColorWheel extends CommandBase {
                                             // the color sensor is at a certain position
 
   /**
-   * Creates a new ExampleCommand.
+   * Creates a new PositionColorWheel command.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param ColorWheelSpinner The subsystem used by this command.
    */
   public PositionColorWheel(ColorWheelSpinner spinner) {
     m_spinner = spinner;
