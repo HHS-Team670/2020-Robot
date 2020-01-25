@@ -57,7 +57,7 @@ public class SpinColorWheel extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_spinner.setSpeed(0.0);
-    SmartDashboard.putBoolean("isSpinning", false);
+    // SmartDashboard.putBoolean("isSpinning", false);
   }
 
   // Returns true when the command should end.
