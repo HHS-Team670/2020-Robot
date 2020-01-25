@@ -24,20 +24,20 @@ public class JoystickTurret extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turret.driveTurret(0);
+    turret.setAngle(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double angle = Math.atan((RobotContainer.operatorJoystick.getY())/(RobotContainer.operatorJoystick.getX()));
-    turret.driveTurret(angle);
+    turret.setAngle(angle);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    turret.driveTurret(0);
+    turret.setAngle(0);
   }
 
   // Returns true when the command should end.
