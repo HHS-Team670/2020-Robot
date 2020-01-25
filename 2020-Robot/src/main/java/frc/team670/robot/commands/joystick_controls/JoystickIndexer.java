@@ -8,42 +8,39 @@
 package frc.team670.robot.commands.joystick_controls;
  
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.team670.robot.RobotContainer;
-import frc.team670.robot.constants.RobotConstants;
-import frc.team670.robot.subsystems.Intake;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.team670.robot.subsystems.Shooter;
  
- 
-public class JoystickIntake extends CommandBase {
+public class JoystickIndexer extends CommandBase {
  /**
-  * Creates a new Joystick_Intake.
+  * Creates a new JoystickGun.
   */
- 
- private Intake intake;
- public JoystickIntake(Intake intake) {
+  private BallIndexer ballIndexer;
+ public JoystickIndexer(BallIndexer ballIndexer) {
    // Use addRequirements() here to declare subsystem dependencies.
-   this.intake = intake;
-   addRequirements(intake);
-  
+   super();
+   this.ballIndexer=ballIndexer;
+   addRequirements(ballIndexer);
  }
  
  // Called when the command is initially scheduled.
  @Override
  public void initialize() {
-   intake.driveIntake(0);
+  ballIndexer.//method, initialize 0
  }
  
  // Called every time the scheduler runs while the command is scheduled.
  @Override
  public void execute() {
-   if (RobotContainer.operatorJoystick.getTop()){
-     intake.driveIntake(RobotContainer.operatorJoystick.getY());
-   }
+  if (RobotContainer.operatorJoystick.getTrigger()){
+    ballIndexer.//method(RobotContainer.operatorJoystick.getY());
+  }
  }
  
  // Called once the command ends or is interrupted.
  @Override
  public void end(boolean interrupted) {
-   intake.driveInake(0);
+  ballIndexer.//method, end 0
  }
  
  // Returns true when the command should end.
@@ -52,3 +49,4 @@ public class JoystickIntake extends CommandBase {
    return false;
  }
 }
+ 
