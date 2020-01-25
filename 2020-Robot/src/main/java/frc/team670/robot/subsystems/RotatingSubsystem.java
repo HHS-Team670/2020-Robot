@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -22,23 +23,23 @@ public abstract class RotatingSubsystem extends SubsystemBase implements Tunable
 
     protected SensorCollection rotatorSensorCollection;
 
-    public RotatingSubsystem(TalonSRX rotatorTalon, double arbitraryFeedForwardConstant, int forwardSoftLimit, int reverseSoftLimit, boolean timeout, int quadEncoderMin, int quadEncoderMax, int continuousCurrentLimit, int peakCurrentLimit, int offsetFromEncoderZero) {
+    public RotatingSubsystem(CANSparkMax canSparkMax, double arbitraryFeedForwardConstant, int forwardSoftLimit, int reverseSoftLimit, boolean timeout, int quadEncoderMin, int quadEncoderMax, int continuousCurrentLimit, int peakCurrentLimit, int offsetFromEncoderZero) {
         // For testing purposes
-        if (rotatorTalon != null) {
-            this.rotator = rotatorTalon;
-            this.rotatorSensorCollection = rotatorTalon.getSensorCollection();
+        if (canSparkMax != null) {
+            this.rotator = canSparkMax;
+            this.rotatorSensorCollection = canSparkMax.getSensorCollection();
             this.arbitraryFeedForwardConstant = arbitraryFeedForwardConstant;
             this.timeout = timeout;
 
             this.offsetFromEncoderZero = offsetFromEncoderZero;
 
-            rotatorTalon.configFactoryDefault();
+            canSparkMax.configFactoryDefault();
 
-            rotatorTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+            canSparkMax.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
-            if (rotatorTalon != null) {
-                this.rotator = rotatorTalon;
-                this.rotatorSensorCollection = rotatorTalon.getSensorCollection();
+            if (canSparkMax != null) {
+                this.rotator = canSparkMax;
+                this.rotatorSensorCollection = canSparkMax.getSensorCollection();
                 this.arbitraryFeedForwardConstant = arbitraryFeedForwardConstant;
                 this.timeout = timeout;
 
@@ -55,17 +56,17 @@ public abstract class RotatingSubsystem extends SubsystemBase implements Tunable
 
             rotatorSensorCollection.setQuadraturePosition(pulseWidthPos, 0);
 
-            rotatorTalon.configContinuousCurrentLimit(continuousCurrentLimit);
-            rotatorTalon.configPeakCurrentLimit(peakCurrentLimit);
-            rotatorTalon.enableCurrentLimit(true);
+            canSparkMax.configContinuousCurrentLimit(continuousCurrentLimit);
+            canSparkMax.configPeakCurrentLimit(peakCurrentLimit);
+            canSparkMax.enableCurrentLimit(true);
 
             // These thresholds stop the motor when limit is reached
-            rotatorTalon.configForwardSoftLimitThreshold(forwardSoftLimit);
-            rotatorTalon.configReverseSoftLimitThreshold(reverseSoftLimit);
+            canSparkMax.configForwardSoftLimitThreshold(forwardSoftLimit);
+            canSparkMax.configReverseSoftLimitThreshold(reverseSoftLimit);
 
             // Enable Safety Measures
-            rotatorTalon.configForwardSoftLimitEnable(true);
-            rotatorTalon.configReverseSoftLimitEnable(true);
+            canSparkMax.configForwardSoftLimitEnable(true);
+            canSparkMax.configReverseSoftLimitEnable(true);
             
             }
         }
