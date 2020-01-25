@@ -26,23 +26,22 @@ public class JoystickIndexer extends CommandBase {
  // Called when the command is initially scheduled.
  @Override
  public void initialize() {
-  ballIndexer.//method, initialize 0
+  ballIndexer.driveIndexer(0);
  }
  
  // Called every time the scheduler runs while the command is scheduled.
  @Override
  public void execute() {
   if (RobotContainer.operatorJoystick.getTrigger()){
-    ballIndexer.//method(RobotContainer.operatorJoystick.getY());
+    ballIndexer.driveIndexer(RobotContainer.operatorJoystick.getY());
   }
  }
  
  // Called once the command ends or is interrupted.
  @Override
  public void end(boolean interrupted) {
-  ballIndexer.//method, end 0
+  ballIndexer.driveIndexer(0);
  }
- 
  // Returns true when the command should end.
  @Override
  public boolean isFinished() {
