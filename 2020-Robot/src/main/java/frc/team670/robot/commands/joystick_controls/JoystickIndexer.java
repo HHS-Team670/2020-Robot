@@ -8,44 +8,44 @@
 package frc.team670.robot.commands.joystick_controls;
  
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.team670.robot.subsystems.Shooter;
+//import frc.team670.robot.subsystems.BallIndexer;
  
 public class JoystickIndexer extends CommandBase {
  /**
   * Creates a new JoystickGun.
   */
+  /*
   private BallIndexer ballIndexer;
- public JoystickIndexer(BallIndexer ballIndexer) {
-   // Use addRequirements() here to declare subsystem dependencies.
-   super();
-   this.ballIndexer=ballIndexer;
-   addRequirements(ballIndexer);
- }
+  public JoystickIndexer(BallIndexer ballIndexer) {
+    // Use addRequirements() here to declare subsystem dependencies.
+     super();
+    this.ballIndexer=ballIndexer;
+    addRequirements(ballIndexer);
+  }*/
  
  // Called when the command is initially scheduled.
  @Override
- public void initialize() {
-  ballIndexer.driveIndexer(0);
- }
+  public void initialize() {
+    //ballIndexer.driveIndexer(0);
+  }
  
  // Called every time the scheduler runs while the command is scheduled.
  @Override
- public void execute() {
-  if (RobotContainer.operatorJoystick.getTrigger()){
-    ballIndexer.driveIndexer(RobotContainer.operatorJoystick.getY());
+  public void execute() {
+    // if (RobotContainer.operatorJoystick.getTrigger()){
+    //   ballIndexer.driveIndexer(RobotContainer.operatorJoystick.getY());
+    // }
   }
- }
  
  // Called once the command ends or is interrupted.
  @Override
- public void end(boolean interrupted) {
-  ballIndexer.driveIndexer(0);
- }
+  public void end(boolean interrupted) {
+   // ballIndexer.driveIndexer(0);
+  }
  // Returns true when the command should end.
  @Override
- public boolean isFinished() {
-   return false;
- }
+  public boolean isFinished() {
+    return false;
+  }
 }
  
