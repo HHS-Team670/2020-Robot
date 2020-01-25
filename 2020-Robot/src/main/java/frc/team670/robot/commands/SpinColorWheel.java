@@ -40,36 +40,10 @@ public class SpinColorWheel extends CommandBase {
   public void initialize() {
     colorDetectedCount = 0;
     isColorDetected = false;
-    SmartDashboard.putNumber("color detected count", 0);   
+    SmartDashboard.putNumber("color detected count", 0);
     referenceColorNumber = m_spinner.detectColor();
     m_spinner.setSpeed(motorSpeed);
-    SmartDashboard.putBoolean("isSpinning", true);    
-  
-    String gameData;
-    gameData = DriverStation.getInstance().getGameSpecificMessage();
-    if(gameData.length() > 0)
-    {
-      switch (gameData.charAt(0))
-      {
-        case 'B' :
-          
-          break;
-        case 'G' :
-          //Green case code
-          break;
-        case 'R' :
-          //Red case code
-          break;
-        case 'Y' :
-          //Yellow case code
-          break;
-        default :
-          Logger.consoleLog("This is corrupt data")
-          break;
-      }
-    } else {
-      
-    }
+    SmartDashboard.putBoolean("isSpinning", true);
 
   }
 
