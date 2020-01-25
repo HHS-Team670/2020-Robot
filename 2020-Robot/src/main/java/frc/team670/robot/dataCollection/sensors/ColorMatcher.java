@@ -110,8 +110,5 @@ public class ColorMatcher {
     SmartDashboard.putNumber("Detected Color Number", colorNumber);
 
     return colorNumber;
-  }
-
-  public void periodic() {
-  }
+  }  
 }

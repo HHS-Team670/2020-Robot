@@ -9,6 +9,8 @@ package frc.team670.robot.commands;
 
 import frc.team670.robot.subsystems.ColorWheelSpinner;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team670.robot.utils.Logger;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
@@ -39,40 +41,39 @@ public class PositionColorWheel extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    int targetColorNumber = m_spinner.targetColorNumber;
+    int targetColorNumber = -1;
     // int targetColorNumber = (int) SmartDashboard.getNumber("Target Color Number", -1);
 
     String gameData;
     gameData = DriverStation.getInstance().getGameSpecificMessage();
+
     if (gameData.length() > 0) {
       switch (gameData.charAt(0)) {
-      case 'B':
-        // Blue case code
-        targetColorNumber = 3;
-        break;
-      case 'G':
-        // Green case code
-        targetColorNumber = 2;
-        break;
-      case 'R':
-        // Red case code
-        targetColorNumber = 1;
-        break;
-      case 'Y':
-        // Yellow case code
-        targetColorNumber = 0;
-        break;
-      default:
-        // This is corrupt data
-        break;
-      }
+        case 'B':
+          targetColorNumber = 0;
+          break;
+        case 'Y':
+          targetColorNumber = 1;
+          break;
+        case 'R':
+          targetColorNumber = 2;
+          break;
+        case 'G':
+          targetColorNumber = 3;
+          break;
+        default:
+        Logger.consoleLog("This is corrupt data");
+          break;
+        }
     } else {
-      // Code for no data received yet
+      Logger.consoleLog("No data received.");
     }
 
-    resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % 4); // calculates offset color number since the robot
-                                                                   // color sensor is in a different place than the frc
-                                                                   // sensor on the color wheel;
+    resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % 4); /** 
+                                                                   * calculates offset color number since the robot
+                                                                   * color sensor is in a different place than the frc
+                                                                   * sensor on the color wheel;
+                                                                   */
     SmartDashboard.putNumber("result color number", resultColorNumber);
     m_spinner.setSpeed(motorSpeed);
     // SmartDashboard.putBoolean("isSpinning", true);
