@@ -41,6 +41,34 @@ public class PositionColorWheel extends CommandBase {
   public void initialize() {
     int targetColorNumber = (int) SmartDashboard.getNumber("Target Color Number", -1);
 
+    String gameData;
+    gameData = DriverStation.getInstance().getGameSpecificMessage();
+    if (gameData.length() > 0) {
+      switch (gameData.charAt(0)) {
+      case 'B':
+        // Blue case code
+        targetColorNumber = 3;
+        break;
+      case 'G':
+        // Green case code
+        targetColorNumber = 2;
+        break;
+      case 'R':
+        // Red case code
+        targetColorNumber = 1;
+        break;
+      case 'Y':
+        // Yellow case code
+        targetColorNumber = 0;
+        break;
+      default:
+        // This is corrupt data
+        break;
+      }
+    } else {
+      // Code for no data received yet
+    }
+
     resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % 4); // calculates offset color number since the robot
                                                                    // color sensor is in a different place than the frc
                                                                    // sensor on the color wheel;
