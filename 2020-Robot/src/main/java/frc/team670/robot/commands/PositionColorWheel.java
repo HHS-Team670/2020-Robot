@@ -29,8 +29,8 @@ public class PositionColorWheel extends CommandBase {
    */
   public PositionColorWheel(ColorWheelSpinner spinner) {
     m_spinner = spinner;
-    SmartDashboard.putNumber("Target Color Number", -1);
-    SmartDashboard.putBoolean("isSpinning", false);
+    // SmartDashboard.putNumber("Target Color Number", -1);
+    // SmartDashboard.putBoolean("isSpinning", false);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(spinner);
   }
@@ -38,12 +38,13 @@ public class PositionColorWheel extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    int targetColorNumber = (int) SmartDashboard.getNumber("Target Color Number", -1);
+    int targetColorNumber = m_spinner.targetColorNumber;
+    // int targetColorNumber = (int) SmartDashboard.getNumber("Target Color Number", -1);
 
     resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % 4); // calculates offset color number since the robot color sensor is in a different place than the frc sensor on the color wheel;
     SmartDashboard.putNumber("result color number", resultColorNumber);
     m_spinner.setSpeed(motorSpeed);
-    SmartDashboard.putBoolean("isSpinning", true);
+    // SmartDashboard.putBoolean("isSpinning", true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -56,7 +57,7 @@ public class PositionColorWheel extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_spinner.setSpeed(0.0);
-    SmartDashboard.putBoolean("isSpinning", false);
+    // SmartDashboard.putBoolean("isSpinning", false);
   }
 
   // Returns true when the command should end.

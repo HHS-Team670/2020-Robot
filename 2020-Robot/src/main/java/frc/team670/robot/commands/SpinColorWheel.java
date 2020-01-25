@@ -42,7 +42,7 @@ public class SpinColorWheel extends CommandBase {
     SmartDashboard.putNumber("color detected count", 0);   
     referenceColorNumber = m_spinner.detectColor();
     m_spinner.setSpeed(motorSpeed);
-    SmartDashboard.putBoolean("isSpinning", true);    
+    // SmartDashboard.putBoolean("isSpinning", true);    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -55,7 +55,7 @@ public class SpinColorWheel extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_spinner.setSpeed(0.0);
-    SmartDashboard.putBoolean("isSpinning", false);
+    // SmartDashboard.putBoolean("isSpinning", false);
   }
 
   // Returns true when the command should end.
