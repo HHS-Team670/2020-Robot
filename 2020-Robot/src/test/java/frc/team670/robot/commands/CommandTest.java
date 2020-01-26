@@ -48,7 +48,8 @@ import frc.team670.robot.commands.TestSubsystem;
         ms.schedule(tc2); //this one should pass
         ms.run();
 
-      //  assertTrue(tc1.isEnded());
+        //assertTrue(tc1.isEnded()); // using cancel instead
+        assertTrue(tc1.isCancelled());
         assertFalse(tc1.isScheduled());
         assertTrue(ms.getCurrentlyScheduled().equals(tc2));
         assertTrue(tc2.isScheduled());

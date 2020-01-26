@@ -34,14 +34,14 @@ public class TestCommand extends MustangCommandBase{
 
     @Override
     public void end(boolean cancelled){
-        if (cancelled) this.ended = true;
+        if (cancelled) this.ended = true; //end is never called? just cancel, which doesn't call end
     }
 
     public void cancel() {
         this.cancelled = true;
     }
 
-    public boolean wasCancelled() {
+    public boolean isCancelled() {
         return this.cancelled;
     }
 

@@ -37,7 +37,7 @@ public class RobotContainer {
   
   //TODO: after changes made to the subsystems, should make these fields private
 
-  public static DriveBase driveBase = new DriveBase();
+  public static DriveBase driveBase;// = new DriveBase();
 
   public static ColorMatcher colorMatch;// = new ColorMatcher();
 

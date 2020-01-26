@@ -52,7 +52,7 @@ public class MustangScheduler{
         this.currentCommand = command;
         scheduler.schedule(command);
         Logger.consoleLog("Command scheduled: %s", this.currentCommand.getName());
-        this.currentCommand = null;
+        //this.currentCommand = null; // not sure where to move this but it's causing npe in mcTest, seems pointless but not sure
       }
 
     }
