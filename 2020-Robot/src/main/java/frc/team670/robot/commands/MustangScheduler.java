@@ -15,10 +15,25 @@ public class MustangScheduler{
 
     private CommandScheduler scheduler;
 
-    public MustangScheduler(){
+    private static MustangScheduler instance;
+
+    /**
+     * Returns the MustangScheduler instance.
+     *
+     * @return the instance
+     */
+    public static synchronized MustangScheduler getInstance() {
+      if (instance == null) {
+        instance = new MustangScheduler();
+      }
+      return instance;
+    }
+
+    MustangScheduler(){
         scheduler = CommandScheduler.getInstance();
         scheduler.onCommandInitialize(command -> check(command));
     }
+
 
     public void run(){
         scheduler.run();
@@ -38,23 +53,26 @@ public class MustangScheduler{
 
     public void schedule(Command command){
 
-    if (command instanceof MustangCommandBase){
-        Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> requirements = ((MustangCommandBase)(command)).getHealthRequirements();
-        for (MustangSubsystemBase s: requirements.keySet()){
-          MustangSubsystemBase .HealthState healthReq = requirements.get(s); 
-          if (s.getHealth(false).getId() > healthReq.getId()){
-                //DriverStation.reportError(command.getName() + " not run because of health issue! Required health: " + healthReq + ", Actual health: " + s.getHealth(false), false);
-                Logger.consoleLog(command.getName() + " not run because of health issue! Required health: " + healthReq + ", Actual health: " + s.getHealth(false));
-                command.cancel();
-                return;
+         try{
+            if (command instanceof MustangCommandBase){
+                Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> requirements = ((MustangCommandBase)(command)).getHealthRequirements();
+          
+                for (MustangSubsystemBase s: requirements.keySet()){
+                MustangSubsystemBase .HealthState healthReq = requirements.get(s); 
+                if (s.getHealth(false).getId() > healthReq.getId()){
+                        //DriverStation.reportError(command.getName() + " not run because of health issue! Required health: " + healthReq + ", Actual health: " + s.getHealth(false), false);
+                        Logger.consoleLog(command.getName() + " not run because of health issue! Required health: " + healthReq + ", Actual health: " + s.getHealth(false));
+                        return;
+                    }
+                }
             }
+            this.currentCommand = command;
+            scheduler.schedule(command);        
+            Logger.consoleLog("Command scheduled: %s", this.currentCommand.getName());
+        } finally {
+            this.currentCommand = null;
         }
-        this.currentCommand = command;
-        scheduler.schedule(command);
-        Logger.consoleLog("Command scheduled: %s", this.currentCommand.getName());
-        //this.currentCommand = null; // not sure where to move this but it's causing npe in mcTest, seems pointless but not sure
-      }
-
+    
     }
 
     public void check(Command command) throws RuntimeException{

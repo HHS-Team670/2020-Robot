@@ -22,7 +22,7 @@ public abstract class MustangSubsystemBase extends SubsystemBase{
      * Creates a new MustangSubsystemBase. By default, the subsystem's initial health state is UNKNOWN (ID 0).
      */
     public MustangSubsystemBase(){
-        RobotContainer.addSubsystem(this);
+        // RobotContainer.addSubsystem(this);
         this.lastHealthState = HealthState.UNKNOWN;
     }
 
@@ -68,11 +68,6 @@ public abstract class MustangSubsystemBase extends SubsystemBase{
      * Calculates the current state of the subsystem.
      */
     public abstract HealthState checkHealth();
-
-    /**
-     * Routine for zeroing all sensors associated with this subsystem
-     */
-    public abstract void zeroSensors();
 
     public void initDefaultCommand(MustangCommandBase command){
         CommandScheduler.getInstance().setDefaultCommand(this, command);

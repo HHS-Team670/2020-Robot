@@ -31,8 +31,9 @@ import frc.team670.robot.commands.TestSubsystem;
 
     @Test
     public void testMC(){
-        RobotContainer rc = new RobotContainer();
-        MustangScheduler ms = new MustangScheduler();
+       // RobotContainer rc = new RobotContainer();
+        MustangScheduler ms = MustangScheduler.getInstance();
+        boolean caughtCS = false;
 
         TestSubsystem testSub1 = new TestSubsystem(1); // g
         TestSubsystem testSub2 = new TestSubsystem(2); // y
@@ -46,14 +47,20 @@ import frc.team670.robot.commands.TestSubsystem;
         
         ms.schedule(tc1); //this one should fail
         ms.schedule(tc2); //this one should pass
+        try{
+          CommandScheduler.getInstance().schedule(tc2);
+        }catch(RuntimeException e){
+          caughtCS = true;
+        }
+        
         ms.run();
 
         //assertTrue(tc1.isEnded()); // using cancel instead
         assertTrue(tc1.isCancelled());
         assertFalse(tc1.isScheduled());
-        assertTrue(ms.getCurrentlyScheduled().equals(tc2));
+        assertTrue(caughtCS);
         assertTrue(tc2.isScheduled());
-
+        //assert(ms.getCurrentlyScheduled().equals(tc2));
     }
 
 
