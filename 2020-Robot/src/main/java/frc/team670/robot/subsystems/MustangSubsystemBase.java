@@ -69,11 +69,6 @@ public abstract class MustangSubsystemBase extends SubsystemBase{
      */
     public abstract HealthState checkHealth();
 
-    /**
-     * Routine for zeroing all sensors associated with this subsystem
-     */
-    public abstract void zeroSensors();
-
     public void initDefaultCommand(MustangCommandBase command){
         CommandScheduler.getInstance().setDefaultCommand(this, command);
     }
