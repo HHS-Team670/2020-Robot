@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
- * An PositionColorWheel command that uses an ColorWheelSpinner subsystem.
+ * A PositionColorWheel command that uses a ColorWheelSpinner subsystem.
  */
 public class PositionColorWheel extends CommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })

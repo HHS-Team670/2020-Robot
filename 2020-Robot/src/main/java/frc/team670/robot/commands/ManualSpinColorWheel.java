@@ -10,12 +10,11 @@ package frc.team670.robot.commands;
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.ColorWheelSpinner;
-import frc.team670.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
- * An example command that uses an example subsystem.
+ * A ManualSpinColorWheel command that uses a ColorWheelSpinner subsystem.
  */
 public class ManualSpinColorWheel extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
@@ -24,7 +23,7 @@ public class ManualSpinColorWheel extends CommandBase {
   private double motorSpeed = 0.5;
 
   /**
-   * Creates a new ExampleCommand.
+   * Creates a new ManualSpinColorWheel.
    *
    * @param subsystem The subsystem used by this command.
    */
@@ -50,14 +49,14 @@ public class ManualSpinColorWheel extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
+    m_spinner.setSpeed(0.0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     if (!RobotContainer.oi.isAPressed()) {
-      m_spinner.setSpeed(0.0);
+      return true;
     }
     return false;
   }
