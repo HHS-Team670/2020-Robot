@@ -161,6 +161,13 @@ public class NavX {
         return mAHRS.getPitch();
     }
     
+    /**
+     * Gets the roll of the NavX
+     */
+    public double getRoll(){
+        return mAHRS.getRoll();
+    }
+
     public class ZeroableNavX_Yaw_PIDSource implements PIDSource{
 
         private PIDSourceType type;

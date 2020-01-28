@@ -1,13 +1,12 @@
 package frc.team670.robot.utils.math.sort;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 import java.util.TreeSet;
 
 /**
- * Add your docs here.
+ * Implementation of a depth first search algorithm
+ * @author ctychen
  */
 public class DepthFirstSearch {
 

@@ -1,11 +1,13 @@
 package frc.team670.robot.constants;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+
 public class RobotConstants {
 
     // Robot Dimensions
-    public static final double ROBOT_LENGTH = 30, ROBOT_WIDTH = 30, DRIVEBASE_TO_GROUND = 2.162;
+    public static final double ROBOT_LENGTH = 29.5, ROBOT_WIDTH = 30.3, DRIVEBASE_TO_GROUND = 2.03;
 
-    // Drive Base Dimensions TODO set these
+    // Drive Base Gearing
     public static final double DRIVEBASE_GEAR_RATIO = 8.45; // 8.45 if low gear, 10.71 if high gear. TODO check which
                                                             // one it is
     /** Drive Base Wheel Diameter in Inches */
@@ -40,14 +42,16 @@ public class RobotConstants {
     public static final double kTrackwidthInches = WHEEL_BASE;
     public static final double kTrackwidthMeters = WHEEL_BASE * 0.0254;
 
-    public static final double kPDriveVel = 4;
+    public static final DifferentialDriveKinematics kDriveKinematics =
+    new DifferentialDriveKinematics(kTrackwidthMeters);
+    public static final double kPDriveVel = 2.53;
     public static final double kIDriveVel = 0.00;
     public static final double kDDriveVel = 0.0;
     public static final double kMaxSpeedInchesPerSecond = 12;
     public static final double kMaxAccelerationInchesPerSecondSquared = 12;
 
-    public static final double kMaxSpeedMetersPerSecond = 0.75;//1; //0.305;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 0.75;//1; //0.305;
+    public static final double kMaxSpeedMetersPerSecond = 0.305;//1; //0.305;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 0.305;//1; //0.305;
 
     // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
     public static final double kRamseteB = 2;

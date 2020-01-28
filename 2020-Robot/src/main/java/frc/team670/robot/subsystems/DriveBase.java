@@ -23,11 +23,13 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.RobotController;
 
 import frc.team670.robot.commands.drive.teleop.XboxRocketLeagueDrive;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
+import frc.team670.robot.RobotContainer;
 import frc.team670.robot.dataCollection.sensors.NavX;
 
 /**
@@ -35,7 +37,7 @@ import frc.team670.robot.dataCollection.sensors.NavX;
  * 
  * @author lakshbhambhani, ctychen
  */
-public class DriveBase extends SubsystemBase {
+public class DriveBase extends MustangSubsystemBase {
 
   private CANSparkMax left1, left2, right1, right2;
   private CANEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
@@ -50,12 +52,6 @@ public class DriveBase extends SubsystemBase {
   private DifferentialDriveOdometry m_odometry;
 
   private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
-  private static final double drivebaseGearRatio = 8.45;
-
-  private final double P_P = 0.1, P_I = 1E-4, P_D = 1, P_FF = 0; // Position PID Values. Set based off the default in
-                                                                 // REV Robotics example code.
-  private final double V_P = 10, V_I = 1E-6, V_D = 0, V_FF = 0; // Velocity PID Values. Set based off the default in
-                                                                // REV Robotics example code.
 
   public DriveBase() {
     left1 = new CANSparkMax(RobotMap.SPARK_LEFT_MOTOR_1, CANSparkMaxLowLevel.MotorType.kBrushless);
@@ -107,12 +103,6 @@ public class DriveBase extends SubsystemBase {
     navXMicro = new NavX(RobotMap.NAVX_PORT);
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
       new Pose2d(0, 0, new Rotation2d()));
-
-    navXMicro = new NavX(RobotMap.NAVX_PORT);
-
-    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
-      new Pose2d(0, 0, new Rotation2d()));
-
 
   }
 
@@ -239,16 +229,6 @@ public class DriveBase extends SubsystemBase {
   }
 
   /**
-   * Sets array of motors to be brushless
-   */
-
-  private void setMotorsBrushless(List<CANSparkMax> motorGroup) {
-    for (CANSparkMax m : motorGroup) {
-      m.setMotorType(CANSparkMaxLowLevel.MotorType.kBrushless);
-    }
-  }
-
-  /**
    * Sets array of motors to be of a specified mode
    */
   public void setMotorsNeutralMode(IdleMode mode) {
@@ -354,7 +334,7 @@ public class DriveBase extends SubsystemBase {
   }
 
   public void initDefaultCommand() {
-    setDefaultCommand(new XboxRocketLeagueDrive());
+    CommandScheduler.getInstance().schedule(new XboxRocketLeagueDrive(this));
   }
 
   /**
@@ -558,6 +538,19 @@ public class DriveBase extends SubsystemBase {
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(left1Encoder.getVelocity(), right1Encoder.getVelocity());
+  }
+
+  @Override
+  public HealthState checkHealth() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public void zeroSensors(){
+    
+  }  
+  public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
+    tankDrive(leftVoltage / RobotController.getBatteryVoltage(), rightVoltage / RobotController.getBatteryVoltage());
   }
 
 }
