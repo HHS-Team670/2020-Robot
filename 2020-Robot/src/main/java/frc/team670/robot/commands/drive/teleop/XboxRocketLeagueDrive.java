@@ -14,11 +14,9 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.utils.functions.JoystickUtils;
 
- 
-
 /**
  * Drives the Robot using Xbox controls like the game Rocket League. Triggers control speed, stick is for steering.
- * @author lakshbhambhani
+ * @author lakshbhambhani, ctychen
  */
 public class XboxRocketLeagueDrive extends CommandBase {
 
