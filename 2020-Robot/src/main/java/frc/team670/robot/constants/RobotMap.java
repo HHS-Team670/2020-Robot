@@ -15,13 +15,11 @@ public class RobotMap {
     public static final int SPARK_RIGHT_MOTOR_1 = 22;
     public static final int SPARK_RIGHT_MOTOR_2 = 23;
 
-    public static final int LEFT_ENCODER_CHANNEL_A = 0; // These are properly set
-    public static final int LEFT_ENCODER_CHANNEL_B = 1;
-    public static final int RIGHT_ENCODER_CHANNEL_A = 2;
-    public static final int RIGHT_ENCODER_CHANNEL_B = 3;
-
     // NavX
     public final static Port NAVX_PORT = SerialPort.Port.kUSB;  
+    public final static int SHOOTER_ID_MAIN = 11;
+    public final static int SHOOTER_ID_FOLLOWER = 12;
+  
 
     // PC Module
     public static final int PCMODULE = 2;

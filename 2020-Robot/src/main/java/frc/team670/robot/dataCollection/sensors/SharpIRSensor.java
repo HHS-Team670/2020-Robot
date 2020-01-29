@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.AnalogTriggerOutput.AnalogTriggerType;
 import edu.wpi.first.wpilibj.Counter;
 
 /**
- * yes
  * Driver for an analog Sharp IR sensor (or any distance sensor where output voltage is a function of range, really).
  */
 public class SharpIRSensor {

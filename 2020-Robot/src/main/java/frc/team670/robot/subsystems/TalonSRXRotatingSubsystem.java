@@ -6,14 +6,13 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
- * Superclass for any rotating subsystem using a TalonSRX, intakes for example
+ * Superclass for any rotating subsystem using a TalonSRX
  */
-public abstract class RotatingSubsystem extends SubsystemBase implements TunableSubsystem {
+public abstract class TalonSRXRotatingSubsystem extends SubsystemBase implements TunableSubsystem {
     protected static final int NO_SETPOINT = 99999;
     protected TalonSRX rotator;
     protected int setpoint;
@@ -23,27 +22,27 @@ public abstract class RotatingSubsystem extends SubsystemBase implements Tunable
 
     protected SensorCollection rotatorSensorCollection;
 
-    public RotatingSubsystem(CANSparkMax canSparkMax, double arbitraryFeedForwardConstant, int forwardSoftLimit, int reverseSoftLimit, boolean timeout, int quadEncoderMin, int quadEncoderMax, int continuousCurrentLimit, int peakCurrentLimit, int offsetFromEncoderZero) {
+    public TalonSRXRotatingSubsystem(TalonSRX rotatorTalon, double arbitraryFeedForwardConstant, int forwardSoftLimit, int reverseSoftLimit, boolean timeout, int quadEncoderMin, int quadEncoderMax, int continuousCurrentLimit, int peakCurrentLimit, int offsetFromEncoderZero) {
         // For testing purposes
-        if (canSparkMax != null) {
-            this.rotator = canSparkMax;
-            this.rotatorSensorCollection = canSparkMax.getSensorCollection();
+        if (rotatorTalon != null) {
+            this.rotator = rotatorTalon;
+            this.rotatorSensorCollection = rotatorTalon.getSensorCollection();
             this.arbitraryFeedForwardConstant = arbitraryFeedForwardConstant;
             this.timeout = timeout;
 
             this.offsetFromEncoderZero = offsetFromEncoderZero;
 
-            canSparkMax.configFactoryDefault();
+            rotatorTalon.configFactoryDefault();
 
-            canSparkMax.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+            rotatorTalon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
-            if (canSparkMax != null) {
-                this.rotator = canSparkMax;
-                this.rotatorSensorCollection = canSparkMax.getSensorCollection();
+            if (rotatorTalon != null) {
+                this.rotator = rotatorTalon;
+                this.rotatorSensorCollection = rotatorTalon.getSensorCollection();
                 this.arbitraryFeedForwardConstant = arbitraryFeedForwardConstant;
                 this.timeout = timeout;
 
-                setpoint = RotatingSubsystem.NO_SETPOINT;
+                setpoint = TalonSRXRotatingSubsystem.NO_SETPOINT;
 
                 int pulseWidthPos = getRotatorPulseWidth() & 4095;
 
@@ -56,17 +55,17 @@ public abstract class RotatingSubsystem extends SubsystemBase implements Tunable
 
             rotatorSensorCollection.setQuadraturePosition(pulseWidthPos, 0);
 
-            canSparkMax.configContinuousCurrentLimit(continuousCurrentLimit);
-            canSparkMax.configPeakCurrentLimit(peakCurrentLimit);
-            canSparkMax.enableCurrentLimit(true);
+            rotatorTalon.configContinuousCurrentLimit(continuousCurrentLimit);
+            rotatorTalon.configPeakCurrentLimit(peakCurrentLimit);
+            rotatorTalon.enableCurrentLimit(true);
 
             // These thresholds stop the motor when limit is reached
-            canSparkMax.configForwardSoftLimitThreshold(forwardSoftLimit);
-            canSparkMax.configReverseSoftLimitThreshold(reverseSoftLimit);
+            rotatorTalon.configForwardSoftLimitThreshold(forwardSoftLimit);
+            rotatorTalon.configReverseSoftLimitThreshold(reverseSoftLimit);
 
             // Enable Safety Measures
-            canSparkMax.configForwardSoftLimitEnable(true);
-            canSparkMax.configReverseSoftLimitEnable(true);
+            rotatorTalon.configForwardSoftLimitEnable(true);
+            rotatorTalon.configReverseSoftLimitEnable(true);
             
             }
         }
