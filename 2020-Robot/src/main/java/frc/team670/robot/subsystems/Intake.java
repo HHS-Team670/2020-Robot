@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import frc.team670.robot.dataCollection.sensors.IRSensor;
 
 
-public class Intake extends SubsystemBase {
+public class Intake extends MustangSubsystemBase {
 
     private Compressor comp;
 	private Solenoid deployer;
@@ -23,9 +23,9 @@ public class Intake extends SubsystemBase {
     public Intake() {
         comp = new Compressor(RobotMap.PCMODULE); // may need to edit RobotMap to update ports
         comp.setClosedLoopControl(true);
-        deployer = new Solenoid(RobotMap.PCMODULE, RobotMap.INTAKE_SOLENOID);
-        rollers = new TalonSRX(RobotMap.INTAKE_ROLLERS);
-        sensor = new IRSensor(RobotMap.INTAKE_IRSENSOR);
+        // deployer = new Solenoid(RobotMap.PCMODULE, RobotMap.INTAKE_SOLENOID); define once RobotMap ID given
+        rollers = new TalonSRX(RobotMap.INTAKE_ROLLER);
+        // sensor = new IRSensor(RobotMap.INTAKE_IRSENSOR);
     }
 
     public void setDeploy(boolean dep) {
@@ -56,5 +56,51 @@ public class Intake extends SubsystemBase {
     public boolean isRolling() {
         return isRolling;
     }
-    
+
+    @Override
+    public HealthState checkHealth() {
+        // TODO Auto-generated method stub, add to this
+        return null;
+    }
+
+    /** 
+     * TODO: These should be moved to commands if they haven't been already.
+    */
+    // // deploy, retract, and roll commands(speeds need to be set)
+    // public void a_deploy() { // uses ir sensor to detect ball to deploy then roll/spin motorz(autonomous
+    //                          // deploy)
+    //     if (!isDeployed() && getSensor()) {
+    //         setDeploy(true);
+    //         if (isDeployed()) {
+    //             setRolling(changingRollingSpeed, true);
+    //         }
+    //     }
+    // }
+
+    // public void m_deploy() {
+    //     if (!isDeployed()) {
+    //         setDeploy(true);
+    //         if (isDeployed()) {
+    //             setRolling(changingRollingSpeed, true);
+    //         }
+    //     }
+    // }
+
+    // public void retract() {
+    //     setDeploy(true);
+    //     if (isDeployed()) {
+    //         setRolling(changingRollingSpeed, true);
+    //     }
+    // }
+
+    // public void unjam() { // use if thing jammed 
+    //     if (!isDeployed()) {
+    //         setDeploy(true);
+    //     }
+
+    //     setRolling(-changingRollingSpeed, true);
+
+    //     // TODO 
+    // }
+
 }

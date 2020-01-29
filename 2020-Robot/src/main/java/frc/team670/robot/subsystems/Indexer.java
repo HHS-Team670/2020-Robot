@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 /**
  *
  */
-public class Indexer extends SubsystemBase{
+public class Indexer extends MustangSubsystemBase{
 
     private CANSparkMax SM;
     private CANEncoder encoder;
@@ -65,6 +65,12 @@ public class Indexer extends SubsystemBase{
         } else {
             return 1;
         }
+    }
+
+    @Override
+    public HealthState checkHealth() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 
