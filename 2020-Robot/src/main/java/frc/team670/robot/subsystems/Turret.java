@@ -16,7 +16,9 @@ import frc.team670.robot.RobotContainer;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.motorcontroller.*;
 
-public class Turret extends RotatingSubsystem {
+//TODO: Change all of this to using a SparkMax instead of TalonSRX
+
+public class Turret extends SparkMaxRotatingSubsystem {
     private final TalonSRX talonControl;
     private final int TICKS_PER_REVOLUTION = 4096;; //ticks per revolution
     // unused private final int TURRET_LIMIT = (int)((TICKS_PER_REVOLUTION * 160.0)/360.0);                  // assuming the turret's soft limit will be 1820 ticks = 160 degrees both ways from center as 0 degrees.           
@@ -144,6 +146,24 @@ public class Turret extends RotatingSubsystem {
 
     public SensorCollection getEncoder() { //   TODO This is not CANEncoder, this has to be changed later.
         return this.talonControl.getSensorCollection();                    // TODO FIX THIS
+    }
+
+    @Override
+    public boolean getTimeout() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public void moveByPercentOutput(double output) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public HealthState checkHealth() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 
