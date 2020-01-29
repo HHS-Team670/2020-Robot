@@ -27,6 +27,7 @@ public class IntakeOneBall extends CommandBase {
     public void execute() {
         if (RobotContainer.indexer.ballIn()) {
             ballIn = true;
+            indexer.fillChamber(indexer.getCurrentChamber() + 3);// might be + 2 
         }
 
         if (ballIn && indexer.getSpeed() == 0) {

@@ -14,12 +14,13 @@ public class Indexer extends MustangSubsystemBase{
     private CANSparkMax SM;
     private CANEncoder encoder;
     private int totalNumBalls;
-    
+    private boolean[] chamberStates;
 
     public Indexer(CANSparkMax SM) {
         this.SM = SM;
         encoder = SM.getEncoder();
         totalNumBalls = 0;
+        chamberStates = new boolean[5];
     }
 
     public int totalNumOfBalls() {
@@ -30,6 +31,40 @@ public class Indexer extends MustangSubsystemBase{
         totalNumBalls = num;
     }
 
+    /**
+     * 
+     * @param chamber the chamber to check
+     * @return if its full
+     */
+    public boolean checkChamber(int chamber) {
+        return chamberStates[chamber];
+    }
+
+    /**
+     * called when ball goes into a chamber
+     * @param chamber the one just filled
+     */
+    public void fillChamber(int chamber) {
+        chamberStates[chamber] = true;
+    }
+
+    // chamber currently at the top
+    // if its exactly between two chamber, default to later before
+    public int getCurrentChamber() {
+        double degrees = getDegreePos();
+        if (degrees <= 36 && degrees > 324)
+            return 0;
+        else if (degrees <= 108 && degrees > 36)
+            return 1;
+        else if (degrees <= 180 && degrees > 108)
+            return 2;
+        else if (degrees <= 252 && degrees > 180)
+            return 3;
+        else
+            return 4;
+    }
+
+    // zeroed means that chamber 0 is at the top
     public boolean isZeroed() {
         //Probably hall sensor?
         return false;
@@ -56,6 +91,14 @@ public class Indexer extends MustangSubsystemBase{
         return encoder.getPosition();
     }
 
+    // TODO: figure this out
+    // assume degrees = 0 is zeroed
+    // zeroed means chamber 0 is at the top
+    public double getDegreePos() {
+        return 0;
+    }
+
+    // TODO: this is wrong
     /**
      * -1 for negative direction, 1 for positive direction
      */
