@@ -9,7 +9,11 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANPIDController;
 
-
+/** 
+ * Superclass for any subsystem using a SparkMax controller.
+ * 
+ * @author ctychen
+*/
 public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase implements TunableSubsystem{
 
     protected CANSparkMax rotator;
