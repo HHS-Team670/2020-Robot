@@ -7,26 +7,18 @@
 
 package frc.team670.robot;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-
-import frc.team670.robot.constants.OI;
-import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.robot.subsystems.Shooter;
-import frc.team670.robot.dataCollection.sensors.ColorMatcher;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
-
-import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
 
 
@@ -51,6 +43,8 @@ public class RobotContainer {
   public static ColorMatcher colorMatch;// = new ColorMatcher();
 
   public static Shooter shooter;// = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
+
+  public static Joystick operatorJoystick;
 
   private Trajectory trajectory;
   private String pathname;
