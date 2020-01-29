@@ -16,7 +16,6 @@ public class OI {
 
     public OI() {
         driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
-        // operatorController = new MustangController(RobotMap.OPERATOR_CONTROLLER_PORT);
         toggleReverseDrive = new JoystickButton(driverController, XboxButtons.LEFT_BUMPER);
         toggleReverseDrive.whenPressed(new FlipDriveAndCamera());
         toggleDriverCameraMode = new JoystickButton(driverController, XboxButtons.B);
@@ -28,8 +27,8 @@ public class OI {
         return driverController.getRightBumper();
       }
 
-      public boolean isAPressed() {
-        return driverController.getAButton();
+      public boolean isManualSpinColorWheelButtonPressed() { // returns true when the button that triggers the motor that spins the color wheel is pressed
+        return driverController.getAButton(); // TODO: change depending on driver preferences
       }
 
 

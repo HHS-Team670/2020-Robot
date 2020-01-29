@@ -19,7 +19,9 @@ import java.util.Map;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
- * A PositionColorWheel command that uses a ColorWheelSpinner subsystem.
+ * Spins the color wheel to a specified color from the field.
+ * 
+ * @author Antonio_Cuan, Katelyn_Yap 
  */
 public class PositionColorWheel extends MustangCommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
@@ -51,19 +53,25 @@ public class PositionColorWheel extends MustangCommandBase {
     if (gameData.length() > 0) {
       switch (gameData.charAt(0)) {
       case 'B':
-        targetColorNumber = ColorMatcher.BLUE_COLOR_NUMBER;
+        targetColorNumber = ColorMatcher.colors.BLUE.getColorNumber();
+        Logger.consoleLog("Game data: %s", gameData);
         break;
       case 'Y':
-        targetColorNumber = ColorMatcher.YELLOW_COLOR_NUMBER;
+        targetColorNumber = ColorMatcher.colors.YELLOW.getColorNumber();
+        Logger.consoleLog("Game data: %s", gameData);
         break;
       case 'R':
-        targetColorNumber = ColorMatcher.RED_COLOR_NUMBER;
+        targetColorNumber = ColorMatcher.colors.RED.getColorNumber();
+        Logger.consoleLog("Game data: %s", gameData);
         break;
       case 'G':
-        targetColorNumber = ColorMatcher.GREEN_COLOR_NUMBER;
+        targetColorNumber = ColorMatcher.colors.GREEN.getColorNumber();
+        Logger.consoleLog("Game data: %s", gameData);
         break;
       default:
-        Logger.consoleLog("This is corrupt data");
+        Logger.consoleLog("This is corrupt data.");
+        Logger.consoleLog(gameData);
+        MustangScheduler.getInstance().cancel(this);
         break;
       }
     } else {
@@ -75,6 +83,7 @@ public class PositionColorWheel extends MustangCommandBase {
     * calculates offset color number since the robot color sensor is in a different
     * place than the frc sensor on the color wheel;
     */
+    Logger.consoleLog("Color to detect: %s", resultColorNumber);
     m_spinner.setSpeed(m_spinner.MOTOR_SPEED);
   }
 

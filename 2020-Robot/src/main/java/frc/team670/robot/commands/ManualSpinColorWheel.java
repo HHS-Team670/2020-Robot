@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.util.Color;
 
 // import frc.team670.robot.commands.MustangCommandBase;
 /**
- * A ManualSpinColorWheel command that uses a ColorWheelSpinner subsystem.
+ * Spins the color wheel at a slower speed when the driver presses a button (manual spin), use if something breaks.
  */
 public class ManualSpinColorWheel extends MustangCommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
@@ -41,7 +41,7 @@ public class ManualSpinColorWheel extends MustangCommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (RobotContainer.oi.isAPressed()) {
+    if (RobotContainer.oi.isManualSpinColorWheelButtonPressed()) {
       m_spinner.setSpeed(MOTOR_SPEED);
     }
   }
@@ -55,7 +55,7 @@ public class ManualSpinColorWheel extends MustangCommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (!RobotContainer.oi.isAPressed()) {
+    if (!RobotContainer.oi.isManualSpinColorWheelButtonPressed()) {
       return true;
     }
     return false;

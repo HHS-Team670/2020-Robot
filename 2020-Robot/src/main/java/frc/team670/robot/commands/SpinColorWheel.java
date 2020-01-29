@@ -17,7 +17,9 @@ import java.util.Map;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * A SpinColorWheel command that uses a ColorWheelSpinner subsystem.
+ * Spins the color wheel a certain number of times.
+ * 
+ * @author Antonio_Cuan, Katelyn_Yap, ctychen
  */
 public class SpinColorWheel extends MustangCommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
@@ -27,14 +29,8 @@ public class SpinColorWheel extends MustangCommandBase {
   private boolean isColorDetected;
   private int colorDetectedCount = 0;
 
-  /**
-   * Creates a new SpinColorWheel command.
-   *
-   * @param ColorWheelSpinner The subsystem used by this command.
-   */
   public SpinColorWheel(ColorWheelSpinner spinner) {
     m_spinner = spinner;
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(spinner);
   }
 
@@ -53,7 +49,9 @@ public class SpinColorWheel extends MustangCommandBase {
     m_spinner.setSpeed(0.0);
   }
 
-  // Returns true when the command should end.
+  /**
+   * @return true when ..
+   */
   @Override
   public boolean isFinished() {
     int detectedColorNumber = m_spinner.detectColor();
