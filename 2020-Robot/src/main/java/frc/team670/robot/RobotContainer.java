@@ -7,14 +7,19 @@
 
 package frc.team670.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.team670.robot.constants.OI;
-import frc.team670.robot.constants.RobotMap;
-import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.robot.subsystems.Shooter;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.team670.robot.constants.OI;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
+import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.subsystems.Shooter;
 
 
 /**
@@ -24,13 +29,25 @@ import frc.team670.robot.dataCollection.sensors.ColorMatcher;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  
   // The robot's subsystems and commands are defined here...
-  public static DriveBase driveBase;// = new DriveBase();
+
+  private static List<MustangSubsystemBase> allSubsystems = new ArrayList<MustangSubsystemBase>();
+
+  public static OI oi = new OI();
+  
+  //TODO: after changes made to the subsystems, should make these fields private
+
+  public static DriveBase driveBase = new DriveBase();
+
   public static ColorMatcher colorMatch;// = new ColorMatcher();
 
+  public static Shooter shooter;// = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
 
-  public static OI oi;
-  public static Shooter shooter = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
+  public static Joystick operatorJoystick;
+
+  private Trajectory trajectory;
+  private String pathname;
 
 
   /**
@@ -40,6 +57,11 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
   }
+
+  public static void addSubsystem(MustangSubsystemBase subsystem){
+    allSubsystems.add(subsystem);
+  }
+
 
   /**
    * Use this method to define your button->command mappings.  Buttons can be created by
@@ -57,7 +79,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An ExampleCommand will run in autonomous
+    // Create a voltage constraint to ensure we don't accelerate too fast
     return null;
   }
 }

@@ -1,5 +1,7 @@
 package frc.team670.robot.constants;
 
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+
 public class RobotConstants {
 
     // Robot Dimensions
@@ -40,14 +42,16 @@ public class RobotConstants {
     public static final double kTrackwidthInches = WHEEL_BASE;
     public static final double kTrackwidthMeters = WHEEL_BASE * 0.0254;
 
-    public static final double kPDriveVel = 4;
+    public static final DifferentialDriveKinematics kDriveKinematics =
+    new DifferentialDriveKinematics(kTrackwidthMeters);
+    public static final double kPDriveVel = 2.53;
     public static final double kIDriveVel = 0.00;
     public static final double kDDriveVel = 0.0;
     public static final double kMaxSpeedInchesPerSecond = 12;
     public static final double kMaxAccelerationInchesPerSecondSquared = 12;
 
-    public static final double kMaxSpeedMetersPerSecond = 0.75;//1; //0.305;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 0.75;//1; //0.305;
+    public static final double kMaxSpeedMetersPerSecond = 0.305;//1; //0.305;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 0.305;//1; //0.305;
 
     // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
     public static final double kRamseteB = 2;

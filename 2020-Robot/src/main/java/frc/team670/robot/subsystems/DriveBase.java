@@ -23,12 +23,13 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.RobotController;
 
 import frc.team670.robot.commands.drive.teleop.XboxRocketLeagueDrive;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
+import frc.team670.robot.RobotContainer;
 import frc.team670.robot.dataCollection.sensors.NavX;
 
 /**
@@ -36,7 +37,7 @@ import frc.team670.robot.dataCollection.sensors.NavX;
  * 
  * @author lakshbhambhani, ctychen
  */
-public class DriveBase extends SubsystemBase {
+public class DriveBase extends MustangSubsystemBase {
 
   private CANSparkMax left1, left2, right1, right2;
   private CANEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
@@ -103,7 +104,6 @@ public class DriveBase extends SubsystemBase {
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
       new Pose2d(0, 0, new Rotation2d()));
 
-    initDefaultCommand();
   }
 
 
@@ -334,7 +334,7 @@ public class DriveBase extends SubsystemBase {
   }
 
   public void initDefaultCommand() {
-    CommandScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive());
+    CommandScheduler.getInstance().schedule(new XboxRocketLeagueDrive(this));
   }
 
   /**
@@ -538,6 +538,19 @@ public class DriveBase extends SubsystemBase {
    */
   public DifferentialDriveWheelSpeeds getWheelSpeeds() {
     return new DifferentialDriveWheelSpeeds(left1Encoder.getVelocity(), right1Encoder.getVelocity());
+  }
+
+  @Override
+  public HealthState checkHealth() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public void zeroSensors(){
+    
+  }  
+  public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
+    tankDrive(leftVoltage / RobotController.getBatteryVoltage(), rightVoltage / RobotController.getBatteryVoltage());
   }
 
 }
