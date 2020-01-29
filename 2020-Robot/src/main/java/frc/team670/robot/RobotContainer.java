@@ -13,7 +13,9 @@ import java.util.ArrayList;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-
+import frc.team670.robot.commands.ManualSpinColorWheel;
+import frc.team670.robot.commands.PositionColorWheel;
+import frc.team670.robot.commands.SpinColorWheel;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 import frc.team670.robot.subsystems.ColorWheelSpinner;
@@ -57,6 +59,12 @@ public class RobotContainer {
 
   private Trajectory trajectory;
   private String pathname;
+
+  private final ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
+
+  private final SpinColorWheel spinForRotations = new SpinColorWheel(wheelSpinner);
+  private final PositionColorWheel rotateToColor = new PositionColorWheel(wheelSpinner);
+  private final ManualSpinColorWheel manualSpinForRotations = new ManualSpinColorWheel(wheelSpinner);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.

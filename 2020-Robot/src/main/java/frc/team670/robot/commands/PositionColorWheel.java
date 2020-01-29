@@ -7,24 +7,28 @@
 
 package frc.team670.robot.commands;
 
+import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 import frc.team670.robot.subsystems.ColorWheelSpinner;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.utils.Logger;
+
+import java.util.Map;
+
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * A PositionColorWheel command that uses a ColorWheelSpinner subsystem.
  */
-public class PositionColorWheel extends CommandBase {
+public class PositionColorWheel extends MustangCommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final ColorWheelSpinner m_spinner;
 
-  private double motorSpeed = 1.0;
   private int resultColorNumber;
-  private final static int OFFSET_SIZE = 2; // note that if they offset is three or one, the program will only work if
-                                            // the color sensor is at a certain position
-
+  private final int COLOR_COUNT = 4; 
+  private final int OFFSET_SIZE = 2; // note that if they offset is three or one, the program will only work if the color sensor is at a certain position
+  // TODO: tune the offset number
   /**
    * Creates a new PositionColorWheel command.
    *
@@ -32,8 +36,6 @@ public class PositionColorWheel extends CommandBase {
    */
   public PositionColorWheel(ColorWheelSpinner spinner) {
     m_spinner = spinner;
-    // SmartDashboard.putNumber("Target Color Number", -1);
-    // SmartDashboard.putBoolean("isSpinning", false);
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(spinner);
   }
@@ -41,55 +43,45 @@ public class PositionColorWheel extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    int targetColorNumber = -1;
-    // int targetColorNumber = (int) SmartDashboard.getNumber("Target Color Number", -1);
+    int targetColorNumber = ColorMatcher.UNKNOWN_COLOR_NUMBER;
 
     String gameData;
     gameData = DriverStation.getInstance().getGameSpecificMessage();
 
     if (gameData.length() > 0) {
       switch (gameData.charAt(0)) {
-        case 'B':
-          targetColorNumber = 0;
-          break;
-        case 'Y':
-          targetColorNumber = 1;
-          break;
-        case 'R':
-          targetColorNumber = 2;
-          break;
-        case 'G':
-          targetColorNumber = 3;
-          break;
-        default:
+      case 'B':
+        targetColorNumber = ColorMatcher.BLUE_COLOR_NUMBER;
+        break;
+      case 'Y':
+        targetColorNumber = ColorMatcher.YELLOW_COLOR_NUMBER;
+        break;
+      case 'R':
+        targetColorNumber = ColorMatcher.RED_COLOR_NUMBER;
+        break;
+      case 'G':
+        targetColorNumber = ColorMatcher.GREEN_COLOR_NUMBER;
+        break;
+      default:
         Logger.consoleLog("This is corrupt data");
-          break;
-        }
+        break;
+      }
     } else {
       Logger.consoleLog("No data received.");
     }
 
-    resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % 4); /** 
-                                                                   * calculates offset color number since the robot
-                                                                   * color sensor is in a different place than the frc
-                                                                   * sensor on the color wheel;
-                                                                   */
-    SmartDashboard.putNumber("result color number", resultColorNumber);
-    m_spinner.setSpeed(motorSpeed);
-    // SmartDashboard.putBoolean("isSpinning", true);
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-
+    resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % COLOR_COUNT); 
+    /**
+    * calculates offset color number since the robot color sensor is in a different
+    * place than the frc sensor on the color wheel;
+    */
+    m_spinner.setSpeed(m_spinner.MOTOR_SPEED);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_spinner.setSpeed(0.0);
-    // SmartDashboard.putBoolean("isSpinning", false);
   }
 
   // Returns true when the command should end.
@@ -102,5 +94,11 @@ public class PositionColorWheel extends CommandBase {
     }
 
     return false;
+  }
+
+  @Override
+  public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

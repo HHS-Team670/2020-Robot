@@ -8,18 +8,21 @@
 package frc.team670.robot.commands;
 
 import frc.team670.robot.subsystems.ColorWheelSpinner;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.utils.Logger;
+
+import java.util.Map;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * A SpinColorWheel command that uses a ColorWheelSpinner subsystem.
  */
-public class SpinColorWheel extends CommandBase {
+public class SpinColorWheel extends MustangCommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final ColorWheelSpinner m_spinner;
 
-  private double motorSpeed = 1.0;
   private int referenceColorNumber;
   private boolean isColorDetected;
   private int colorDetectedCount = 0;
@@ -40,23 +43,14 @@ public class SpinColorWheel extends CommandBase {
   public void initialize() {
     colorDetectedCount = 0;
     isColorDetected = false;
-    SmartDashboard.putNumber("color detected count", 0);
     referenceColorNumber = m_spinner.detectColor();
-    m_spinner.setSpeed(motorSpeed);
-    SmartDashboard.putBoolean("isSpinning", true);
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-
+    m_spinner.setSpeed(m_spinner.MOTOR_SPEED);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_spinner.setSpeed(0.0);
-    // SmartDashboard.putBoolean("isSpinning", false);
   }
 
   // Returns true when the command should end.
@@ -64,23 +58,25 @@ public class SpinColorWheel extends CommandBase {
   public boolean isFinished() {
     int detectedColorNumber = m_spinner.detectColor();
 
-    if (detectedColorNumber == referenceColorNumber) { // when it detects the reference color(which is whatever color it
-                                                       // sees first)
+    if (detectedColorNumber == referenceColorNumber) { // when it detects the reference color, which is whatever color it sees first
       isColorDetected = true;
     }
 
-    if (isColorDetected && detectedColorNumber != referenceColorNumber) { // has detected ref. color; the wheel is at
-                                                                          // the next color
+    if (isColorDetected && detectedColorNumber != referenceColorNumber) { // has detected ref. color; the wheel is at the next color
       colorDetectedCount++;
       isColorDetected = false;
-      SmartDashboard.putNumber("color detected count", colorDetectedCount);
     }
 
-    if (colorDetectedCount == 7) { // 7 means 3+(1/8) rotations and 1 is added to colorDetectedCount once 1/8 of a
-                                   // rotation is completed
+    if (colorDetectedCount == 7) { // 7 means 3+(1/8) rotations and 1 is added to colorDetectedCount once 1/8 of a rotation is completed
       return true;
     }
 
     return false;
+  }
+
+  @Override
+  public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+    // TODO Auto-generated method stub
+    return null;
   }
 }

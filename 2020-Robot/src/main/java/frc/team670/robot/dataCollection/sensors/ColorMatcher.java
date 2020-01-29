@@ -42,10 +42,7 @@ public class ColorMatcher {
   public static final int YELLOW_COLOR_NUMBER = 1;
   public static final int RED_COLOR_NUMBER = 2;
   public static final int GREEN_COLOR_NUMBER = 3;
-
-  private ColorMatchResult matchedResult = new ColorMatchResult(Color.kBlack, 0);
-
-  public int colorNumber;
+  public static final int UNKNOWN_COLOR_NUMBER = -1;
 
   // Rev Color threshold
   // blue 0.143, 0.427, 0.429
@@ -79,8 +76,9 @@ public class ColorMatcher {
      * Run the color match algorithm on our detected color
      */
     String colorString;
+    int colorNumber;
+
     ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
-    matchedResult = match;
 
     if (match.color == BLUE_TARGET) {
       colorString = "Blue";
@@ -96,18 +94,20 @@ public class ColorMatcher {
       colorNumber = GREEN_COLOR_NUMBER;
     } else {
       colorString = "Unknown";
-      colorNumber = -1;
+      colorNumber = UNKNOWN_COLOR_NUMBER;
     }
 
     /**
      * Open Smart Dashboard or Shuffleboard to see the color detected by the sensor.
      */
+    /*
     SmartDashboard.putNumber("Red", detectedColor.red);
     SmartDashboard.putNumber("Green", detectedColor.green);
     SmartDashboard.putNumber("Blue", detectedColor.blue);
     SmartDashboard.putNumber("Confidence", match.confidence);
     SmartDashboard.putString("Detected Color", colorString);
     SmartDashboard.putNumber("Detected Color Number", colorNumber);
+    */
 
     return colorNumber;
   }  
