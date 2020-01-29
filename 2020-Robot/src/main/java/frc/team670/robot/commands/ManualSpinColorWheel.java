@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.util.Color;
 // import frc.team670.robot.commands.MustangCommandBase;
 /**
  * Spins the color wheel at a slower speed when the driver presses a button (manual spin), use if something breaks.
+ * 
+ * @author Antonio Cuan
  */
 public class ManualSpinColorWheel extends MustangCommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })

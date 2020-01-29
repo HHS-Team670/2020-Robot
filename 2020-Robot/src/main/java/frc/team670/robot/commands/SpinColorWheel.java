@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * Spins the color wheel a certain number of times.
  * 
- * @author Antonio_Cuan, Katelyn_Yap, ctychen
+ * @author Antonio Cuan, Katelyn Yap
  */
 public class SpinColorWheel extends MustangCommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
@@ -50,7 +50,7 @@ public class SpinColorWheel extends MustangCommandBase {
   }
 
   /**
-   * @return true when ..
+   * @return true when motor spins the color wheel enough times
    */
   @Override
   public boolean isFinished() {

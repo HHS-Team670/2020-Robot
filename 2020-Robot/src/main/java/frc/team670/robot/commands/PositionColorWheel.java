@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 /**
  * Spins the color wheel to a specified color from the field.
  * 
- * @author Antonio_Cuan, Katelyn_Yap 
+ * @author Antonio Cuan, Katelyn Yap 
  */
 public class PositionColorWheel extends MustangCommandBase {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
@@ -93,7 +93,9 @@ public class PositionColorWheel extends MustangCommandBase {
     m_spinner.setSpeed(0.0);
   }
 
-  // Returns true when the command should end.
+  /**
+   * @return true when detects desired color
+   */
   @Override
   public boolean isFinished() {
     int detectedColorNumber = m_spinner.detectColor();
