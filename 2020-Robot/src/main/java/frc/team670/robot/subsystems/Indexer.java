@@ -101,6 +101,54 @@ public class Indexer extends MustangSubsystemBase{
     }
 
     /**
+     * logic for rotatetoshoot
+     * @return the first full chamber en route to shoot
+     */
+    public int getFirstFull() {
+        if (isEmpty())
+            return -1;
+
+        if (chamberStates[getCurrentChamber()])
+            return getCurrentChamber();
+
+        int c = getCurrentChamber() - 1;
+
+        if (getCurrentChamber() == 0)
+            c = 4;        
+
+        while (c >= 0) {
+            if(chamberStates[c])
+                return c;
+            c--;
+        }
+
+        return -1; // should not be reached
+    }
+
+    /**
+     * more logic for rotatetointake
+     * @return the last full chamber en route to shoot
+     */
+    public int getLastFull() {
+        if (isEmpty())
+            return -1;
+        if (!chamberStates[getCurrentIntakeChamber()])
+            return getCurrentIntakeChamber();
+        int c = getCurrentIntakeChamber() - 1;
+
+        if (getCurrentIntakeChamber() == 0)
+            c = 4;        
+
+        while (c >= 0) {
+            if(!chamberStates[c])
+                return c;
+            c--;
+        }
+
+        return -1; // should not be reached
+    }
+
+    /**
      * checks collective state of all chambers
      * @return true if there's no ball in any chambers
      */
@@ -131,6 +179,20 @@ public class Indexer extends MustangSubsystemBase{
         else if (degrees <= 180 && degrees > 108)
             return 2;
         else if (degrees <= 252 && degrees > 180)
+            return 3;
+        else
+            return 4;
+    }
+
+    public int getCurrentIntakeChamber() {
+        double degrees = getDegreePos();
+        if (degrees <= 144 && degrees > 216)
+            return 0;
+        else if (degrees <= 72 && degrees > 144)
+            return 1;
+        else if (degrees <= 0 && degrees > 172)
+            return 2;
+        else if (degrees <= 216 && degrees > 0)
             return 3;
         else
             return 4;
