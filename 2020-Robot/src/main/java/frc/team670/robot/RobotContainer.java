@@ -44,8 +44,6 @@ public class RobotContainer {
 
   public static Shooter shooter;// = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
 
-  public static Joystick operatorJoystick;
-
   private Trajectory trajectory;
   private String pathname;
 
