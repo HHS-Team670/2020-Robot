@@ -7,22 +7,14 @@
 
 package frc.team670.robot;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import edu.wpi.first.wpilibj.Filesystem;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.commands.MustangCommandBase;
+import frc.team670.robot.commands.MustangScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.commands.MustangCommandBase;
@@ -31,10 +23,7 @@ import frc.team670.robot.commands.drive.straight.TimedDrive;
 import frc.team670.robot.utils.Logger;
 
 import java.util.Map;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import frc.team670.robot.constants.RobotConstants;
-import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.robot.utils.Logger;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to

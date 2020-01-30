@@ -33,7 +33,7 @@ public class JoystickTurret extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double angle = Math.atan((RobotContainer.operatorJoystick.getY())/(RobotContainer.operatorJoystick.getX()));
+    double angle = Math.atan((RobotContainer.oi.getOperatorController().getY())/(RobotContainer.oi.getOperatorController().getX()));
     //turret.setAngle(angle);
   }
 
