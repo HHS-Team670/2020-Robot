@@ -9,8 +9,7 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANPIDController;
 
-
-public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase implements TunableSubsystem{
+public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase implements TunableSubsystem {
 
     protected CANSparkMax rotator;
     protected CANEncoder encoder;
@@ -20,7 +19,7 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     protected int setpoint;
 
     public SparkMaxRotatingSubsystem(CANSparkMax rotatorSparkMax, int offsetFromEncoderZero) {
-    
+
         if (rotatorSparkMax != null) {
             this.rotator = rotatorSparkMax;
             this.encoder = rotatorSparkMax.getEncoder();
@@ -30,10 +29,10 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     }
 
     protected int getUnadjustedPosition() {
-        return (int)(this.encoder.getPosition());
+        return (int) (this.encoder.getPosition());
     }
 
-    public void setSmartMotionTarget(double setpoint){
+    public void setSmartMotionTarget(double setpoint) {
         controller.setReference(setpoint, ControlType.kSmartMotion);
     }
 

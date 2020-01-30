@@ -22,7 +22,9 @@ public abstract class TalonSRXRotatingSubsystem extends SubsystemBase implements
 
     protected SensorCollection rotatorSensorCollection;
 
-    public TalonSRXRotatingSubsystem(TalonSRX rotatorTalon, double arbitraryFeedForwardConstant, int forwardSoftLimit, int reverseSoftLimit, boolean timeout, int quadEncoderMin, int quadEncoderMax, int continuousCurrentLimit, int peakCurrentLimit, int offsetFromEncoderZero) {
+    public TalonSRXRotatingSubsystem(TalonSRX rotatorTalon, double arbitraryFeedForwardConstant, int forwardSoftLimit,
+            int reverseSoftLimit, boolean timeout, int quadEncoderMin, int quadEncoderMax, int continuousCurrentLimit,
+            int peakCurrentLimit, int offsetFromEncoderZero) {
         // For testing purposes
         if (rotatorTalon != null) {
             this.rotator = rotatorTalon;
@@ -46,27 +48,27 @@ public abstract class TalonSRXRotatingSubsystem extends SubsystemBase implements
 
                 int pulseWidthPos = getRotatorPulseWidth() & 4095;
 
-            if (pulseWidthPos < quadEncoderMin) {
-              pulseWidthPos += 4096;
-            }
-            if (pulseWidthPos > quadEncoderMax) {
-                pulseWidthPos -= 4096;
-            }
+                if (pulseWidthPos < quadEncoderMin) {
+                    pulseWidthPos += 4096;
+                }
+                if (pulseWidthPos > quadEncoderMax) {
+                    pulseWidthPos -= 4096;
+                }
 
-            rotatorSensorCollection.setQuadraturePosition(pulseWidthPos, 0);
+                rotatorSensorCollection.setQuadraturePosition(pulseWidthPos, 0);
 
-            rotatorTalon.configContinuousCurrentLimit(continuousCurrentLimit);
-            rotatorTalon.configPeakCurrentLimit(peakCurrentLimit);
-            rotatorTalon.enableCurrentLimit(true);
+                rotatorTalon.configContinuousCurrentLimit(continuousCurrentLimit);
+                rotatorTalon.configPeakCurrentLimit(peakCurrentLimit);
+                rotatorTalon.enableCurrentLimit(true);
 
-            // These thresholds stop the motor when limit is reached
-            rotatorTalon.configForwardSoftLimitThreshold(forwardSoftLimit);
-            rotatorTalon.configReverseSoftLimitThreshold(reverseSoftLimit);
+                // These thresholds stop the motor when limit is reached
+                rotatorTalon.configForwardSoftLimitThreshold(forwardSoftLimit);
+                rotatorTalon.configReverseSoftLimitThreshold(reverseSoftLimit);
 
-            // Enable Safety Measures
-            rotatorTalon.configForwardSoftLimitEnable(true);
-            rotatorTalon.configReverseSoftLimitEnable(true);
-            
+                // Enable Safety Measures
+                rotatorTalon.configForwardSoftLimitEnable(true);
+                rotatorTalon.configReverseSoftLimitEnable(true);
+
             }
         }
     }
@@ -74,7 +76,7 @@ public abstract class TalonSRXRotatingSubsystem extends SubsystemBase implements
     /**
      * Gets the boolean to decide whether or not to pulse or stall the motor
      */
-    public boolean getTimeout(){
+    public boolean getTimeout() {
         return timeout;
     }
 
@@ -102,7 +104,6 @@ public abstract class TalonSRXRotatingSubsystem extends SubsystemBase implements
         setpoint = NO_SETPOINT;
     }
 
-
     /**
      * Rotates the talon at a certain percent output
      */
@@ -113,14 +114,14 @@ public abstract class TalonSRXRotatingSubsystem extends SubsystemBase implements
     /**
      * Updates the arbitrary feed forward on this subsystem
      */
-    public synchronized void updateArbitraryFeedForward(){
-        if(setpoint != NO_SETPOINT) {
+    public synchronized void updateArbitraryFeedForward() {
+        if (setpoint != NO_SETPOINT) {
             double value = getArbitraryFeedForwardAngleMultiplier() * arbitraryFeedForwardConstant;
             rotator.set(ControlMode.MotionMagic, setpoint, DemandType.ArbitraryFeedForward, value);
-          }
+        }
     }
 
-    protected int getRotatorPulseWidth(){
+    protected int getRotatorPulseWidth() {
         return getUnadjustedPulseWidth() - offsetFromEncoderZero;
     }
 
@@ -128,25 +129,25 @@ public abstract class TalonSRXRotatingSubsystem extends SubsystemBase implements
         return rotatorSensorCollection.getPulseWidthPosition();
     }
 
-    public double getMotionMagicSetpoint(){
+    public double getMotionMagicSetpoint() {
         return rotator.getClosedLoopTarget();
     }
 
-    protected int getPositionTicks(){
+    protected int getPositionTicks() {
         return rotator.getSelectedSensorPosition(0);
     }
 
     /**
-     * Gets the multiplier for updating the arbitrary feed forward based on angle and subsystem
+     * Gets the multiplier for updating the arbitrary feed forward based on angle
+     * and subsystem
      */
     protected abstract double getArbitraryFeedForwardAngleMultiplier();
 
-     /**
+    /**
      * Sets the setpoint for motion magic (in ticks)
      */
     public abstract void setMotionMagicSetpointAngle(double angle);
 
     public abstract double getAngleInDegrees();
-
 
 }

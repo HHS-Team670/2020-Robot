@@ -7,8 +7,6 @@
 
 package frc.team670.robot;
 
-
-
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,15 +15,15 @@ import frc.team670.robot.commands.MustangScheduler;
 
 import frc.team670.robot.utils.Logger;
 
-
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to each mode, as described in the TimedRobot
+ * documentation. If you change the name of this class or the package after
+ * creating this project, you must also update the build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
-  
+
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
 
@@ -33,12 +31,13 @@ public class Robot extends TimedRobot {
   private double SYSTEM_CHECK_PERIOD = 10;
 
   /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
+   * This function is run when the robot is first started up and should be used
+   * for any initialization code.
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+    // Instantiate our RobotContainer. This will perform all our button bindings,
+    // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     timer = new Timer();
@@ -46,21 +45,23 @@ public class Robot extends TimedRobot {
     MustangScheduler.getInstance();
   }
 
-
   /**
-   * This function is called every robot packet, no matter the mode. Use this for items like
-   * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
+   * This function is called every robot packet, no matter the mode. Use this for
+   * items like diagnostics that you want ran during disabled, autonomous,
+   * teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
+   * <p>
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and SmartDashboard integrated updating.
    * 
-   * Re-calculates the health of all subsystems on the robot at specified intervals.
+   * Re-calculates the health of all subsystems on the robot at specified
+   * intervals.
    */
   @Override
   public void robotPeriodic() {
     MustangScheduler.getInstance().run();
-    if (timer.hasPeriodPassed(SYSTEM_CHECK_PERIOD)){
-      RobotContainer.checkSubsystemsHealth(); //TODO: check and see if we need to reset the timer after this
+    if (timer.hasPeriodPassed(SYSTEM_CHECK_PERIOD)) {
+      RobotContainer.checkSubsystemsHealth(); // TODO: check and see if we need to reset the timer after this
     }
   }
 
@@ -76,7 +77,8 @@ public class Robot extends TimedRobot {
   }
 
   /**
-   * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
+   * This autonomous runs the autonomous command selected by your
+   * {@link RobotContainer} class.
    */
   @Override
   public void autonomousInit() {
@@ -84,7 +86,7 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      //m_autonomousCommand.schedule();
+      // m_autonomousCommand.schedule();
       // MustangScheduler.getInstance().schedule(m_autonomousCommand);
     }
     m_autonomousCommand.schedule();
@@ -99,7 +101,7 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopInit(){
+  public void teleopInit() {
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
