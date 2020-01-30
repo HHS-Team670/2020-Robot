@@ -58,28 +58,29 @@ public class MustangScheduler{
         scheduler.cancelAll();
     }
 
-    public void schedule(Command command){
+    public void schedule(Command... command){
 
-         try{
-            if (command instanceof MustangCommandBase){
-                Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> requirements = ((MustangCommandBase)(command)).getHealthRequirements();
-          
-                for (MustangSubsystemBase s: requirements.keySet()){
-                MustangSubsystemBase.HealthState healthReq = requirements.get(s); 
-                if (s.getHealth(false).getId() > healthReq.getId()){
-                        DriverStation.reportError(command.getName() + " not run because of health issue! Required health: " + healthReq + ", Actual health: " + s.getHealth(false), false);
-                        Logger.consoleLog("%s not run because of health issue! Required health: %s , Actual health: %s", command.getName(), healthReq, s.getHealth(false));
-                        return;
+        for(Command m_command : command){
+            try{
+                if (m_command instanceof MustangCommandBase){
+                    Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> requirements = ((MustangCommandBase)(m_command)).getHealthRequirements();
+              
+                    for (MustangSubsystemBase s: requirements.keySet()){
+                    MustangSubsystemBase.HealthState healthReq = requirements.get(s); 
+                    if (s.getHealth(false).getId() > healthReq.getId()){
+                            DriverStation.reportError(m_command.getName() + " not run because of health issue! Required health: " + healthReq + ", Actual health: " + s.getHealth(false), false);
+                            Logger.consoleLog("%s not run because of health issue! Required health: %s , Actual health: %s", m_command.getName(), healthReq, s.getHealth(false));
+                            return;
+                        }
                     }
                 }
+                this.currentCommand = m_command;
+                scheduler.schedule(command);        
+                Logger.consoleLog("Command scheduled: %s", this.currentCommand.getName());
+            } finally {
+                this.currentCommand = null;
             }
-            this.currentCommand = command;
-            scheduler.schedule(command);        
-            Logger.consoleLog("Command scheduled: %s", this.currentCommand.getName());
-        } finally {
-            this.currentCommand = null;
         }
-    
     }
 
     public void check(Command command) throws RuntimeException{
