@@ -60,7 +60,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     MustangScheduler.getInstance().run();
     if (timer.hasPeriodPassed(SYSTEM_CHECK_PERIOD)){
-      m_robotContainer.checkSubsystemsHealth(); //TODO: check and see if we need to reset the timer after this
+      RobotContainer.checkSubsystemsHealth(); //TODO: check and see if we need to reset the timer after this
     }
   }
 
@@ -85,7 +85,7 @@ public class Robot extends TimedRobot {
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       //m_autonomousCommand.schedule();
-      MustangScheduler.getInstance().schedule(m_autonomousCommand);
+      // MustangScheduler.getInstance().schedule(m_autonomousCommand);
     }
     m_autonomousCommand.schedule();
   }
