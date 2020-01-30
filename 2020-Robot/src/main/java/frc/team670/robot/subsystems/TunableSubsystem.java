@@ -13,7 +13,7 @@ public interface TunableSubsystem {
     public void stop();
 
     /**
-     * Moves the Subsystem using percent outpu
+     * Moves the Subsystem using percent output
      */
     public void moveByPercentOutput(double output);
 

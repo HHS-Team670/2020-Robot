@@ -14,7 +14,6 @@ import java.util.List;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel;
 
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -29,8 +28,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import frc.team670.robot.commands.drive.teleop.XboxRocketLeagueDrive;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
-import frc.team670.robot.RobotContainer;
 import frc.team670.robot.dataCollection.sensors.NavX;
+import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
 /**
  * Represents a tank drive base.
@@ -39,14 +38,14 @@ import frc.team670.robot.dataCollection.sensors.NavX;
  */
 public class DriveBase extends MustangSubsystemBase {
 
-  private CANSparkMax left1, left2, right1, right2;
+  private SparkMAXLite left1, left2, right1, right2;
   private CANEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
 
   private SpeedControllerGroup left, right;
   private DifferentialDrive driveTrain;
 
-  private List<CANSparkMax> leftControllers, rightControllers;
-  private List<CANSparkMax> allMotors = new ArrayList<CANSparkMax>();;
+  private List<SparkMAXLite> leftControllers, rightControllers;
+  private List<SparkMAXLite> allMotors = new ArrayList<SparkMAXLite>();;
 
   private NavX navXMicro;
   private DifferentialDriveOdometry m_odometry;
@@ -54,15 +53,10 @@ public class DriveBase extends MustangSubsystemBase {
   private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
 
   public DriveBase() {
-    left1 = new CANSparkMax(RobotMap.SPARK_LEFT_MOTOR_1, CANSparkMaxLowLevel.MotorType.kBrushless);
-    left2 = new CANSparkMax(RobotMap.SPARK_LEFT_MOTOR_2, CANSparkMaxLowLevel.MotorType.kBrushless);
-    right1 = new CANSparkMax(RobotMap.SPARK_RIGHT_MOTOR_1, CANSparkMaxLowLevel.MotorType.kBrushless);
-    right2 = new CANSparkMax(RobotMap.SPARK_RIGHT_MOTOR_2, CANSparkMaxLowLevel.MotorType.kBrushless);
-
-    left1.restoreFactoryDefaults();
-    left2.restoreFactoryDefaults();
-    right1.restoreFactoryDefaults();
-    right2.restoreFactoryDefaults();
+    left1 = new SparkMAXLite(RobotMap.SPARK_LEFT_MOTOR_1);
+    left2 = new SparkMAXLite(RobotMap.SPARK_LEFT_MOTOR_2);
+    right1 = new SparkMAXLite(RobotMap.SPARK_RIGHT_MOTOR_1);
+    right2 = new SparkMAXLite(RobotMap.SPARK_RIGHT_MOTOR_2);
 
     left1Encoder = left1.getEncoder();
     right1Encoder = right1.getEncoder();
@@ -76,14 +70,12 @@ public class DriveBase extends MustangSubsystemBase {
 
     leftControllers = Arrays.asList(left1, left2);
     rightControllers = Arrays.asList(right1, right2);
+    
     allMotors.addAll(leftControllers);
     allMotors.addAll(rightControllers);
 
-    setMotorsInvert(leftControllers, false);
-    setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController and then invert the SpeedController to compensate for automatic inversion.
-
-    left2.follow(left1);
-    right2.follow(right1);
+    left2.setFollow(left1);
+    right2.setFollow(right1);
 
     left = new SpeedControllerGroup(left1, left2);
     right = new SpeedControllerGroup(right1, right2);
@@ -92,7 +84,8 @@ public class DriveBase extends MustangSubsystemBase {
     // to invert straight from the Spark so that we can
     // still use it properly with the CANPIDController, so we need to reverse the
     // automatic invert.
-    right.setInverted(true);
+    setMotorsInvert(leftControllers, false);
+    setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController and then invert the SpeedController to compensate for automatic inversion.
 
     driveTrain = new DifferentialDrive(left, right);
     driveTrain.setMaxOutput(1.0);
@@ -106,6 +99,33 @@ public class DriveBase extends MustangSubsystemBase {
 
   }
 
+  /**
+   * Used to initialized teleop command for the driveBase
+   */
+  public void initDefaultCommand() {
+    CommandScheduler.getInstance().schedule(new XboxRocketLeagueDrive(this));
+  }
+  
+  /**
+   * Checks the health for driveBase
+   */
+  @Override
+  public HealthState checkHealth() {
+    HealthState state = HealthState.GREEN;
+
+    boolean l1 = left1==null, l2 = left2==null, r1 = right1==null, r2 = right2==null;
+
+      if(l1 && l2 || r1 && r2){
+        state = HealthState.RED;
+      }
+      else if(!l1 && !l2 && !r1 && !r2){
+        state = HealthState.GREEN;
+      }
+      else{
+        state = HealthState.YELLOW;
+      }
+      return state;
+  }
 
   /**
    * 
@@ -145,33 +165,6 @@ public class DriveBase extends MustangSubsystemBase {
    */
   public void curvatureDrive(double xSpeed, double zRotation, boolean isQuickTurn) {
     driveTrain.curvatureDrive(xSpeed, zRotation, isQuickTurn);
-  }
-
-  /**
-   * 
-   * Drives the Robot using an arcade drive configuration (single joystick with
-   * twist)
-   * 
-   * @param xSpeed      The forward throttle speed [-1, 1]
-   * @param zRotation   The amount of rotation to turn [-1, 1] with positive being
-   *                    right
-   * @param isQuickTurn If true, decreases sensitivity at lower inputs
-   */
-  public void arcadeDrive(double xSpeed, double zRotation, boolean squaredInputs) {
-    driveTrain.arcadeDrive(xSpeed, zRotation, squaredInputs);
-  }
-
-  /**
-   * 
-   * Drives the Robot using an arcade drive configuration (single joystick with
-   * twist)
-   * 
-   * @param xSpeed    The forward throttle speed [-1, 1]
-   * @param zRotation The amount of rotation to turn [-1, 1] with positive being
-   *                  right
-   */
-  public void arcadeDrive(double xSpeed, double zRotation) {
-    arcadeDrive(xSpeed, zRotation, false);
   }
 
   /**
@@ -222,7 +215,7 @@ public class DriveBase extends MustangSubsystemBase {
   /**
    * Inverts a list of motors.
    */
-  private void setMotorsInvert(List<CANSparkMax> motorGroup, boolean invert) {
+  private void setMotorsInvert(List<SparkMAXLite> motorGroup, boolean invert) {
     for (CANSparkMax m : motorGroup) {
       m.setInverted(invert);
     }
@@ -249,7 +242,7 @@ public class DriveBase extends MustangSubsystemBase {
   /**
    * Sets array of motor to brake mode
    */
-  public void setMotorsBrakeMode(List<CANSparkMax> motorGroup, IdleMode mode) {
+  public void setMotorsBrakeMode(List<SparkMAXLite> motorGroup, IdleMode mode) {
     for (CANSparkMax m : motorGroup) {
       m.setIdleMode(IdleMode.kBrake);
     }
@@ -333,10 +326,6 @@ public class DriveBase extends MustangSubsystemBase {
     return output;
   }
 
-  public void initDefaultCommand() {
-    CommandScheduler.getInstance().schedule(new XboxRocketLeagueDrive(this));
-  }
-
   /**
    * Returns the velocity of the right side of the drivebase in inches/second from
    * the Spark Encoder
@@ -403,7 +392,7 @@ public class DriveBase extends MustangSubsystemBase {
    * Returns the Left Motor Controllers
    * @return The list of the motor controller on the left side of the robot
    */
-  public List<CANSparkMax> getLeftControllers() {
+  public List<SparkMAXLite> getLeftControllers() {
     return leftControllers;
   }
 
@@ -411,14 +400,14 @@ public class DriveBase extends MustangSubsystemBase {
    * Returns the Right Motor Controller
    * @return The list of hte motor controller on the right side of the robot
    */
-  public List<CANSparkMax> getRightControllers() {
+  public List<SparkMAXLite> getRightControllers() {
     return rightControllers;
   }
 
   /**
    * @param rampRate The ramp rate in seconds from 0 to full throttle
    */
-  public void setRampRate(List<CANSparkMax> motors, double rampRate) {
+  public void setRampRate(List<SparkMAXLite> motors, double rampRate) {
     for (CANSparkMax m : motors) {
       m.setClosedLoopRampRate(rampRate);
       m.setOpenLoopRampRate(rampRate);
@@ -433,6 +422,11 @@ public class DriveBase extends MustangSubsystemBase {
     return rotations * Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER;
   }
 
+  /**
+   * Converts revolutions to inches rotated
+   * @param revolutions The number of revolutions that has to be converted to distance travelled
+   * @return The distance rotated in inches
+   */
   public static double convertSparkRevolutionsToInches(double revolutions) {
     // rev * 2piR in / rev
     return revolutions * Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER / RobotConstants.DRIVEBASE_GEAR_RATIO;
@@ -540,15 +534,11 @@ public class DriveBase extends MustangSubsystemBase {
     return new DifferentialDriveWheelSpeeds(left1Encoder.getVelocity(), right1Encoder.getVelocity());
   }
 
-  @Override
-  public HealthState checkHealth() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
   public void zeroSensors(){
-    
+    left1Encoder.setPosition(0);
+    right1Encoder.setPosition(0);
   }  
+  
   public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
     tankDrive(leftVoltage / RobotController.getBatteryVoltage(), rightVoltage / RobotController.getBatteryVoltage());
   }

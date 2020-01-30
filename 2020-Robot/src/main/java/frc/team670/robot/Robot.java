@@ -7,33 +7,16 @@
 
 package frc.team670.robot;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import edu.wpi.first.wpilibj.Filesystem;
+
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
-import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
-import frc.team670.robot.commands.MustangCommandBase;
-import frc.team670.robot.commands.drive.straight.TimedDrive;
+
+import frc.team670.robot.commands.MustangScheduler;
+
 import frc.team670.robot.utils.Logger;
 
-import java.util.Map;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import frc.team670.robot.constants.RobotConstants;
-import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.robot.utils.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -47,6 +30,9 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
 
+  private Timer timer;
+  private double SYSTEM_CHECK_PERIOD = 10;
+
   /**
    * This function is run when the robot is first started up and should be used
    * for any initialization code.
@@ -57,40 +43,28 @@ public class Robot extends TimedRobot {
     // and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    CommandScheduler.getInstance().onCommandInitialize(command -> Robot.checkCommandsHealth(command));
+    timer = new Timer();
+    timer.start();
+    MustangScheduler.getInstance();
   }
 
-  public static void checkCommandsHealth(Command command){
-
-    if (command instanceof MustangCommandBase){
-      Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> requirements = ((MustangCommandBase)(command)).getHealthRequirements();
-      for (MustangSubsystemBase s: requirements.keySet()){
-        if (s.getHealth(false).getId() > requirements.get(s).getId()){
-          CommandScheduler.getInstance().cancel(command);
-        }
-      }
-    }
-  }
 
   /**
    * This function is called every robot packet, no matter the mode. Use this for
    * items like diagnostics that you want ran during disabled, autonomous,
    * teleoperated and test.
    *
-   * <p>
-   * This runs after the mode specific periodic functions, but before LiveWindow
-   * and SmartDashboard integrated updating.
+   * <p>This runs after the mode specific periodic functions, but before
+   * LiveWindow and SmartDashboard integrated updating.
+   * 
+   * Re-calculates the health of all subsystems on the robot at specified intervals.
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler. This is responsible for polling buttons, adding
-    // newly-scheduled
-    // commands, running already-scheduled commands, removing finished or
-    // interrupted commands,
-    // and running subsystem periodic() methods. This must be called from the
-    // robot's periodic
-    // block in order for anything in the Command-based framework to work.
-    CommandScheduler.getInstance().run();
+    MustangScheduler.getInstance().run();
+    if (timer.hasPeriodPassed(SYSTEM_CHECK_PERIOD)){
+      RobotContainer.checkSubsystemsHealth(); //TODO: check and see if we need to reset the timer after this
+    }
   }
 
   /**
@@ -115,7 +89,7 @@ public class Robot extends TimedRobot {
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       //m_autonomousCommand.schedule();
-      CommandScheduler.getInstance().schedule(m_autonomousCommand);
+      // MustangScheduler.getInstance().schedule(m_autonomousCommand);
     }
     m_autonomousCommand.schedule();
   }
@@ -125,8 +99,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    RobotContainer.driveBase.periodic();
-    CommandScheduler.getInstance().run();
+    MustangScheduler.getInstance().run();
   }
 
   @Override
@@ -139,7 +112,6 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     Logger.consoleLog("Teleop Init");
-    RobotContainer.driveBase.initDefaultCommand();
   }
 
   /**
@@ -147,13 +119,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    CommandScheduler.getInstance().run();
+    MustangScheduler.getInstance().run();
   }
 
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
+    MustangScheduler.getInstance().cancelAll();
   }
 
   /**
@@ -161,6 +133,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    CommandScheduler.getInstance().run();
+    MustangScheduler.getInstance().run();
   }
 }

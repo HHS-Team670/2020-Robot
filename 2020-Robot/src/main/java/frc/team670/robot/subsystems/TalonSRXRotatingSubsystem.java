@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 /**
  * Superclass for any rotating subsystem using a TalonSRX, intakes for example
  */
-public abstract class RotatingSubsystem extends SubsystemBase implements TunableSubsystem {
+public abstract class TalonSRXRotatingSubsystem extends SubsystemBase implements TunableSubsystem {
     protected static final int NO_SETPOINT = 99999;
     protected TalonSRX rotator;
     protected int setpoint;
@@ -22,7 +22,7 @@ public abstract class RotatingSubsystem extends SubsystemBase implements Tunable
 
     protected SensorCollection rotatorSensorCollection;
 
-    public RotatingSubsystem(TalonSRX rotatorTalon, double arbitraryFeedForwardConstant, int forwardSoftLimit, int reverseSoftLimit, boolean timeout, int quadEncoderMin, int quadEncoderMax, int continuousCurrentLimit, int peakCurrentLimit, int offsetFromEncoderZero) {
+    public TalonSRXRotatingSubsystem(TalonSRX rotatorTalon, double arbitraryFeedForwardConstant, int forwardSoftLimit, int reverseSoftLimit, boolean timeout, int quadEncoderMin, int quadEncoderMax, int continuousCurrentLimit, int peakCurrentLimit, int offsetFromEncoderZero) {
         // For testing purposes
         if (rotatorTalon != null) {
             this.rotator = rotatorTalon;
@@ -42,7 +42,7 @@ public abstract class RotatingSubsystem extends SubsystemBase implements Tunable
                 this.arbitraryFeedForwardConstant = arbitraryFeedForwardConstant;
                 this.timeout = timeout;
 
-                setpoint = RotatingSubsystem.NO_SETPOINT;
+                setpoint = TalonSRXRotatingSubsystem.NO_SETPOINT;
 
                 int pulseWidthPos = getRotatorPulseWidth() & 4095;
 
