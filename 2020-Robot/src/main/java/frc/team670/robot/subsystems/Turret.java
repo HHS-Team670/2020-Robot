@@ -2,7 +2,9 @@ package frc.team670.robot.subsystems;
 
 
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.motorcontroller.*;
@@ -13,8 +15,9 @@ public class Turret extends SparkMaxRotatingSubsystem {
     private final CANSparkMax sparkControl;
     private final int TICKS_PER_REVOLUTION = 4096;; //ticks per revolution
     // unused private final int TURRET_LIMIT = (int)((TICKS_PER_REVOLUTION * 160.0)/360.0);                  // assuming the turret's soft limit will be 1820 ticks = 160 degrees both ways from center as 0 degrees.           
-    private final double REFERENCE_POINT;
+    private double referencePoint;
     private final double SOFT_LIMIT_IN_DEGREES = 160.0;
+
     private final double HARD_LIMIT_IN_DEGREES = 180.0;
 
     public Turret(/*int mainCANId,*/ ) {
@@ -23,8 +26,31 @@ public class Turret extends SparkMaxRotatingSubsystem {
         //super(TalonSRXFactory.buildFactoryTalonSRX(RobotMap.TALON_TURRET), 0, 180, 0, true, 0, 0, 0, 0, 0);         //TODO Complete this
         super(SparkMAXFactory.buildFactorySparkMAX(RobotMap.SPARK_TURRET), 0);
         this.sparkControl = super.rotator;
-        REFERENCE_POINT = super.encoder.getPosition();
+        this.sparkControl.setSoftLimit(SoftLimitDirection.kForward, (float)getTicks(SOFT_LIMIT_IN_DEGREES));
+        this.sparkControl.setSoftLimit(SoftLimitDirection.kReverse, (float)getTicks(SOFT_LIMIT_IN_DEGREES));
+        this.sparkControl.enableSoftLimit(SoftLimitDirection.kForward, true);
+        this.sparkControl.enableSoftLimit(SoftLimitDirection.kReverse, true);
+               //referencePoint = super.encoder.getPosition();
         
+    }
+
+    /**
+     * @return the referencePoint
+     */
+    public void setZeroPoint(double point) {
+        referencePoint = point;
+    }
+
+    /*
+
+    */
+
+
+    /**
+     * @return the referencePoint
+     */
+    public double getZeroPoint() {
+        return referencePoint;
     }
 
     /**
@@ -35,7 +61,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         //define degrees
         
         //there are 4096 ticks in a circle, so one degree is 11 17/45 ticks.
-        return ((super.encoder.getPosition() / TICKS_PER_REVOLUTION) * 360);
+        return ((getEncoderPos() / TICKS_PER_REVOLUTION) * 360);
         // verify if this is counts per revolution as the input of get ticks in degrees. 
     }
 
@@ -57,7 +83,12 @@ public class Turret extends SparkMaxRotatingSubsystem {
     // }
 
     public double getEncoderPos() {
-        return this.encoder.getPosition();
+        
+        return this.encoder.getPosition() - referencePoint;// - referencePoint;
+    }
+
+    public CANPIDController getPIDController() {
+        return this.rotator.getPIDController();
     }
 
     /**
