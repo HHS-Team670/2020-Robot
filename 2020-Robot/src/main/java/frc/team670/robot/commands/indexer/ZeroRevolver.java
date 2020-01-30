@@ -14,6 +14,7 @@ public class ZeroRevolver extends CommandBase {
 
     public ZeroRevolver() {
         speed = 0.7;
+        addRequirements(RobotContainer.indexer);
         indexer = RobotContainer.indexer;
     }
 

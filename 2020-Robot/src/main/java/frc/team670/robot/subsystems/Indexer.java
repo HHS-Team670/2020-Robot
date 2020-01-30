@@ -41,6 +41,30 @@ public class Indexer extends MustangSubsystemBase{
     }
 
     /**
+     * checks collective state of all chambers
+     * @return true if there's a ball in every chamger
+     */
+    public boolean isFull() {
+        for (boolean chamber: chamberStates)
+            if (!chamber)
+                return false;
+
+        return true;
+    }
+
+    /**
+     * checks collective state of all chambers
+     * @return true if there's no ball in any chambers
+     */
+    public boolean isEmpty() {
+        for (boolean chamber: chamberStates)
+            if (chamber)
+                return false;
+
+        return true;
+    }
+
+    /**
      * called when ball goes into a chamber
      * @param chamber the one just filled
      */
@@ -98,7 +122,6 @@ public class Indexer extends MustangSubsystemBase{
         return 0;
     }
 
-    // TODO: this is wrong
     /**
      * -1 for negative direction, 1 for positive direction
      */
