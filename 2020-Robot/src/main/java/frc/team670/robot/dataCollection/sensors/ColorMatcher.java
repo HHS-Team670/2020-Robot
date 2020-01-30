@@ -3,7 +3,6 @@ package frc.team670.robot.dataCollection.sensors;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.team670.robot.constants.RobotConstants;
 
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorMatchResult;
@@ -31,22 +30,27 @@ public class ColorMatcher {
   private final ColorMatch m_colorMatcher = new ColorMatch();
 
   public enum colors {
-  
-    BLUE(0, ColorMatch.makeColor(0.136, 0.412, 0.450)), YELLOW(1, ColorMatch.makeColor(0.293, 0.561, 0.144)), RED(2, ColorMatch.makeColor(0.475, 0.371, 0.153)), GREEN(3, ColorMatch.makeColor(0.196, 0.557, 0.246));
+
+    BLUE(0, ColorMatch.makeColor(0.136, 0.412, 0.450)), YELLOW(1, ColorMatch.makeColor(0.293, 0.561, 0.144)),
+    RED(2, ColorMatch.makeColor(0.475, 0.371, 0.153)), GREEN(3, ColorMatch.makeColor(0.196, 0.557, 0.246));
 
     private int colorNumber;
     private Color color;
 
-    private colors(int colorNumber, Color color){
+    private colors(int colorNumber, Color color) {
       this.colorNumber = colorNumber;
       this.color = color;
     }
 
+    /**
+     * 
+     * @return the corresponding integer code for each color on the wheel
+     */
     public int getColorNumber() {
       return colorNumber;
     }
 
-    private Color getTargetColor(){
+    private Color getTargetColor() {
       return color;
     }
   }
@@ -54,6 +58,10 @@ public class ColorMatcher {
   public static final int UNKNOWN_COLOR_NUMBER = -1;
 
   private final double CONFIDENCE_THRESHOLD = 0.85;
+
+  public ColorMatcher() {
+    init();
+  }
 
   public void init() {
     m_colorMatcher.addColorMatch(colors.BLUE.getTargetColor());
@@ -106,14 +114,14 @@ public class ColorMatcher {
      * Open Smart Dashboard or Shuffleboard to see the color detected by the sensor.
      */
     /*
-    SmartDashboard.putNumber("Red", detectedColor.red);
-    SmartDashboard.putNumber("Green", detectedColor.green);
-    SmartDashboard.putNumber("Blue", detectedColor.blue);
-    SmartDashboard.putNumber("Confidence", match.confidence);
-    SmartDashboard.putString("Detected Color", colorString);
-    SmartDashboard.putNumber("Detected Color Number", colorNumber);
-    */
+     * SmartDashboard.putNumber("Red", detectedColor.red);
+     * SmartDashboard.putNumber("Green", detectedColor.green);
+     * SmartDashboard.putNumber("Blue", detectedColor.blue);
+     * SmartDashboard.putNumber("Confidence", match.confidence);
+     * SmartDashboard.putString("Detected Color", colorString);
+     * SmartDashboard.putNumber("Detected Color Number", colorNumber);
+     */
 
     return colorNumber;
-  }  
+  }
 }

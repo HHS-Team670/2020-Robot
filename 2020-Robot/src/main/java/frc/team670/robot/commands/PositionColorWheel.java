@@ -17,25 +17,23 @@ import frc.team670.robot.utils.Logger;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Spins the color wheel to a specified color from the field.
  * 
- * @author Antonio Cuan, Katelyn Yap 
+ * @author Antonio Cuan, Katelyn Yap
  */
-public class PositionColorWheel extends MustangCommandBase {
+public class PositionColorWheel extends CommandBase implements MustangCommand {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final ColorWheelSpinner m_spinner;
 
   private int resultColorNumber;
-  private final int COLOR_COUNT = 4; 
-  private final int OFFSET_SIZE = 2; // note that if they offset is three or one, the program will only work if the color sensor is at a certain position
+  private final int COLOR_COUNT = 4;
+  private final int OFFSET_SIZE = 2; // note that if they offset is three or one, the program will only work if the
+                                     // color sensor is at a certain position
   // TODO: tune the offset number
-  /**
-   * Creates a new PositionColorWheel command.
-   *
-   * @param ColorWheelSpinner The subsystem used by this command.
-   */
+
   public PositionColorWheel(ColorWheelSpinner spinner) {
     m_spinner = spinner;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -78,11 +76,11 @@ public class PositionColorWheel extends MustangCommandBase {
       Logger.consoleLog("No data received.");
     }
 
-    resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % COLOR_COUNT); 
+    resultColorNumber = (((targetColorNumber) + OFFSET_SIZE) % COLOR_COUNT);
     /**
-    * calculates offset color number since the robot color sensor is in a different
-    * place than the frc sensor on the color wheel;
-    */
+     * calculates offset color number since the robot color sensor is in a different
+     * place than the frc sensor on the color wheel;
+     */
     Logger.consoleLog("Color to detect: %s", resultColorNumber);
     m_spinner.setSpeed(m_spinner.MOTOR_SPEED);
   }

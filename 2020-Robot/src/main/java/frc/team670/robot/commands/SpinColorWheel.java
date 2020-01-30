@@ -15,13 +15,14 @@ import frc.team670.robot.utils.Logger;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Spins the color wheel a certain number of times.
  * 
  * @author Antonio Cuan, Katelyn Yap
  */
-public class SpinColorWheel extends MustangCommandBase {
+public class SpinColorWheel extends CommandBase implements MustangCommand {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final ColorWheelSpinner m_spinner;
 
@@ -56,16 +57,19 @@ public class SpinColorWheel extends MustangCommandBase {
   public boolean isFinished() {
     int detectedColorNumber = m_spinner.detectColor();
 
-    if (detectedColorNumber == referenceColorNumber) { // when it detects the reference color, which is whatever color it sees first
+    if (detectedColorNumber == referenceColorNumber) { // when it detects the reference color, which is whatever color
+                                                       // it sees first
       isColorDetected = true;
     }
 
-    if (isColorDetected && detectedColorNumber != referenceColorNumber) { // has detected ref. color; the wheel is at the next color
+    if (isColorDetected && detectedColorNumber != referenceColorNumber) { // has detected ref. color; the wheel is at
+                                                                          // the next color
       colorDetectedCount++;
       isColorDetected = false;
     }
 
-    if (colorDetectedCount == 7) { // 7 means 3+(1/8) rotations and 1 is added to colorDetectedCount once 1/8 of a rotation is completed
+    if (colorDetectedCount == 7) { // 7 means 3+(1/8) rotations and 1 is added to colorDetectedCount once 1/8 of a
+                                   // rotation is completed
       return true;
     }
 

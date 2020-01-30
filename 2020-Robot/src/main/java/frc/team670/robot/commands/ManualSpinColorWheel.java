@@ -8,22 +8,21 @@
 package frc.team670.robot.commands;
 
 import frc.team670.robot.RobotContainer;
-import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.ColorWheelSpinner;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 import java.util.Map;
 
-import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
-// import frc.team670.robot.commands.MustangCommandBase;
 /**
- * Spins the color wheel at a slower speed when the driver presses a button (manual spin), use if something breaks.
+ * Spins the color wheel at a slower speed when the driver presses a button
+ * (manual spin), use if something breaks.
  * 
  * @author Antonio Cuan
  */
-public class ManualSpinColorWheel extends MustangCommandBase {
+public class ManualSpinColorWheel extends CommandBase implements MustangCommand {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final ColorWheelSpinner m_spinner;
 
@@ -32,7 +31,7 @@ public class ManualSpinColorWheel extends MustangCommandBase {
   /**
    * Creates a new ManualSpinColorWheel.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param ColorWheelSpinner The subsystem used by this command.
    */
   public ManualSpinColorWheel(ColorWheelSpinner spinner) {
     m_spinner = spinner;
