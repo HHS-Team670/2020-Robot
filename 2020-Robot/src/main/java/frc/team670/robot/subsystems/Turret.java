@@ -1,37 +1,29 @@
 package frc.team670.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.SensorCollection;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.EncoderType;
-import com.revrobotics.CANAnalog.AnalogMode;
-import edu.wpi.first.wpilibj2.command.ScheduleCommand;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team670.robot.RobotContainer;
+
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.motorcontroller.*;
 
 //TODO: Change all of this to using a SparkMax instead of TalonSRX
 
 public class Turret extends SparkMaxRotatingSubsystem {
-    private final TalonSRX talonControl;
+    private final CANSparkMax sparkControl;
     private final int TICKS_PER_REVOLUTION = 4096;; //ticks per revolution
     // unused private final int TURRET_LIMIT = (int)((TICKS_PER_REVOLUTION * 160.0)/360.0);                  // assuming the turret's soft limit will be 1820 ticks = 160 degrees both ways from center as 0 degrees.           
-    private final int REFERENCE_POINT =  super.getPositionTicks();
+    private final double REFERENCE_POINT;
     private final double SOFT_LIMIT_IN_DEGREES = 160.0;
     private final double HARD_LIMIT_IN_DEGREES = 180.0;
 
     public Turret(/*int mainCANId,*/ ) {
         // NOTE ignore error, will deal with this later. 
         // NOTE May not be Talon control, if not talon control, then we will need to change the TalonSRX 
-        super(TalonSRXFactory.buildFactoryTalonSRX(RobotMap.TALON_TURRET), 0, 180, 0, true, 0, 0, 0, 0, 0);         //TODO Complete this
-        this.talonControl = super.rotator;
-        
+        //super(TalonSRXFactory.buildFactoryTalonSRX(RobotMap.TALON_TURRET), 0, 180, 0, true, 0, 0, 0, 0, 0);         //TODO Complete this
+        super(SparkMAXFactory.buildFactorySparkMAX(RobotMap.SPARK_TURRET), 0);
+        this.sparkControl = super.rotator;
+        REFERENCE_POINT = super.encoder.getPosition();
         
     }
 
@@ -43,7 +35,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         //define degrees
         
         //there are 4096 ticks in a circle, so one degree is 11 17/45 ticks.
-        return ((super.getPositionTicks() / TICKS_PER_REVOLUTION) * 360);
+        return ((super.encoder.getPosition() / TICKS_PER_REVOLUTION) * 360);
         // verify if this is counts per revolution as the input of get ticks in degrees. 
     }
 
@@ -64,8 +56,8 @@ public class Turret extends SparkMaxRotatingSubsystem {
     //     return getEncoder().getPulseWidthVelocity();
     // }
 
-    public int getEncoderPos() {
-        return getEncoder().getPulseWidthPosition();
+    public double getEncoderPos() {
+        return this.encoder.getPosition();
     }
 
     /**
@@ -76,7 +68,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
      * @param degrees the position in degrees the turret should move
      *      
      */
-    public void rotateTurretTo(double degrees) {
+    public void setTurretSpeed(double speed) {
 
         /**
          * taking soft limit is 20 degrees
@@ -93,7 +85,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
          * 
          * 
          */
-
+/*
          if(Math.abs(degrees) > SOFT_LIMIT_IN_DEGREES) {
              return;
          }
@@ -103,10 +95,10 @@ public class Turret extends SparkMaxRotatingSubsystem {
         // if (Math.abs(setpoint) >= HARD_LIMIT && Math.abs(super.getPositionTicks()) >= HARD_LIMIT) {
         //     return;
         // }
-
+*/
         
-
-        talonControl.set((ControlMode.Position), setpoint);//(degrees)/(getTicksInDegrees(ticksPerRevolution)));
+        this.rotator.set(speed);
+        //set((ControlMode.Position), setpoint);//(degrees)/(getTicksInDegrees(ticksPerRevolution)));
          
         // TODO research this and make changes, this section is not complete. 
      }
@@ -116,14 +108,14 @@ public class Turret extends SparkMaxRotatingSubsystem {
      * Rotates the turret amount amount.
      * @param amount the amount (in degrees) the turret should rotate
      */
-    public void rotateTurretAdditionalAmount(double amount) {
+    /*public void rotateTurretAdditionalAmount(double amount) {
         if(Math.abs(getAngleInDegrees() + amount) > SOFT_LIMIT_IN_DEGREES)
         {
             return;
         }
         double amountInTicks = amount*getTicksPerDegree();
-        talonControl.set((ControlMode.Position), super.getPositionTicks() + amountInTicks);
-    }
+        sparkControl.set((ControlMode.Position), super.encoder.getPosition() + amountInTicks);
+    }*/
 
     public double getTicksPerDegree() { //int numberOfTicks) {
         return TICKS_PER_REVOLUTION / 360;//((numberOfTicks / TICKS_PER_REVOLUTION) * 360);
@@ -144,8 +136,8 @@ public class Turret extends SparkMaxRotatingSubsystem {
         setpoint = (int)(angle*(getTicksPerDegree()));
     }
 
-    public SensorCollection getEncoder() { //   TODO This is not CANEncoder, this has to be changed later.
-        return this.talonControl.getSensorCollection();                    // TODO FIX THIS
+    public CANEncoder getEncoder() { //   TODO This is not CANEncoder, this has to be changed later.
+        return this.encoder;                    // TODO FIX THIS
     }
 
     @Override
@@ -187,19 +179,19 @@ public class Turret extends SparkMaxRotatingSubsystem {
 //      * @return
 //      */
 //     public boolean motorHealthConditions() {
-//         // talonControl 
+//         // sparkControl 
 
 //         //  This function is apparently depreciated
-// //        double currentAmps = talonControl.getOutputCurrent();
+// //        double currentAmps = sparkControl.getOutputCurrent();
 
-//         final double currentAmps = talonControl.getSupplyCurrent();   // OR
-// //        double currentAmps = talonControl.getStatorCurrent();
+//         final double currentAmps = sparkControl.getSupplyCurrent();   // OR
+// //        double currentAmps = sparkControl.getStatorCurrent();
 
-//         final double outputVoltage = talonControl.getMotorOutputVoltage();
-//         final double busV = talonControl.getBusVoltage();
+//         final double outputVoltage = sparkControl.getMotorOutputVoltage();
+//         final double busV = sparkControl.getBusVoltage();
         
 //         /**
-//          * double quadEncoderPos = talonControl.getSelectedSensorPosition();
+//          * double quadEncoderPos = sparkControl.getSelectedSensorPosition();
 //          * 
 //          */
 
