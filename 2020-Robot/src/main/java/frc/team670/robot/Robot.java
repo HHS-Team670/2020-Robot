@@ -30,7 +30,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private Timer timer;
-  private double SYSTEM_CHECK_PERIOD;
+  private double SYSTEM_CHECK_PERIOD = 10;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -42,6 +42,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
     timer = new Timer();
+    timer.start();
     MustangScheduler.getInstance();
   }
 
@@ -57,10 +58,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
     MustangScheduler.getInstance().run();
     if (timer.hasPeriodPassed(SYSTEM_CHECK_PERIOD)){
       m_robotContainer.checkSubsystemsHealth(); //TODO: check and see if we need to reset the timer after this

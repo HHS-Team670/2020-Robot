@@ -62,8 +62,8 @@ public class MustangScheduler{
 
         for(Command m_command : command){
             try{
-                if (m_command instanceof MustangCommandBase){
-                    Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> requirements = ((MustangCommandBase)(m_command)).getHealthRequirements();
+                if (m_command instanceof MustangCommand){
+                    Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> requirements = ((MustangCommand)(m_command)).getHealthRequirements();
               
                     for (MustangSubsystemBase s: requirements.keySet()){
                     MustangSubsystemBase.HealthState healthReq = requirements.get(s); 
@@ -73,6 +73,10 @@ public class MustangScheduler{
                             return;
                         }
                     }
+                }
+                else{
+                    Logger.consoleLog("The command %s is not a MustangCommand", m_command.getName());
+                    throw new Exception("The command " + m_command.getName() + " is not a MustangCommand");
                 }
                 this.currentCommand = m_command;
                 scheduler.schedule(command);        

@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team670.robot.constants.OI;
-import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
@@ -35,13 +34,8 @@ public class RobotContainer {
   private static List<MustangSubsystemBase> allSubsystems = new ArrayList<MustangSubsystemBase>();
 
   public static OI oi = new OI();
-  
-  //TODO: after changes made to the subsystems, should make these fields private
 
   private static DriveBase driveBase = new DriveBase();
-
-  private static ColorMatcher colorMatch;// = new ColorMatcher();
-
   private static Shooter shooter;// = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
 
   private Trajectory trajectory;
@@ -88,4 +82,11 @@ public class RobotContainer {
     // Create a voltage constraint to ensure we don't accelerate too fast
     return null;
   }
+
+  public void initTeleopCommands(){
+    driveBase.initDefaultCommand();
+    shooter.initDefaultCommand();
+  }
+
+
 }

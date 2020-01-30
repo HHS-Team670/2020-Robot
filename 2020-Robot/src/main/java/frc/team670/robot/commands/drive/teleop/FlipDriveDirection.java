@@ -7,14 +7,19 @@
 
 package frc.team670.robot.commands.drive.teleop;
 
+import java.util.Map;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.robot.RobotContainer;
+import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.utils.Logger;
 
 /**
  * Flips the direction of the drive: forward or reversed.
  */
-public class FlipDriveDirection extends InstantCommand {
+public class FlipDriveDirection extends InstantCommand implements MustangCommand {
 
   public FlipDriveDirection() {
     super();
@@ -24,13 +29,19 @@ public class FlipDriveDirection extends InstantCommand {
   public void initialize() {
     boolean isReversed = XboxRocketLeagueDrive.isDriveReversed();
     // if (!isReversed) {
-    //   Robot.leds.setReverseData(true);
+    // Robot.leds.setReverseData(true);
     // } else {
-    //   Robot.leds.setForwardData(true);
+    // Robot.leds.setForwardData(true);
     // }
     XboxRocketLeagueDrive.setDriveReversed(!isReversed);
     RobotContainer.oi.rumbleDriverController(0.7, 0.2);
     Logger.consoleLog("Flipped Drive: %s", (!isReversed));
+  }
+
+  @Override
+  public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

@@ -68,4 +68,9 @@ public class Shooter extends MustangSubsystemBase {
     // TODO Auto-generated method stub
     return null;
   }
+
+  //TODO implement this to use joystick control if we use that
+  public void initDefaultCommand(){
+
+  }
 }
