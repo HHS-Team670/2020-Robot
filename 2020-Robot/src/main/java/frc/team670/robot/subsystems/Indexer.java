@@ -3,8 +3,8 @@ package frc.team670.robot.subsystems;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team670.robot.constants.RobotConstants;
 
 /**
  *
@@ -50,6 +50,54 @@ public class Indexer extends MustangSubsystemBase{
                 return false;
 
         return true;
+    }
+
+      /**
+     * logic for rotatetoshoot
+     * @return the first full chamber en route to shoot
+     */
+    public int getFirstFull() {
+        if (isEmpty())
+            return -1;
+
+        if (chamberStates[getCurrentChamber()])
+            return getCurrentChamber();
+
+        int c = getCurrentChamber() - 1;
+
+        if (getCurrentChamber() == 0)
+            c = 4;        
+
+        while (c >= 0) {
+            if(chamberStates[c])
+                return c;
+            c--;
+        }
+
+        return -1; // should not be reached
+    }
+
+    /**
+     * more logic for rotatetointake
+     * @return the last full chamber en route to shoot
+     */
+    public int getLastFull() {
+        if (isEmpty())
+            return -1;
+        if (!chamberStates[getCurrentChamber()])
+            return getCurrentChamber();
+        int c = getCurrentChamber() - 1;
+
+        if (getCurrentChamber() == 0)
+            c = 4;        
+
+        while (c >= 0) {
+            if(!chamberStates[c])
+                return c;
+            c--;
+        }
+
+        return -1; // should not be reached
     }
 
     /**
@@ -111,15 +159,16 @@ public class Indexer extends MustangSubsystemBase{
     }
 
 
+    //Preferably use this instead of getDegreePos
     public double getPosition() {
-        return encoder.getPosition();
+        return encoder.getPosition() / RobotConstants.REVOLVER_GEAR_RATIO;
     }
 
     // TODO: figure this out
     // assume degrees = 0 is zeroed
     // zeroed means chamber 0 is at the top
     public double getDegreePos() {
-        return 0;
+        return 360*(getPosition() % 1.0);
     }
 
     /**

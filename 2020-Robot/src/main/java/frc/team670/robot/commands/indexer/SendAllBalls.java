@@ -1,85 +1,57 @@
 package frc.team670.robot.commands.indexer;
 
+import java.util.Map;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team670.robot.RobotContainer;
+import frc.team670.robot.commands.MustangCommandBase;
 import frc.team670.robot.subsystems.Indexer;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 /**
- * Sends al the balls to the shooter
+ * Sends all the balls to the shooter
  */
-public class SendAllBalls extends CommandBase {
+public class SendAllBalls extends MustangCommandBase {
 
     private double speed;
     private Indexer indexer;
-    private int originalNumBalls, ballsLeft;
-    private double[] rotationOrder;
     private double originalPosition;
-    private int rotationDirection;
-    private boolean reachedBall;
+    private double rotationGoal;
+    private int originalNumBalls;
+    private int desiredNumBalls;
 
     public SendAllBalls() {
         speed = 0.7;
         indexer = RobotContainer.indexer;
-        originalPosition = indexer.getPosition();
         originalNumBalls = indexer.totalNumOfBalls();
-        ballsLeft = originalNumBalls;
-        rotationDirection = 0;
-        reachedBall = false;
-        if (originalNumBalls == 1) {
-            rotationOrder = new double[]{0.2+0.1};
-        } else if (originalNumBalls == 2) {
-            rotationOrder = new double[]{0.1, 0.1+0.2};
-        } else if (originalNumBalls == 3) {
-            rotationOrder = new double[]{-0.1, 0.1, 0.1+0.2};
-        } else if (originalNumBalls == 4) {
-            rotationOrder = new double[]{0.1, 0.1+0.2, 0.1+0.2*3, 0.1+0.2*4};   
-        } else if (originalNumBalls == 5) {
-            rotationOrder = new double[]{0.1, 0.1+0.2, 0.1+0.2*2, 0.1+0.2*3, 0.1+0.2*3};   
-        } else {
-            //Nice, either it's 0 or something is going amazingly
-        }
+        originalPosition = indexer.getPosition();
+        desiredNumBalls = indexer.totalNumOfBalls();
+        rotationGoal = indexer.getPosition() + 0.2;
     }
 
-
+    @Override
+    public void initialize() {
+        indexer.setSpeed(speed);
+    }
 
     @Override
     public void execute() {
-        
-        //Make sure to have whatever subsystem handles moving the balls out update the number of balls on the indexer
 
-        if (!reachedBall) {
-            indexer.setSpeed(speed*rotationDirection);
-            if (ballsLeft == originalNumBalls) {
-                if (rotationOrder[0] > 0) {
-                    rotationDirection = 1;
-                } else {
-                    rotationDirection = -1;
-                }
-            } else {
-                if (rotationOrder[originalNumBalls-ballsLeft] > rotationOrder[originalNumBalls-ballsLeft-1]) {
-                    rotationDirection = 1;
-                } else {
-                    rotationDirection = -1;
-                }
+        // Make sure to have whatever subsystem handles moving the balls out update the
+        // number of balls on the indexer
+        if (indexer.getPosition() > rotationGoal) {
+            desiredNumBalls--;
+            if (indexer.getSpeed() != 0) {
+                indexer.setSpeed(0);
             }
-    
-            if (rotationDirection == 1) {
-                if (indexer.getPosition() > originalPosition + rotationOrder[originalNumBalls-ballsLeft]) {
-                    reachedBall = true;
-                } else {
-                    reachedBall = false;
-                }
-            } else if (rotationDirection == -1) {
-                if (indexer.getPosition() < originalPosition +  rotationOrder[originalNumBalls-ballsLeft]) {
-                    reachedBall = true;
-                } else {
-                    reachedBall = false;
-                }
+
+            // Means that the ball left the revolver
+            if (indexer.totalNumOfBalls() == desiredNumBalls) {
+                rotationGoal = originalPosition + 0.2 + (originalNumBalls - desiredNumBalls) * 0.2;
             }
         }
-        
-
 
     }
 
@@ -90,7 +62,13 @@ public class SendAllBalls extends CommandBase {
 
     @Override
     public void end(boolean isInteruppted) {
-        CommandScheduler.getInstance().schedule(new ZeroRevolver());
+        CommandScheduler.getInstance().schedule(new RotateToIntakePosition(indexer.getFirstFull()));
+    }
+
+    @Override
+    public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 

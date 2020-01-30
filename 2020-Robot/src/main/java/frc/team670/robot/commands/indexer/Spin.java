@@ -9,6 +9,9 @@ import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
+/**
+ * Obsolete method
+ */
 public class Spin extends MustangCommandBase {
     
     private double speed;

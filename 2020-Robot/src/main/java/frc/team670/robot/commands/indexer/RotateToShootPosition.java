@@ -16,10 +16,8 @@ public class RotateToShootPosition extends MustangCommandBase {
 
     private double speed;
     private Indexer indexer;
-    private int goal;
 
-    public RotateToShootPosition(int chamber){
-        goal = chamber;
+    public RotateToShootPosition(){
         speed = 0.8;
         addRequirements(RobotContainer.indexer);
         indexer = RobotContainer.indexer;
@@ -38,8 +36,8 @@ public class RotateToShootPosition extends MustangCommandBase {
 
     @Override
     public boolean isFinished() {
-
-        return (indexer.getCurrentChamber() == goal);
+    
+        return indexer.getCurrentChamber() == indexer.getFirstFull();
     }
 
     @Override
