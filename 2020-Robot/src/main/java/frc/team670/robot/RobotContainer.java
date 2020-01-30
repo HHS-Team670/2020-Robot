@@ -62,6 +62,11 @@ public class RobotContainer {
     allSubsystems.add(subsystem);
   }
 
+  public static void checkSubsystemsHealth(){
+    for (MustangSubsystemBase s : allSubsystems){
+      s.getHealth(true);
+    }
+  }
 
   /**
    * Use this method to define your button->command mappings.  Buttons can be created by

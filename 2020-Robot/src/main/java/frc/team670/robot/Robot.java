@@ -22,10 +22,10 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.commands.MustangCommandBase;
+import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.commands.drive.straight.TimedDrive;
 import frc.team670.robot.utils.Logger;
 
@@ -55,20 +55,9 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    CommandScheduler.getInstance().onCommandInitialize(command -> Robot.checkCommandsHealth(command));
+    MustangScheduler.getInstance();
   }
 
-  public static void checkCommandsHealth(Command command){
-
-    if (command instanceof MustangCommandBase){
-      Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> requirements = ((MustangCommandBase)(command)).getHealthRequirements();
-      for (MustangSubsystemBase s: requirements.keySet()){
-        if (s.getHealth(false).getId() > requirements.get(s).getId()){
-          CommandScheduler.getInstance().cancel(command);
-        }
-      }
-    }
-  }
 
   /**
    * This function is called every robot packet, no matter the mode. Use this for items like
@@ -83,7 +72,7 @@ public class Robot extends TimedRobot {
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
-    CommandScheduler.getInstance().run();
+    MustangScheduler.getInstance().run();
   }
 
   /**
@@ -107,7 +96,7 @@ public class Robot extends TimedRobot {
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       //m_autonomousCommand.schedule();
-      CommandScheduler.getInstance().schedule(m_autonomousCommand);
+      MustangScheduler.getInstance().schedule(m_autonomousCommand);
     }
     m_autonomousCommand.schedule();
   }
@@ -118,7 +107,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     RobotContainer.driveBase.periodic();
-    CommandScheduler.getInstance().run();
+    MustangScheduler.getInstance().run();
   }
 
   @Override
@@ -139,13 +128,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    CommandScheduler.getInstance().run();
+    MustangScheduler.getInstance().run();
   }
 
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
+    MustangScheduler.getInstance().cancelAll();
   }
 
   /**
@@ -153,6 +142,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void testPeriodic() {
-    CommandScheduler.getInstance().run();
+    MustangScheduler.getInstance().run();
   }
 }
