@@ -6,47 +6,44 @@ import frc.team670.robot.constants.RobotMap;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
+
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
 import frc.team670.robot.dataCollection.sensors.IRSensor;
 
-
+/*
+ * @author Khicken
+*/
 public class Intake extends MustangSubsystemBase {
 
     private Compressor comp;
 	private Solenoid deployer;
-    private TalonSRX rollers;
+    private CANSparkMax rollers;
+    private CANEncoder encoder;
     private IRSensor sensor;
     private double rollerSpeed;
-	private boolean isDeployed, isRolling;
+    
+    // for testing
+    private double pValue = 0;
 
     public Intake() {
-        comp = new Compressor(RobotMap.PCMODULE); // may need to edit RobotMap to update ports
+        comp = new Compressor(RobotMap.PCMODULE); // need to edit RobotMap to update ports for irsensor and other stuff
         comp.setClosedLoopControl(true);
-        // deployer = new Solenoid(RobotMap.PCMODULE, RobotMap.INTAKE_SOLENOID); define once RobotMap ID given
-        rollers = new TalonSRX(RobotMap.INTAKE_ROLLER);
-        // sensor = new IRSensor(RobotMap.INTAKE_IRSENSOR);
-    }
-
-    public void setDeploy(boolean dep) {
-        isDeployed = dep;
-        deployer.set(isDeployed);
-    }
-
-    public void setRolling(boolean roll) {
-        isRolling = roll;
-        if(isRolling)
-            rollers.set(ControlMode.PercentOutput,rollerSpeed);
-        else
-            rollers.set(ControlMode.PercentOutput,0);
+        deployer = new Solenoid(RobotMap.PCMODULE, RobotMap.INTAKE_SOLENOID); //define once RobotMap ID given
+        rollers = new CANSparkMax(RobotMap.INTAKE_ROLLER, CANSparkMaxLowLevel.MotorType.kBrushless);
+        encoder = new CANEncoder(rollers);
+        // sensor = new IRSensor(RobotMap.INTAKE_IRSENSOR);        
     }
 
     public boolean getSensor() {
         return sensor.isTriggered();
-    }
-
-    public void setRollerSpeed(double percent) {
-        rollerSpeed = percent;
+        }
+    
+    public double getEncoderPosition() {
+        return encoder.getPosition();
     }
 
     public boolean isDeployed() {
@@ -57,50 +54,37 @@ public class Intake extends MustangSubsystemBase {
         return isRolling;
     }
 
+
     @Override
     public HealthState checkHealth() {
-        // TODO Auto-generated method stub, add to this
-        return null;
+        if(encoder.getCountsPerRevolution() != 7)
+            return HealthState.GREEN;
+        else
+            return HealthState.RED;
     }
 
-    /** 
-     * TODO: These should be moved to commands if they haven't been already.
-    */
-    // // deploy, retract, and roll commands(speeds need to be set)
-    // public void a_deploy() { // uses ir sensor to detect ball to deploy then roll/spin motorz(autonomous
-    //                          // deploy)
-    //     if (!isDeployed() && getSensor()) {
-    //         setDeploy(true);
-    //         if (isDeployed()) {
-    //             setRolling(changingRollingSpeed, true);
-    //         }
-    //     }
-    // }
+    public void fr_retract() {
+        setDeploy(true);
+        if(isDeployed()) {
+            setRolling(pValue, true);
+        }
+    }
 
-    // public void m_deploy() {
-    //     if (!isDeployed()) {
-    //         setDeploy(true);
-    //         if (isDeployed()) {
-    //             setRolling(changingRollingSpeed, true);
-    //         }
-    //     }
-    // }
+    public void setDeploy(boolean dep) {
+        isDeployed = dep;
+        deployer.set(isDeployed);
+    }
 
-    // public void retract() {
-    //     setDeploy(true);
-    //     if (isDeployed()) {
-    //         setRolling(changingRollingSpeed, true);
-    //     }
-    // }
+    public void setRolling(boolean roll) {
+        isRolling = roll;
+        if(isRolling)
+            rollers.set(rollerSpeed);
+        else
+            rollers.set(0);
+    }
 
-    // public void unjam() { // use if thing jammed 
-    //     if (!isDeployed()) {
-    //         setDeploy(true);
-    //     }
-
-    //     setRolling(-changingRollingSpeed, true);
-
-    //     // TODO 
-    // }
-
-}
+    public void setRollerSpeed(double percent) {
+        rollerSpeed = percent;
+    }
+    
+    }
