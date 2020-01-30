@@ -59,6 +59,10 @@ public class Indexer extends MustangSubsystemBase{
     public int getFirstFull() {
         if (isEmpty())
             return -1;
+
+        if (chamberStates[getCurrentChamber()])
+            return getCurrentChamber();
+
         int c = getCurrentChamber() - 1;
 
         if (getCurrentChamber() == 0)
@@ -80,6 +84,8 @@ public class Indexer extends MustangSubsystemBase{
     public int getLastFull() {
         if (isEmpty())
             return -1;
+        if (!chamberStates[getCurrentIntakeChamber()])
+            return getCurrentIntakeChamber();
         int c = getCurrentIntakeChamber() - 1;
 
         if (getCurrentIntakeChamber() == 0)
