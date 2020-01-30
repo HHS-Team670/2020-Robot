@@ -67,6 +67,28 @@ public class XKeys {
             else if (s.equals("toggle_shooter_zero"))
                 toggleShooterZero();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        table.addEntryListener("xkeys-updraw", (table2, key2, entry, value, flags) -> {
+            if (value.getType() != NetworkTableType.kString)
+                return;
+            String s = value.getString();
+            if (s.equals("toggle_updraw_up"))
+                toggleUpdrawUp();
+            else if (s.equals("toggle_updraw_down"))
+                toggleUpdrawDown();
+            else if (s.equals("toggle_updraw_off"))
+                toggleUpdrawOff();
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        table.addEntryListener("xkeys-indexer", (table2, key2, entry, value, flags) -> {
+            if (value.getType() != NetworkTableType.kString)
+                return;
+            String s = value.getString();
+            if (s.equals(""))
+                toggleUpdrawUp();
+            else if (s.equals("toggle_updraw_down"))
+                toggleUpdrawDown();
+            else if (s.equals("toggle_updraw_off"))
+                toggleUpdrawOff();
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-climber", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kString)
                 return;
@@ -92,23 +114,23 @@ public class XKeys {
 
     }
 
-    private void raiseClimber(){
+    private void raiseClimber() {
         MustangScheduler.getInstance().schedule();
     }
 
-    private void lowerClimber(){
+    private void lowerClimber() {
         MustangScheduler.getInstance().schedule();
     }
 
-    private void toggleShooterHigh(){
+    private void toggleShooterHigh() {
         MustangScheduler.getInstance().schedule();
     }
 
-    private void toggleShooterLow(){
+    private void toggleShooterLow() {
         MustangScheduler.getInstance().schedule();
     }
 
-    private void toggleShooterZero(){
+    private void toggleShooterZero() {
         MustangScheduler.getInstance().schedule();
     }
 
@@ -137,6 +159,18 @@ public class XKeys {
     }
 
     private void autoPickupBall() {
+        MustangScheduler.getInstance().schedule();
+    }
+
+    private void toggleUpdrawUp() {
+        MustangScheduler.getInstance().schedule();
+    }
+
+    private void toggleUpdrawDown() {
+        MustangScheduler.getInstance().schedule();
+    }
+
+    private void toggleUpdrawOff() {
         MustangScheduler.getInstance().schedule();
     }
 

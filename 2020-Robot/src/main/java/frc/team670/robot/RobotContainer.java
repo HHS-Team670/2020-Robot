@@ -38,11 +38,11 @@ public class RobotContainer {
   
   //TODO: after changes made to the subsystems, should make these fields private
 
-  public static DriveBase driveBase = new DriveBase();
+  private static DriveBase driveBase = new DriveBase();
 
-  public static ColorMatcher colorMatch;// = new ColorMatcher();
+  private static ColorMatcher colorMatch;// = new ColorMatcher();
 
-  public static Shooter shooter;// = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
+  private static Shooter shooter;// = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
 
   private Trajectory trajectory;
   private String pathname;

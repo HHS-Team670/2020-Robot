@@ -11,15 +11,11 @@ import java.util.Map;
  * 
  * @author ctychen
  */
-public abstract class MustangCommandBase extends CommandBase{
-
-    public MustangCommandBase(){
-        
-    }
+public interface MustangCommandBase{
 
     /**
      * @return A Map containing the minimum health condition for each subsystem that this Command requires to be safely used.
      */
-    public abstract Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> getHealthRequirements();
+    public Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> getHealthRequirements();
 
 }

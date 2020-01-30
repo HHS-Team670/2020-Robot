@@ -12,17 +12,10 @@ package frc.team670.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
-import frc.team670.robot.commands.MustangCommandBase;
-import frc.team670.robot.commands.MustangScheduler;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
-import frc.team670.robot.commands.MustangCommandBase;
-import frc.team670.robot.commands.MustangScheduler;
-import frc.team670.robot.commands.drive.straight.TimedDrive;
-import frc.team670.robot.utils.Logger;
 
-import java.util.Map;
+import frc.team670.robot.commands.MustangScheduler;
+
+import frc.team670.robot.utils.Logger;
 
 
 /**
@@ -105,7 +98,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    RobotContainer.driveBase.periodic();
     MustangScheduler.getInstance().run();
   }
 
@@ -119,7 +111,6 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     Logger.consoleLog("Teleop Init");
-    RobotContainer.driveBase.initDefaultCommand();
   }
 
   /**
