@@ -62,6 +62,9 @@ public class RobotContainer {
     allSubsystems.add(subsystem);
   }
 
+  /**
+   * Recalculates the health of all subsystems on the robot.
+   */
   public static void checkSubsystemsHealth(){
     for (MustangSubsystemBase s : allSubsystems){
       s.getHealth(true);

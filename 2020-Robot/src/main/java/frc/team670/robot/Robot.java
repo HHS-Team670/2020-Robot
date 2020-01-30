@@ -13,6 +13,7 @@ import java.nio.file.Paths;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
@@ -46,6 +47,9 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
 
+  private Timer timer;
+  private double SYSTEM_CHECK_PERIOD;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -55,6 +59,7 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    timer = new Timer();
     MustangScheduler.getInstance();
   }
 
@@ -65,6 +70,8 @@ public class Robot extends TimedRobot {
    *
    * <p>This runs after the mode specific periodic functions, but before
    * LiveWindow and SmartDashboard integrated updating.
+   * 
+   * Re-calculates the health of all subsystems on the robot at specified intervals.
    */
   @Override
   public void robotPeriodic() {
@@ -73,6 +80,9 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     MustangScheduler.getInstance().run();
+    if (timer.hasPeriodPassed(SYSTEM_CHECK_PERIOD)){
+      m_robotContainer.checkSubsystemsHealth(); //TODO: check and see if we need to reset the timer after this
+    }
   }
 
   /**
