@@ -2,11 +2,12 @@ package frc.team670.robot.commands.drive.teleop;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.cameras.FlipCamera;
 import frc.team670.robot.utils.Logger;
 import frc.team670.robot.RobotContainer;
 
-public class FlipDriveAndCamera extends InstantCommand {
+public class FlipDriveAndCamera extends InstantCommand implements MustangCommand{
 
     public FlipDriveAndCamera() {
         super();

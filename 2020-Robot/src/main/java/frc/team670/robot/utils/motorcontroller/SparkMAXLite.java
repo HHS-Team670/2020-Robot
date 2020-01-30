@@ -6,19 +6,27 @@ import com.revrobotics.ControlType;
 /**
  * Wrapper class for a SparkMAX for reducing CAN bus overhead by skipping duplicate set
  * commands.
- * @author ctychen
+ * @author ctychen, lakshbhambhani
  */
 public final class SparkMAXLite extends CANSparkMax{
 
     protected double lastSet = Double.NaN;
     protected ControlType lastControlType = null;
-    protected CANSparkMax master = null;
+    protected CANSparkMax leader = null;
 
     /**
      * Creates a SparkMAX on a given ID. Defaults to brushless motor.
      */
     public SparkMAXLite(int id){
         super(id, MotorType.kBrushless);
+    }
+
+    /**
+     * Creates a SparkMAX on a given ID.
+     * @param Motortype type Whether the motor connected to the controller is a brushed or brushless motor
+     */
+    public SparkMAXLite(int id, MotorType type){
+        super(id, type);
     }
 
     public double getLastSet(){
@@ -31,18 +39,18 @@ public final class SparkMAXLite extends CANSparkMax{
 
     /**
      * Applicable if this SparkMAX is set as a follower.
-     * @return the 'master' controller that the SparkMAX follows
+     * @return the 'leader' controller that the SparkMAX follows
      */
-    public CANSparkMax getMaster(){
-        return this.master;
+    public CANSparkMax getLeader(){
+        return this.leader;
     }
 
     /**
-     * @param master the SparkMAX for this controller to follow, if applicable.
+     * @param leader the SparkMAX for this controller to follow, if applicable.
      */
-    public void setFollow(CANSparkMax master){
-        this.master = master;
-        super.follow(master);
+    public void setFollow(CANSparkMax leader){
+        this.leader = leader;
+        super.follow(leader);
     }
 
     /**
