@@ -46,8 +46,8 @@ public class MustangScheduler {
         scheduler.run();
     }
 
-    public void cancel(Command... commands) {
-        scheduler.cancel(commands);
+    public void cancel(MustangCommand... commands) {
+        scheduler.cancel((CommandBase[])commands);
     }
 
     public Command getCurrentlyScheduled() {

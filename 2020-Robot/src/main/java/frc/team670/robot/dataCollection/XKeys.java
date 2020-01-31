@@ -151,7 +151,7 @@ public class XKeys {
     }
 
     private void cancelAllCommands() {
-        // MustangScheduler.getInstance().schedule(new CancelAllCommands());
+        MustangScheduler.getInstance().schedule(new CancelAllCommands());
     }
 
     private void visionAlign() {

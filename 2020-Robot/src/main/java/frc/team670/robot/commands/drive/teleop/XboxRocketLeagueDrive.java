@@ -7,6 +7,7 @@
 
 package frc.team670.robot.commands.drive.teleop;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -100,7 +101,9 @@ public class XboxRocketLeagueDrive extends CommandBase implements MustangCommand
 
   @Override
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-    return null;
+    Map<MustangSubsystemBase, HealthState> healthRequirements = new HashMap<MustangSubsystemBase, HealthState>();
+    healthRequirements.put(driveBase, HealthState.YELLOW);
+    return healthRequirements;
   }
 
 }
