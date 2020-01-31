@@ -7,10 +7,14 @@
 
 package frc.team670.robot.commands;
 
+import java.util.Map;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
-public class CancelAllCommands extends InstantCommand {
+public class CancelAllCommands extends InstantCommand implements MustangCommand {
 
   public CancelAllCommands() {
     addRequirements();
@@ -18,6 +22,12 @@ public class CancelAllCommands extends InstantCommand {
 
   public void initialize() {
     SmartDashboard.putString("current-command", "CancelAllCommands");
+  }
+
+  @Override
+  public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }
