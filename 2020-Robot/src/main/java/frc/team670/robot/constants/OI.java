@@ -10,6 +10,7 @@ import frc.team670.robot.utils.MustangController.XboxButtons;
 public class OI {
 
     private MustangController driverController;
+    private Joystick operatorController;
 
     private JoystickButton toggleReverseDrive, toggleDriverCameraMode;
 
@@ -20,7 +21,7 @@ public class OI {
         toggleReverseDrive.whenPressed(new FlipDriveAndCamera());
         toggleDriverCameraMode = new JoystickButton(driverController, XboxButtons.B);
         toggleDriverCameraMode.whenPressed(new FlipDriverCameraMode());
-        Joystick operator = new Joystick(RobotMap.OPERATOR_CONTROLLER_PORT);
+        operatorController = new Joystick(RobotMap.OPERATOR_CONTROLLER_PORT);
       
       }
 
@@ -55,6 +56,10 @@ public class OI {
 
   public MustangController getDriverController(){
       return driverController;
+  }
+
+  public Joystick getOperatorController(){
+    return operatorController;
   }
 
 }

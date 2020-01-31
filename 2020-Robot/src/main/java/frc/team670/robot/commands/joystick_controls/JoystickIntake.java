@@ -9,7 +9,6 @@ package frc.team670.robot.commands.joystick_controls;
  
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.robot.RobotContainer;
-import frc.team670.robot.subsystems.Intake;
  
  
 public class JoystickIntake extends CommandBase {
@@ -17,11 +16,10 @@ public class JoystickIntake extends CommandBase {
   * Creates a new Joystick_Intake.
   */
  
- private Intake intake;
- public JoystickIntake(Intake intake) {
+ public JoystickIntake() {
    // Use addRequirements() here to declare subsystem dependencies.
-   this.intake = intake;
-   addRequirements(intake);
+  //  this.intake = intake;
+  //  addRequirements(intake);
   
  }
  
@@ -34,7 +32,7 @@ public class JoystickIntake extends CommandBase {
  // Called every time the scheduler runs while the command is scheduled.
  @Override
  public void execute() {
-   if (RobotContainer.operatorJoystick.getTop()){
+   if (RobotContainer.oi.getOperatorController().getTop()){
      //intake.driveIntake(RobotContainer.operatorJoystick.getY());
    }
  }
