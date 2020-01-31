@@ -10,7 +10,8 @@ package frc.team670.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.MustangScheduler;
 
 import frc.team670.robot.utils.Logger;
@@ -23,8 +24,8 @@ import frc.team670.robot.utils.Logger;
  * project.
  */
 public class Robot extends TimedRobot {
-
-  private Command m_autonomousCommand;
+  
+  private MustangCommand m_autonomousCommand;
   private RobotContainer m_robotContainer;
 
   private Timer timer;
@@ -86,10 +87,9 @@ public class Robot extends TimedRobot {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      // m_autonomousCommand.schedule();
-      // MustangScheduler.getInstance().schedule(m_autonomousCommand);
+      //m_autonomousCommand.schedule();
+      MustangScheduler.getInstance().schedule(m_autonomousCommand);
     }
-    m_autonomousCommand.schedule();
   }
 
   /**
@@ -107,7 +107,7 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+      MustangScheduler.getInstance().cancel(m_autonomousCommand);
     }
     Logger.consoleLog("Teleop Init");
   }

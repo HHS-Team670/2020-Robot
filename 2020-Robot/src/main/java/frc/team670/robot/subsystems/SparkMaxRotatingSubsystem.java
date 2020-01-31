@@ -7,6 +7,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANPIDController;
 
 public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase implements TunableSubsystem {
@@ -15,21 +16,37 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     protected CANEncoder encoder;
     protected CANPIDController controller;
     protected int offsetFromEncoderZero;
-    protected static final int NO_SETPOINT = 99999;
+    protected static final int NO_SETPOINT = 99999; // TODO: why 99999?
     protected int setpoint;
+    protected boolean timeout;
 
-    public SparkMaxRotatingSubsystem(CANSparkMax rotatorSparkMax, int offsetFromEncoderZero) {
+    public SparkMaxRotatingSubsystem(int deviceID, double kP, double kI, double kD, double kFF, int forwardSoftLimit,
+            int reverseSoftLimit, boolean timeout, int continuousCurrentLimit, int peakCurrentLimit,
+            int offsetFromEncoderZero) {
+        this.rotator = SparkMAXFactory.buildFactorySparkMAX(deviceID);// TODO: let's ask claire what this is supposed to
+                                                                      // do
+        this.encoder = rotator.getEncoder();
+        this.offsetFromEncoderZero = offsetFromEncoderZero;
+        this.timeout = timeout;
 
-        if (rotatorSparkMax != null) {
-            this.rotator = rotatorSparkMax;
-            this.encoder = rotatorSparkMax.getEncoder();
-            this.offsetFromEncoderZero = offsetFromEncoderZero;
-            SparkMAXFactory.buildFactorySparkMAX(rotatorSparkMax.getDeviceId());
-        }
+        controller = this.rotator.getPIDController();
+        controller.setP(kP);
+        controller.setI(kI);
+        controller.setD(kD);
+        controller.setFF(kFF);
+
+        rotator.setSmartCurrentLimit(peakCurrentLimit, continuousCurrentLimit);
+
+        rotator.setSoftLimit(SoftLimitDirection.kForward, forwardSoftLimit);
+        rotator.setSoftLimit(SoftLimitDirection.kReverse, reverseSoftLimit);
+
+        rotator.enableSoftLimit(SoftLimitDirection.kForward, true);
+        rotator.enableSoftLimit(SoftLimitDirection.kReverse, true);
+
     }
 
-    protected int getUnadjustedPosition() {
-        return (int) (this.encoder.getPosition());
+    protected double getUnadjustedPosition() {
+        return this.encoder.getPosition();
     }
 
     public void setSmartMotionTarget(double setpoint) {
@@ -52,7 +69,7 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     }
 
     public void clearSetpoint() {
-        setpoint = NO_SETPOINT;
+        setpoint = NO_SETPOINT; // TODO: is NO_SETPOINT a good value?
     }
 
 }
