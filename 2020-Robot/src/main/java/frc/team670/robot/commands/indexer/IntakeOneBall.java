@@ -6,6 +6,7 @@ import frc.team670.robot.subsystems.Indexer;
 
 /**
  * Detects when the ball is fully in, then rotates one compartment over
+ * Make sure RotateToIntakePosition has been run
  */
 public class IntakeOneBall extends CommandBase {
 
@@ -27,7 +28,7 @@ public class IntakeOneBall extends CommandBase {
     public void execute() {
         if (RobotContainer.indexer.ballIn()) {
             ballIn = true;
-            indexer.fillChamber(indexer.getCurrentChamber() + 3);// might be + 2 
+            indexer.fillChamber(indexer.getBottomChamber());
         }
 
         if (ballIn && indexer.getSpeed() == 0) {
@@ -54,7 +55,6 @@ public class IntakeOneBall extends CommandBase {
 
     @Override
     public void end(boolean isInteruppted) {
-        indexer.setNumBalls(indexer.totalNumOfBalls() + 1);
         indexer.setSpeed(0);
     }
 

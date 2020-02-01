@@ -13,23 +13,24 @@ public class Indexer extends MustangSubsystemBase{
 
     private CANSparkMax SM;
     private CANEncoder encoder;
-    private int totalNumBalls;
     private boolean[] chamberStates;
 
     public Indexer(CANSparkMax SM) {
         this.SM = SM;
         encoder = SM.getEncoder();
-        totalNumBalls = 0;
         chamberStates = new boolean[5];
     }
 
     public int totalNumOfBalls() {
+        int totalNumBalls = 0;
+        for (boolean c : chamberStates) {
+            if (c) {
+                totalNumBalls++;
+            }
+        }
         return totalNumBalls;
     }
 
-    public void setNumBalls(int num) {
-        totalNumBalls = num;
-    }
 
     /**
      * 
@@ -41,126 +42,6 @@ public class Indexer extends MustangSubsystemBase{
     }
 
     /**
-     * checks collective state of all chambers
-     * @return true if there's a ball in every chamger
-     */
-    public boolean isFull() {
-        for (boolean chamber: chamberStates)
-            if (!chamber)
-                return false;
-
-        return true;
-    }
-
-      /**
-     * logic for rotatetoshoot
-     * @return the first full chamber en route to shoot
-     */
-    public int getFirstFull() {
-        if (isEmpty())
-            return -1;
-
-        if (chamberStates[getCurrentChamber()])
-            return getCurrentChamber();
-
-        int c = getCurrentChamber() - 1;
-
-        if (getCurrentChamber() == 0)
-            c = 4;        
-
-        while (c >= 0) {
-            if(chamberStates[c])
-                return c;
-            c--;
-        }
-
-        return -1; // should not be reached
-    }
-
-    /**
-     * more logic for rotatetointake
-     * @return the last full chamber en route to shoot
-     */
-    public int getLastFull() {
-        if (isEmpty())
-            return -1;
-        if (!chamberStates[getCurrentChamber()])
-            return getCurrentChamber();
-        int c = getCurrentChamber() - 1;
-
-        if (getCurrentChamber() == 0)
-            c = 4;        
-
-        while (c >= 0) {
-            if(!chamberStates[c])
-                return c;
-            c--;
-        }
-
-        return -1; // should not be reached
-    }
-
-    /**
-     * logic for rotatetoshoot
-     * @return the first full chamber en route to shoot
-     */
-    public int getFirstFull() {
-        if (isEmpty())
-            return -1;
-
-        if (chamberStates[getCurrentChamber()])
-            return getCurrentChamber();
-
-        int c = getCurrentChamber() - 1;
-
-        if (getCurrentChamber() == 0)
-            c = 4;        
-
-        while (c >= 0) {
-            if(chamberStates[c])
-                return c;
-            c--;
-        }
-
-        return -1; // should not be reached
-    }
-
-    /**
-     * more logic for rotatetointake
-     * @return the last full chamber en route to shoot
-     */
-    public int getLastFull() {
-        if (isEmpty())
-            return -1;
-        if (!chamberStates[getCurrentIntakeChamber()])
-            return getCurrentIntakeChamber();
-        int c = getCurrentIntakeChamber() - 1;
-
-        if (getCurrentIntakeChamber() == 0)
-            c = 4;        
-
-        while (c >= 0) {
-            if(!chamberStates[c])
-                return c;
-            c--;
-        }
-
-        return -1; // should not be reached
-    }
-
-    /**
-     * checks collective state of all chambers
-     * @return true if there's no ball in any chambers
-     */
-    public boolean isEmpty() {
-        for (boolean chamber: chamberStates)
-            if (chamber)
-                return false;
-
-        return true;
-    }
-
-    /**
      * called when ball goes into a chamber
      * @param chamber the one just filled
      */
@@ -169,33 +50,95 @@ public class Indexer extends MustangSubsystemBase{
     }
 
     // chamber currently at the top
-    // if its exactly between two chamber, default to later before
-    public int getCurrentChamber() {
-        double degrees = getDegreePos();
-        if (degrees <= 36 && degrees > 324)
+    // if its exactly between two chambers, default to later before
+    public int getBottomChamber() {
+
+        double pos = getPosition() % 1.0;
+        if (pos < 0) {
+            pos++;
+        }
+
+        if (pos <= 0.1 || pos >= 0.9) {
             return 0;
-        else if (degrees <= 108 && degrees > 36)
-            return 1;
-        else if (degrees <= 180 && degrees > 108)
-            return 2;
-        else if (degrees <= 252 && degrees > 180)
-            return 3;
-        else
+        }
+        else if (pos <= 0.3 && pos >= 0.1) {
             return 4;
+        }
+        else if (pos <= 0.5 && pos >= 0.3) {
+            return 3;
+        }
+        else if (pos<= 0.7 && pos > 0.5) {
+            return 2;
+        }
+        else if (pos <= 0.9 && pos >= 0.7) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 
-    public int getCurrentIntakeChamber() {
-        double degrees = getDegreePos();
-        if (degrees <= 144 && degrees > 216)
-            return 0;
-        else if (degrees <= 72 && degrees > 144)
-            return 1;
-        else if (degrees <= 0 && degrees > 172)
+    public int getTopChamber() {
+
+        double pos = getPosition() % 1.0;
+        if (pos < 0) {
+            pos++;
+        }
+
+        if (pos <= 0.2 && pos >= 0) {
             return 2;
-        else if (degrees <= 216 && degrees > 0)
-            return 3;
-        else
+        }
+        else if (pos <= 0.4 && pos >= 0.2) {
+            return 1;
+        }
+        else if (pos <= 0.6 && pos >= 0.4) {
+            return 0;
+        }
+        else if (pos<= 0.8 && pos > 0.6) {
             return 4;
+        }
+        else if (pos >= 0.8) {
+            return 3;
+        } else {
+            return -1;
+        }
+    }
+
+
+    //Designed by JOSHIE SANGYALSWEIO
+    public int getIntakeChamber() {
+        if (totalNumOfBalls() == 5) {
+            return -1;
+        }
+        int currentBottom = getBottomChamber();
+        boolean foundFilled = false;
+        for (int i = currentBottom; i < currentBottom + 5; i++) {
+            if (foundFilled && !chamberStates[i%5]) {
+                return i%5;
+            }
+            if (chamberStates[i % 5]) {
+                foundFilled = true;
+            }
+            
+        }
+        return currentBottom;
+    }
+
+    public int getShootChamber() {
+        if (totalNumOfBalls() == 5) {
+            return getTopChamber();
+        }
+        int currentTop = getTopChamber();
+        boolean foundFilled = false;
+        for (int i = currentTop; i < currentTop + 5; i++) {
+            if (foundFilled && !chamberStates[i%5]) {
+                return (i-1) % 5;
+            }
+            if (chamberStates[i % 5]) {
+                foundFilled = true;
+            }
+            
+        }
+        return currentTop;
     }
 
     // zeroed means that chamber 0 is at the top
@@ -225,14 +168,6 @@ public class Indexer extends MustangSubsystemBase{
     public double getPosition() {
         return encoder.getPosition() / RobotConstants.REVOLVER_GEAR_RATIO;
     }
-
-    // TODO: figure this out
-    // assume degrees = 0 is zeroed
-    // zeroed means chamber 0 is at the top
-    public double getDegreePos() {
-        return 360*(getPosition() % 1.0);
-    }
-
     /**
      * -1 for negative direction, 1 for positive direction
      */

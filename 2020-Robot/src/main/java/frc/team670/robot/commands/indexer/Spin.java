@@ -10,7 +10,7 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 /**
- * Obsolete method
+ * Obsolete command 
  */
 public class Spin extends MustangCommandBase {
     
@@ -43,7 +43,7 @@ public class Spin extends MustangCommandBase {
     @Override
     public boolean isFinished() {
         // one possibility for ending is that all balls are gone
-        if (indexer.isEmpty())
+        if (indexer.totalNumOfBalls() == 0)
             return true;
     
         return false;

@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.commands.MustangCommandBase;
+import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
@@ -13,7 +14,7 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 /**
  * Sends all the balls to the shooter
  */
-public class SendAllBalls extends MustangCommandBase {
+public class SendAllBalls extends CommandBase implements MustangCommandBase {
 
     private double speed;
     private Indexer indexer;
@@ -28,7 +29,7 @@ public class SendAllBalls extends MustangCommandBase {
         originalNumBalls = indexer.totalNumOfBalls();
         originalPosition = indexer.getPosition();
         desiredNumBalls = indexer.totalNumOfBalls();
-        rotationGoal = indexer.getPosition() + 0.2;
+        rotationGoal = indexer.getPosition();
     }
 
     @Override
@@ -41,11 +42,14 @@ public class SendAllBalls extends MustangCommandBase {
 
         // Make sure to have whatever subsystem handles moving the balls out update the
         // number of balls on the indexer
-        if (indexer.getPosition() > rotationGoal) {
+        if (indexer.getPosition() >= rotationGoal) {
             desiredNumBalls--;
+
             if (indexer.getSpeed() != 0) {
                 indexer.setSpeed(0);
             }
+
+            //SPIN UPTAKE WHEELS HERE
 
             // Means that the ball left the revolver
             if (indexer.totalNumOfBalls() == desiredNumBalls) {
@@ -62,7 +66,7 @@ public class SendAllBalls extends MustangCommandBase {
 
     @Override
     public void end(boolean isInteruppted) {
-        CommandScheduler.getInstance().schedule(new RotateToIntakePosition(indexer.getFirstFull()));
+        
     }
 
     @Override
