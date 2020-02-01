@@ -13,6 +13,7 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 import java.util.Map;
+import java.util.HashMap;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -24,9 +25,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  */
 public class ManualSpinColorWheel extends CommandBase implements MustangCommand {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-  private final ColorWheelSpinner m_spinner;
+  private final ColorWheelSpinner spinner;
 
-  private double MOTOR_SPEED = 0.5; // TODO: tune speed
+  private double MOTOR_SPEED = 0.1; // TODO: tune speed
 
   /**
    * Creates a new ManualSpinColorWheel.
@@ -34,7 +35,7 @@ public class ManualSpinColorWheel extends CommandBase implements MustangCommand 
    * @param ColorWheelSpinner The subsystem used by this command.
    */
   public ManualSpinColorWheel(ColorWheelSpinner spinner) {
-    m_spinner = spinner;
+    this.spinner = spinner;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(spinner);
   }
@@ -43,14 +44,14 @@ public class ManualSpinColorWheel extends CommandBase implements MustangCommand 
   @Override
   public void execute() {
     if (RobotContainer.oi.isManualSpinColorWheelButtonPressed()) {
-      m_spinner.setSpeed(MOTOR_SPEED);
+      spinner.setSpeed(MOTOR_SPEED);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_spinner.setSpeed(0.0);
+    spinner.setSpeed(0.0);
   }
 
   // Returns true when the command should end.
@@ -64,7 +65,8 @@ public class ManualSpinColorWheel extends CommandBase implements MustangCommand 
 
   @Override
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-    // TODO Auto-generated method stub
-    return null;
+    Map<MustangSubsystemBase, HealthState> healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
+    healthReqs.put(spinner, HealthState.YELLOW);
+    return healthReqs;
   }
 }
