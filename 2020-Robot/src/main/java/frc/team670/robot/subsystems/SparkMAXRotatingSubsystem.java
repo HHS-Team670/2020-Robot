@@ -72,4 +72,19 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         setpoint = NO_SETPOINT; // TODO: is NO_SETPOINT a good value?
     }
 
+    public double getP(){
+        return this.controller.getP();
+    }
+
+    public void setP(double p){
+        this.controller.setP(p);
+    }
+
+    public CANSparkMax getRotator(){
+        return this.rotator;
+    }
+
+    public CANPIDController getController(){
+        return this.controller;
+    }
 }

@@ -16,10 +16,12 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.commands.TestCommand;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Test;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -41,6 +43,8 @@ public class RobotContainer {
 
   private Trajectory trajectory;
   private String pathname;
+
+  private Test test = new Test();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -79,7 +83,7 @@ public class RobotContainer {
    */
   public MustangCommand getAutonomousCommand() {
     // Create a voltage constraint to ensure we don't accelerate too fast
-    return null;
+    return new TestCommand(test);
   }
 
   public void initTeleopCommands() {

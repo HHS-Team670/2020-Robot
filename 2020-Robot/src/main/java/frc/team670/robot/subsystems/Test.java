@@ -5,7 +5,7 @@ import frc.team670.robot.constants.RobotMap;
 public class Test extends SparkMaxRotatingSubsystem {
 
     public Test() {
-        super(RobotMap.SPARK_LEFT_MOTOR_1, SmartDashboard.getNumber("P", 0.001), 0, 0, 0, 1000000, -1000000, false, 0, 0, 0);
+        super(RobotMap.SPARK_LEFT_MOTOR_1, SmartDashboard.getNumber("P", 0.001), 0, 0, 0, 1000000, -1000000, false, 30, 5, 0);
     }
 
     @Override
