@@ -15,12 +15,13 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.constants.OI;
-import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 
 /**
@@ -36,17 +37,13 @@ public class RobotContainer {
   private static List<MustangSubsystemBase> allSubsystems = new ArrayList<MustangSubsystemBase>();
 
   public static OI oi = new OI();
-  
-  //TODO: after changes made to the subsystems, should make these fields private
-
-  public static DriveBase driveBase = new DriveBase();
-
-  public static ColorMatcher colorMatch;// = new ColorMatcher();
 
   public static Indexer indexer;
 
 
   public static Joystick operatorJoystick;
+  private static DriveBase driveBase = new DriveBase();
+  private static Shooter shooter;// = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
 
   private Trajectory trajectory;
   private String pathname;
@@ -58,12 +55,25 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    addSubsystem(driveBase);
   }
 
-  public static void addSubsystem(MustangSubsystemBase subsystem){
-    allSubsystems.add(subsystem);
+  public static void addSubsystem(MustangSubsystemBase... subsystems){
+    for(MustangSubsystemBase m_subsystemBase : subsystems){
+      allSubsystems.add(m_subsystemBase);
+    }
   }
 
+  /**
+   * Recalculates the health of all subsystems on the robot.
+   */
+  public static void checkSubsystemsHealth(){
+    for (MustangSubsystemBase s : allSubsystems){
+      if(s.getHealth(true) == HealthState.RED){
+        
+      }
+    }
+  }
 
   /**
    * Use this method to define your button->command mappings.  Buttons can be created by
@@ -80,8 +90,15 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  public MustangCommand getAutonomousCommand() {
     // Create a voltage constraint to ensure we don't accelerate too fast
     return null;
   }
+
+  public static void initTeleopCommands(){
+    driveBase.initDefaultCommand();
+    shooter.initDefaultCommand();
+  }
+
+
 }

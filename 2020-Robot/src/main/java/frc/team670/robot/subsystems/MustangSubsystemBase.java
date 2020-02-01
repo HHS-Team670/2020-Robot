@@ -1,9 +1,10 @@
 package frc.team670.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.team670.robot.commands.MustangCommandBase;
 import frc.team670.robot.RobotContainer;
+import frc.team670.robot.commands.MustangCommand;
 
 /**
  * Basic framework for a subsystem of the robot with defined levels of system Health.
@@ -69,8 +70,8 @@ public abstract class MustangSubsystemBase extends SubsystemBase{
      */
     public abstract HealthState checkHealth();
 
-    public void initDefaultCommand(MustangCommandBase command){
-        CommandScheduler.getInstance().setDefaultCommand(this, command);
+    public void initDefaultCommand(MustangCommand command){
+        CommandScheduler.getInstance().setDefaultCommand(this, (CommandBase)command);
     }
   
 

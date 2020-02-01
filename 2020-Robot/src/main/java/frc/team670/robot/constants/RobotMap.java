@@ -29,5 +29,4 @@ public class RobotMap{
   public static final int INTAKE_ROLLER = 4;
   public static final int INTAKE_SENSOR = 5;
 
-
 }
