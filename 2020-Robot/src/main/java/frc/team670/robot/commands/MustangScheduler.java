@@ -48,7 +48,7 @@ public class MustangScheduler{
     }
 
     public void cancel(MustangCommand... commands) {
-        scheduler.cancel((CommandBase[])commands);
+        scheduler.cancel((CommandBase[]) commands);
     }
 
     public Command getCurrentlyScheduled() {
@@ -59,22 +59,28 @@ public class MustangScheduler{
         scheduler.cancelAll();
     }
 
-    public void schedule(MustangCommand... command) {
+    public void schedule(MustangCommand... commands) {
 
-        for (CommandBase m_command : (CommandBase[]) (command)) {
+        for (MustangCommand a_command : commands) {
+
+            CommandBase m_command = (CommandBase) a_command;
             try {
                 Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> requirements = ((MustangCommand) (m_command))
                         .getHealthRequirements();
 
-                for (MustangSubsystemBase s : requirements.keySet()) {
-                    MustangSubsystemBase.HealthState healthReq = requirements.get(s);
-                    if (s.getHealth(false).getId() > healthReq.getId()) {
-                        DriverStation
-                                .reportError(m_command.getName() + " not run because of health issue! Required health: "
-                                        + healthReq + ", Actual health: " + s.getHealth(false), false);
-                        Logger.consoleLog("%s not run because of health issue! Required health: %s , Actual health: %s",
-                                m_command.getName(), healthReq, s.getHealth(false));
-                        return;
+                if (requirements != null) {
+                    for (MustangSubsystemBase s : requirements.keySet()) {
+                        MustangSubsystemBase.HealthState healthReq = requirements.get(s);
+                        if (s.getHealth(false).getId() > healthReq.getId()) {
+                            DriverStation.reportError(
+                                    m_command.getName() + " not run because of health issue! Required health: "
+                                            + healthReq + ", Actual health: " + s.getHealth(false),
+                                    false);
+                            Logger.consoleLog(
+                                    "%s not run because of health issue! Required health: %s , Actual health: %s",
+                                    m_command.getName(), healthReq, s.getHealth(false));
+                            return;
+                        }
                     }
                 }
                 this.currentCommand = m_command;
