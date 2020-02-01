@@ -1,7 +1,5 @@
 package frc.team670.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 
 import java.util.Map;

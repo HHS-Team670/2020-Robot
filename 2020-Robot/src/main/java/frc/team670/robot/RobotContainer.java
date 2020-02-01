@@ -27,10 +27,12 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -65,10 +67,13 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    addSubsystem(driveBase);
   }
 
-  public static void addSubsystem(MustangSubsystemBase subsystem) {
-    allSubsystems.add(subsystem);
+  public static void addSubsystem(MustangSubsystemBase... subsystems){
+    for(MustangSubsystemBase m_subsystemBase : subsystems){
+      allSubsystems.add(m_subsystemBase);
+    }
   }
 
   /**
@@ -94,7 +99,7 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
+  public MustangCommand getAutonomousCommand() {
     // Create a voltage constraint to ensure we don't accelerate too fast
     return null;
   }
@@ -110,10 +115,8 @@ public class RobotContainer {
   public Command getManualSpinWheelCommand() {
     return manualSpinForRotations;
   }
-
-  public void initTeleopCommands() {
+  public static void initTeleopCommands(){
     driveBase.initDefaultCommand();
-    shooter.initDefaultCommand();
   }
 
 }

@@ -7,12 +7,10 @@
 
 package frc.team670.robot;
 
-
-
+import edu.wpi.first.hal.sim.DriverStationSim;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
-
+import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.MustangScheduler;
 
 import frc.team670.robot.utils.Logger;
@@ -27,11 +25,11 @@ import frc.team670.robot.utils.Logger;
  */
 public class Robot extends TimedRobot {
   
-  private Command m_autonomousCommand;
+  private MustangCommand m_autonomousCommand;
   private RobotContainer m_robotContainer;
 
   private Timer timer;
-  private double SYSTEM_CHECK_PERIOD = 10;
+  private double SYSTEM_CHECK_PERIOD = 5;
 
   /**
    * This function is run when the robot is first started up and should be used
@@ -39,10 +37,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer. This will perform all our button bindings,
-    // and put our
-    // autonomous chooser on the dashboard.
+    // Instantiate our RobotContainer.  This will perform all our button bindings
     m_robotContainer = new RobotContainer();
+    RobotContainer.checkSubsystemsHealth();
     timer = new Timer();
     timer.start();
     MustangScheduler.getInstance();
@@ -63,7 +60,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     MustangScheduler.getInstance().run();
     if (timer.hasPeriodPassed(SYSTEM_CHECK_PERIOD)){
-      RobotContainer.checkSubsystemsHealth(); //TODO: check and see if we need to reset the timer after this
+      RobotContainer.checkSubsystemsHealth();
     }
   }
 
@@ -86,12 +83,11 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     Logger.consoleLog("Autonomous Init");
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      //m_autonomousCommand.schedule();
-      // MustangScheduler.getInstance().schedule(m_autonomousCommand);
+      MustangScheduler.getInstance().schedule(m_autonomousCommand);
     }
-    m_autonomousCommand.schedule();
   }
 
   /**
@@ -109,9 +105,10 @@ public class Robot extends TimedRobot {
     // continue until interrupted by another command, remove
     // this line or comment it out.
     if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+      MustangScheduler.getInstance().cancel(m_autonomousCommand);
     }
     Logger.consoleLog("Teleop Init");
+    RobotContainer.initTeleopCommands();
   }
 
   /**

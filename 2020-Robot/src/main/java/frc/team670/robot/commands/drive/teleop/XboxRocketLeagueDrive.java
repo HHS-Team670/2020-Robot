@@ -7,6 +7,7 @@
 
 package frc.team670.robot.commands.drive.teleop;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,6 +35,7 @@ public class XboxRocketLeagueDrive extends CommandBase implements MustangCommand
   public XboxRocketLeagueDrive(DriveBase driveBase) {
     isReversed = false;
     addRequirements(driveBase);
+    this.driveBase = driveBase;
   }
 
   // Called once when the command executes
@@ -93,6 +95,11 @@ public class XboxRocketLeagueDrive extends CommandBase implements MustangCommand
     return isReversed;
   }
 
+  @Override
+  public boolean isFinished(){
+    return false;
+  }
+
   public static void setDriveReversed(boolean reversed) {
     XboxRocketLeagueDrive.isReversed = reversed;
     SmartDashboard.putBoolean("drive-reversed", reversed);
@@ -100,7 +107,9 @@ public class XboxRocketLeagueDrive extends CommandBase implements MustangCommand
 
   @Override
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-    return null;
+    Map<MustangSubsystemBase, HealthState> healthRequirements = new HashMap<MustangSubsystemBase, HealthState>();
+    healthRequirements.put(driveBase, HealthState.YELLOW);
+    return healthRequirements;
   }
 
 }
