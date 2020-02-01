@@ -11,8 +11,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
  * Superclass for any rotating subsystem using a TalonSRX, intakes for example
+ * @author ctchen
  */
-public abstract class TalonSRXRotatingSubsystem extends SubsystemBase implements TunableSubsystem {
+public abstract class TalonSRXRotatingSubsystem extends MustangSubsystemBase implements TunableSubsystem {
     protected static final int NO_SETPOINT = 99999;
     protected TalonSRX rotator;
     protected int setpoint;

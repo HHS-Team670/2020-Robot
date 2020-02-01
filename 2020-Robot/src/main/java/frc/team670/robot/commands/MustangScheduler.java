@@ -1,6 +1,7 @@
 package frc.team670.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -17,7 +18,7 @@ import java.util.Map;
  * @author ctychen
  */
 
-public class MustangScheduler {
+public class MustangScheduler{
 
     private Command currentCommand;
 
@@ -89,6 +90,10 @@ public class MustangScheduler {
         if (!this.currentCommand.equals(command)) {
             throw new RuntimeException("Command was not properly scheduled. Are you using MustangScheduler?");
         }
+    }
+
+    public void setDefaultCommand(MustangSubsystemBase subsystem, MustangCommand command) {
+        CommandScheduler.getInstance().setDefaultCommand((SubsystemBase)subsystem, (CommandBase)command);
     }
 
 }

@@ -8,6 +8,8 @@
 package frc.team670.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team670.robot.commands.MustangScheduler;
+import frc.team670.robot.commands.joystick_controls.JoystickTurret;
 import frc.team670.robot.utils.Logger;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
@@ -69,8 +71,7 @@ public class Shooter extends MustangSubsystemBase {
     return null;
   }
 
-  //TODO implement this to use joystick control if we use that
   public void initDefaultCommand(){
-
+    MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret());
   }
 }

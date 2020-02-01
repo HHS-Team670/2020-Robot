@@ -9,8 +9,6 @@ package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.MustangScheduler;
 
@@ -37,9 +35,13 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    // Instantiate our RobotContainer.  This will perform all our button bindings
+    try{
+      m_robotContainer = new RobotContainer();
+    } catch(Exception e){
+      System.out.println(e);
+    }
+    RobotContainer.checkSubsystemsHealth();
     timer = new Timer();
     timer.start();
     MustangScheduler.getInstance();
@@ -106,6 +108,7 @@ public class Robot extends TimedRobot {
       MustangScheduler.getInstance().cancel(m_autonomousCommand);
     }
     Logger.consoleLog("Teleop Init");
+    RobotContainer.initTeleopCommands();
   }
 
   /**

@@ -20,6 +20,7 @@ import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 
 /**
@@ -49,10 +50,13 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    addSubsystem(driveBase);
   }
 
-  public static void addSubsystem(MustangSubsystemBase subsystem){
-    allSubsystems.add(subsystem);
+  public static void addSubsystem(MustangSubsystemBase... subsystems){
+    for(MustangSubsystemBase m_subsystemBase : subsystems){
+      allSubsystems.add(m_subsystemBase);
+    }
   }
 
   /**
@@ -60,7 +64,9 @@ public class RobotContainer {
    */
   public static void checkSubsystemsHealth(){
     for (MustangSubsystemBase s : allSubsystems){
-      s.getHealth(true);
+      if(s.getHealth(true) == HealthState.RED){
+        
+      }
     }
   }
 
@@ -84,7 +90,7 @@ public class RobotContainer {
     return null;
   }
 
-  public void initTeleopCommands(){
+  public static void initTeleopCommands(){
     driveBase.initDefaultCommand();
     shooter.initDefaultCommand();
   }
