@@ -2,7 +2,7 @@ package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
-
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import frc.team670.robot.constants.RobotConstants;
@@ -22,9 +22,14 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     // Current control: updraw
     // TODO: find all these values
-    private static final double CURRENT_P = 0.2;
-    private static final double CURRENT_I = 0;
-    private static final double CURRENT_D = 0;
+    private static final double UPDRAW_CURR_P = 0.2;
+    private static final double UPDRAW_CURR_I = 0;
+    private static final double UPDRAW_CURR_D = 0;
+
+    private static final int UPDRAW_CURRENT_SLOT = 0;
+
+    private static final int UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT = 0;
+    private static final int UPDRAW_PEAK_CURRENT_LIMIT = 0;
 
     // SmartMotion control: indexer
     // TODO: find all these values
@@ -48,6 +53,14 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         this.updraw  = new TalonSRXLite(RobotMap.UPDRAW_SPINNER);
         encoder = SM.getEncoder();
         chamberStates = new boolean[5];
+
+        updraw.setNeutralMode(NeutralMode.Coast);
+        updraw.config_kP(UPDRAW_CURRENT_SLOT, UPDRAW_CURR_P);
+        updraw.config_kI(UPDRAW_CURRENT_SLOT, UPDRAW_CURR_I);
+        updraw.config_kD(UPDRAW_CURRENT_SLOT, UPDRAW_CURR_D);
+        updraw.configContinuousCurrentLimit(UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT);
+        updraw.configPeakCurrentLimit(UPDRAW_PEAK_CURRENT_LIMIT);
+        updraw.enableCurrentLimit(true);
     }
 
     public int totalNumOfBalls() {

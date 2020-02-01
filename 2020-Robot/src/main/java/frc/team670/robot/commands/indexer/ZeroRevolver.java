@@ -24,8 +24,9 @@ public class ZeroRevolver extends CommandBase implements MustangCommand {
 
     @Override
     public void execute() {
-        int direction = indexer.directionToTurn();
-        indexer.setSpeed(speed * direction);
+        //int direction = indexer.directionToTurn();
+        //indexer.setSpeed(speed * direction);
+        indexer.setSpeed(speed);
     }
 
     @Override
