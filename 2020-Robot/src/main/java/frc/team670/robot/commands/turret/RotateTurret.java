@@ -12,20 +12,37 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+/**
+ * Rotates the turret to a specified point
+ */
 public class RotateTurret extends MustangCommandBase {
     private Turret turret;
-    private double initialPos;
+    //private double initialPos;
     private double angle;
     private double generalSpeed;
     private double ERROR_MARGIN = 2;
 
-    public RotateTurret(double angleTo, Turret turret) {
+    /**
+     * @param angleTo position on turret to rotate to
+     * @param inTicks true if angle is in ticks, false if in degrees
+     * 
+     */
+    public RotateTurret(double angleTo, Turret turret, boolean inTicks) {
         this.turret = turret;
-        initialPos = turret.getEncoderPos();
-        //turret.setZeroPoint(this.turret.getEncoderPos());
-        //initialPos = this.turret.getZeroPoint();
-        this.angle = angleTo;
+        //initialPos = turret.getEncoderPos();
+        if (!inTicks) {
+            if (angleTo > 360) {
+                throw new IllegalArgumentException("Cannot use angle greater than 360 degrees");
+            }
+            this.angle = angleTo;
+        } else {
+            if (angleTo > turret.TICKS_PER_REVOLUTION) {
+                throw new IllegalArgumentException("Cannot use tick measure greater than " + turret.TICKS_PER_REVOLUTION);
+            }
+            this.angle = turret.getDegrees(angleTo);
+        }
     }
+
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
@@ -33,7 +50,7 @@ public class RotateTurret extends MustangCommandBase {
         health.put(turret, turret.getHealth(true));
         return health;
     }
-    
+ 
     @Override
     public void initialize() {
         if (Math.abs(angle - turret.getAngleInDegrees()) > ERROR_MARGIN) {

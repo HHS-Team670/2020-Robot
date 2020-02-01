@@ -13,45 +13,25 @@ import frc.team670.robot.utils.motorcontroller.*;
 
 public class Turret extends SparkMaxRotatingSubsystem {
     private final CANSparkMax sparkControl;
-    private final int TICKS_PER_REVOLUTION = 4096;; //ticks per revolution
-    // unused private final int TURRET_LIMIT = (int)((TICKS_PER_REVOLUTION * 160.0)/360.0);                  // assuming the turret's soft limit will be 1820 ticks = 160 degrees both ways from center as 0 degrees.           
-    private double referencePoint;
+    public final int TICKS_PER_REVOLUTION = 4096;      
+    
     private final double SOFT_LIMIT_IN_DEGREES = 160.0;
 
-    private final double HARD_LIMIT_IN_DEGREES = 180.0;
 
-    public Turret(/*int mainCANId,*/ ) {
-        // NOTE ignore error, will deal with this later. 
-        // NOTE May not be Talon control, if not talon control, then we will need to change the TalonSRX 
-        //super(TalonSRXFactory.buildFactoryTalonSRX(RobotMap.TALON_TURRET), 0, 180, 0, true, 0, 0, 0, 0, 0);         //TODO Complete this
+    public Turret() {
+       
+        
         super(SparkMAXFactory.buildFactorySparkMAX(RobotMap.SPARK_TURRET), 0);
         this.sparkControl = super.rotator;
         this.sparkControl.setSoftLimit(SoftLimitDirection.kForward, (float)getTicks(SOFT_LIMIT_IN_DEGREES));
         this.sparkControl.setSoftLimit(SoftLimitDirection.kReverse, (float)getTicks(SOFT_LIMIT_IN_DEGREES));
         this.sparkControl.enableSoftLimit(SoftLimitDirection.kForward, true);
         this.sparkControl.enableSoftLimit(SoftLimitDirection.kReverse, true);
-               //referencePoint = super.encoder.getPosition();
+               
         
     }
 
-    /**
-     * @return the referencePoint
-     */
-    public void setZeroPoint(double point) {
-        referencePoint = point;
-    }
 
-    /*
-
-    */
-
-
-    /**
-     * @return the referencePoint
-     */
-    public double getZeroPoint() {
-        return referencePoint;
-    }
 
     /**
      * 
@@ -67,95 +47,60 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
 
 
+  
+
+    
     /**
-     * angular speed, not linear speed
      * 
-     * TODO Maybe change this, pretty obvious?!!
-     * 
-     * @return
+     * @return encoder position in ticks
      */
-
-    // public double getSpeed() {
-    //     //getTicksInDegrees
-    //     //angle travelled / time
-
-    //     return getEncoder().getPulseWidthVelocity();
-    // }
-
     public double getEncoderPos() {
         
-        return this.encoder.getPosition() - referencePoint;// - referencePoint;
+        return this.encoder.getPosition();// - referencePoint;
     }
 
-    public CANPIDController getPIDController() {
-        return this.rotator.getPIDController();
-    }
+    // public CANPIDController getPIDController() {
+    //     return this.rotator.getPIDController();
+    // }
 
     /**
      * 
-     * Takes in degrees and rotates the turret to that position
+     * takes in double from -1 to 1 to set speed of turret motor
      * 
      * 
-     * @param degrees the position in degrees the turret should move
+     * @param speed speed to set turret to
      *      
      */
+    
     public void setTurretSpeed(double speed) {
-
-        /**
-         * taking soft limit is 20 degrees
-         * 
-         * 1820 = 20 degrees
-         *  
-         * if ( 
-         *      setpoint >= 1820 and super.getPositionTicks() >= 1820
-         * ) then return
-         * 
-         * if (
-         *      setpoint <= -1820 and super.getPositionTicks() <= -1820
-         * ) then return
-         * 
-         * 
-         */
-/*
-         if(Math.abs(degrees) > SOFT_LIMIT_IN_DEGREES) {
-             return;
-         }
-
-        setpoint = (int)(degrees*getTicksPerDegree());
-
-        // if (Math.abs(setpoint) >= HARD_LIMIT && Math.abs(super.getPositionTicks()) >= HARD_LIMIT) {
-        //     return;
-        // }
-*/
         
         this.rotator.set(speed);
-        //set((ControlMode.Position), setpoint);//(degrees)/(getTicksInDegrees(ticksPerRevolution)));
-         
-        // TODO research this and make changes, this section is not complete. 
+  
      }
 
 
-    /**
-     * Rotates the turret amount amount.
-     * @param amount the amount (in degrees) the turret should rotate
-     */
-    /*public void rotateTurretAdditionalAmount(double amount) {
-        if(Math.abs(getAngleInDegrees() + amount) > SOFT_LIMIT_IN_DEGREES)
-        {
-            return;
-        }
-        double amountInTicks = amount*getTicksPerDegree();
-        sparkControl.set((ControlMode.Position), super.encoder.getPosition() + amountInTicks);
-    }*/
-
-    public double getTicksPerDegree() { //int numberOfTicks) {
-        return TICKS_PER_REVOLUTION / 360;//((numberOfTicks / TICKS_PER_REVOLUTION) * 360);
+    
+     /**
+      * 
+      * @return double ratio of ticks to degrees. Can be multiplied by degrees to get ticks
+      */
+    public double getTicksPerDegree() { 
+        return TICKS_PER_REVOLUTION / 360;
     }
 
+    /**
+     * Converts degrees to ticks
+     * @param degrees value to convert
+     * @return
+     */
     public double getTicks(double degrees) {
         return degrees * getTicksPerDegree();
     }
 
+    /**
+     * Converts ticks to degrees
+     * @param ticks value to convert
+     */
     public double getDegrees(double ticks) {
         return ticks / getTicksPerDegree();
     }
@@ -163,20 +108,29 @@ public class Turret extends SparkMaxRotatingSubsystem {
      /**
      * Sets the setpoint for motion magic (in ticks)
      */
-    public void setMotionMagicSetpointAngle(final double angle) {
+    /*public void setMotionMagicSetpointAngle(final double angle) {
         setpoint = (int)(angle*(getTicksPerDegree()));
+    }*/
+
+    /**
+     * @return the encoder of the motor
+     */
+    public CANEncoder getEncoder() { 
+        return this.encoder;                   
     }
 
-    public CANEncoder getEncoder() { //   TODO This is not CANEncoder, this has to be changed later.
-        return this.encoder;                    // TODO FIX THIS
-    }
-
+    /**
+     * @return ???
+     */
     @Override
     public boolean getTimeout() {
         // TODO Auto-generated method stub
         return false;
     }
 
+    /**
+     * Abstract method we have no clue what to do with
+     */
     @Override
     public void moveByPercentOutput(double output) {
         // TODO Auto-generated method stub
