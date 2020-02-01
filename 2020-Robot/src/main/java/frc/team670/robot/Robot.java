@@ -7,6 +7,7 @@
 
 package frc.team670.robot;
 
+import edu.wpi.first.hal.sim.DriverStationSim;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import frc.team670.robot.commands.MustangCommand;
@@ -27,7 +28,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private Timer timer;
-  private double SYSTEM_CHECK_PERIOD = 10;
+  private double SYSTEM_CHECK_PERIOD = 5;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -36,11 +37,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings
-    try{
-      m_robotContainer = new RobotContainer();
-    } catch(Exception e){
-      System.out.println(e);
-    }
+    m_robotContainer = new RobotContainer();
     RobotContainer.checkSubsystemsHealth();
     timer = new Timer();
     timer.start();
@@ -61,7 +58,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     MustangScheduler.getInstance().run();
     if (timer.hasPeriodPassed(SYSTEM_CHECK_PERIOD)){
-      RobotContainer.checkSubsystemsHealth(); //TODO: check and see if we need to reset the timer after this
+      RobotContainer.checkSubsystemsHealth();
     }
   }
 
@@ -83,9 +80,9 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     Logger.consoleLog("Autonomous Init");
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
-      //m_autonomousCommand.schedule();
       MustangScheduler.getInstance().schedule(m_autonomousCommand);
     }
   }

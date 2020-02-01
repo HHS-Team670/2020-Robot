@@ -92,7 +92,6 @@ public class RobotContainer {
 
   public static void initTeleopCommands(){
     driveBase.initDefaultCommand();
-    shooter.initDefaultCommand();
   }
 
 
