@@ -31,8 +31,10 @@ public class ColorMatcher {
 
   public enum colors {
 
-    BLUE(0, ColorMatch.makeColor(0.136, 0.412, 0.450)), YELLOW(1, ColorMatch.makeColor(0.293, 0.561, 0.144)),
-    RED(2, ColorMatch.makeColor(0.475, 0.371, 0.153)), GREEN(3, ColorMatch.makeColor(0.196, 0.557, 0.246));
+    BLUE(0, ColorMatch.makeColor(0.136, 0.412, 0.450)), 
+    YELLOW(1, ColorMatch.makeColor(0.293, 0.561, 0.144)),
+    RED(2, ColorMatch.makeColor(0.475, 0.371, 0.153)), 
+    GREEN(3, ColorMatch.makeColor(0.196, 0.557, 0.246));
 
     private int colorNumber;
     private Color color;
