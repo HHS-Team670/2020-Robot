@@ -3,9 +3,9 @@ package frc.team670.robot.commands.indexer;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
 import frc.team670.robot.RobotContainer;
-import frc.team670.robot.commands.MustangCommandBase;
+import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
@@ -14,7 +14,7 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 /**
  * Sends all the balls to the shooter
  */
-public class SendAllBalls extends CommandBase implements MustangCommandBase {
+public class SendAllBalls extends CommandBase implements MustangCommand {
 
     private double speed;
     private Indexer indexer;

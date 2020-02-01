@@ -3,8 +3,9 @@ package frc.team670.robot.commands.indexer;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
 import frc.team670.robot.RobotContainer;
-import frc.team670.robot.commands.MustangCommandBase;
+import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
@@ -12,7 +13,7 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 /**
  * Run this command before you run IntakeOneBall
  */
-public class RotateToIntakePosition extends MustangCommandBase {
+public class RotateToIntakePosition extends CommandBase implements MustangCommand{
 
     private double speed;
     private Indexer indexer;
@@ -36,7 +37,6 @@ public class RotateToIntakePosition extends MustangCommandBase {
 
     @Override
     public void execute() {
-        //Not optimized because 
         indexer.setSpeed(speed);
         if (indexer.getTopChamber() == goal) {
             if (reached) {

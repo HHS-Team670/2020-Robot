@@ -3,8 +3,9 @@ package frc.team670.robot.commands.indexer;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
 import frc.team670.robot.RobotContainer;
-import frc.team670.robot.commands.MustangCommandBase;
+import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
@@ -12,7 +13,7 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 /**
  * Run this commmand before running SendAllBalls
  */
-public class RotateToShootPosition extends MustangCommandBase {
+public class RotateToShootPosition extends CommandBase implements MustangCommand {
 
     private double speed;
     private Indexer indexer;
