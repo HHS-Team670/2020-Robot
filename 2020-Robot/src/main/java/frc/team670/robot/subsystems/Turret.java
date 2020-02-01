@@ -1,22 +1,25 @@
 package frc.team670.robot.subsystems;
 
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.motorcontroller.*;
 
-//TODO: Change all of this to using a SparkMax instead of TalonSRX
 
 public class Turret extends SparkMaxRotatingSubsystem {
     private final CANSparkMax sparkControl;
     public final int TICKS_PER_REVOLUTION = 4096;      
-    
+    private CANPIDController pidController;
     private final double SOFT_LIMIT_IN_DEGREES = 160.0;
-
+    private final double P = 0;
+    private final double I = 0;
+    private final double D = 0;
 
     public Turret() {
        
@@ -27,7 +30,11 @@ public class Turret extends SparkMaxRotatingSubsystem {
         this.sparkControl.setSoftLimit(SoftLimitDirection.kReverse, (float)getTicks(SOFT_LIMIT_IN_DEGREES));
         this.sparkControl.enableSoftLimit(SoftLimitDirection.kForward, true);
         this.sparkControl.enableSoftLimit(SoftLimitDirection.kReverse, true);
-               
+        
+        pidController = new CANPIDController(sparkControl);
+        pidController.setP(P);
+        pidController.setI(I);
+        pidController.setD(D);
         
     }
 
@@ -47,6 +54,9 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
 
 
+    public void rotateToAngle(double setpoint) {
+        pidController.setReference(getTicks(setpoint), ControlType.kPosition);
+    }
   
 
     
@@ -59,17 +69,15 @@ public class Turret extends SparkMaxRotatingSubsystem {
         return this.encoder.getPosition();// - referencePoint;
     }
 
-    // public CANPIDController getPIDController() {
-    //     return this.rotator.getPIDController();
-    // }
+    public CANPIDController getPIDController() {
+        return this.rotator.getPIDController();
+    }
 
     /**
      * 
      * takes in double from -1 to 1 to set speed of turret motor
      * 
-     * 
-     * @param speed speed to set turret to
-     *      
+     * @param speed speed to set turret to    
      */
     
     public void setTurretSpeed(double speed) {
