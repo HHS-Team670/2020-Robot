@@ -25,13 +25,14 @@ public class RollIntake extends InstantCommand {
 		if (isDeployed) {
 			roll = true;
 		}
-		intake.setRolling(speed, roll);
+		intake.setRollerSpeed(speed);
+		intake.setRolling(roll);
 		Logger.consoleLog("Speed", speed);
 	}
 
     // Called once after isFinished returns true
     protected void end() {
-    	intake.setRollingSpeed(0);
+    	intake.setRollerSpeed(0.0);
 		Logger.consoleLog("Speed", speed);
 
     }
