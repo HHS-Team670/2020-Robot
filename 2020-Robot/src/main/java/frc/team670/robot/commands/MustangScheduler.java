@@ -18,7 +18,7 @@ import java.util.Map;
  * @author ctychen
  */
 
-public class MustangScheduler{
+public class MustangScheduler {
 
     private Command currentCommand;
 
@@ -71,15 +71,17 @@ public class MustangScheduler{
                 if (requirements != null) {
                     for (MustangSubsystemBase s : requirements.keySet()) {
                         MustangSubsystemBase.HealthState healthReq = requirements.get(s);
-                        if (s.getHealth(false).getId() > healthReq.getId()) {
-                            DriverStation.reportError(
-                                    m_command.getName() + " not run because of health issue! Required health: "
-                                            + healthReq + ", Actual health: " + s.getHealth(false),
-                                    false);
-                            Logger.consoleLog(
-                                    "%s not run because of health issue! Required health: %s , Actual health: %s",
-                                    m_command.getName(), healthReq, s.getHealth(false));
-                            return;
+                        if (s != null && healthReq != null) {
+                            if (s.getHealth(false).getId() > healthReq.getId()) {
+                                DriverStation.reportError(
+                                        m_command.getName() + " not run because of health issue! Required health: "
+                                                + healthReq + ", Actual health: " + s.getHealth(false),
+                                        false);
+                                Logger.consoleLog(
+                                        "%s not run because of health issue! Required health: %s , Actual health: %s",
+                                        m_command.getName(), healthReq, s.getHealth(false));
+                                return;
+                            }
                         }
                     }
                 }
@@ -99,7 +101,7 @@ public class MustangScheduler{
     }
 
     public void setDefaultCommand(MustangSubsystemBase subsystem, MustangCommand command) {
-        CommandScheduler.getInstance().setDefaultCommand((SubsystemBase)subsystem, (CommandBase)command);
+        CommandScheduler.getInstance().setDefaultCommand((SubsystemBase) subsystem, (CommandBase) command);
     }
 
 }
