@@ -31,4 +31,8 @@ public class RobotMap {
   public static final int INTAKE_ROLLER = 4;
   public static final int INTAKE_SENSOR = 5;
 
+  //Indexer and Updraw
+  public static final int INDEXER_ROTATOR = 9;
+  public static final int UPDRAW_SPINNER = 10;
+
 }
