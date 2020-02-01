@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
@@ -23,8 +24,9 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
-
+import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.commands.drive.teleop.XboxRocketLeagueDrive;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -62,7 +64,7 @@ public class DriveBase extends MustangSubsystemBase {
     right1Encoder = right1.getEncoder();
     left2Encoder = left2.getEncoder();
     right2Encoder = right2.getEncoder();
-    
+
     left1Encoder.setVelocityConversionFactor(sparkMaxVelocityConversionFactor);
     left2Encoder.setVelocityConversionFactor(sparkMaxVelocityConversionFactor); // Do not invert for right side
     right1Encoder.setVelocityConversionFactor(sparkMaxVelocityConversionFactor);
@@ -70,7 +72,7 @@ public class DriveBase extends MustangSubsystemBase {
 
     leftControllers = Arrays.asList(left1, left2);
     rightControllers = Arrays.asList(right1, right2);
-    
+
     allMotors.addAll(leftControllers);
     allMotors.addAll(rightControllers);
 
@@ -79,13 +81,14 @@ public class DriveBase extends MustangSubsystemBase {
 
     left = new SpeedControllerGroup(left1, left2);
     right = new SpeedControllerGroup(right1, right2);
-    
+
     // The DifferentialDrive inverts the right side automatically, however we want
     // to invert straight from the Spark so that we can
     // still use it properly with the CANPIDController, so we need to reverse the
     // automatic invert.
     setMotorsInvert(leftControllers, false);
-    setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController and then invert the SpeedController to compensate for automatic inversion.
+    setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController and then
+                                             // invert the SpeedController to compensate for automatic inversion.
 
     driveTrain = new DifferentialDrive(left, right);
     driveTrain.setMaxOutput(1.0);
@@ -95,7 +98,7 @@ public class DriveBase extends MustangSubsystemBase {
     // initialized NavX and sets Odometry
     navXMicro = new NavX(RobotMap.NAVX_PORT);
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
-      new Pose2d(0, 0, new Rotation2d()));
+        new Pose2d(0, 0, new Rotation2d()));
 
   }
 
@@ -103,28 +106,40 @@ public class DriveBase extends MustangSubsystemBase {
    * Used to initialized teleop command for the driveBase
    */
   public void initDefaultCommand() {
-    CommandScheduler.getInstance().schedule(new XboxRocketLeagueDrive(this));
+    MustangScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive(this));
   }
-  
+
   /**
    * Checks the health for driveBase
    */
   @Override
   public HealthState checkHealth() {
+
+    System.out.println("Starting");
     HealthState state = HealthState.GREEN;
 
-    boolean l1 = left1==null, l2 = left2==null, r1 = right1==null, r2 = right2==null;
+    boolean isLeft1Error = left1.getLastError() != null && left1.getLastError() != CANError.kOk;
+    boolean isLeft2Error = left2.getLastError() != null && left2.getLastError() != CANError.kOk;
+    boolean isRight1Error = right1.getLastError() != null && right1.getLastError() != CANError.kOk;
+    boolean isRight2Error = right2.getLastError() != null && right2.getLastError() != CANError.kOk;
 
-      if(l1 && l2 || r1 && r2){
-        state = HealthState.RED;
-      }
-      else if(!l1 && !l2 && !r1 && !r2){
-        state = HealthState.GREEN;
-      }
-      else{
-        state = HealthState.YELLOW;
-      }
-      return state;
+    System.out.println(("RED Errors: l1:" + left1.getLastError() + " l2:" + left2.getLastError() + " r1:"
+          + right1.getLastError() + " r2:" + right2.getLastError()));
+
+
+    if (isLeft1Error && isLeft2Error || isRight1Error && isRight2Error) {
+      state = HealthState.RED;
+      DriverStation.reportWarning("RED Errors: l1:" + left1.getLastError() + " l2:" + left2.getLastError() + " r1:"
+          + right1.getLastError() + " r2:" + right2.getLastError(), false);
+    } else if (!isLeft1Error && !isLeft2Error && !isRight1Error && !isRight2Error) {
+      state = HealthState.GREEN;
+    } else {
+      state = HealthState.YELLOW;
+      DriverStation.reportWarning("YELLOW Errors: l1:" + left1.getLastError() + " l2:" + left2.getLastError() + " r1:"
+          + right1.getLastError() + " r2:" + right2.getLastError(), false);
+    }
+    System.out.println("Health check done. State is: " + state);
+    return state;
   }
 
   /**
@@ -363,33 +378,34 @@ public class DriveBase extends MustangSubsystemBase {
   /**
    * Returns the Spark Max Encoder for the Left Main Motor
    */
-  public CANEncoder getLeftMainEncoder(){
+  public CANEncoder getLeftMainEncoder() {
     return left1Encoder;
   }
 
   /**
    * Returns the Spark Max Encoder for the Left Follower Motor
    */
-  public CANEncoder getLeftFollowerEncoder(){
+  public CANEncoder getLeftFollowerEncoder() {
     return left2Encoder;
   }
 
   /**
    * Returns the Spark Max Encoder for the Right Main Motor
    */
-  public CANEncoder getRightMainEncoder(){
+  public CANEncoder getRightMainEncoder() {
     return right1Encoder;
   }
 
   /**
    * Returns the Spark Max Encoder for the Right Follower Motor
    */
-  public CANEncoder getRightFollowerEncoder(){
+  public CANEncoder getRightFollowerEncoder() {
     return right2Encoder;
   }
 
   /**
    * Returns the Left Motor Controllers
+   * 
    * @return The list of the motor controller on the left side of the robot
    */
   public List<SparkMAXLite> getLeftControllers() {
@@ -398,6 +414,7 @@ public class DriveBase extends MustangSubsystemBase {
 
   /**
    * Returns the Right Motor Controller
+   * 
    * @return The list of hte motor controller on the right side of the robot
    */
   public List<SparkMAXLite> getRightControllers() {
@@ -424,7 +441,9 @@ public class DriveBase extends MustangSubsystemBase {
 
   /**
    * Converts revolutions to inches rotated
-   * @param revolutions The number of revolutions that has to be converted to distance travelled
+   * 
+   * @param revolutions The number of revolutions that has to be converted to
+   *                    distance travelled
    * @return The distance rotated in inches
    */
   public static double convertSparkRevolutionsToInches(double revolutions) {
@@ -534,11 +553,11 @@ public class DriveBase extends MustangSubsystemBase {
     return new DifferentialDriveWheelSpeeds(left1Encoder.getVelocity(), right1Encoder.getVelocity());
   }
 
-  public void zeroSensors(){
+  public void zeroSensors() {
     left1Encoder.setPosition(0);
     right1Encoder.setPosition(0);
-  }  
-  
+  }
+
   public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
     tankDrive(leftVoltage / RobotController.getBatteryVoltage(), rightVoltage / RobotController.getBatteryVoltage());
   }
