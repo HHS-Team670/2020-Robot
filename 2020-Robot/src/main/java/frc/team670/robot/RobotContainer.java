@@ -50,12 +50,10 @@ public class RobotContainer {
 
   public static OI oi = new OI();
 
-  public static Indexer indexer;
-
-
   public static Joystick operatorJoystick;
   private static DriveBase driveBase = new DriveBase();
   private static Shooter shooter;// = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
+  private static Indexer indexer;
 
   private Trajectory trajectory;
   private String pathname;

@@ -1,27 +1,31 @@
 package frc.team670.robot.commands.indexer;
 
+import java.util.Map;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.team670.robot.RobotContainer;
+import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.Indexer;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 /**
  * Resets the revolver to the 0 position, defined by a magnet
  */
-public class ZeroRevolver extends CommandBase {
+public class ZeroRevolver extends CommandBase implements MustangCommand {
 
     private double speed;
     private Indexer indexer;
 
-    public ZeroRevolver() {
-        speed = 0.7;
-        addRequirements(RobotContainer.indexer);
-        indexer = RobotContainer.indexer;
+    public ZeroRevolver(Indexer indexer) {
+        speed = 0.5; // TODO: find a speed after testing
+        addRequirements(indexer);
+        this.indexer = indexer;
     }
 
     @Override
     public void execute() {
         int direction = indexer.directionToTurn();
-        indexer.setSpeed(speed*direction);
+        indexer.setSpeed(speed * direction);
     }
 
     @Override
@@ -31,8 +35,13 @@ public class ZeroRevolver extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return RobotContainer.indexer.isZeroed();
+        return this.indexer.isZeroed();
     }
 
+    @Override
+    public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
 }

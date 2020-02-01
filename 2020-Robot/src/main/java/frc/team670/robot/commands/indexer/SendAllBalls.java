@@ -4,9 +4,7 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import frc.team670.robot.RobotContainer;
 import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
@@ -23,9 +21,10 @@ public class SendAllBalls extends CommandBase implements MustangCommand {
     private int originalNumBalls;
     private int desiredNumBalls;
 
-    public SendAllBalls() {
-        speed = 0.7;
-        indexer = RobotContainer.indexer;
+    public SendAllBalls(Indexer indexer) {
+        speed = 0.5; //TODO: find this speed after testing
+        addRequirements(indexer);
+        this.indexer = indexer;
         originalNumBalls = indexer.totalNumOfBalls();
         originalPosition = indexer.getPosition();
         desiredNumBalls = indexer.totalNumOfBalls();

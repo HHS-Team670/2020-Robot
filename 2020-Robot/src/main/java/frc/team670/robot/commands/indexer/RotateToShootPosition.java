@@ -4,7 +4,6 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-import frc.team670.robot.RobotContainer;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
@@ -25,10 +24,10 @@ public class RotateToShootPosition extends CommandBase implements MustangCommand
     //For isFinished()
     private boolean done;
 
-    public RotateToShootPosition(){
+    public RotateToShootPosition(Indexer indexer){
         speed = 0.8;
-        addRequirements(RobotContainer.indexer);
-        indexer = RobotContainer.indexer;
+        addRequirements(indexer);
+        this.indexer = indexer;
         goal = indexer.getShootChamber();
         firstReachedPos = 0;
         reached = false;
