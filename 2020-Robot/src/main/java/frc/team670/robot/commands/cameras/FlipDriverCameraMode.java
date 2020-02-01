@@ -7,14 +7,19 @@
 
 package frc.team670.robot.commands.cameras;
 
+import java.util.Map;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.robot.RobotContainer;
+import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 /**
  * Flips between single camera and double camera on the dashboard
  */
-public class FlipDriverCameraMode extends InstantCommand {
+public class FlipDriverCameraMode extends InstantCommand implements MustangCommand {
   /**
    * Add your docs here.
    */
@@ -31,6 +36,12 @@ public class FlipDriverCameraMode extends InstantCommand {
     doubleCamera = !doubleCamera;
     SmartDashboard.putString("driver-camera-mode", doubleCamera ? "double" : "single");
     RobotContainer.oi.rumbleDriverController(0.7, 0.2);
+  }
+
+  @Override
+  public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

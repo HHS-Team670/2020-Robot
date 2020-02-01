@@ -3,7 +3,6 @@ package frc.team670.robot.dataCollection.sensors;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.team670.robot.utils.Logger;
 
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorMatchResult;
@@ -30,33 +29,52 @@ public class ColorMatcher {
    */
   private final ColorMatch m_colorMatcher = new ColorMatch();
 
-  /**
-   * Note: Any example colors should be calibrated as the user needs, these are
-   * here as a basic example.
-   */
-  public static final Color kBlueTarget = ColorMatch.makeColor(0.136, 0.412, 0.450);
-  public static final Color kGreenTarget = ColorMatch.makeColor(0.196, 0.557, 0.246);
-  public static final Color kRedTarget = ColorMatch.makeColor(0.475, 0.371, 0.153);
-  public static final Color kYellowTarget = ColorMatch.makeColor(0.293, 0.561, 0.144);
+  public enum colors {
 
-  private ColorMatchResult matchedResult = new ColorMatchResult(Color.kBlack, 0);
+    BLUE(0, ColorMatch.makeColor(0.136, 0.412, 0.450)), 
+    YELLOW(1, ColorMatch.makeColor(0.293, 0.561, 0.144)),
+    RED(2, ColorMatch.makeColor(0.475, 0.371, 0.153)), 
+    GREEN(3, ColorMatch.makeColor(0.196, 0.557, 0.246));
 
-  // Rev Color threshold
-  // blue 0.143, 0.427, 0.429
-  // green 0.197, 0.561, 0.240
-  // red 0.561, 0.232, 0.114
-  // yellow 0.361, 0.524, 0.113
+    private int colorNumber;
+    private Color color;
 
-  public void init() {
-    m_colorMatcher.addColorMatch(kBlueTarget);
-    m_colorMatcher.addColorMatch(kGreenTarget);
-    m_colorMatcher.addColorMatch(kRedTarget);
-    m_colorMatcher.addColorMatch(kYellowTarget);
+    private colors(int colorNumber, Color color) {
+      this.colorNumber = colorNumber;
+      this.color = color;
+    }
 
-    m_colorMatcher.setConfidenceThreshold(0.80);
+    /**
+     * 
+     * @return the corresponding integer code for each color on the wheel
+     */
+    public int getColorNumber() {
+      return colorNumber;
+    }
+
+    private Color getTargetColor() {
+      return color;
+    }
   }
 
-  public void periodic() {
+  public static final int UNKNOWN_COLOR_NUMBER = -1;
+
+  private final double CONFIDENCE_THRESHOLD = 0.85;
+
+  public ColorMatcher() {
+    init();
+  }
+
+  public void init() {
+    m_colorMatcher.addColorMatch(colors.BLUE.getTargetColor());
+    m_colorMatcher.addColorMatch(colors.YELLOW.getTargetColor());
+    m_colorMatcher.addColorMatch(colors.RED.getTargetColor());
+    m_colorMatcher.addColorMatch(colors.GREEN.getTargetColor());
+
+    m_colorMatcher.setConfidenceThreshold(CONFIDENCE_THRESHOLD);
+  }
+
+  public int detectColor() {
     /**
      * The method GetColor() returns a normalized color value from the sensor and
      * can be useful if outputting the color to an RGB LED or similar. To read the
@@ -72,36 +90,40 @@ public class ColorMatcher {
     /**
      * Run the color match algorithm on our detected color
      */
-    String colorString;
-    ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
-    matchedResult = match;
+    // String colorString;
+    int colorNumber;
 
-    if (match.color == kBlueTarget) {
-      colorString = "Blue";
-    } else if (match.color == kRedTarget) {
-      colorString = "Red";
-    } else if (match.color == kGreenTarget) {
-      colorString = "Green";
-    } else if (match.color == kYellowTarget) {
-      colorString = "Yellow";
+    ColorMatchResult match = m_colorMatcher.matchClosestColor(detectedColor);
+
+    if (match.color == colors.BLUE.getTargetColor()) {
+      // colorString = "Blue";
+      colorNumber = colors.BLUE.getColorNumber();
+    } else if (match.color == colors.YELLOW.getTargetColor()) {
+      // colorString = "Yellow";
+      colorNumber = colors.YELLOW.getColorNumber();
+    } else if (match.color == colors.RED.getTargetColor()) {
+      // colorString = "Red";
+      colorNumber = colors.RED.getColorNumber();
+    } else if (match.color == colors.GREEN.getTargetColor()) {
+      // colorString = "Green";
+      colorNumber = colors.GREEN.getColorNumber();
     } else {
-      colorString = "Unknown";
+      // colorString = "Unknown";
+      colorNumber = UNKNOWN_COLOR_NUMBER;
     }
 
     /**
      * Open Smart Dashboard or Shuffleboard to see the color detected by the sensor.
      */
-    SmartDashboard.putNumber("Red", detectedColor.red);
-    SmartDashboard.putNumber("Green", detectedColor.green);
-    SmartDashboard.putNumber("Blue", detectedColor.blue);
-    SmartDashboard.putNumber("Confidence", match.confidence);
-    SmartDashboard.putString("Detected Color", colorString);
+    /*
+     * SmartDashboard.putNumber("Red", detectedColor.red);
+     * SmartDashboard.putNumber("Green", detectedColor.green);
+     * SmartDashboard.putNumber("Blue", detectedColor.blue);
+     * SmartDashboard.putNumber("Confidence", match.confidence);
+     * SmartDashboard.putString("Detected Color", colorString);
+     * SmartDashboard.putNumber("Detected Color Number", colorNumber);
+     */
 
-    // System.out.println(colorString);
-
-  }
-
-  public ColorMatchResult getResult() {
-    return matchedResult;
+    return colorNumber;
   }
 }

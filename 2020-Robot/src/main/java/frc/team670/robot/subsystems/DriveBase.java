@@ -106,7 +106,7 @@ public class DriveBase extends MustangSubsystemBase {
    * Used to initialized teleop command for the driveBase
    */
   public void initDefaultCommand() {
-    MustangScheduler.getInstance().schedule(new XboxRocketLeagueDrive(this));
+    MustangScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive(this));
   }
 
   /**
@@ -118,10 +118,10 @@ public class DriveBase extends MustangSubsystemBase {
     System.out.println("Starting");
     HealthState state = HealthState.GREEN;
 
-    boolean isLeft1Error = left1.getLastError() != null;
-    boolean isLeft2Error = left2.getLastError() != null;
-    boolean isRight1Error = right1.getLastError() != null;
-    boolean isRight2Error = right2.getLastError() != null;
+    boolean isLeft1Error = left1.getLastError() != null && left1.getLastError() != CANError.kOk;
+    boolean isLeft2Error = left2.getLastError() != null && left2.getLastError() != CANError.kOk;
+    boolean isRight1Error = right1.getLastError() != null && right1.getLastError() != CANError.kOk;
+    boolean isRight2Error = right2.getLastError() != null && right2.getLastError() != CANError.kOk;
 
     System.out.println(("RED Errors: l1:" + left1.getLastError() + " l2:" + left2.getLastError() + " r1:"
           + right1.getLastError() + " r2:" + right2.getLastError()));

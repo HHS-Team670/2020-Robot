@@ -35,6 +35,7 @@ public class XboxRocketLeagueDrive extends CommandBase implements MustangCommand
   public XboxRocketLeagueDrive(DriveBase driveBase) {
     isReversed = false;
     addRequirements(driveBase);
+    this.driveBase = driveBase;
   }
 
   // Called once when the command executes
@@ -92,6 +93,11 @@ public class XboxRocketLeagueDrive extends CommandBase implements MustangCommand
 
   public static boolean isDriveReversed() {
     return isReversed;
+  }
+
+  @Override
+  public boolean isFinished(){
+    return false;
   }
 
   public static void setDriveReversed(boolean reversed) {
