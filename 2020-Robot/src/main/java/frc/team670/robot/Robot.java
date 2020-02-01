@@ -15,7 +15,6 @@ import frc.team670.robot.commands.MustangScheduler;
 
 import frc.team670.robot.utils.Logger;
 
-
 /**
  * The VM is configured to automatically run this class, and to call the
  * functions corresponding to each mode, as described in the TimedRobot
@@ -24,7 +23,7 @@ import frc.team670.robot.utils.Logger;
  * project.
  */
 public class Robot extends TimedRobot {
-  
+
   private MustangCommand m_autonomousCommand;
   private RobotContainer m_robotContainer;
 
@@ -37,7 +36,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings
+    // Instantiate our RobotContainer. This will perform all our button bindings
     m_robotContainer = new RobotContainer();
     RobotContainer.checkSubsystemsHealth();
     timer = new Timer();
@@ -45,21 +44,22 @@ public class Robot extends TimedRobot {
     MustangScheduler.getInstance();
   }
 
-
   /**
    * This function is called every robot packet, no matter the mode. Use this for
    * items like diagnostics that you want ran during disabled, autonomous,
    * teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
+   * <p>
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and SmartDashboard integrated updating.
    * 
-   * Re-calculates the health of all subsystems on the robot at specified intervals.
+   * Re-calculates the health of all subsystems on the robot at specified
+   * intervals.
    */
   @Override
   public void robotPeriodic() {
     MustangScheduler.getInstance().run();
-    if (timer.hasPeriodPassed(SYSTEM_CHECK_PERIOD)){
+    if (timer.hasPeriodPassed(SYSTEM_CHECK_PERIOD)) {
       RobotContainer.checkSubsystemsHealth();
     }
   }
@@ -83,7 +83,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     Logger.consoleLog("Autonomous Init");
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    
+
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       MustangScheduler.getInstance().schedule(m_autonomousCommand);
@@ -99,7 +99,7 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopInit(){
+  public void teleopInit() {
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

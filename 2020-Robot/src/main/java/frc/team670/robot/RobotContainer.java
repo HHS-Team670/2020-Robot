@@ -70,8 +70,8 @@ public class RobotContainer {
     addSubsystem(driveBase);
   }
 
-  public static void addSubsystem(MustangSubsystemBase... subsystems){
-    for(MustangSubsystemBase m_subsystemBase : subsystems){
+  public static void addSubsystem(MustangSubsystemBase... subsystems) {
+    for (MustangSubsystemBase m_subsystemBase : subsystems) {
       allSubsystems.add(m_subsystemBase);
     }
   }
@@ -115,7 +115,8 @@ public class RobotContainer {
   public Command getManualSpinWheelCommand() {
     return manualSpinForRotations;
   }
-  public static void initTeleopCommands(){
+
+  public static void initTeleopCommands() {
     driveBase.initDefaultCommand();
   }
 
