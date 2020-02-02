@@ -79,7 +79,7 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
 
     }
 
-    protected double getUnadjustedPosition() {
+    public double getUnadjustedPosition() {
         return this.encoder.getPosition();
     }
 
