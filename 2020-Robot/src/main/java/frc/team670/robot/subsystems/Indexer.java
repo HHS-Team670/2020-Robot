@@ -16,7 +16,7 @@ import frc.team670.robot.utils.motorcontroller.TalonSRXLite;
  */
 public class Indexer extends SparkMaxRotatingSubsystem {
 
-    private CANSparkMax SM;
+    private CANSparkMax rotator;
     private TalonSRXLite updraw;
 
     private CANEncoder encoder;
@@ -36,10 +36,11 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     // SmartMotion control: indexer
     // TODO: find all these values
-    private static final double SM_P = 0.95;
-    private static final double SM_I = 0;
-    private static final double SM_D = 0;
-    private static final double SM_FF = 0;
+    private static final double rotator_SM_P = 0.95;
+    private static final double rotator_SM_I = 0;
+    private static final double rotator_SM_D = 0;
+    private static final double rotator_SM_FF = 0;
+    private static final double rotator_SM_Iz = 0;
 
     public static final int FORWARD_LIMIT = 0; // TODO set this
     public static final int REVERSE_LIMIT = 0; // TODO set this
@@ -47,15 +48,18 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     private static final int INDEXER_NORMAL_CONTINUOUS_CURRENT_LIMIT = 0; // TODO set this?
     private static final int INDEXER_PEAK_CURRENT_LIMIT = 0; // TODO set this?
 
-    private static final int INDEXER_TICKS_PER_ROTATION= 42; //NEO550 integrated encoder is 42 counts per rev
+    private static final int INDEXER_TICKS_PER_ROTATION = 42; // NEO550 integrated encoder is 42 counts per rev
     private static final int INDEXER_OFFSET_FROM_ZERO = 0;
 
     public Indexer() {
-        super(RobotMap.INDEXER_ROTATOR, SM_P, SM_I, SM_D, SM_FF, FORWARD_LIMIT, REVERSE_LIMIT, false, INDEXER_NORMAL_CONTINUOUS_CURRENT_LIMIT, INDEXER_PEAK_CURRENT_LIMIT, INDEXER_OFFSET_FROM_ZERO);
-        this.SM = rotator;
-        controller = SM.getPIDController();
-        this.updraw  = new TalonSRXLite(RobotMap.UPDRAW_SPINNER);
-        encoder = SM.getEncoder();
+        // TODO: find actual values for everything here. Does it make sense to require
+        // all these?
+        super(RobotMap.INDEXER_ROTATOR, 0, rotator_SM_P, rotator_SM_I, rotator_SM_D, rotator_SM_FF, rotator_SM_Iz, 1, 0,
+                5700, 2000, 0, 1500, 50, FORWARD_LIMIT, REVERSE_LIMIT, false, INDEXER_NORMAL_CONTINUOUS_CURRENT_LIMIT,
+                INDEXER_PEAK_CURRENT_LIMIT, INDEXER_OFFSET_FROM_ZERO);
+
+        this.updraw = new TalonSRXLite(RobotMap.UPDRAW_SPINNER);
+
         chamberStates = new boolean[5];
 
         updraw.setNeutralMode(NeutralMode.Coast);
@@ -110,28 +114,29 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
     }
 
-    //TODO: check if chamber labeling direction is correct, if not change goal to bottom - intake
+    // TODO: check if chamber labeling direction is correct, if not change goal to
+    // bottom - intake
     public void prepareToIntake() {
         double goal = getIntakeChamber() - getBottomChamber();
         if (goal < 0) {
             goal += 5;
         }
-        //setSmartMotionTarget(goal);
-        controller.setReference(goal/5.0, ControlType.kPosition);
+        // setSmartMotionTarget(goal);
+        controller.setReference(goal / 5.0, ControlType.kPosition);
     }
 
     public boolean isReadyToIntake() {
         return getIntakeChamber() == getBottomChamber();
     }
 
-    //TODO: same thing with prepareToIntake: check chamber labeling direction
+    // TODO: same thing with prepareToIntake: check chamber labeling direction
     public void prepareToShoot() {
         double goal = getShootChamber() - getTopChamber();
         if (goal < 0) {
             goal += 5;
         }
-        //setSmartMotionTarget(goal);
-        controller.setReference(goal/5.0, ControlType.kPosition);
+        // setSmartMotionTarget(goal);
+        controller.setReference(goal / 5.0, ControlType.kPosition);
 
     }
 
@@ -213,11 +218,11 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * Sets speed of the motor controlling the revolver
      */
     public void setSpeed(double speed) {
-        SM.set(speed);
+        rotator.set(speed);
     }
 
     public double getSpeed() {
-        return SM.get();
+        return rotator.get();
     }
 
     // Preferably use this instead of getDegreePos
@@ -244,7 +249,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     @Override
     public double getAngleInDegrees() {
-        return ((this.getPosition()/INDEXER_TICKS_PER_ROTATION)*360);
+        return ((this.getPosition() / INDEXER_TICKS_PER_ROTATION) * 360);
     }
 
 }
