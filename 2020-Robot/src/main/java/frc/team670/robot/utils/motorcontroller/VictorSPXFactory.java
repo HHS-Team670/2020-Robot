@@ -5,17 +5,19 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.ParamEnum;
 
 /**
- * Utility class for configuring a SparkMAX to default settings and resetting to factory defaults.
- * @author ruchidixit 
+ * Utility class for configuring a SparkMAX to default settings and resetting to
+ * factory defaults.
+ * 
+ * @author ruchidixit
  */
-public class VictorSPXFactory{
+public class VictorSPXFactory {
 
     public static final int TIMEOUT_MS = 100;
 
-    public static class Config{
+    public static class Config {
 
         public NeutralMode NEUTRAL_MODE = NeutralMode.Coast;
-        public double NEUTRAL_DEADBAND = 0.04; //factory default
+        public double NEUTRAL_DEADBAND = 0.04; // factory default
 
         public boolean INVERTED = false;
 
@@ -29,7 +31,7 @@ public class VictorSPXFactory{
 
         public double OPEN_LOOP_RAMP_RATE = 0.0;
         public double CLOSED_LOOP_RAMP_RATE = 0.0;
-        
+
         public VelocityMeasPeriod VELOCITY_MEASUREMENT_PERIOD = VelocityMeasPeriod.Period_100Ms;
         public int VELOCITY_MEASUREMENT_ROLLING_AVERAGE_WINDOW = 64;
 
@@ -44,7 +46,7 @@ public class VictorSPXFactory{
     public static final Config defaultConfig = new Config();
     public static final Config defaultFollowerConfig = new Config();
 
-    static{
+    static {
         defaultFollowerConfig.CONTROL_FRAME_PERIOD_MS = 100;
         defaultFollowerConfig.MOTION_CONTROL_FRAME_PERIOD_MS = 1000;
         defaultFollowerConfig.GENERAL_STATUS_FRAME_RATE_MS = 1000;
@@ -54,11 +56,11 @@ public class VictorSPXFactory{
         defaultFollowerConfig.PULSE_WIDTH_STATUS_FRAME_RATE_MS = 1000;
     }
 
-    public static VictorSPX buildFactoryVictorSPX(int deviceID, Config config){
+    public static VictorSPX buildFactoryVictorSPX(int deviceID, Config config) {
         return buildVictorSPX(deviceID, defaultConfig);
     }
 
-    public static VictorSPX buildVictorSPX(int deviceID, Config config){
+    public static VictorSPX buildVictorSPX(int deviceID, Config config) {
         VictorSPX victorspx = new VictorSPXLite(deviceID);
         victorspx.set(ControlMode.PercentOutput, 0.0);
         victorspx.setInverted(config.INVERTED);
@@ -70,10 +72,8 @@ public class VictorSPXFactory{
         victorspx.clearStickyFaults(TIMEOUT_MS);
 
         // Turn off re-zeroing by default.
-        victorspx.configSetParameter(
-                ParamEnum.eClearPositionOnLimitF, 0, 0, 0, TIMEOUT_MS);
-        victorspx.configSetParameter(
-                ParamEnum.eClearPositionOnLimitR, 0, 0, 0, TIMEOUT_MS);
+        victorspx.configSetParameter(ParamEnum.eClearPositionOnLimitF, 0, 0, 0, TIMEOUT_MS);
+        victorspx.configSetParameter(ParamEnum.eClearPositionOnLimitR, 0, 0, 0, TIMEOUT_MS);
 
         victorspx.configNominalOutputForward(0, TIMEOUT_MS);
         victorspx.configNominalOutputReverse(0, TIMEOUT_MS);
@@ -94,8 +94,7 @@ public class VictorSPXFactory{
         victorspx.selectProfileSlot(0, 0);
 
         victorspx.configVelocityMeasurementPeriod(config.VELOCITY_MEASUREMENT_PERIOD, TIMEOUT_MS);
-        victorspx.configVelocityMeasurementWindow(config.VELOCITY_MEASUREMENT_ROLLING_AVERAGE_WINDOW,
-                TIMEOUT_MS);
+        victorspx.configVelocityMeasurementWindow(config.VELOCITY_MEASUREMENT_ROLLING_AVERAGE_WINDOW, TIMEOUT_MS);
 
         victorspx.configOpenloopRamp(config.OPEN_LOOP_RAMP_RATE, TIMEOUT_MS);
         victorspx.configClosedloopRamp(config.CLOSED_LOOP_RAMP_RATE, TIMEOUT_MS);
@@ -103,6 +102,5 @@ public class VictorSPXFactory{
 
         return victorspx;
     }
-
 
 }

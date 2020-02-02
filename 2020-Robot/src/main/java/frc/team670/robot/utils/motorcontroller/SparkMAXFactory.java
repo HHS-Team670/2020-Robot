@@ -5,12 +5,14 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.ControlType;
 
 /**
- * Utility class for configuring a SparkMAX to default settings and resetting to factory defaults.
- * @author ctychen, ruchidixit 
+ * Utility class for configuring a SparkMAX to default settings and resetting to
+ * factory defaults.
+ * 
+ * @author ctychen, ruchidixit
  */
-public class SparkMAXFactory{
+public class SparkMAXFactory {
 
-    public static class Config{
+    public static class Config {
 
         public boolean BURN_FACTORY_DEFAULT_FLASH = false;
         public IdleMode DEFAULT_MODE = IdleMode.kCoast;
@@ -37,12 +39,11 @@ public class SparkMAXFactory{
         defaultFollowerConfig.STATUS_FRAME_2_RATE_MS = 1000;
     }
 
-
-    public static CANSparkMax buildFactorySparkMAX(int deviceID){
+    public static CANSparkMax buildFactorySparkMAX(int deviceID) {
         return buildSparkMAX(deviceID, defaultConfig);
     }
 
-    public static CANSparkMax setPermanentFollower(int deviceID, CANSparkMax leader){
+    public static CANSparkMax setPermanentFollower(int deviceID, CANSparkMax leader) {
         CANSparkMax sparkMax = buildSparkMAX(deviceID, defaultFollowerConfig);
         sparkMax.follow(leader);
         return sparkMax;
