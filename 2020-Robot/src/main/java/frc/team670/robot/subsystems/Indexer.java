@@ -121,7 +121,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         return getIntakeChamber() == getBottomChamber();
     }
 
-    //TODO: same thing with preparetointake: check chamber labeling direction
+    //TODO: same thing with prepareToIntake: check chamber labeling direction
     public void prepareToShoot() {
         double goal = getShootChamber() - getTopChamber();
         if (goal < 0) {

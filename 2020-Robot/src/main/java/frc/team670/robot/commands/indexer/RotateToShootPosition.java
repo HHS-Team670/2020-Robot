@@ -28,6 +28,11 @@ public class RotateToShootPosition extends CommandBase implements MustangCommand
         speed = 0.8;
         addRequirements(indexer);
         this.indexer = indexer;
+        
+    }
+
+    public void initialize() {
+        super.initialize();
         goal = indexer.getShootChamber();
         firstReachedPos = 0;
         reached = false;
@@ -36,17 +41,19 @@ public class RotateToShootPosition extends CommandBase implements MustangCommand
 
     @Override
     public void execute() {
+        // should not be needed if preparetoshoot works
         //Not optimized because 
-        indexer.setSpeed(speed);
-        if (indexer.getTopChamber() == goal) {
-            if (reached) {
-                if (indexer.getPosition() > firstReachedPos + 0.1) {
-                    done = true;
-                }
-            }
-            firstReachedPos = indexer.getPosition();
-            reached = true;
-        }
+        // indexer.setSpeed(speed);
+        // if (indexer.getTopChamber() == goal) {
+        //     if (reached) {
+        //         if (indexer.getPosition() > firstReachedPos + 0.1) {
+        //             done = true;
+        //         }
+        //     }
+        //     firstReachedPos = indexer.getPosition();
+        //     reached = true;
+        // }
+        indexer.prepareToShoot();
     }
 
     @Override
@@ -56,7 +63,8 @@ public class RotateToShootPosition extends CommandBase implements MustangCommand
 
     @Override
     public boolean isFinished() {
-        return done;
+        //return done;
+        return indexer.readyToShoot()
     }
 
     @Override
