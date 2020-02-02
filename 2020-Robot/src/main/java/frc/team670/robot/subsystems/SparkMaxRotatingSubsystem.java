@@ -22,12 +22,16 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     protected CANEncoder rotator_encoder;
     protected CANPIDController rotator_controller;
     protected int offsetFromEncoderZero;
-    protected static final double NO_SETPOINT = Double.NaN; 
+    protected static final double NO_SETPOINT = Double.NaN;
     protected double setpoint;
     protected double kP, kI, kD, kFF, kIz, MAX_OUTPUT, MIN_OUTPUT, MAX_RPM;
     protected double MAX_VEL, MIN_VEL, MAX_ACC, ALLOWED_ERR;
     protected int SMARTMOTION_SLOT;
 
+    /**
+     * Configuration for this RotatingSubsystem's properties. 
+     * Use this to keep track of PID and SmartMotion constants
+     */
     public static abstract class Config {
 
         public abstract int getDeviceID();
@@ -72,7 +76,6 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
 
     public SparkMaxRotatingSubsystem(Config config) {
         this.rotator = SparkMAXFactory.buildFactorySparkMAX(config.getDeviceID());
-        this.rotator_encoder = rotator.getEncoder();
         this.rotator_controller = rotator.getPIDController();
         this.offsetFromEncoderZero = config.getOffsetFromEncoderZero();
 
@@ -145,8 +148,8 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     public CANSparkMax getRotator() {
         return this.rotator;
     }
-    
-    public CANEncoder getRotatorEncoder(){
+
+    public CANEncoder getRotatorEncoder() {
         return this.rotator_encoder;
     }
 

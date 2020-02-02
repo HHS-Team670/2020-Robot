@@ -21,11 +21,11 @@ public class RobotMap{
   public final static int SHOOTER_ID_MAIN = 11;
   public final static int SHOOTER_ID_FOLLOWER = 12;
   
+  public final static int SPARKMAX_TEST = 2;
+  // // PC Module
+  // public static final int PCMODULE = 2;
 
-  // PC Module
-  public static final int PCMODULE = 2;
-
-  // Intake
-  public static final int INTAKE_ROLLER = 4;
+  // // Intake
+  // public static final int INTAKE_ROLLER = 4;
 
 }

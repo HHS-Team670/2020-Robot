@@ -94,11 +94,6 @@ public static class Config extends SparkMaxRotatingSubsystem.Config{
 
     public Test() {
         // display PID coefficients on SmartDashboard
-        // super(RobotMap.SPARK_RIGHT_MOTOR_1, 0, SmartDashboard.getNumber("P", 0.001),
-        // SmartDashboard.getNumber("I", 0.001), SmartDashboard.getNumber("D", 0.001),
-        // SmartDashboard.getNumber("FF", 0.001), SmartDashboard.getNumber("Iz", 0.001),
-        // 1, -1, 5700, 2000, 0,
-        // 1500, 50, 1000, -1000, false, 30, 0, 0);
         super(testConfig);
         Logger.consoleLog("Test subsystem started");
         SmartDashboard.putNumber("P Gain", kP);
@@ -120,7 +115,7 @@ public static class Config extends SparkMaxRotatingSubsystem.Config{
     }
 
     public void valueTest() {
-        Logger.consoleLog("Testing values");
+        Logger.consoleLog("Testing");
         double p = SmartDashboard.getNumber("P Gain", 0);
         double i = SmartDashboard.getNumber("I Gain", 0);
         double d = SmartDashboard.getNumber("D Gain", 0);
@@ -185,13 +180,11 @@ public static class Config extends SparkMaxRotatingSubsystem.Config{
          */
         // Methods from SMRS below
         setSmartMotionTarget(setPoint);
-        Logger.consoleLog("Setpoint: %s", setPoint);
         processVariable = getUnadjustedPosition();
 
         SmartDashboard.putNumber("SetPoint", setPoint);
         SmartDashboard.putNumber("Process Variable", processVariable);
         SmartDashboard.putNumber("Output", rotator.getAppliedOutput());
-        Logger.consoleLog("Moved to");
     }
 
     @Override

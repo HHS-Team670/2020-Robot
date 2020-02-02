@@ -38,8 +38,8 @@ public class RobotContainer {
 
   public static OI oi = new OI();
 
-  private static DriveBase driveBase = new DriveBase();
-  private static Shooter shooter;// = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
+  //private static DriveBase driveBase = new DriveBase();
+  //private static Shooter shooter;// = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
 
   private Trajectory trajectory;
   private String pathname;
@@ -87,8 +87,8 @@ public class RobotContainer {
   }
 
   public void initTeleopCommands() {
-    driveBase.initDefaultCommand();
-    shooter.initDefaultCommand();
+    //driveBase.initDefaultCommand();
+    //shooter.initDefaultCommand();
   }
 
 }
