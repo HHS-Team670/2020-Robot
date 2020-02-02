@@ -7,21 +7,25 @@
 
 package frc.team670.robot.commands;
 
+import java.util.Map;
+
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.robot.constants.OI;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 /**
  * Sets the rumble on the driver and operator controllers
  */
-public class RumbleDriverController extends InstantCommand {
-  
+public class RumbleDriverController extends InstantCommand implements MustangCommand {
+
   private OI oi;
   private double power, time;
 
-    /**
-     * @param power The desired power of the rumble [0, 1]
-     * @param time The time to rumble for in seconds
-     */
+  /**
+   * @param power The desired power of the rumble [0, 1]
+   * @param time  The time to rumble for in seconds
+   */
   public RumbleDriverController(OI oi, double power, double time) {
     super();
     this.oi = oi;
@@ -29,9 +33,14 @@ public class RumbleDriverController extends InstantCommand {
     this.time = time;
   }
 
-
   public void initialize() {
     oi.rumbleDriverController(power, time);
+  }
+
+  @Override
+  public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }

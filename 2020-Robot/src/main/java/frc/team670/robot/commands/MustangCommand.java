@@ -1,7 +1,5 @@
 package frc.team670.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 
 import java.util.Map;
@@ -9,17 +7,13 @@ import java.util.Map;
 /**
  * Represents a robot action with defined health requirements for every subsystem it uses.
  * 
- * @author ctychen
+ * @author ctychen, lakshbhambhani
  */
-public abstract class MustangCommandBase extends CommandBase{
-
-    public MustangCommandBase(){
-        
-    }
+public interface MustangCommand{
 
     /**
      * @return A Map containing the minimum health condition for each subsystem that this Command requires to be safely used.
      */
-    public abstract Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> getHealthRequirements();
+    public Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> getHealthRequirements();
 
 }

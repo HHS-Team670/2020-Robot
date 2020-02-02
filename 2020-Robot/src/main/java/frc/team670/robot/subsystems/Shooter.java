@@ -8,12 +8,13 @@
 package frc.team670.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team670.robot.commands.MustangScheduler;
+import frc.team670.robot.commands.joystick_controls.JoystickTurret;
 import frc.team670.robot.utils.Logger;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-public class Shooter extends SubsystemBase {
+public class Shooter extends MustangSubsystemBase {
 
    //Practice Values
    public static final double kP =0.24;
@@ -62,5 +63,15 @@ public class Shooter extends SubsystemBase {
   public void periodic(){
     setPID();
     setSpeed();
+  }
+
+  @Override
+  public HealthState checkHealth() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public void initDefaultCommand(){
+    MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret());
   }
 }
