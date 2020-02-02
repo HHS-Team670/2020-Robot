@@ -1,6 +1,7 @@
 package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -20,6 +21,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     private CANEncoder encoder;
     private boolean[] chamberStates;
+    private CANPIDController controller;
 
     // Current control: updraw
     // TODO: find all these values
@@ -51,6 +53,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     public Indexer() {
         super(RobotMap.INDEXER_ROTATOR, SM_P, SM_I, SM_D, SM_FF, FORWARD_LIMIT, REVERSE_LIMIT, false, INDEXER_NORMAL_CONTINUOUS_CURRENT_LIMIT, INDEXER_PEAK_CURRENT_LIMIT, INDEXER_OFFSET_FROM_ZERO);
         this.SM = rotator;
+        controller = SM.getPIDController();
         this.updraw  = new TalonSRXLite(RobotMap.UPDRAW_SPINNER);
         encoder = SM.getEncoder();
         chamberStates = new boolean[5];
@@ -114,10 +117,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             goal += 5;
         }
         //setSmartMotionTarget(goal);
-        SM.getPIDController().setReference(goal/5.0, ControlType.kPosition);
+        controller.setReference(goal/5.0, ControlType.kPosition);
     }
 
-    public boolean readyToIntake() {
+    public boolean isReadyToIntake() {
         return getIntakeChamber() == getBottomChamber();
     }
 
@@ -128,11 +131,11 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             goal += 5;
         }
         //setSmartMotionTarget(goal);
-        SM.getPIDController().setReference(goal/5.0, ControlType.kPosition);
+        controller.setReference(goal/5.0, ControlType.kPosition);
 
     }
 
-    public boolean readyToShoot() {
+    public boolean isReadyToShoot() {
         return getShootChamber() == getTopChamber();
     }
 

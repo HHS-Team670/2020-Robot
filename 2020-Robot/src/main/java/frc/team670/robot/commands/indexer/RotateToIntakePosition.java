@@ -39,6 +39,7 @@ public class RotateToIntakePosition extends CommandBase implements MustangComman
         firstReachedPos = 0;
         reached = false;
         done = false;
+        indexer.prepareToIntake();
     }
 
     @Override
@@ -53,7 +54,8 @@ public class RotateToIntakePosition extends CommandBase implements MustangComman
         //     firstReachedPos = indexer.getPosition();
         //     reached = true;
         // }
-        indexer.prepareToIntake();
+        //indexer.prepareToIntake();
+        
     }
 
     @Override
@@ -64,7 +66,7 @@ public class RotateToIntakePosition extends CommandBase implements MustangComman
     @Override
     public boolean isFinished() {
         //return done;
-        return indexer.readyToIntake();
+        return indexer.isReadyToIntake();
     }
 
     @Override

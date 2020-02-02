@@ -37,6 +37,7 @@ public class RotateToShootPosition extends CommandBase implements MustangCommand
         firstReachedPos = 0;
         reached = false;
         done = false;
+        indexer.prepareToShoot();
     }
 
     @Override
@@ -53,7 +54,7 @@ public class RotateToShootPosition extends CommandBase implements MustangCommand
         //     firstReachedPos = indexer.getPosition();
         //     reached = true;
         // }
-        indexer.prepareToShoot();
+        //indexer.prepareToShoot();
     }
 
     @Override
@@ -64,7 +65,7 @@ public class RotateToShootPosition extends CommandBase implements MustangCommand
     @Override
     public boolean isFinished() {
         //return done;
-        return indexer.readyToShoot()
+        return indexer.isReadyToShoot();
     }
 
     @Override
