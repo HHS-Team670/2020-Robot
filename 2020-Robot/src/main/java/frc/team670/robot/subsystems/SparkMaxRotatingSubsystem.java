@@ -73,6 +73,7 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     public SparkMaxRotatingSubsystem(Config config) {
         this.rotator = SparkMAXFactory.buildFactorySparkMAX(config.getDeviceID());
         this.rotator_encoder = rotator.getEncoder();
+        this.rotator_controller = rotator.getPIDController();
         this.offsetFromEncoderZero = config.getOffsetFromEncoderZero();
 
         // PID coefficients

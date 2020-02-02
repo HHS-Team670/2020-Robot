@@ -6,13 +6,14 @@ import com.revrobotics.ControlType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.RobotMap;
+import frc.team670.robot.utils.Logger;
 
 public class Test extends SparkMaxRotatingSubsystem{
 
 public static class Config extends SparkMaxRotatingSubsystem.Config{
 
     public int getDeviceID() {
-        return RobotMap.SPARK_RIGHT_MOTOR_1;
+        return 2;
     }
 
     public int getSlot() {
@@ -20,23 +21,23 @@ public static class Config extends SparkMaxRotatingSubsystem.Config{
     }
 
     public double getP() {
-        return SmartDashboard.getNumber("P", 0.001);
+        return SmartDashboard.getNumber("P Gain", 0.001);
     }
 
     public double getI() {
-        return SmartDashboard.getNumber("I", 0.001);
+        return SmartDashboard.getNumber("I Gan", 0.001);
     }
 
     public double getD() {
-        return SmartDashboard.getNumber("D", 0.001);
+        return SmartDashboard.getNumber("D Gain", 0.001);
     }
 
     public double getFF() {
-        return SmartDashboard.getNumber("FF", 0.001);
+        return SmartDashboard.getNumber("Feed Forward", 0.001);
     }
 
     public double getIz() {
-        return SmartDashboard.getNumber("Iz", 0.001);
+        return SmartDashboard.getNumber("I Zone", 0.001);
     }
 
     public double getMaxOutput() {
@@ -99,6 +100,7 @@ public static class Config extends SparkMaxRotatingSubsystem.Config{
         // 1, -1, 5700, 2000, 0,
         // 1500, 50, 1000, -1000, false, 30, 0, 0);
         super(testConfig);
+        Logger.consoleLog("Test subsystem started");
         SmartDashboard.putNumber("P Gain", kP);
         SmartDashboard.putNumber("I Gain", kI);
         SmartDashboard.putNumber("D Gain", kD);
@@ -118,6 +120,7 @@ public static class Config extends SparkMaxRotatingSubsystem.Config{
     }
 
     public void valueTest() {
+        Logger.consoleLog("Testing values");
         double p = SmartDashboard.getNumber("P Gain", 0);
         double i = SmartDashboard.getNumber("I Gain", 0);
         double d = SmartDashboard.getNumber("D Gain", 0);
@@ -182,11 +185,13 @@ public static class Config extends SparkMaxRotatingSubsystem.Config{
          */
         // Methods from SMRS below
         setSmartMotionTarget(setPoint);
+        Logger.consoleLog("Setpoint: %s", setPoint);
         processVariable = getUnadjustedPosition();
 
         SmartDashboard.putNumber("SetPoint", setPoint);
         SmartDashboard.putNumber("Process Variable", processVariable);
         SmartDashboard.putNumber("Output", rotator.getAppliedOutput());
+        Logger.consoleLog("Moved to");
     }
 
     @Override
