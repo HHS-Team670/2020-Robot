@@ -7,15 +7,98 @@ import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.RobotMap;
 
-public class Test extends SparkMaxRotatingSubsystem {
+public class Test extends SparkMaxRotatingSubsystem{
+
+public static class Config extends SparkMaxRotatingSubsystem.Config{
+
+    public int getDeviceID() {
+        return RobotMap.SPARK_RIGHT_MOTOR_1;
+    }
+
+    public int getSlot() {
+        return 0;
+    }
+
+    public double getP() {
+        return SmartDashboard.getNumber("P", 0.001);
+    }
+
+    public double getI() {
+        return SmartDashboard.getNumber("I", 0.001);
+    }
+
+    public double getD() {
+        return SmartDashboard.getNumber("D", 0.001);
+    }
+
+    public double getFF() {
+        return SmartDashboard.getNumber("FF", 0.001);
+    }
+
+    public double getIz() {
+        return SmartDashboard.getNumber("Iz", 0.001);
+    }
+
+    public double getMaxOutput() {
+        return 1;
+    }
+
+    public double getMinOutput() {
+        return -1;
+    }
+
+    public double getMaxRPM() {
+        return 5700;
+    }
+
+    public double getMaxVelocity() {
+        return 2000;
+    }
+
+    public double getMinVelocity() {
+        return 0;
+    }
+
+    public double getMaxAcceleration() {
+        return 1500;
+    }
+
+    public double getAllowedError() {
+        return 50;
+    }
+
+    public float getForwardSoftLimit() {
+        return 1000;
+    }
+
+    public float getReverseSoftLimit() {
+        return -1000;
+    }
+
+    public int getContinuousCurrent() {
+        return 30;
+    }
+
+    public int getPeakCurrent() {
+        return 0;
+    }
+
+    public int getOffsetFromEncoderZero() {
+        return 0;
+    }
+
+    }
+
+    public static final Config testConfig = new Config();
 
     public Test() {
         // display PID coefficients on SmartDashboard
-        super(RobotMap.SPARK_LEFT_MOTOR_1, 0, SmartDashboard.getNumber("P", 0.001),
-                SmartDashboard.getNumber("I", 0.001), SmartDashboard.getNumber("D", 0.001),
-                SmartDashboard.getNumber("FF", 0.001), SmartDashboard.getNumber("Iz", 0.001), 1, -1, 5700, 2000, 0,
-                1500, 50, 1000, -1000, false, 30, 0, 0);
-
+        // super(RobotMap.SPARK_RIGHT_MOTOR_1, 0, SmartDashboard.getNumber("P", 0.001),
+        // SmartDashboard.getNumber("I", 0.001), SmartDashboard.getNumber("D", 0.001),
+        // SmartDashboard.getNumber("FF", 0.001), SmartDashboard.getNumber("Iz", 0.001),
+        // 1, -1, 5700, 2000, 0,
+        // 1500, 50, 1000, -1000, false, 30, 0, 0);
+        super(testConfig);
         SmartDashboard.putNumber("P Gain", kP);
         SmartDashboard.putNumber("I Gain", kI);
         SmartDashboard.putNumber("D Gain", kD);
@@ -50,44 +133,44 @@ public class Test extends SparkMaxRotatingSubsystem {
         // if PID coefficients on SmartDashboard have changed, write new values to
         // controller
         if ((p != kP)) {
-            controller.setP(p);
+            rotator_controller.setP(p);
             kP = p;
         }
         if ((i != kI)) {
-            controller.setI(i);
+            rotator_controller.setI(i);
             kI = i;
         }
         if ((d != kD)) {
-            controller.setD(d);
+            rotator_controller.setD(d);
             kD = d;
         }
         if ((iz != kIz)) {
-            controller.setIZone(iz);
+            rotator_controller.setIZone(iz);
             kIz = iz;
         }
         if ((ff != kFF)) {
-            controller.setFF(ff);
+            rotator_controller.setFF(ff);
             kFF = ff;
         }
         if ((max != MAX_OUTPUT) || (min != MIN_OUTPUT)) {
-            controller.setOutputRange(min, max);
+            rotator_controller.setOutputRange(min, max);
             MIN_OUTPUT = min;
             MAX_OUTPUT = max;
         }
         if ((maxV != MAX_VEL)) {
-            controller.setSmartMotionMaxVelocity(maxV, 0);
+            rotator_controller.setSmartMotionMaxVelocity(maxV, 0);
             MAX_VEL = maxV;
         }
         if ((minV != MIN_VEL)) {
-            controller.setSmartMotionMinOutputVelocity(minV, 0);
+            rotator_controller.setSmartMotionMinOutputVelocity(minV, 0);
             MIN_VEL = minV;
         }
         if ((maxA != MAX_ACC)) {
-            controller.setSmartMotionMaxAccel(maxA, 0);
+            rotator_controller.setSmartMotionMaxAccel(maxA, 0);
             MAX_ACC = maxA;
         }
         if ((allE != ALLOWED_ERR)) {
-            controller.setSmartMotionAllowedClosedLoopError(allE, 0);
+            rotator_controller.setSmartMotionAllowedClosedLoopError(allE, 0);
             ALLOWED_ERR = allE;
         }
 
@@ -104,11 +187,6 @@ public class Test extends SparkMaxRotatingSubsystem {
         SmartDashboard.putNumber("SetPoint", setPoint);
         SmartDashboard.putNumber("Process Variable", processVariable);
         SmartDashboard.putNumber("Output", rotator.getAppliedOutput());
-    }
-
-    @Override
-    public boolean getTimeout() {
-        return false;
     }
 
     @Override
