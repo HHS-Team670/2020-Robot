@@ -10,7 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 /**
- * Superclass for any rotating subsystem using a TalonSRX, intakes for example
+ * Superclass for any rotating subsystem using a TalonSRX
  */
 public abstract class TalonSRXRotatingSubsystem extends SubsystemBase implements TunableSubsystem {
     protected static final int NO_SETPOINT = 99999;
