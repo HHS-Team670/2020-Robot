@@ -72,6 +72,6 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public void initDefaultCommand(){
-    MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret());
+    //MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret());
   }
 }
