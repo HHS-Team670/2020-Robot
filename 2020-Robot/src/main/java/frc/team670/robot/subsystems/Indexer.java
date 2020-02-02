@@ -2,6 +2,7 @@ package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -104,6 +105,35 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         } else {
             return -1;
         }
+    }
+
+    //TODO: check if chamber labeling direction is correct, if not change goal to bottom - intake
+    public void prepareToIntake() {
+        double goal = getIntakeChamber() - getBottomChamber();
+        if (goal < 0) {
+            goal += 5;
+        }
+        //setSmartMotionTarget(goal);
+        SM.getPIDController().setReference(goal/5.0, ControlType.kPosition);
+    }
+
+    public boolean readyToIntake() {
+        return getIntakeChamber() == getBottomChamber();
+    }
+
+    //TODO: same thing with preparetointake: check chamber labeling direction
+    public void prepareToShoot() {
+        double goal = getShootChamber() - getTopChamber();
+        if (goal < 0) {
+            goal += 5;
+        }
+        //setSmartMotionTarget(goal);
+        SM.getPIDController().setReference(goal/5.0, ControlType.kPosition);
+
+    }
+
+    public boolean readyToShoot() {
+        return getShootChamber() == getTopChamber();
     }
 
     public int getTopChamber() {

@@ -28,6 +28,13 @@ public class RotateToIntakePosition extends CommandBase implements MustangComman
         speed = 0.8;
         addRequirements(indexer);
         this.indexer = indexer;
+        
+    }
+
+    // this should not be needed if readyToIntake/prepareToIntake works the way it should
+    @Override
+    public void initialize() {
+        super.initialize();
         goal = indexer.getIntakeChamber();
         firstReachedPos = 0;
         reached = false;
@@ -36,16 +43,17 @@ public class RotateToIntakePosition extends CommandBase implements MustangComman
 
     @Override
     public void execute() {
-        indexer.setSpeed(speed);
-        if (indexer.getTopChamber() == goal) {
-            if (reached) {
-                if (indexer.getPosition() > firstReachedPos + 0.1) {
-                    done = true;
-                }
-            }
-            firstReachedPos = indexer.getPosition();
-            reached = true;
-        }
+        // indexer.setSpeed(speed);
+        // if (indexer.getTopChamber() == goal) {
+        //     if (reached) {
+        //         if (indexer.getPosition() > firstReachedPos + 0.1) {
+        //             done = true;
+        //         }
+        //     }
+        //     firstReachedPos = indexer.getPosition();
+        //     reached = true;
+        // }
+        indexer.prepareToIntake();
     }
 
     @Override
@@ -55,7 +63,8 @@ public class RotateToIntakePosition extends CommandBase implements MustangComman
 
     @Override
     public boolean isFinished() {
-        return done;
+        //return done;
+        return indexer.readyToIntake();
     }
 
     @Override
