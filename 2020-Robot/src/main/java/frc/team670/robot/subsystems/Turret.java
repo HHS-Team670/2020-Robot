@@ -1,6 +1,5 @@
 package frc.team670.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
@@ -9,17 +8,104 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import frc.team670.robot.constants.RobotMap;
-import frc.team670.robot.utils.motorcontroller.*;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Turret extends SparkMaxRotatingSubsystem {
 
     public final int TICKS_PER_REVOLUTION = 4096;
     private final double SOFT_LIMIT_IN_DEGREES = 160.0; // Default soft limit is in rotations. Will need to adjust this
-    private static final double kFF = 0, kP = 0, kI = 0, kD = 0, kIz = 0; // TODO: find these values
+
+    /**
+     * Constants for the turret go here; this includes PID and SmartMotion values.
+     * TODO: find what these values should be, because everything in here is a
+     * placeholder
+     */
+    public static class Config extends SparkMaxRotatingSubsystem.Config {
+
+        public int getDeviceID() {
+            return RobotMap.TURRET_ROTATOR;
+        }
+
+        //Slot for SmartMotion control
+        public int getSlot() {
+            return 0;
+        }
+
+        public double getP() {
+            return SmartDashboard.getNumber("P Gain", 0.001);
+        }
+
+        public double getI() {
+            return SmartDashboard.getNumber("I Gain", 0.001);
+        }
+
+        public double getD() {
+            return SmartDashboard.getNumber("D Gain", 0.001);
+        }
+
+        public double getFF() {
+            return SmartDashboard.getNumber("Feed Forward", 0.001);
+        }
+
+        public double getIz() {
+            return SmartDashboard.getNumber("I Zone", 0.001);
+        }
+
+        public double getMaxOutput() {
+            return 1;
+        }
+
+        public double getMinOutput() {
+            return -1;
+        }
+
+        public double getMaxRPM() {
+            return 5700;
+        }
+
+        public double getMaxVelocity() {
+            return 2000;
+        }
+
+        public double getMinVelocity() {
+            return 0;
+        }
+
+        public double getMaxAcceleration() {
+            return 1500;
+        }
+
+        public double getAllowedError() {
+            return 50;
+        }
+
+        public float getForwardSoftLimit() {
+            return 1000;
+        }
+
+        public float getReverseSoftLimit() {
+            return -1000;
+        }
+
+        public int getContinuousCurrent() {
+            return 30;
+        }
+
+        public int getPeakCurrent() {
+            return 0;
+        }
+
+        public int getOffsetFromEncoderZero() {
+            return 0;
+        }
+
+    }
+
+    public static final Config turretConfig = new Config();
 
     public Turret() {
-        super(RobotMap.TURRET_ROTATOR, 0, kP, kI, kD, kFF, kIz, 1, -1, 5700, 2000, 0, 1500, 50, 1000, -1000, false, 30,
-                0, 0);
+        super(turretConfig);
     }
 
     /**
@@ -35,7 +121,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     }
 
     public void rotateToAngle(double setpoint) {
-        controller.setReference(getTicks(setpoint), ControlType.kPosition);
+        this.rotator_controller.setReference(getTicks(setpoint), ControlType.kPosition);
     }
 
     /**
@@ -44,7 +130,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
      */
     public double getEncoderPos() {
 
-        return this.encoder.getPosition();// - referencePoint;
+        return this.rotator_encoder.getPosition();// - referencePoint;
     }
 
     /**
@@ -99,7 +185,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
      * @return the encoder of the motor
      */
     public CANEncoder getEncoder() {
-        return this.encoder;
+        return this.rotator_encoder;
     }
 
     /**
@@ -120,10 +206,10 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     }
 
-    //TODO: define
+    // TODO: define
     @Override
     public HealthState checkHealth() {
-        if (rotator.getLastError() != null && rotator.getLastError() != CANError.kOk){
+        if (rotator.getLastError() != null && rotator.getLastError() != CANError.kOk) {
             return HealthState.RED;
         }
         return HealthState.GREEN;

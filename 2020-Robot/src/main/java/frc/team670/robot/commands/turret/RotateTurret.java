@@ -1,6 +1,6 @@
 package frc.team670.robot.commands.turret;
 
-import frc.team670.robot.commands.MustangCommandBase;
+import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.joystick_controls.JoystickTurret;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 /**
  * Rotates the turret to a specified point
  */
-public class RotateTurret extends MustangCommandBase {
+public class RotateTurret extends CommandBase implements MustangCommand {
     private Turret turret;
     //private double initialPos;
     private double angle;
