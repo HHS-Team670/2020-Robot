@@ -49,4 +49,8 @@ public class ColorWheelSpinner extends MustangSubsystemBase {
         }
         return HealthState.GREEN;
     }
+
+    public void mustangPeriodic(){
+
+    }
 }
