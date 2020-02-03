@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.utils.Logger;
 
 /**
  * Basic framework for a subsystem of the robot with defined levels of system Health.
@@ -18,6 +19,7 @@ import frc.team670.robot.commands.MustangCommand;
 public abstract class MustangSubsystemBase extends SubsystemBase{
 
     protected HealthState lastHealthState;
+    private boolean failedOnce = false;
 
     /**
      * Creates a new MustangSubsystemBase. By default, the subsystem's initial health state is UNKNOWN (ID 0).
@@ -73,6 +75,26 @@ public abstract class MustangSubsystemBase extends SubsystemBase{
     public void initDefaultCommand(MustangCommand command){
         CommandScheduler.getInstance().setDefaultCommand(this, (CommandBase)command);
     }
+
+    @Override
+    public void periodic(){
+        HealthState lastHealth = getHealth(false);
+        if(lastHealth == HealthState.GREEN){
+            if(failedOnce){
+                Logger.consoleLog("Health state for " + this.getName() + " is: " + lastHealth + ". Enabling Periodic");
+                failedOnce = false;
+            }
+            mustangPeriodic(); 
+        }
+        else{
+            if(!failedOnce){
+                Logger.consoleLog("Health state for " + this.getName() + " is: " + lastHealth + ". Disabling Periodic");
+                failedOnce = true;
+            }           
+        }
+    }
+
+    public abstract void mustangPeriodic();
   
 
 }
