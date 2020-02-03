@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.MustangScheduler;
-import frc.team670.robot.commands.TestCommand;
-import frc.team670.robot.subsystems.Test;
 
 import frc.team670.robot.utils.Logger;
 
@@ -85,7 +83,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     Logger.consoleLog("Autonomous Init");
-    MustangScheduler.getInstance().schedule(new TestCommand(new Test()));
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)

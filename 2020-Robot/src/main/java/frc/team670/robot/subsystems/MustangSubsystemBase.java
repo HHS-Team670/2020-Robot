@@ -79,24 +79,22 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
     }
 
     @Override
-    public void periodic(){
+    public void periodic() {
         HealthState lastHealth = getHealth(false);
-        if(lastHealth == HealthState.GREEN){
-            if(failedOnce){
+        if (lastHealth == HealthState.GREEN) {
+            if (failedOnce) {
                 Logger.consoleLog("Health state for " + this.getName() + " is: " + lastHealth + ". Enabling Periodic");
                 failedOnce = false;
             }
-            mustangPeriodic(); 
-        }
-        else{
-            if(!failedOnce){
+            mustangPeriodic();
+        } else {
+            if (!failedOnce) {
                 Logger.consoleLog("Health state for " + this.getName() + " is: " + lastHealth + ". Disabling Periodic");
                 failedOnce = true;
-            }           
+            }
         }
     }
 
     public abstract void mustangPeriodic();
-  
 
 }
