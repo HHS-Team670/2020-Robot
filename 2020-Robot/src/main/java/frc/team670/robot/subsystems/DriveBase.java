@@ -55,12 +55,9 @@ public class DriveBase extends MustangSubsystemBase {
 
   private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
 
-  private int[] leftControllerIDs = { RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2 };
-  private int[] rightControllerIDs = { RobotMap.SPARK_RIGHT_MOTOR_1, RobotMap.SPARK_RIGHT_MOTOR_2 };
-
   public DriveBase() {
-    leftControllers = SparkMAXFactory.buildSparkMAXPair(leftControllerIDs);
-    rightControllers = SparkMAXFactory.buildSparkMAXPair(rightControllerIDs);
+    leftControllers = SparkMAXFactory.buildSparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2);
+    rightControllers = SparkMAXFactory.buildSparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1, RobotMap.SPARK_RIGHT_MOTOR_2);
 
     left1 = leftControllers.get(0);
     left2 = leftControllers.get(1);
@@ -90,8 +87,6 @@ public class DriveBase extends MustangSubsystemBase {
     driveTrain = new DifferentialDrive(left1, right1);
     driveTrain.setMaxOutput(1.0);
     driveTrain.setRightSideInverted(false);
-
-    setRampRate(allMotors, 0.36); // Will automatically cook some Cheezy Poofs
 
     // initialized NavX and sets Odometry
     navXMicro = new NavX(RobotMap.NAVX_PORT);
@@ -424,6 +419,13 @@ public class DriveBase extends MustangSubsystemBase {
       m.setClosedLoopRampRate(rampRate);
       m.setOpenLoopRampRate(rampRate);
     }
+  }
+
+  /**
+   * @param rampRate The ramp rate in seconds from 0 to full throttle
+   */
+  public void initTeleopRampRate() {
+    setRampRate(allMotors, 0.36); // Will automatically cook some Cheezy Poofs
   }
 
   /**

@@ -64,21 +64,21 @@ public class SparkMAXFactory {
         return sparkMax;
     }
 
-    public static List<SparkMAXLite> buildSparkMAXPair(int[] deviceID) {
-        SparkMAXLite sparkMaxLeader = new SparkMAXLite(deviceID[0]);
+    public static List<SparkMAXLite> buildSparkMAXPair(int deviceIDMotor1, int deviceIDMotor2) {
+        SparkMAXLite sparkMaxLeader = new SparkMAXLite(deviceIDMotor1);
         SparkMAXLite sparkMaxFollower;
         
         if (sparkMaxLeader.getLastError() != CANError.kOk && sparkMaxLeader.getLastError() != null) {
-            sparkMaxLeader = buildSparkMAX(deviceID[1], defaultConfig);
-            sparkMaxFollower = buildSparkMAX(deviceID[0], defaultConfig);
+            sparkMaxLeader = buildSparkMAX(deviceIDMotor2, defaultConfig);
+            sparkMaxFollower = buildSparkMAX(deviceIDMotor1, defaultConfig);
             sparkMaxFollower.follow(sparkMaxLeader);
             List<SparkMAXLite> motorPair = Arrays.asList(sparkMaxLeader, sparkMaxFollower);
             Logger.consoleLog("Primary Spark Max Broken. Switching to SparkMax id %s", sparkMaxLeader.getDeviceId());
             return motorPair;
         }
         else{
-            sparkMaxLeader = buildSparkMAX(deviceID[0], defaultConfig);
-            sparkMaxFollower = buildSparkMAX(deviceID[1], defaultConfig);
+            sparkMaxLeader = buildSparkMAX(deviceIDMotor1, defaultConfig);
+            sparkMaxFollower = buildSparkMAX(deviceIDMotor2, defaultConfig);
             sparkMaxFollower.follow(sparkMaxLeader);
             List<SparkMAXLite> motorPair = Arrays.asList(sparkMaxLeader, sparkMaxFollower);
             Logger.consoleLog("Primary Spark Max Working. SparkMax Leader id is %s", sparkMaxLeader.getDeviceId());
