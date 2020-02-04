@@ -12,9 +12,6 @@ import java.util.List;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.team670.robot.commands.ManualSpinColorWheel;
-import frc.team670.robot.commands.PositionColorWheel;
-import frc.team670.robot.commands.SpinColorWheel;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 import frc.team670.robot.subsystems.ColorWheelSpinner;
@@ -22,9 +19,7 @@ import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team670.robot.commands.MustangCommand;
@@ -45,7 +40,6 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 public class RobotContainer {
 
   // The robot's subsystems and commands are defined here...
-
   private static List<MustangSubsystemBase> allSubsystems = new ArrayList<MustangSubsystemBase>();
 
   public static OI oi = new OI();
@@ -54,15 +48,11 @@ public class RobotContainer {
   private static DriveBase driveBase = new DriveBase();
   private static Shooter shooter;// = new Shooter(RobotMap.SHOOTER_ID_MAIN, RobotMap.SHOOTER_ID_FOLLWOER);
   private static Indexer indexer;
+  private final ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
 
   private Trajectory trajectory;
   private String pathname;
 
-  private final ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
-
-  private final SpinColorWheel spinForRotations = new SpinColorWheel(wheelSpinner);
-  private final PositionColorWheel rotateToColor = new PositionColorWheel(wheelSpinner);
-  private final ManualSpinColorWheel manualSpinForRotations = new ManualSpinColorWheel(wheelSpinner);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -107,20 +97,12 @@ public class RobotContainer {
     return null;
   }
 
-  public Command getSpinWheelCommand() {
-    return spinForRotations;
-  }
-
-  public Command getPositionWheelCommand() {
-    return rotateToColor;
-  }
-
-  public Command getManualSpinWheelCommand() {
-    return manualSpinForRotations;
-  }
-
   public static void initTeleopCommands() {
     driveBase.initDefaultCommand();
+  }
+
+  public static List<MustangSubsystemBase> getSubsystems(){
+    return allSubsystems;
   }
 
 }
