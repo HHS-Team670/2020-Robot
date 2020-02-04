@@ -64,21 +64,27 @@ public class SparkMAXFactory {
         return sparkMax;
     }
 
-    public static List<SparkMAXLite> buildSparkMAXPair(int deviceIDMotor1, int deviceIDMotor2) {
-        SparkMAXLite sparkMaxLeader = new SparkMAXLite(deviceIDMotor1);
+    /**
+     * Used to build a pair of spark max controllers to control motors. Creates a leader on the port which is working and makes
+     * other controller follow it
+     * @param motor1DeviceID The CAN ID of spark max controller 1
+     * @param motor2DeviceID The CAN ID of spark max controller 2
+     * @return motorPair a pair of motors with the first one as its leader and second one as the follower
+     */
+    public static List<SparkMAXLite> buildSparkMAXPair(int motor1DeviceID, int motor2DeviceID) {
+        SparkMAXLite sparkMaxLeader = buildFactorySparkMAX(motor1DeviceID);
         SparkMAXLite sparkMaxFollower;
         
         if (sparkMaxLeader.getLastError() != CANError.kOk && sparkMaxLeader.getLastError() != null) {
-            sparkMaxLeader = buildSparkMAX(deviceIDMotor2, defaultConfig);
-            sparkMaxFollower = buildSparkMAX(deviceIDMotor1, defaultConfig);
+            sparkMaxLeader = buildSparkMAX(motor2DeviceID, defaultConfig);
+            sparkMaxFollower = buildSparkMAX(motor1DeviceID, defaultConfig);
             sparkMaxFollower.follow(sparkMaxLeader);
             List<SparkMAXLite> motorPair = Arrays.asList(sparkMaxLeader, sparkMaxFollower);
             Logger.consoleLog("Primary Spark Max Broken. Switching to SparkMax id %s", sparkMaxLeader.getDeviceId());
             return motorPair;
         }
         else{
-            sparkMaxLeader = buildSparkMAX(deviceIDMotor1, defaultConfig);
-            sparkMaxFollower = buildSparkMAX(deviceIDMotor2, defaultConfig);
+            sparkMaxFollower = buildSparkMAX(motor2DeviceID, defaultConfig);
             sparkMaxFollower.follow(sparkMaxLeader);
             List<SparkMAXLite> motorPair = Arrays.asList(sparkMaxLeader, sparkMaxFollower);
             Logger.consoleLog("Primary Spark Max Working. SparkMax Leader id is %s", sparkMaxLeader.getDeviceId());

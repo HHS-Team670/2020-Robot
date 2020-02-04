@@ -424,7 +424,7 @@ public class DriveBase extends MustangSubsystemBase {
   /**
    * @param rampRate The ramp rate in seconds from 0 to full throttle
    */
-  public void initTeleopRampRate() {
+  public void setTeleopRampRate() {
     setRampRate(allMotors, 0.36); // Will automatically cook some Cheezy Poofs
   }
 

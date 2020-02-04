@@ -95,7 +95,7 @@ public class RobotContainer {
   }
 
   public static void teleopInit() {
-    driveBase.initTeleopRampRate();
+    driveBase.setTeleopRampRate();
     driveBase.initDefaultCommand();
   }
 
