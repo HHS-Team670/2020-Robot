@@ -14,6 +14,7 @@ import frc.team670.robot.utils.motorcontroller.TalonSRXFactory;
  * 
  * @author ctchen
  */
+
 public abstract class TalonSRXRotatingSubsystem extends MustangSubsystemBase implements TunableSubsystem {
     protected static final int NO_SETPOINT = 99999;
     protected TalonSRX rotator;
@@ -40,7 +41,6 @@ public abstract class TalonSRXRotatingSubsystem extends MustangSubsystemBase imp
         rotator.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
         if (rotator != null) {
-            this.rotator = rotator;
             this.rotatorSensorCollection = rotator.getSensorCollection();
             this.arbitraryFeedForwardConstant = arbitraryFeedForwardConstant;
             this.timeout = timeout;
@@ -71,6 +71,7 @@ public abstract class TalonSRXRotatingSubsystem extends MustangSubsystemBase imp
             rotator.configReverseSoftLimitEnable(true);
 
         }
+
     }
 
     /**

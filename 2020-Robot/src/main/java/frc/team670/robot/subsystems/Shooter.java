@@ -60,7 +60,7 @@ public class Shooter extends MustangSubsystemBase {
     
   }
 
-  public void periodic(){
+  public void mustangPeriodic(){
     setPID();
     setSpeed();
   }
