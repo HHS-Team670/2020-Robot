@@ -11,6 +11,8 @@ import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.motorcontroller.TalonSRXLite;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  * 
  */
@@ -34,29 +36,97 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     private static final int UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT = 0;
     private static final int UPDRAW_PEAK_CURRENT_LIMIT = 0;
 
-    // SmartMotion control: indexer
-    // TODO: find all these values
-    private static final double rotator_SM_P = 0.95;
-    private static final double rotator_SM_I = 0;
-    private static final double rotator_SM_D = 0;
-    private static final double rotator_SM_FF = 0;
-    private static final double rotator_SM_Iz = 0;
-
-    public static final int FORWARD_LIMIT = 0; // TODO set this
-    public static final int REVERSE_LIMIT = 0; // TODO set this
-
-    private static final int INDEXER_NORMAL_CONTINUOUS_CURRENT_LIMIT = 0; // TODO set this?
-    private static final int INDEXER_PEAK_CURRENT_LIMIT = 0; // TODO set this?
-
     private static final int INDEXER_TICKS_PER_ROTATION = 42; // NEO550 integrated encoder is 42 counts per rev
-    private static final int INDEXER_OFFSET_FROM_ZERO = 0;
+
+    /**
+     * PID and SmartMotion constants for the indexer rotator go here.
+     */
+    public static class Config extends SparkMaxRotatingSubsystem.Config {
+
+        public int getDeviceID() {
+            return RobotMap.INDEXER_ROTATOR;
+        }
+
+        public int getSlot() {
+            return 0;
+        }
+
+        public double getP() {
+            return SmartDashboard.getNumber("P Gain", 0.001);
+        }
+
+        public double getI() {
+            return SmartDashboard.getNumber("I Gan", 0.001);
+        }
+
+        public double getD() {
+            return SmartDashboard.getNumber("D Gain", 0.001);
+        }
+
+        public double getFF() {
+            return SmartDashboard.getNumber("Feed Forward", 0.001);
+        }
+
+        public double getIz() {
+            return SmartDashboard.getNumber("I Zone", 0.001);
+        }
+
+        public double getMaxOutput() {
+            return 1;
+        }
+
+        public double getMinOutput() {
+            return -1;
+        }
+
+        public double getMaxRPM() {
+            return 5700;
+        }
+
+        public double getMaxVelocity() {
+            return 2000;
+        }
+
+        public double getMinVelocity() {
+            return 0;
+        }
+
+        public double getMaxAcceleration() {
+            return 1500;
+        }
+
+        public double getAllowedError() {
+            return 50;
+        }
+
+        public float getForwardSoftLimit() {
+            return 1000;
+        }
+
+        public float getReverseSoftLimit() {
+            return -1000;
+        }
+
+        public int getContinuousCurrent() {
+            return 30;
+        }
+
+        public int getPeakCurrent() {
+            return 0;
+        }
+
+        public int getOffsetFromEncoderZero() {
+            return 0;
+        }
+
+    }
+
+    public static final Config INDEXER_CONFIG = new Config();
 
     public Indexer() {
         // TODO: find actual values for everything here. Does it make sense to require
         // all these?
-        super(RobotMap.INDEXER_ROTATOR, 0, rotator_SM_P, rotator_SM_I, rotator_SM_D, rotator_SM_FF, rotator_SM_Iz, 1, 0,
-                5700, 2000, 0, 1500, 50, FORWARD_LIMIT, REVERSE_LIMIT, false, INDEXER_NORMAL_CONTINUOUS_CURRENT_LIMIT,
-                INDEXER_PEAK_CURRENT_LIMIT, INDEXER_OFFSET_FROM_ZERO);
+        super(INDEXER_CONFIG);
 
         this.updraw = new TalonSRXLite(RobotMap.UPDRAW_SPINNER);
 
@@ -237,12 +307,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     }
 
     @Override
-    public boolean getTimeout() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
     public void moveByPercentOutput(double output) {
 
     }
@@ -250,6 +314,12 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     @Override
     public double getAngleInDegrees() {
         return ((this.getPosition() / INDEXER_TICKS_PER_ROTATION) * 360);
+    }
+
+    @Override
+    public void mustangPeriodic() {
+        // TODO Auto-generated method stub
+
     }
 
 }
