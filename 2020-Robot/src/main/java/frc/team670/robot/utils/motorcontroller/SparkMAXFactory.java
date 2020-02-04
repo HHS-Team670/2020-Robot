@@ -71,20 +71,45 @@ public class SparkMAXFactory {
      * @param motor2DeviceID The CAN ID of spark max controller 2
      * @return motorPair a pair of motors with the first one as its leader and second one as the follower
      */
-    public static List<SparkMAXLite> buildSparkMAXPair(int motor1DeviceID, int motor2DeviceID) {
-        SparkMAXLite sparkMaxLeader = buildFactorySparkMAX(motor1DeviceID);
+    public static List<SparkMAXLite> buildFactorySparkMAXPair(int motor1DeviceID, int motor2DeviceID) {
+        return buildSparkMAXPair(motor1DeviceID, motor2DeviceID, defaultConfig, defaultConfig);
+    }
+
+     /**
+     * Used to build a pair of spark max controllers to control motors. Creates a leader on the port which is working and makes
+     * other controller follow it
+     * @param motor1DeviceID The CAN ID of spark max controller 1
+     * @param motor2DeviceID The CAN ID of spark max controller 2
+     * @param config The config to be set on to the motor controllers
+     * @return motorPair a pair of motors with the first one as its leader and second one as the follower
+     */
+    public static List<SparkMAXLite> buildSparkMAXPair(int motor1DeviceID, int motor2DeviceID, Config config) {
+        return buildSparkMAXPair(motor1DeviceID, motor2DeviceID, config, config);
+    }
+
+    /**
+     * Used to build a pair of spark max controllers to control motors. Creates a leader on the port which is working and makes
+     * other controller follow it
+     * @param motor1DeviceID The CAN ID of spark max controller 1
+     * @param motor2DeviceID The CAN ID of spark max controller 2
+     * @param leaderConfig The config to be set on to the motor controller which is the leader
+     * @param followerConfig The config to be set on to the motor controller which is the follower
+     * @return motorPair a pair of motors with the first one as its leader and second one as the follower
+     */
+    public static List<SparkMAXLite> buildSparkMAXPair(int motor1DeviceID, int motor2DeviceID, Config leaderConfig, Config followerConfig) {
+        SparkMAXLite sparkMaxLeader = buildSparkMAX(motor1DeviceID, leaderConfig);
         SparkMAXLite sparkMaxFollower;
         
         if (sparkMaxLeader.getLastError() != CANError.kOk && sparkMaxLeader.getLastError() != null) {
-            sparkMaxLeader = buildSparkMAX(motor2DeviceID, defaultConfig);
-            sparkMaxFollower = buildSparkMAX(motor1DeviceID, defaultConfig);
+            sparkMaxLeader = buildSparkMAX(motor2DeviceID, leaderConfig);
+            sparkMaxFollower = buildSparkMAX(motor1DeviceID, followerConfig);
             sparkMaxFollower.follow(sparkMaxLeader);
             List<SparkMAXLite> motorPair = Arrays.asList(sparkMaxLeader, sparkMaxFollower);
             Logger.consoleLog("Primary Spark Max Broken. Switching to SparkMax id %s", sparkMaxLeader.getDeviceId());
             return motorPair;
         }
         else{
-            sparkMaxFollower = buildSparkMAX(motor2DeviceID, defaultConfig);
+            sparkMaxFollower = buildSparkMAX(motor2DeviceID, followerConfig);
             sparkMaxFollower.follow(sparkMaxLeader);
             List<SparkMAXLite> motorPair = Arrays.asList(sparkMaxLeader, sparkMaxFollower);
             Logger.consoleLog("Primary Spark Max Working. SparkMax Leader id is %s", sparkMaxLeader.getDeviceId());

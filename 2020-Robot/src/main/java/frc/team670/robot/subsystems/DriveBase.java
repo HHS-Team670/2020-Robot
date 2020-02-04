@@ -56,8 +56,8 @@ public class DriveBase extends MustangSubsystemBase {
   private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
 
   public DriveBase() {
-    leftControllers = SparkMAXFactory.buildSparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2);
-    rightControllers = SparkMAXFactory.buildSparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1, RobotMap.SPARK_RIGHT_MOTOR_2);
+    leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2);
+    rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1, RobotMap.SPARK_RIGHT_MOTOR_2);
 
     left1 = leftControllers.get(0);
     left2 = leftControllers.get(1);
