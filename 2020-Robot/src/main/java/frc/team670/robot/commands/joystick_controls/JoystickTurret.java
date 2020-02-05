@@ -42,7 +42,7 @@ public class JoystickTurret extends CommandBase implements MustangCommand {
   @Override
   public void initialize() {
 
-    turret.rotateToAngle(0);
+    turret.setTargetAngle(0);
 
   }
 
@@ -57,7 +57,7 @@ public class JoystickTurret extends CommandBase implements MustangCommand {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    turret.rotateToAngle(0);
+    turret.setTargetAngle(0);
   }
 
   // Returns true when the command should end.

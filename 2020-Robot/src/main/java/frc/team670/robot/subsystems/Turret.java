@@ -27,7 +27,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
             return RobotMap.TURRET_ROTATOR;
         }
 
-        //Slot for SmartMotion control
+        // Slot for SmartMotion control
         public int getSlot() {
             return 0;
         }
@@ -103,6 +103,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     }
 
     public static final Config turretConfig = new Config();
+    private final int DEGREES_PER_MOTOR_ROTATION = 36;
 
     public Turret() {
         super(turretConfig);
@@ -116,34 +117,30 @@ public class Turret extends SparkMaxRotatingSubsystem {
         // define degrees
 
         // there are 4096 ticks in a circle, so one degree is 11 17/45 ticks.
-        return ((getEncoderPos() / TICKS_PER_REVOLUTION) * 360);
+        //return ((getEncoderPos() / TICKS_PER_REVOLUTION) * 360);
+        return getUnadjustedPosition()*DEGREES_PER_MOTOR_ROTATION;
         // verify if this is counts per revolution as the input of get ticks in degrees.
     }
 
-    public void rotateToAngle(double setpoint) {
-        this.rotator_controller.setReference(getTicks(setpoint), ControlType.kPosition);
-    }
-
-    /**
-     * 
-     * @return encoder position in ticks
+    /*
+     * Sets the target angle to angleGoal and rotates there.
      */
-    public double getEncoderPos() {
-
-        return this.rotator_encoder.getPosition();// - referencePoint;
+    public void setTargetAngle(double goalAngle){
+        //10 rotations of the motor is equal to 360 degrees for the turret
+        double angleToTurn = goalAngle-getAngleInDegrees();
+        double rotations = angleToTurn/DEGREES_PER_MOTOR_ROTATION;
+        setSmartMotionTarget(rotations);
     }
 
     /**
      * 
      * takes in double from -1 to 1 to set speed of turret motor
-     * 
+     * @pre speed has to be greater than or equal to negative one and less than or equal to one.
      * @param speed speed to set turret to
      */
 
     public void setTurretSpeed(double speed) {
-
         this.rotator.set(speed);
-
     }
 
     /**
@@ -175,35 +172,10 @@ public class Turret extends SparkMaxRotatingSubsystem {
     }
 
     /**
-     * Sets the setpoint for motion magic (in ticks)
-     */
-    public void setMotionMagicSetpointAngle(final double angle) {
-        setpoint = (int) (angle * (getTicksPerDegree()));
-    }
-
-    /**
      * @return the encoder of the motor
      */
     public CANEncoder getEncoder() {
         return this.rotator_encoder;
-    }
-
-    /**
-     * @return ???
-     */
-    @Override
-    public boolean getTimeout() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    /**
-     * Abstract method we have no clue what to do with
-     */
-    @Override
-    public void moveByPercentOutput(double output) {
-        // TODO Auto-generated method stub
-
     }
 
     // TODO: define
@@ -213,6 +185,18 @@ public class Turret extends SparkMaxRotatingSubsystem {
             return HealthState.RED;
         }
         return HealthState.GREEN;
+    }
+
+    @Override
+    public void mustangPeriodic() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void moveByPercentOutput(double output) {
+        // TODO Auto-generated method stub
+
     }
 
     // Unused methods for potential later use.
