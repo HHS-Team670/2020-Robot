@@ -1,6 +1,7 @@
 package frc.team670.robot.subsystems;
 
 import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 
 import com.revrobotics.CANEncoder;
@@ -37,6 +38,8 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         public abstract int getDeviceID();
 
         public abstract int getSlot();
+
+        public abstract MotorConfig.Motor_Type getMotorType();
 
         public abstract double getP();
 
@@ -75,7 +78,7 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     }
 
     public SparkMaxRotatingSubsystem(Config config) {
-        this.rotator = SparkMAXFactory.buildFactorySparkMAX(config.getDeviceID());
+        this.rotator = SparkMAXFactory.buildFactorySparkMAX(config.getDeviceID(), config.getMotorType());
         this.rotator_encoder = rotator.getEncoder();
         this.rotator_controller = rotator.getPIDController();
         this.offsetFromEncoderZero = config.getOffsetFromEncoderZero();
