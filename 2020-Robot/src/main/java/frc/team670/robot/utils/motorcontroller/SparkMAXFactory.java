@@ -47,11 +47,14 @@ public class SparkMAXFactory {
         defaultFollowerConfig.STATUS_FRAME_2_RATE_MS = 1000;
     }
 
+    /**
+     * Creates a SparkMAXLite with factory settings.
+     */
     public static SparkMAXLite buildFactorySparkMAX(int deviceID) {
         return buildSparkMAX(deviceID, defaultConfig);
     }
 
-    public static SparkMAXLite buildFactorySparkMAX(int deviceID, MotorConfig.BrushlessMotor motorType){
+    public static SparkMAXLite buildFactorySparkMAX(int deviceID, MotorConfig.Motor_Type motorType) {
         return buildSparkMAX(deviceID, defaultConfig, motorType);
     }
 
@@ -68,11 +71,19 @@ public class SparkMAXFactory {
         return sparkMax;
     }
 
-    public static SparkMAXLite buildSparkMAX(int deviceID, Config config, MotorConfig.BrushlessMotor motorType) {
+    /**
+     * 
+     * @param deviceID  CAN ID of this SparkMax
+     * @param config    The configuration to set this for, ex. default or
+     *                  defaultFollower
+     * @param motorType The kind of motor this controller will be using
+     * @return SparkMAXLite set to this configuration with current limit
+     */
+    public static SparkMAXLite buildSparkMAX(int deviceID, Config config, MotorConfig.Motor_Type motorType) {
         SparkMAXLite sparkMax = new SparkMAXLite(deviceID);
         sparkMax.set(ControlType.kDutyCycle, 0.0);
         sparkMax.setInverted(config.INVERTED);
-        sparkMax.setSmartCurrentLimit(motorType.getMaxCurrent());
+        sparkMax.setSmartCurrentLimit(MotorConfig.MOTOR_MAX_CURRENT.get(motorType));
         return sparkMax;
     }
 
