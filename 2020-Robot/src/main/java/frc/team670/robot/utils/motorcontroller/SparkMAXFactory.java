@@ -1,6 +1,5 @@
 package frc.team670.robot.utils.motorcontroller;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -65,56 +64,74 @@ public class SparkMAXFactory {
     }
 
     /**
-     * Used to build a pair of spark max controllers to control motors. Creates a leader on the port which is working and makes
-     * other controller follow it
+     * Used to build a pair of spark max controllers to control motors. Creates a
+     * leader on the port which is working and makes other controller follow it. Uses the Default Config
+     * 
      * @param motor1DeviceID The CAN ID of spark max controller 1
      * @param motor2DeviceID The CAN ID of spark max controller 2
-     * @return motorPair a pair of motors with the first one as its leader and second one as the follower
+     * @return motorPair a pair of motors with the first one as its leader and
+     *         second one as the follower
      */
     public static List<SparkMAXLite> buildFactorySparkMAXPair(int motor1DeviceID, int motor2DeviceID) {
         return buildSparkMAXPair(motor1DeviceID, motor2DeviceID, defaultConfig, defaultConfig);
     }
 
-     /**
-     * Used to build a pair of spark max controllers to control motors. Creates a leader on the port which is working and makes
-     * other controller follow it
+    /**
+     * Used to build a pair of spark max controllers to control motors. Creates a
+     * leader on the port which is working and makes other controller follow it
+     * 
      * @param motor1DeviceID The CAN ID of spark max controller 1
      * @param motor2DeviceID The CAN ID of spark max controller 2
-     * @param config The config to be set on to the motor controllers
-     * @return motorPair a pair of motors with the first one as its leader and second one as the follower
+     * @param config         The config to be set on to the motor controllers
+     * @return motorPair a pair of motors with the first one as its leader and
+     *         second one as the follower
      */
     public static List<SparkMAXLite> buildSparkMAXPair(int motor1DeviceID, int motor2DeviceID, Config config) {
         return buildSparkMAXPair(motor1DeviceID, motor2DeviceID, config, config);
     }
 
     /**
-     * Used to build a pair of spark max controllers to control motors. Creates a leader on the port which is working and makes
-     * other controller follow it
+     * Used to build a pair of spark max controllers to control motors. Creates a
+     * leader on the port which is working and makes other controller follow it
+     * 
      * @param motor1DeviceID The CAN ID of spark max controller 1
      * @param motor2DeviceID The CAN ID of spark max controller 2
-     * @param leaderConfig The config to be set on to the motor controller which is the leader
-     * @param followerConfig The config to be set on to the motor controller which is the follower
-     * @return motorPair a pair of motors with the first one as its leader and second one as the follower
+     * @param leaderConfig   The config to be set on to the motor controller which
+     *                       is the leader
+     * @param followerConfig The config to be set on to the motor controller which
+     *                       is the follower
+     * @return motorPair a pair of motors with the first one as its leader and
+     *         second one as the follower
      */
-    public static List<SparkMAXLite> buildSparkMAXPair(int motor1DeviceID, int motor2DeviceID, Config leaderConfig, Config followerConfig) {
+    public static List<SparkMAXLite> buildSparkMAXPair(int motor1DeviceID, int motor2DeviceID, Config leaderConfig,
+            Config followerConfig) {
         SparkMAXLite sparkMaxLeader = buildSparkMAX(motor1DeviceID, leaderConfig);
-        SparkMAXLite sparkMaxFollower;
-        
-        if (sparkMaxLeader.getLastError() != CANError.kOk && sparkMaxLeader.getLastError() != null) {
-            sparkMaxLeader = buildSparkMAX(motor2DeviceID, leaderConfig);
-            sparkMaxFollower = buildSparkMAX(motor1DeviceID, followerConfig);
-            sparkMaxFollower.follow(sparkMaxLeader);
-            List<SparkMAXLite> motorPair = Arrays.asList(sparkMaxLeader, sparkMaxFollower);
-            Logger.consoleLog("Primary Spark Max Broken. Switching to SparkMax id %s", sparkMaxLeader.getDeviceId());
-            return motorPair;
+        SparkMAXLite sparkMaxFollower = buildSparkMAX(motor2DeviceID, leaderConfig);
+
+        CANError sparkMaxLeaderError = sparkMaxLeader.getLastError();
+        CANError sparkMaxFollowerError = sparkMaxFollower.getLastError();
+
+        boolean isMotor1Error = sparkMaxLeaderError != CANError.kOk && sparkMaxLeaderError != null;
+        boolean isMotor2Error = sparkMaxFollowerError != CANError.kOk && sparkMaxFollowerError != null;
+
+        if (isMotor1Error && isMotor2Error) {
+            Logger.consoleError("SparkMaxControllerID %s and SparkMaxControllerID %s are broken",
+                    sparkMaxLeader.getDeviceId(), sparkMaxFollower.getDeviceId());
+        } else if (isMotor2Error) {
+            Logger.consoleWarning("SparkMaxControllerID %s is broken.", sparkMaxFollower.getDeviceId());
+        } else if (isMotor1Error) {
+            Logger.consoleWarning("SparkMaxControllerID %s is broken. Switching to SparkMaxControllerID %s",
+                    sparkMaxLeader.getDeviceId(), sparkMaxFollower.getDeviceId());
+            SparkMAXLite sparkMaxTemp = sparkMaxLeader;
+            sparkMaxLeader = sparkMaxFollower;
+            sparkMaxFollower = sparkMaxTemp;
         }
-        else{
-            sparkMaxFollower = buildSparkMAX(motor2DeviceID, followerConfig);
-            sparkMaxFollower.follow(sparkMaxLeader);
-            List<SparkMAXLite> motorPair = Arrays.asList(sparkMaxLeader, sparkMaxFollower);
-            Logger.consoleLog("Primary Spark Max Working. SparkMax Leader id is %s", sparkMaxLeader.getDeviceId());
-            return motorPair;
-        }
+
+        sparkMaxFollower.follow(sparkMaxLeader);
+        List<SparkMAXLite> motorPair = Arrays.asList(sparkMaxLeader, sparkMaxFollower);
+        Logger.consoleLog("SparkMaxLeaderID %s, SparkMaxFollowerID %s", sparkMaxLeader.getDeviceId(),
+                sparkMaxFollower.getDeviceId());
+        return motorPair;
     }
 
 }
