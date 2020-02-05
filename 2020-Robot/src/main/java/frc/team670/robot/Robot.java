@@ -109,7 +109,7 @@ public class Robot extends TimedRobot {
       MustangScheduler.getInstance().cancel(m_autonomousCommand);
     }
     Logger.consoleLog("Teleop Init");
-    RobotContainer.initTeleopCommands();
+    RobotContainer.teleopInit();
   }
 
   /**
