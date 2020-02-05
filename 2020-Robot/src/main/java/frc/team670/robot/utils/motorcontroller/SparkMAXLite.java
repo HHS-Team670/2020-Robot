@@ -14,13 +14,14 @@ public final class SparkMAXLite extends CANSparkMax {
     protected double lastSet = Double.NaN;
     protected ControlType lastControlType = null;
     protected CANSparkMax leader = null;
+    protected MotorConfig.Motor_Type motorType = null;
 
-    /**
-     * Creates a SparkMAX on a given ID. Defaults to brushless motor.
-     */
-    public SparkMAXLite(int id) {
-        super(id, MotorType.kBrushless);
-    }
+    // /**
+    //  * Creates a SparkMAX on a given ID. Defaults to brushless motor.
+    //  */
+    // public SparkMAXLite(int id) {
+    //     super(id, MotorType.kBrushless);
+    // }
 
     /**
      * Creates a SparkMAX on a given ID, which is controlling a specified kind of motor.
@@ -30,6 +31,7 @@ public final class SparkMAXLite extends CANSparkMax {
      */
     public SparkMAXLite(int id, MotorConfig.Motor_Type type) {
         super(id, MotorConfig.MOTOR_TYPE.get(type));
+        this.motorType = type;
     }
 
     public double getLastSet() {
@@ -38,6 +40,10 @@ public final class SparkMAXLite extends CANSparkMax {
 
     public ControlType getLastControlType() {
         return this.lastControlType;
+    }
+
+    public MotorConfig.Motor_Type getMotor(){
+        return this.motorType;
     }
 
     /**
