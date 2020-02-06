@@ -31,9 +31,6 @@ public class RobotConstants {
     /** The number of meters per roatation of a drivebase wheel */
     public static final double DRIVEBASE_METERS_PER_ROTATION = (1/DRIVEBASE_GEAR_RATIO) * DRIVE_BASE_WHEEL_DIAMETER * Math.PI * 0.0254;
 
-    //For indexer, update when needed
-    public static final double REVOLVER_GEAR_RATIO = 1;
-
     //Talon PID Constants
     public static final int kTimeoutMs = 0;
 

@@ -1,19 +1,15 @@
 package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANError;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
+import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.motorcontroller.TalonSRXLite;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Represents the ball indexer subsystem, which tracks and stores up to 5 balls.
@@ -22,12 +18,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Indexer extends SparkMaxRotatingSubsystem {
 
-    private CANSparkMax rotator;
     private TalonSRXLite updraw;
 
     private CANEncoder encoder;
     private boolean[] chamberStates;
-    private CANPIDController controller;
 
     // Current control: updraw
     // TODO: find all these values
@@ -41,8 +35,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     private static final int UPDRAW_PEAK_CURRENT_LIMIT = 0;
 
     private static final int INDEXER_TICKS_PER_ROTATION = 42; // NEO550 integrated encoder is 42 counts per rev
-
-    private static final double MOTOR_ROTATIONS_PER_INDEXER_ROTATIONS = 0; // TODO: this is a number
 
     private static final double INDEXER_DEGREES_PER_CHAMBER = 72;
 
@@ -62,8 +54,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             return 0;
         }
 
-        public MotorConfig.Motor_Type getMotorType(){
-            return MotorConfig.Motor_Type.NEO550;
+        public MotorConfig.Motor_Type getMotorType() {
+            return MotorConfig.Motor_Type.NEO_550;
         }
 
         public double getP() {
@@ -124,6 +116,11 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
         public int getPeakCurrent() {
             return 0;
+        }
+
+        @Override
+        public int getRotatorGearRatio() {
+            return 1; // TODO: Update when we find out for sure
         }
 
     }
@@ -307,15 +304,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     // Preferably use this instead of getDegreePos
     public double getPosition() {
-        return encoder.getPosition() / RobotConstants.REVOLVER_GEAR_RATIO;
-    }
-
-    /**
-     * Convert an angle (of the subsystem) to motor rotations.
-     */
-    @Override
-    public double getMotorRotationsFromAngle(double angle){
-        return (angle/360)*RobotConstants.REVOLVER_GEAR_RATIO;
+        return encoder.getPosition() / ROTATOR_GEAR_RATIO;
     }
 
     @Override
