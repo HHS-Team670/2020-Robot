@@ -126,11 +126,17 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         return this.rotator_encoder.getPosition();
     }
 
-    public void setSmartMotionTarget(double setpoint) {
+    private void setSmartMotionTarget(double setpoint) {
         rotator_controller.setReference(setpoint, ControlType.kSmartMotion);
     }
 
-    public abstract double getAngleInDegrees();
+    public void setTargetAngleInDegrees(double angle){
+       setSmartMotionTarget(getMotorRotationsFromAngle(angle));
+    }
+
+    protected abstract double getMotorRotationsFromAngle(double angle);
+
+    public abstract double getCurrentAngleInDegrees();
 
     public void enableCoastMode() {
         rotator.setIdleMode(IdleMode.kCoast);
