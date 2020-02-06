@@ -160,7 +160,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     // chamber currently at the top
     // if its exactly between two chambers, default to later before
-    public int getBottomChamber() {
+    private int getBottomChamber() {
 
         double pos = getPosition() % 1.0;
         if (pos < 0) {
@@ -231,7 +231,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         chamberStates[getTopChamber()] = false;
     }
 
-    public int getTopChamber() {
+    private int getTopChamber() {
 
         double pos = getPosition() % 1.0;
         if (pos < 0) {
@@ -254,7 +254,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     }
 
     // Designed by JOSHIE SANGYALSWEIO
-    public int getIntakeChamber() {
+    private int getIntakeChamber() {
         if (totalNumOfBalls() == 5) {
             return -1;
         }
@@ -272,7 +272,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         return currentBottom;
     }
 
-    public int getShootChamber() {
+    private int getShootChamber() {
         if (totalNumOfBalls() == 5) {
             return getTopChamber();
         }
