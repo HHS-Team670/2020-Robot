@@ -4,6 +4,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -38,6 +39,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     private static final int INDEXER_TICKS_PER_ROTATION = 42; // NEO550 integrated encoder is 42 counts per rev
 
+    private static final double MOTOR_ROTATIONS_PER_INDEXER_ROTATIONS = 0; //TODO: this is a number
     /**
      * PID and SmartMotion constants for the indexer rotator go here.
      */
@@ -150,14 +152,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
         return totalNumBalls;
     }
-
-    /**
-     * called when ball goes into a chamber
-     * 
-     * @param chamber the one just filled
-     */
-    public void fillChamber(int chamber) {
-        chamberStates[chamber] = true;
+    
+    //TODO: figure this out once we have sensor(s)
+    public void fillChamber() {
+        chamberStates[getBottomChamber()] = true;
     }
 
     // chamber currently at the top
@@ -184,15 +182,14 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
     }
 
-    // TODO: check if chamber labeling direction is correct, if not change goal to
-    // bottom - intake
+    // TODO: check if chamber labeling direction is correct, if not make goal neg
     public void prepareToIntake() {
         double goal = getIntakeChamber() - getBottomChamber();
         if (goal < 0) {
             goal += 5;
         }
-        // setSmartMotionTarget(goal);
-        controller.setReference(goal / 5.0, ControlType.kPosition);
+        setSmartMotionTarget(goal * MOTOR_ROTATIONS_PER_INDEXER_ROTATIONS/5.0);
+        //controller.setReference(goal / 5.0, ControlType.kPosition);
     }
 
     public boolean isReadyToIntake() {
@@ -205,13 +202,33 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         if (goal < 0) {
             goal += 5;
         }
-        // setSmartMotionTarget(goal);
-        controller.setReference(goal / 5.0, ControlType.kPosition);
+        setSmartMotionTarget(goal * MOTOR_ROTATIONS_PER_INDEXER_ROTATIONS/5.0);        
+        //controller.setReference(goal / 5.0, ControlType.kPosition);
 
     }
 
     public boolean isReadyToShoot() {
         return getShootChamber() == getTopChamber();
+    }
+
+    /**
+     * uptake into shooter
+     * 
+     * @param percentOutput percent output for the updraw
+     * @post top chamber should be empty
+     */
+    public void uptake(double percentOutput) {
+        updraw.set(ControlMode.PercentOutput, percentOutput);
+        chamberStates[getTopChamber()] = false;
+    }
+
+    /**
+     * uptake at 1.0 percentoutput
+     * @post top chamber should be empty
+     */
+    public void uptake() {
+        updraw.set(ControlMode.PercentOutput, 1.0);
+        chamberStates[getTopChamber()] = false;
     }
 
     public int getTopChamber() {
