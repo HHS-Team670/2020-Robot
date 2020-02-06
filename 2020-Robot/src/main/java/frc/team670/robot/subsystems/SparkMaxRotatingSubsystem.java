@@ -22,10 +22,9 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     protected CANSparkMax rotator;
     protected CANEncoder rotator_encoder;
     protected CANPIDController rotator_controller;
-    protected int offsetFromEncoderZero;
     protected static final double NO_SETPOINT = Double.NaN;
     protected double setpoint;
-    protected double kP, kI, kD, kFF, kIz, MAX_OUTPUT, MIN_OUTPUT, MAX_RPM;
+    protected double kP, kI, kD, kFF, kIz, MAX_OUTPUT, MIN_OUTPUT;
     protected double MAX_VEL, MIN_VEL, MAX_ACC, ALLOWED_ERR;
     protected int SMARTMOTION_SLOT;
 
@@ -55,8 +54,6 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
 
         public abstract double getMinOutput();
 
-        public abstract double getMaxRPM();
-
         public abstract double getMaxVelocity();
 
         public abstract double getMinVelocity();
@@ -73,15 +70,12 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
 
         public abstract int getPeakCurrent();
 
-        public abstract int getOffsetFromEncoderZero();
-
     }
 
     public SparkMaxRotatingSubsystem(Config config) {
         this.rotator = SparkMAXFactory.buildFactorySparkMAX(config.getDeviceID(), config.getMotorType());
         this.rotator_encoder = rotator.getEncoder();
         this.rotator_controller = rotator.getPIDController();
-        this.offsetFromEncoderZero = config.getOffsetFromEncoderZero();
 
         // PID coefficients
         this.kP = config.getP();
@@ -91,7 +85,6 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         this.kFF = config.getFF();
         this.MAX_OUTPUT = config.getMaxOutput();
         this.MIN_OUTPUT = config.getMinOutput();
-        this.MAX_RPM = config.getMaxRPM();
 
         // Smart Motion Coefficients
         this.MAX_VEL = config.getMaxVelocity(); // rpm
@@ -152,7 +145,7 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     }
 
     public void clearSetpoint() {
-        setpoint = NO_SETPOINT; // TODO: is NO_SETPOINT a good value?
+        setpoint = NO_SETPOINT;
     }
 
     public CANSparkMax getRotator() {
