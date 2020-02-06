@@ -15,7 +15,9 @@ import frc.team670.robot.utils.motorcontroller.TalonSRXLite;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
+ * Represents the ball indexer subsystem, which tracks and stores up to 5 balls.
  * 
+ * @author ctychen, eddieli, ruchidixit
  */
 public class Indexer extends SparkMaxRotatingSubsystem {
 
@@ -39,7 +41,13 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     private static final int INDEXER_TICKS_PER_ROTATION = 42; // NEO550 integrated encoder is 42 counts per rev
 
-    private static final double MOTOR_ROTATIONS_PER_INDEXER_ROTATIONS = 0; //TODO: this is a number
+    private static final double MOTOR_ROTATIONS_PER_INDEXER_ROTATIONS = 0; // TODO: this is a number
+
+    private static final double INDEXER_DEGREES_PER_CHAMBER = 72;
+
+    private static final int CHAMBER_0_AT_TOP_POS_IN_DEGREES = 252;
+    private static final int CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES = 72;
+
     /**
      * PID and SmartMotion constants for the indexer rotator go here.
      */
@@ -81,10 +89,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             return -1;
         }
 
-        public double getMaxRPM() {
-            return 5700;
-        }
-
         public double getMaxVelocity() {
             return 2000;
         }
@@ -114,10 +118,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
 
         public int getPeakCurrent() {
-            return 0;
-        }
-
-        public int getOffsetFromEncoderZero() {
             return 0;
         }
 
@@ -152,8 +152,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
         return totalNumBalls;
     }
-    
-    //TODO: figure this out once we have sensor(s)
+
+    // TODO: figure this out once we have sensor(s)
     public void fillChamber() {
         chamberStates[getBottomChamber()] = true;
     }
@@ -166,7 +166,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         if (pos < 0) {
             pos++;
         }
-
+ggg
         if (pos <= 0.1 || pos >= 0.9) {
             return 0;
         } else if (pos <= 0.3 && pos >= 0.1) {
@@ -182,29 +182,16 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
     }
 
-    // TODO: check if chamber labeling direction is correct, if not make goal neg
     public void prepareToIntake() {
-        double goal = getIntakeChamber() - getBottomChamber();
-        if (goal < 0) {
-            goal += 5;
-        }
-        setSmartMotionTarget(goal * MOTOR_ROTATIONS_PER_INDEXER_ROTATIONS/5.0);
-        //controller.setReference(goal / 5.0, ControlType.kPosition);
+        setTargetAngleInDegrees(INDEXER_DEGREES_PER_CHAMBER * getIntakeChamber() + CHAMBER_0_AT_TOP_POS_IN_DEGREES);
     }
 
     public boolean isReadyToIntake() {
         return getIntakeChamber() == getBottomChamber();
     }
 
-    // TODO: same thing with prepareToIntake: check chamber labeling direction
     public void prepareToShoot() {
-        double goal = getShootChamber() - getTopChamber();
-        if (goal < 0) {
-            goal += 5;
-        }
-        setSmartMotionTarget(goal * MOTOR_ROTATIONS_PER_INDEXER_ROTATIONS/5.0);        
-        //controller.setReference(goal / 5.0, ControlType.kPosition);
-
+        setTargetAngleInDegrees(getShootChamber * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES);
     }
 
     public boolean isReadyToShoot() {
@@ -223,11 +210,13 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     }
 
     /**
-     * uptake at 1.0 percentoutput
+     * TODO: ay use current for controlling uptake; if using % output let's start
+     * small for testing
+     * 
      * @post top chamber should be empty
      */
     public void uptake() {
-        updraw.set(ControlMode.PercentOutput, 1.0);
+        updraw.set(ControlMode.PercentOutput, 0.6);
         chamberStates[getTopChamber()] = false;
     }
 
@@ -319,8 +308,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     @Override
     public HealthState checkHealth() {
-        // TODO Auto-generated method stub
-        return null;
+        boolean isRotatorError = rotator.getLastError() != null && rotator.getLastError() != CANError.kOk;
+        if (isRotatorError)
+            return HealthState.RED;
+        return HealthState.GREEN;
     }
 
     @Override
