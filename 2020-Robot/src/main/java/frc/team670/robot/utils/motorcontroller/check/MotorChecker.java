@@ -9,17 +9,18 @@ import java.util.List;
 import java.util.function.DoubleSupplier;
 
 /**
- * For performing basic tests to check functionality of a subsystem's motors. 
+ * For performing basic tests to check functionality of a subsystem's motors.
+ * 
  * @author ctychen
  */
 public abstract class MotorChecker<T> {
 
     public static class Config {
-        //unscientifically-deterimined values, change them if needed
+        // unscientifically-deterimined values, change them if needed
         public double minCurrent = 5;
         public double currentError = 3;
 
-        public double minRPM = 1000; 
+        public double minRPM = 1000;
         public double rpmError = 500;
 
         public DoubleSupplier rpmSupplier = null;
@@ -49,23 +50,24 @@ public abstract class MotorChecker<T> {
     public abstract double getCurrent(T motor);
 
     /**
-     * Runs basic tests for any motor, specifically, the ability to run at a consistent current and RPM. 
+     * Runs basic tests for any motor, specifically, the ability to run at a
+     * consistent current and RPM.
      * 
-     * @param subsystem Subsystem to run the motor check on
-     * @param motorsToCheck 
-     * @param checkerConfig 
-     * @return true if all tests pass, false if any of the following happens: motor is running 
-     * at below a defined minimum current or RPM, and/or current or RPM is varying too much.
+     * @param subsystem     Subsystem to run the motor check on
+     * @param motorsToCheck
+     * @param checkerConfig
+     * @return true if all tests pass, false if any of the following happens: motor
+     *         is running at below a defined minimum current or RPM, and/or current
+     *         or RPM is varying too much.
      */
-    public boolean check(MustangSubsystemBase subsystem,
-                                      ArrayList<MotorConfig<T>> motorsToCheck,
-                                      Config checkerConfig) {
-        
-        System.out.println("Checking MustangSubsystemBase " + subsystem.getClass()
-                + " for " + motorsToCheck.size() + " motors...");
+    public boolean check(MustangSubsystemBase subsystem, ArrayList<MotorConfig<T>> motorsToCheck,
+            Config checkerConfig) {
+
+        System.out.println("Checking MustangSubsystemBase " + subsystem.getClass() + " for " + motorsToCheck.size()
+                + " motors...");
 
         boolean failed = false;
-        
+
         ArrayList<Double> currents = new ArrayList<>();
         ArrayList<Double> rpms = new ArrayList<>();
 
@@ -97,15 +99,15 @@ public abstract class MotorChecker<T> {
             setOutput(config.motor, 0.0);
 
             if (current < checkerConfig.minCurrent) {
-                System.out.println("Current check failed for: " + config.name + ", the target current should be " +
-                        checkerConfig.minCurrent + "!\n");
+                System.out.println("Current check failed for: " + config.name + ", the target current should be "
+                        + checkerConfig.minCurrent + "!\n");
                 failed = true;
             }
             if (checkerConfig.rpmSupplier != null) {
                 if (rpm < checkerConfig.minRPM) {
-                    System.out.println("RPM check failed for: " + config.name + ", the  target RPM should be " +
-                            checkerConfig.minRPM + "!\n");
-                failed = true; 
+                    System.out.println("RPM check failed for: " + config.name + ", the  target RPM should be "
+                            + checkerConfig.minRPM + "!\n");
+                    failed = true;
                 }
             }
 

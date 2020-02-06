@@ -5,10 +5,9 @@ package frc.team670.robot.subsystems;
  */
 public interface TunableSubsystem {
 
-    public boolean getTimeout();
-
     /**
-     * Enables percent output to shut off other movement of the Subsystem (note this means it will stop holding itself up).
+     * Enables percent output to shut off other movement of the Subsystem (note this
+     * means it will stop holding itself up).
      */
     public void stop();
 
