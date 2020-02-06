@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class AutoRunIntake extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private Intake intake;
-  private double speed;
 
   /**
    * Creates a new ExampleCommand.
@@ -28,7 +27,6 @@ public class AutoRunIntake extends CommandBase {
    */
   public AutoRunIntake(Intake intake, double speed) {
     this.intake = intake;
-    this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(intake);
   }
@@ -46,7 +44,7 @@ public class AutoRunIntake extends CommandBase {
   public void execute() {
     if (!intake.isDeployed() && intake.getSensor()) {
       intake.setDeploy(true);
-      intake.setRolling(speed, true); 
+      intake.setRolling(false); 
  
     }
   }
@@ -64,7 +62,7 @@ public class AutoRunIntake extends CommandBase {
 
   // Called once the command ends or is interrupted.
   public void end() {
-    intake.setRolling(0, true);
+    intake.setRolling(false);
     Logger.consoleLog();
   }
 

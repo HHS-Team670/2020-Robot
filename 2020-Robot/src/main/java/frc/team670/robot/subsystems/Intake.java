@@ -28,6 +28,7 @@ public class Intake extends MustangSubsystemBase {
     private boolean isDeployed, isRolling;
     private double rollerSpeed;
     public double kP, kI, kD, kIz, kFF, kMinOutput, kMaxOutput, maxRPM;
+    
     public Intake() {
         /* INITIALIZE HARDWARE COMPONENTS */
         comp = new Compressor(RobotMap.PCMODULE); // need to edit RobotMap to update ports for irsensor and other stuff
@@ -106,7 +107,7 @@ public class Intake extends MustangSubsystemBase {
         if(/*encoder.getCountsPerRevolution() != (kP + kI + kD)*/isDeployed() != true) { return HealthState.RED;} // if not deployed, UH OH STINKY
         else return HealthState.GREEN;
     }
-
+    
     public void teleopPeriodic() {
         double p = SmartDashboard.getNumber("P Gain", 0);
         double i = SmartDashboard.getNumber("I Gain", 0);
