@@ -33,10 +33,6 @@ public class RotateToShootPosition extends CommandBase implements MustangCommand
 
     public void initialize() {
         super.initialize();
-        goal = indexer.getShootChamber();
-        firstReachedPos = 0;
-        reached = false;
-        done = false;
         indexer.prepareToShoot();
     }
 

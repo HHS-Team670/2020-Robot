@@ -35,10 +35,6 @@ public class RotateToIntakePosition extends CommandBase implements MustangComman
     @Override
     public void initialize() {
         super.initialize();
-        goal = indexer.getIntakeChamber();
-        firstReachedPos = 0;
-        reached = false;
-        done = false;
         indexer.prepareToIntake();
     }
 

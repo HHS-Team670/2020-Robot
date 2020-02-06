@@ -4,6 +4,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANError;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -61,24 +62,28 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             return 0;
         }
 
+        public MotorConfig.Motor_Type getMotorType(){
+            return MotorConfig.Motor_Type.NEO550;
+        }
+
         public double getP() {
-            return SmartDashboard.getNumber("P Gain", 0.001);
+            return 0.001;
         }
 
         public double getI() {
-            return SmartDashboard.getNumber("I Gan", 0.001);
+            return 0;
         }
 
         public double getD() {
-            return SmartDashboard.getNumber("D Gain", 0.001);
+            return 0;
         }
 
         public double getFF() {
-            return SmartDashboard.getNumber("Feed Forward", 0.001);
+            return 0;
         }
 
         public double getIz() {
-            return SmartDashboard.getNumber("I Zone", 0.001);
+            return 0;
         }
 
         public double getMaxOutput() {
@@ -154,7 +159,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     }
 
     // TODO: figure this out once we have sensor(s)
-    public void fillChamber() {
+    public void setChamberStates() {
         chamberStates[getBottomChamber()] = true;
     }
 
@@ -166,7 +171,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         if (pos < 0) {
             pos++;
         }
-ggg
         if (pos <= 0.1 || pos >= 0.9) {
             return 0;
         } else if (pos <= 0.3 && pos >= 0.1) {
@@ -191,7 +195,7 @@ ggg
     }
 
     public void prepareToShoot() {
-        setTargetAngleInDegrees(getShootChamber * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES);
+        setTargetAngleInDegrees(getShootChamber() * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES);
     }
 
     public boolean isReadyToShoot() {
@@ -306,6 +310,14 @@ ggg
         return encoder.getPosition() / RobotConstants.REVOLVER_GEAR_RATIO;
     }
 
+    /**
+     * Convert an angle (of the subsystem) to motor rotations.
+     */
+    @Override
+    public double getMotorRotationsFromAngle(double angle){
+        return (angle/360)*RobotConstants.REVOLVER_GEAR_RATIO;
+    }
+
     @Override
     public HealthState checkHealth() {
         boolean isRotatorError = rotator.getLastError() != null && rotator.getLastError() != CANError.kOk;
@@ -320,7 +332,7 @@ ggg
     }
 
     @Override
-    public double getAngleInDegrees() {
+    public double getCurrentAngleInDegrees() {
         return ((this.getPosition() / INDEXER_TICKS_PER_ROTATION) * 360);
     }
 

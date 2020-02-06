@@ -31,7 +31,7 @@ public class IntakeOneBall extends CommandBase implements MustangCommand {
     public void execute() {
         if (this.indexer.ballIn()) {
             ballIn = true;
-            indexer.fillChamber(indexer.getBottomChamber());
+            indexer.setChamberStates();
         }
 
         if (ballIn && indexer.getSpeed() == 0) {
