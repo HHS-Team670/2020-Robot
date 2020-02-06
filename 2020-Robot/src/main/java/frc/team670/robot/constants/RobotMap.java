@@ -28,6 +28,7 @@ public class RobotMap {
 
   // Intake
   public static final int INTAKE_ROLLER = 4;
-  public static final int INTAKE_DEPLOYER = 0;
+  public static final int INTAKE_DEPLOYER = 3;    //SET THIS
+  public static final int INTAKE_COMPRESSOR = 6;  //SET THIS
   public static final int INTAKE_SENSOR = 5;
 }
