@@ -115,10 +115,10 @@ public class DriveBase extends MustangSubsystemBase {
     CANError right1Error = right1.getLastError();
     CANError right2Error = right2.getLastError();
 
-    boolean isLeft1Error = SparkMAXLite.isErrorFree(left1);
-    boolean isLeft2Error = SparkMAXLite.isErrorFree(left2);
-    boolean isRight1Error = SparkMAXLite.isErrorFree(right1);
-    boolean isRight2Error = SparkMAXLite.isErrorFree(right2);
+    boolean isLeft1Error = isSparkMaxErrored(left1);
+    boolean isLeft2Error = isSparkMaxErrored(left2);
+    boolean isRight1Error = isSparkMaxErrored(right1);
+    boolean isRight2Error = isSparkMaxErrored(right2);
     boolean isNavXError = (navXMicro == null);
 
     // used to check if it is green first which would be the case most of the times. Then red as it is just 4 conditions and 

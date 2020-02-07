@@ -1,12 +1,16 @@
 package frc.team670.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import com.revrobotics.CANError;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.utils.Logger;
-import frc.team670.robot.utils.MustangWarnings;
+import frc.team670.robot.utils.MustangNotifications;
+import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
 /**
  * Basic framework for a subsystem of the robot with defined levels of system
@@ -65,7 +69,7 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
      * @return The latest known state of this subsystem: GREEN, YELLOW, or RED.
      */
     public HealthState getHealth(boolean check) {
-        if (lastHealthState == HealthState.UNKNOWN || check){
+        if (lastHealthState == HealthState.UNKNOWN || check) {
             lastHealthState = checkHealth();
         }
         return this.lastHealthState;
@@ -85,18 +89,29 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
         HealthState lastHealth = getHealth(false);
         if (lastHealth == HealthState.GREEN) {
             if (failedLastTime) {
-                MustangWarnings
+                MustangNotifications
                         .notify("Health state for " + this.getName() + " is: " + lastHealth + ". Enabling Periodic");
                 failedLastTime = false;
             }
             mustangPeriodic();
         } else {
             if (!failedLastTime) {
-                MustangWarnings.reportError(
+                MustangNotifications.reportError(
                         "Health state for " + this.getName() + " is: " + lastHealth + ". Disabling Periodic");
                 failedLastTime = true;
             }
         }
+    }
+
+    /**
+     * Used to check if a sparkMax Motor Controller is connected successfully and
+     * has no error
+     * 
+     * @param sparkMax The motor which has to be checked for an error
+     * @return
+     */
+    public boolean isSparkMaxErrored(SparkMAXLite sparkMax) {
+        return (sparkMax != null && sparkMax.getLastError() != CANError.kOk);
     }
 
     public abstract void mustangPeriodic();

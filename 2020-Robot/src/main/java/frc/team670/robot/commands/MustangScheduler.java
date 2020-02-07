@@ -62,7 +62,7 @@ public class MustangScheduler {
 
     public void schedule(MustangCommand... commands) {
 
-        if (commands == null) { // TODO check if we have to use null or size to compare
+        if (commands == null) {
             MustangNotifications.reportMinorWarning("Scheduler run without any command"); // TODO Choose if we want to
                                                                                           // throw a warning or a minor
                                                                                           // warning which does not kill
