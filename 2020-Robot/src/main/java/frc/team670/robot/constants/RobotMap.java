@@ -29,4 +29,11 @@ public class RobotMap {
   // Intake
   public static final int INTAKE_ROLLER = 4;
 
+  // Conveyor
+  public static final int CONVEYOR_ROLLER = 8;
+
+  //Indexer and Updraw
+  public static final int INDEXER_ROTATOR = 9;
+  public static final int UPDRAW_SPINNER = 10;
+
 }
