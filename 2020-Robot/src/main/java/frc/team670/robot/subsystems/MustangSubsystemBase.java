@@ -20,7 +20,7 @@ import frc.team670.robot.utils.MustangWarnings;
 public abstract class MustangSubsystemBase extends SubsystemBase {
 
     protected HealthState lastHealthState;
-    private boolean failedOnce = false;
+    private boolean failedLastTime = false;
 
     /**
      * Creates a new MustangSubsystemBase. By default, the subsystem's initial
@@ -65,8 +65,9 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
      * @return The latest known state of this subsystem: GREEN, YELLOW, or RED.
      */
     public HealthState getHealth(boolean check) {
-        if (lastHealthState == HealthState.UNKNOWN || check)
+        if (lastHealthState == HealthState.UNKNOWN || check){
             lastHealthState = checkHealth();
+        }
         return this.lastHealthState;
     }
 
@@ -83,17 +84,17 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
     public void periodic() {
         HealthState lastHealth = getHealth(false);
         if (lastHealth == HealthState.GREEN) {
-            if (failedOnce) {
+            if (failedLastTime) {
                 MustangWarnings
                         .notify("Health state for " + this.getName() + " is: " + lastHealth + ". Enabling Periodic");
-                failedOnce = false;
+                failedLastTime = false;
             }
             mustangPeriodic();
         } else {
-            if (!failedOnce) {
+            if (!failedLastTime) {
                 MustangWarnings.reportError(
                         "Health state for " + this.getName() + " is: " + lastHealth + ". Disabling Periodic");
-                failedOnce = true;
+                failedLastTime = true;
             }
         }
     }

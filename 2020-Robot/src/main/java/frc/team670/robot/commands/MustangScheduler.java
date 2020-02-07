@@ -5,8 +5,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.DriverStation;
 
-import frc.team670.robot.utils.MustangWarnings;
+import frc.team670.robot.utils.MustangNotifications;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.utils.Logger;
 
 import java.util.Map;
@@ -61,6 +62,14 @@ public class MustangScheduler {
 
     public void schedule(MustangCommand... commands) {
 
+        if (commands == null) { // TODO check if we have to use null or size to compare
+            MustangNotifications.reportMinorWarning("Scheduler run without any command"); // TODO Choose if we want to
+                                                                                          // throw a warning or a minor
+                                                                                          // warning which does not kill
+                                                                                          // the jar
+            return;
+        }
+
         for (MustangCommand a_command : commands) {
 
             CommandBase m_command = (CommandBase) a_command;
@@ -72,10 +81,11 @@ public class MustangScheduler {
                     for (MustangSubsystemBase s : requirements.keySet()) {
                         MustangSubsystemBase.HealthState healthReq = requirements.get(s);
                         if (s != null && healthReq != null) {
-                            if (s.getHealth(false).getId() > healthReq.getId()) {
-                                MustangWarnings.reportWarning(
+                            HealthState currentHealth = s.getHealth(false);
+                            if (currentHealth.getId() > healthReq.getId()) {
+                                MustangNotifications.reportWarning(
                                         "%s not run because of health issue! Required health: %s, Actual health: %s",
-                                        m_command.getName(), healthReq, s.getHealth(false));
+                                        m_command.getName(), healthReq, currentHealth);
                                 return;
                             }
                         }
@@ -102,7 +112,8 @@ public class MustangScheduler {
             return;
         } else {
             if (!(command instanceof MustangCommand)) {
-                MustangWarnings.reportError("Command was not properly scheduled. Are you using MustangScheduler?");
+                MustangNotifications.reportError("%s was not properly scheduled. Are you using MustangScheduler?",
+                        command.getName());
             }
         }
     }
@@ -117,10 +128,11 @@ public class MustangScheduler {
                 for (MustangSubsystemBase s : requirements.keySet()) {
                     MustangSubsystemBase.HealthState healthReq = requirements.get(s);
                     if (s != null && healthReq != null) {
-                        if (s.getHealth(false).getId() > healthReq.getId()) {
-                            MustangWarnings.reportError(
+                        HealthState currentHealth = s.getHealth(false);
+                        if (currentHealth.getId() > healthReq.getId()) {
+                            MustangNotifications.reportError(
                                     "%s not run because of health issue! Required health: %s, Actual health: %s",
-                                    m_command.getName(), healthReq, s.getHealth(false));
+                                    m_command.getName(), healthReq, currentHealth);
                             return;
                         }
                     }

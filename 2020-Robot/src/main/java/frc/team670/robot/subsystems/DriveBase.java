@@ -8,7 +8,6 @@
 package frc.team670.robot.subsystems;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import com.revrobotics.CANEncoder;
@@ -16,23 +15,20 @@ import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.SpeedController;
 import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.commands.drive.teleop.XboxRocketLeagueDrive;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.sensors.NavX;
 import frc.team670.robot.utils.Logger;
-import frc.team670.robot.utils.MustangWarnings;
+import frc.team670.robot.utils.MustangNotifications;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
@@ -114,23 +110,30 @@ public class DriveBase extends MustangSubsystemBase {
   public HealthState checkHealth() {
     HealthState state = HealthState.GREEN;
 
-    boolean isLeft1Error = left1.getLastError() != null && left1.getLastError() != CANError.kOk;
-    boolean isLeft2Error = left2.getLastError() != null && left2.getLastError() != CANError.kOk;
-    boolean isRight1Error = right1.getLastError() != null && right1.getLastError() != CANError.kOk;
-    boolean isRight2Error = right2.getLastError() != null && right2.getLastError() != CANError.kOk;
-    boolean isNavXError = navXMicro == null;
+    CANError left1Error = left1.getLastError();
+    CANError left2Error = left2.getLastError();
+    CANError right1Error = right1.getLastError();
+    CANError right2Error = right2.getLastError();
 
-    if (isLeft1Error && isLeft2Error || isRight1Error && isRight2Error) {
-      state = HealthState.RED;
-      MustangWarnings.reportError("RED Errors: l1: %s, l2: %s, r1: %s, r2: %s", left1.getLastError(),
-          left2.getLastError(), right1.getLastError(), right2.getLastError());
-    } else if (!isLeft1Error && !isLeft2Error && !isRight1Error && !isRight2Error && !isNavXError) {
+    boolean isLeft1Error = SparkMAXLite.isErrorFree(left1);
+    boolean isLeft2Error = SparkMAXLite.isErrorFree(left2);
+    boolean isRight1Error = SparkMAXLite.isErrorFree(right1);
+    boolean isRight2Error = SparkMAXLite.isErrorFree(right2);
+    boolean isNavXError = (navXMicro == null);
+
+    // used to check if it is green first which would be the case most of the times. Then red as it is just 4 conditions and 
+    // finally yellow using else as it has many conditions to check for yellow
+    if (!isLeft1Error && !isLeft2Error && !isRight1Error && !isRight2Error && !isNavXError) { 
       state = HealthState.GREEN;
       Logger.consoleLog("Health check done. State is: " + state);
+    } else if (isLeft1Error && isLeft2Error || isRight1Error && isRight2Error) {
+      state = HealthState.RED;
+      MustangNotifications.reportError("RED Errors: l1: %s, l2: %s, r1: %s, r2: %s", left1Error, left2Error,
+          right1Error, right2Error);
     } else {
       state = HealthState.YELLOW;
-      MustangWarnings.reportError("YELLOW Errors: l1: %s, l2: %s, r1: %s, r2: %s, navX: %s", left1.getLastError(),
-          left2.getLastError(), right1.getLastError(), right2.getLastError(), isNavXError);
+      MustangNotifications.reportError("YELLOW Errors: l1: %s, l2: %s, r1: %s, r2: %s, navX: %s", left1Error,
+          left2Error, right1Error, right2Error, isNavXError);
     }
     return state;
   }

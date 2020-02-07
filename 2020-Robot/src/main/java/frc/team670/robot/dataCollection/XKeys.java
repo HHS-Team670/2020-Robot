@@ -86,12 +86,10 @@ public class XKeys {
             if (value.getType() != NetworkTableType.kString)
                 return;
             String s = value.getString();
-            if (s.equals("indexer_1"))
-                rotateIndexerBy1();
-            else if (s.equals("indexer_-1"))
-                rotateIndexerBackBy1();
-            else if (s.equals("rotate_indexer"))
-                rotateIndexer();
+            if (s.equals("indexer_intake"))
+                indexerAtIntake();
+            else if (s.equals("indexer_shoot"))
+                indexerAtShoot();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-climber", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kString)
@@ -212,15 +210,11 @@ public class XKeys {
         MustangScheduler.getInstance().schedule();
     }
 
-    private void rotateIndexerBy1() {
+    private void indexerAtIntake() {
         MustangScheduler.getInstance().schedule();
     }
 
-    private void rotateIndexerBackBy1() {
-        MustangScheduler.getInstance().schedule();
-    }
-
-    private void rotateIndexer() {
+    private void indexerAtShoot() {
         MustangScheduler.getInstance().schedule();
     }
 

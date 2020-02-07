@@ -37,7 +37,7 @@ public class ColorWheelSpinner extends MustangSubsystemBase {
      */
     @Override
     public HealthState checkHealth() {
-        if (rotator.getLastError()!=CANError.kOk && rotator.getLastError()!=null){
+        if (SparkMAXLite.isErrorFree(rotator)){
             DriverStation.reportWarning("RED error: Problem with color wheel spinner motor", false);
             return HealthState.RED;
         }

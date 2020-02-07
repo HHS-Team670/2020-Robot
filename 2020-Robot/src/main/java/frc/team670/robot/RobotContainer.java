@@ -87,7 +87,7 @@ public class RobotContainer {
     JoystickButton runIntakeOut = new JoystickButton(oi.getOperatorController(), 3);
     JoystickButton runIntakeIn = new JoystickButton(oi.getOperatorController(), 2);
 
-    // toggleIntake.whenPressed(new toggleIntake());
+    // toggleIntake.whenPressed(new toggleIntake()); // schedules the command when the button is pressed
     // runIntakeIn.whenHeld(new runIntakeIn());
     // runIntakeOut.whenHeld(new runIntakeOut());
   }

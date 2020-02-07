@@ -1,5 +1,6 @@
 package frc.team670.robot.utils.motorcontroller;
 
+import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 
@@ -63,6 +64,15 @@ public final class SparkMAXLite extends CANSparkMax{
             this.lastControlType = mode;
             super.getPIDController().setReference(value, mode);
         }
+    }
+
+    /**
+     * Used to check if a sparkMax Motor Controller is connected successfully and has no error
+     * @param sparkMax The motor which has to be checked for an error
+     * @return
+     */
+    public static boolean isErrorFree(SparkMAXLite sparkMax){
+        return (sparkMax != null && sparkMax.getLastError() != CANError.kOk);
     }
 
 }
