@@ -55,17 +55,23 @@ public class XKeys {
                 bringIntakeIn();
             else if (s.equals("bring_intake_out"))
                 bringIntakeOut();
+            else if (s.equals("auto_pickup_ball"))
+                autoPickupBall();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-shooter", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kString)
                 return;
             String s = value.getString();
-            if (s.equals("toggle_shooter_high"))
-                toggleShooterHigh();
-            else if (s.equals("toggle_shooter_low"))
-                toggleShooterLow();
-            else if (s.equals("toggle_shooter_zero"))
-                toggleShooterZero();
+            if (s.equals("init_shooter"))
+                initShooter();
+            else if (s.equals("shoot_high"))
+                shootHigh();
+            else if (s.equals("shoot_low"))
+                shootLow();
+            else if (s.equals("shoot"))
+                shoot();
+            else if (s.equals("shoot_all"))
+                shootAll();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-updraw", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kString)
@@ -75,34 +81,34 @@ public class XKeys {
                 toggleUpdrawUp();
             else if (s.equals("toggle_updraw_down"))
                 toggleUpdrawDown();
-            else if (s.equals("toggle_updraw_off"))
-                toggleUpdrawOff();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-indexer", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kString)
                 return;
             String s = value.getString();
-            if (s.equals(""))
-                toggleUpdrawUp();
-            else if (s.equals("toggle_updraw_down"))
-                toggleUpdrawDown();
-            else if (s.equals("toggle_updraw_off"))
-                toggleUpdrawOff();
+            if (s.equals("indexer_1"))
+                rotateIndexerBy1();
+            else if (s.equals("indexer_-1"))
+                rotateIndexerBackBy1();
+            else if (s.equals("rotate_indexer"))
+                rotateIndexer();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-climber", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kString)
                 return;
             String s = value.getString();
-            if (s.equals("raise_climber"))
-                raiseClimber();
-            else if (s.equals("lower_climber"))
-                lowerClimber();
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-        table.addEntryListener("xkeys-autopickup", (table2, key2, entry, value, flags) -> {
-            autoPickupBall();
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-        table.addEntryListener("xkeys-visiondrive", (table2, key2, entry, value, flags) -> {
-            visionAlign();
+            if (s.equals("extend_climber"))
+                extendClimber();
+            else if (s.equals("retract_climber"))
+                retractClimber();
+            else if (s.equals("retract_climber_left"))
+                retractClimberLeft();
+            else if (s.equals("retract_climber_right"))
+                retractClimberRight();
+            else if (s.equals("extend_climber_left"))
+                extendClimberLeft();
+            else if (s.equals("extend_climber_right"))
+                extendClimberRight();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-cancel", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kString)
@@ -110,27 +116,67 @@ public class XKeys {
             String s = value.getString();
             if (s.equals("cancel_all"))
                 cancelAllCommands();
+            else if (s.equals("cancel_intake"))
+                cancelIntake();
+            else if (s.equals("cancel_indexer"))
+                cancelIndexer();
+            else if (s.equals("cancel_updraw"))
+                cancelUpdraw();
+            else if (s.equals("cancel_shooter"))
+                cancenShooter();
+            else if (s.equals("cancel_climber"))
+                cancelClimber();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-
+        table.addEntryListener("xkeys-autopickup", (table2, key2, entry, value, flags) -> {
+            autoPickupBall();
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        table.addEntryListener("xkeys-vision", (table2, key2, entry, value, flags) -> {
+            visionAlign();
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        
     }
 
-    private void raiseClimber() {
+    private void extendClimber() {
         MustangScheduler.getInstance().schedule();
     }
 
-    private void lowerClimber() {
+    private void retractClimber() {
         MustangScheduler.getInstance().schedule();
     }
 
-    private void toggleShooterHigh() {
+    private void retractClimberLeft() {
         MustangScheduler.getInstance().schedule();
     }
 
-    private void toggleShooterLow() {
+    private void retractClimberRight() {
         MustangScheduler.getInstance().schedule();
     }
 
-    private void toggleShooterZero() {
+    private void extendClimberLeft() {
+        MustangScheduler.getInstance().schedule();
+    }
+
+    private void extendClimberRight() {
+        MustangScheduler.getInstance().schedule();
+    }
+
+    private void initShooter() {
+        MustangScheduler.getInstance().schedule();
+    }
+
+    private void shootHigh() {
+        MustangScheduler.getInstance().schedule();
+    }
+
+    private void shootLow() {
+        MustangScheduler.getInstance().schedule();
+    }
+
+    private void shoot() {
+        MustangScheduler.getInstance().schedule();
+    }
+
+    private void shootAll() {
         MustangScheduler.getInstance().schedule();
     }
 
@@ -150,15 +196,11 @@ public class XKeys {
         MustangScheduler.getInstance().schedule();
     }
 
-    private void cancelAllCommands() {
-        MustangScheduler.getInstance().schedule(new CancelAllCommands());
-    }
-
-    private void visionAlign() {
+    private void autoPickupBall() {
         MustangScheduler.getInstance().schedule();
     }
 
-    private void autoPickupBall() {
+    private void visionAlign() {
         MustangScheduler.getInstance().schedule();
     }
 
@@ -170,7 +212,39 @@ public class XKeys {
         MustangScheduler.getInstance().schedule();
     }
 
-    private void toggleUpdrawOff() {
+    private void rotateIndexerBy1() {
+        MustangScheduler.getInstance().schedule();
+    }
+
+    private void rotateIndexerBackBy1() {
+        MustangScheduler.getInstance().schedule();
+    }
+
+    private void rotateIndexer() {
+        MustangScheduler.getInstance().schedule();
+    }
+
+    private void cancelAllCommands() {
+        MustangScheduler.getInstance().schedule(new CancelAllCommands());
+    }
+
+    private void cancelIntake() {
+        MustangScheduler.getInstance().schedule();
+    }
+
+    private void cancelIndexer() {
+        MustangScheduler.getInstance().schedule();
+    }
+
+    private void cancelUpdraw() {
+        MustangScheduler.getInstance().schedule();
+    }
+
+    private void cancenShooter() {
+        MustangScheduler.getInstance().schedule();
+    }
+
+    private void cancelClimber() {
         MustangScheduler.getInstance().schedule();
     }
 

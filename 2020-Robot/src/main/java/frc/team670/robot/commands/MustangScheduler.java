@@ -1,16 +1,14 @@
 package frc.team670.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.team670.robot.RobotContainer;
+
+import frc.team670.robot.utils.MustangWarnings;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
-import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.utils.Logger;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -75,12 +73,8 @@ public class MustangScheduler {
                         MustangSubsystemBase.HealthState healthReq = requirements.get(s);
                         if (s != null && healthReq != null) {
                             if (s.getHealth(false).getId() > healthReq.getId()) {
-                                DriverStation.reportError(
-                                        m_command.getName() + " not run because of health issue! Required health: "
-                                                + healthReq + ", Actual health: " + s.getHealth(false),
-                                        false);
-                                Logger.consoleLog(
-                                        "%s not run because of health issue! Required health: %s , Actual health: %s",
+                                MustangWarnings.reportWarning(
+                                        "%s not run because of health issue! Required health: %s, Actual health: %s",
                                         m_command.getName(), healthReq, s.getHealth(false));
                                 return;
                             }
@@ -108,7 +102,7 @@ public class MustangScheduler {
             return;
         } else {
             if (!(command instanceof MustangCommand)) {
-                throw new RuntimeException("Command was not properly scheduled. Are you using MustangScheduler?");
+                MustangWarnings.reportError("Command was not properly scheduled. Are you using MustangScheduler?");
             }
         }
     }
@@ -124,12 +118,8 @@ public class MustangScheduler {
                     MustangSubsystemBase.HealthState healthReq = requirements.get(s);
                     if (s != null && healthReq != null) {
                         if (s.getHealth(false).getId() > healthReq.getId()) {
-                            DriverStation.reportError(
-                                    m_command.getName() + " not run because of health issue! Required health: "
-                                            + healthReq + ", Actual health: " + s.getHealth(false),
-                                    false);
-                            Logger.consoleLog(
-                                    "%s not run because of health issue! Required health: %s , Actual health: %s",
+                            MustangWarnings.reportError(
+                                    "%s not run because of health issue! Required health: %s, Actual health: %s",
                                     m_command.getName(), healthReq, s.getHealth(false));
                             return;
                         }

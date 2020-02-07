@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.robot.commands.cameras.FlipDriverCameraMode;
 import frc.team670.robot.commands.drive.teleop.FlipDriveAndCamera;
+import frc.team670.robot.dataCollection.XKeys;
 import frc.team670.robot.utils.MustangController;
 import frc.team670.robot.utils.MustangController.XboxButtons;
 
@@ -14,6 +15,8 @@ public class OI {
 
     private JoystickButton toggleReverseDrive, toggleDriverCameraMode;
 
+    private XKeys xkeys;
+
     public OI() {
         driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
         toggleReverseDrive = new JoystickButton(driverController, XboxButtons.LEFT_BUMPER);
@@ -21,7 +24,7 @@ public class OI {
         toggleDriverCameraMode = new JoystickButton(driverController, XboxButtons.B);
         toggleDriverCameraMode.whenPressed(new FlipDriverCameraMode());
         operatorController = new Joystick(RobotMap.OPERATOR_CONTROLLER_PORT);
-      
+        xkeys = new XKeys();
       }
 
       public boolean isQuickTurnPressed() {

@@ -32,6 +32,7 @@ import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.sensors.NavX;
 import frc.team670.robot.utils.Logger;
+import frc.team670.robot.utils.MustangWarnings;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
@@ -56,8 +57,10 @@ public class DriveBase extends MustangSubsystemBase {
   private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
 
   public DriveBase() {
-    leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2);
-    rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1, RobotMap.SPARK_RIGHT_MOTOR_2);
+    leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1,
+        RobotMap.SPARK_LEFT_MOTOR_2);
+    rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
+        RobotMap.SPARK_RIGHT_MOTOR_2);
 
     left1 = leftControllers.get(0);
     left2 = leftControllers.get(1);
@@ -103,7 +106,9 @@ public class DriveBase extends MustangSubsystemBase {
   }
 
   /**
-   * Checks the health for driveBase
+   * Checks the health for driveBase. RED if all motors are dead, GREEN if all
+   * motors are alive and navx is connected, YELLOW if a motor is disconnected or
+   * nav is not connected
    */
   @Override
   public HealthState checkHealth() {
@@ -113,22 +118,20 @@ public class DriveBase extends MustangSubsystemBase {
     boolean isLeft2Error = left2.getLastError() != null && left2.getLastError() != CANError.kOk;
     boolean isRight1Error = right1.getLastError() != null && right1.getLastError() != CANError.kOk;
     boolean isRight2Error = right2.getLastError() != null && right2.getLastError() != CANError.kOk;
-
-    System.out.println(("RED Errors: l1:" + left1.getLastError() + " l2:" + left2.getLastError() + " r1:"
-        + right1.getLastError() + " r2:" + right2.getLastError()));
+    boolean isNavXError = navXMicro == null;
 
     if (isLeft1Error && isLeft2Error || isRight1Error && isRight2Error) {
       state = HealthState.RED;
-      DriverStation.reportWarning("RED Errors: l1:" + left1.getLastError() + " l2:" + left2.getLastError() + " r1:"
-          + right1.getLastError() + " r2:" + right2.getLastError(), false);
-    } else if (!isLeft1Error && !isLeft2Error && !isRight1Error && !isRight2Error) {
+      MustangWarnings.reportError("RED Errors: l1: %s, l2: %s, r1: %s, r2: %s", left1.getLastError(),
+          left2.getLastError(), right1.getLastError(), right2.getLastError());
+    } else if (!isLeft1Error && !isLeft2Error && !isRight1Error && !isRight2Error && !isNavXError) {
       state = HealthState.GREEN;
+      Logger.consoleLog("Health check done. State is: " + state);
     } else {
       state = HealthState.YELLOW;
-      DriverStation.reportWarning("YELLOW Errors: l1:" + left1.getLastError() + " l2:" + left2.getLastError() + " r1:"
-          + right1.getLastError() + " r2:" + right2.getLastError(), false);
+      MustangWarnings.reportError("YELLOW Errors: l1: %s, l2: %s, r1: %s, r2: %s, navX: %s", left1.getLastError(),
+          left2.getLastError(), right1.getLastError(), right2.getLastError(), isNavXError);
     }
-    System.out.println("Health check done. State is: " + state);
     return state;
   }
 

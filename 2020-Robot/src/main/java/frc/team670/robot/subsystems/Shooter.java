@@ -9,7 +9,7 @@ package frc.team670.robot.subsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.commands.MustangScheduler;
-import frc.team670.robot.commands.joystick_controls.JoystickTurret;
+import frc.team670.robot.commands.joystickControls.JoystickTurret;
 import frc.team670.robot.utils.Logger;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;

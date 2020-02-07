@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import frc.team670.robot.utils.Logger;
+import frc.team670.robot.utils.MustangWarnings;
 
 import com.revrobotics.ControlType;
 
@@ -115,12 +116,12 @@ public class SparkMAXFactory {
         boolean isMotor2Error = sparkMaxFollowerError != CANError.kOk && sparkMaxFollowerError != null;
 
         if (isMotor1Error && isMotor2Error) {
-            Logger.consoleError("SparkMaxControllerID %s and SparkMaxControllerID %s are broken",
+            MustangWarnings.reportError("SparkMaxControllerID %s and SparkMaxControllerID %s are broken",
                     sparkMaxLeader.getDeviceId(), sparkMaxFollower.getDeviceId());
         } else if (isMotor2Error) {
-            Logger.consoleWarning("SparkMaxControllerID %s is broken.", sparkMaxFollower.getDeviceId());
+            MustangWarnings.reportWarning("SparkMaxControllerID %s is broken.", sparkMaxFollower.getDeviceId());
         } else if (isMotor1Error) {
-            Logger.consoleWarning("SparkMaxControllerID %s is broken. Switching to SparkMaxControllerID %s",
+            MustangWarnings.reportWarning("SparkMaxControllerID %s is broken. Switching to SparkMaxControllerID %s",
                     sparkMaxLeader.getDeviceId(), sparkMaxFollower.getDeviceId());
             SparkMAXLite sparkMaxTemp = sparkMaxLeader;
             sparkMaxLeader = sparkMaxFollower;

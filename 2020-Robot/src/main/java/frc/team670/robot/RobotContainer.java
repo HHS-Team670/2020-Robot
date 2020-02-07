@@ -22,6 +22,7 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
@@ -82,6 +83,13 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    JoystickButton toggleIntake = new JoystickButton(oi.getOperatorController(), 1);
+    JoystickButton runIntakeOut = new JoystickButton(oi.getOperatorController(), 3);
+    JoystickButton runIntakeIn = new JoystickButton(oi.getOperatorController(), 2);
+
+    // toggleIntake.whenPressed(new toggleIntake());
+    // runIntakeIn.whenHeld(new runIntakeIn());
+    // runIntakeOut.whenHeld(new runIntakeOut());
   }
 
   /**

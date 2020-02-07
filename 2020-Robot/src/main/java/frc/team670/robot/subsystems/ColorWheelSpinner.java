@@ -5,8 +5,6 @@ import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
 import com.revrobotics.CANError;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DriverStation;
 /**
@@ -39,7 +37,7 @@ public class ColorWheelSpinner extends MustangSubsystemBase {
      */
     @Override
     public HealthState checkHealth() {
-        if (rotator.getLastError()!=CANError.kOk){
+        if (rotator.getLastError()!=CANError.kOk && rotator.getLastError()!=null){
             DriverStation.reportWarning("RED error: Problem with color wheel spinner motor", false);
             return HealthState.RED;
         }
@@ -51,6 +49,5 @@ public class ColorWheelSpinner extends MustangSubsystemBase {
     }
 
     public void mustangPeriodic(){
-
     }
 }

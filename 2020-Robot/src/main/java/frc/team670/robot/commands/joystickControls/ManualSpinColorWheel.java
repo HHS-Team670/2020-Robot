@@ -5,9 +5,10 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.team670.robot.commands;
+package frc.team670.robot.commands.joystickControls;
 
 import frc.team670.robot.RobotContainer;
+import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.ColorWheelSpinner;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
