@@ -7,9 +7,9 @@ import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 
 public class Turret extends SparkMaxRotatingSubsystem {
 
-    // TODO: Set these values
+    // TODO: Set these values. Keeping it small right now for testing.
     public static final int SOFT_MINIMUM_DEGREES = -30;
-    public static final int SOFT_MAXIMUM_DEGREES = 210;
+    public static final int SOFT_MAXIMUM_DEGREES = 30;
 
     /**
      * Constants for the turret go here; this includes PID and SmartMotion values.
@@ -56,7 +56,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getMaxVelocity() {
-            return 10;
+            return 20; //TODO: probably needs to be adjusted
         }
 
         public double getMinVelocity() {
@@ -64,11 +64,12 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getMaxAcceleration() {
-            return 1.5;
+            return 25; //TODO: probably needs to be adjusted
         }
 
         public double getAllowedError() {
-            return 2;
+            // equivalent of 2 degrees, in rotations
+            return (2 / 360) * this.getRotatorGearRatio();
         }
 
         public float getForwardSoftLimit() {
@@ -98,7 +99,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     }
 
     public static final Config turretConfig = new Config();
-    private final int DEGREES_PER_MOTOR_ROTATION = 36;
+    private final double DEGREES_PER_MOTOR_ROTATION = 360/turretConfig.getRotatorGearRatio();
 
     public Turret() {
         super(turretConfig);
@@ -117,10 +118,9 @@ public class Turret extends SparkMaxRotatingSubsystem {
         this.rotator.set(speed);
     }
 
-    // TODO: define
     @Override
     public HealthState checkHealth() {
-        if (rotator.getLastError() != null && rotator.getLastError() != CANError.kOk) {
+        if (isSparkMaxHealthy(rotator)) {
             return HealthState.RED;
         }
         return HealthState.GREEN;
@@ -133,9 +133,13 @@ public class Turret extends SparkMaxRotatingSubsystem {
     }
 
     @Override
-    public void moveByPercentOutput(double output) {
-        // TODO Auto-generated method stub
-
+    public void setTargetAngleInDegrees(double targetAngle) {
+        if (targetAngle > SOFT_MAXIMUM_DEGREES || targetAngle < SOFT_MINIMUM_DEGREES) {
+            throw new IllegalArgumentException(
+                    "Invalid angle: must be within range " + SOFT_MINIMUM_DEGREES + " and " + SOFT_MAXIMUM_DEGREES);
+        } else {
+            super.setTargetAngleInDegrees(targetAngle);
+        }
     }
 
     @Override
@@ -144,9 +148,9 @@ public class Turret extends SparkMaxRotatingSubsystem {
     }
 
     @Override
-    protected double getMotorRotationsFromAngle(double angle) {
+    public void moveByPercentOutput(double output) {
         // TODO Auto-generated method stub
-        return 0;
+
     }
 
 }

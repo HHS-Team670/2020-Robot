@@ -1,11 +1,15 @@
 package frc.team670.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import com.revrobotics.CANError;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.utils.Logger;
+import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
 /**
  * Basic framework for a subsystem of the robot with defined levels of system
@@ -73,6 +77,10 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
      * Calculates the current state of the subsystem.
      */
     public abstract HealthState checkHealth();
+
+    protected boolean isSparkMaxHealthy(SparkMAXLite rotator){
+        return (rotator != null && rotator.getLastError() != CANError.kOk);
+    }
 
     public void initDefaultCommand(MustangCommand command) {
         CommandScheduler.getInstance().setDefaultCommand(this, (CommandBase) command);

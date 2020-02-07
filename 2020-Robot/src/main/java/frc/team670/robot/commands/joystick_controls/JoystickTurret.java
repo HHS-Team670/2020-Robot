@@ -19,24 +19,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.robot.subsystems.Turret;
 
 public class JoystickTurret extends CommandBase implements MustangCommand {
-  /**
-   * Creates a new JoystickTurret.
-   */
+
   private Turret turret;
+  private Map<MustangSubsystemBase, HealthState> healthReqs;
   
   public JoystickTurret(Turret turret) {
-    // Use addRequirements() here to declare subsystem dependencies.
     super();
     this.turret=turret;
     addRequirements(turret);
+    healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
+    healthReqs.put(this.turret, HealthState.YELLOW);
   }
-  
-  // private Turret turret;
-  /*
-   * public JoystickTurret(Turret turret) { // Use addRequirements() here to
-   * declare subsystem dependencies. super(); // this.turret=turret;
-   * addRequirements(turret); }
-   */
 
   // Called when the command is initially scheduled.
   @Override
@@ -48,20 +41,11 @@ public class JoystickTurret extends CommandBase implements MustangCommand {
   public void execute() {
     double angle = Math
         .atan((RobotContainer.oi.getOperatorController().getY()) / (RobotContainer.oi.getOperatorController().getX()));
-    // turret.setAngle(angle);
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
+    turret.setTargetAngleInDegrees(angle);
   }
 
   @Override
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-    // TODO Auto-generated method stub
-    // Map<MustangSubsystemBase, HealthState> healthRequirements = new HashMap<MustangSubsystemBase, HealthState>();
-    // healthRequirements.put(turret, HealthState.YELLOW);
-    return null; //healthRequirements;
+    return healthReqs;
   }
 }
