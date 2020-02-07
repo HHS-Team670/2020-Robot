@@ -38,4 +38,7 @@ public class RobotMap {
   public static final int INDEXER_ROTATOR = 9;
   public static final int UPDRAW_SPINNER = 10;
 
+  // Conveyor
+  public static final int CONVEYOR_ROLLER = 8;
+
 }
