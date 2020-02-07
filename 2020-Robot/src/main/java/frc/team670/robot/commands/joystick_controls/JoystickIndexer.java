@@ -13,19 +13,19 @@ import java.util.Map;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 //import frc.team670.robot.subsystems.BallIndexer;
 import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 public class JoystickIndexer extends CommandBase implements MustangCommand {
-  /**
-   * Creates a new JoystickGun.
-   */
-  /*
-   * private BallIndexer ballIndexer; public JoystickIndexer(BallIndexer
-   * ballIndexer) { // Use addRequirements() here to declare subsystem
-   * dependencies. super(); this.ballIndexer=ballIndexer;
-   * addRequirements(ballIndexer); }
-   */
+
+  private Indexer indexer;
+
+  public JoystickIndexer(Indexer indexer) {
+    super();
+    this.indexer = indexer;
+    addRequirements(indexer);
+  }
 
   // Called when the command is initially scheduled.
   @Override
@@ -56,9 +56,8 @@ public class JoystickIndexer extends CommandBase implements MustangCommand {
   @Override
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
     // TODO Auto-generated method stub
-    // Map<MustangSubsystemBase, HealthState> healthRequirements = new HashMap<MustangSubsystemBase, HealthState>();
-    // healthRequirements.put(indexer, HealthState.GREEN);
-    return null; //healthRequirements;
+    Map<MustangSubsystemBase, HealthState> healthRequirements = new HashMap<MustangSubsystemBase, HealthState>();
+    healthRequirements.put(indexer, HealthState.GREEN);
+    return healthRequirements;
   }
 }
- 

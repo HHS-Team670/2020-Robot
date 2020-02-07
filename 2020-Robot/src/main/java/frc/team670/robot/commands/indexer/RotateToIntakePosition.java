@@ -12,26 +12,18 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 /**
  * Run this command before you run IntakeOneBall
  */
-public class RotateToIntakePosition extends CommandBase implements MustangCommand{
+public class RotateToIntakePosition extends CommandBase implements MustangCommand {
 
-    private double speed;
     private Indexer indexer;
-    private int goal;
-    //Indexer's position when it first sees the right chamber
-    private double firstReachedPos;
-    //When the chamber first shows that it's the correct chamber (not right positoin yet though)
-    private boolean reached;
-    //For isFinished()
-    private boolean done;
 
-    public RotateToIntakePosition(Indexer indexer){
-        speed = 0.8;
+    public RotateToIntakePosition(Indexer indexer) {
         addRequirements(indexer);
         this.indexer = indexer;
-        
+
     }
 
-    // this should not be needed if readyToIntake/prepareToIntake works the way it should
+    // this should not be needed if readyToIntake/prepareToIntake works the way it
+    // should
     @Override
     public void initialize() {
         super.initialize();
@@ -40,18 +32,7 @@ public class RotateToIntakePosition extends CommandBase implements MustangComman
 
     @Override
     public void execute() {
-        // indexer.setSpeed(speed);
-        // if (indexer.getTopChamber() == goal) {
-        //     if (reached) {
-        //         if (indexer.getPosition() > firstReachedPos + 0.1) {
-        //             done = true;
-        //         }
-        //     }
-        //     firstReachedPos = indexer.getPosition();
-        //     reached = true;
-        // }
-        //indexer.prepareToIntake();
-        
+        indexer.prepareToIntake();
     }
 
     @Override
@@ -61,7 +42,7 @@ public class RotateToIntakePosition extends CommandBase implements MustangComman
 
     @Override
     public boolean isFinished() {
-        //return done;
+        // return done;
         return indexer.isReadyToIntake();
     }
 

@@ -1,8 +1,6 @@
 package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
 import com.revrobotics.CANError;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -207,17 +205,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      */
     public void uptake(double percentOutput) {
         updraw.set(ControlMode.PercentOutput, percentOutput);
-        chamberStates[getTopChamber()] = false;
-    }
-
-    /**
-     * TODO: ay use current for controlling uptake; if using % output let's start
-     * small for testing
-     * 
-     * @post top chamber should be empty
-     */
-    public void uptake() {
-        updraw.set(ControlMode.PercentOutput, 0.6);
         chamberStates[getTopChamber()] = false;
     }
 

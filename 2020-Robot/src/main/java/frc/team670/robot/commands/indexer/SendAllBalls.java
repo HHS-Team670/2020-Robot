@@ -48,7 +48,7 @@ public class SendAllBalls extends CommandBase implements MustangCommand {
                 indexer.setSpeed(0);
             }
 
-            //SPIN UPTAKE WHEELS HERE
+            indexer.uptake(0.5); // Uptake should spin here, at what speed TBD
 
             // Means that the ball left the revolver
             if (indexer.totalNumOfBalls() == desiredNumBalls) {
