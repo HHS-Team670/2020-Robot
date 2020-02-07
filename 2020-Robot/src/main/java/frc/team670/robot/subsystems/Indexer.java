@@ -156,6 +156,58 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         chamberStates[getBottomChamber()] = true;
     }
 
+    public void prepareToIntake() {
+        setTargetAngleInDegrees(INDEXER_DEGREES_PER_CHAMBER * getIntakeChamber() + CHAMBER_0_AT_TOP_POS_IN_DEGREES);
+    }
+
+    public void prepareToShoot() {
+        setTargetAngleInDegrees(getShootChamber() * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES);
+    }
+
+    /**
+     * uptake into shooter
+     * 
+     * @param percentOutput percent output for the updraw
+     * @post top chamber should be empty
+     */
+    public void uptake(double percentOutput) {
+        updraw.set(ControlMode.PercentOutput, percentOutput);
+        chamberStates[getTopChamber()] = false;
+    }
+
+    //TODO: check for this
+    public boolean updrawIsUpToSpeed() {
+        return false;
+    }
+
+    //TODO: check that ball has left chamber using current???
+
+    public void rotateToLoadShoot() {
+        setTargetAngleInDegrees(getShootChamber() * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES)
+        - INDEXER_DEGREES_PER_CHAMBER/2);
+    }
+
+    private int getTopChamber() {
+
+        double pos = getPosition() % 1.0;
+        if (pos < 0) {
+            pos++;
+        }
+        if (pos <= 0.2 && pos >= 0) {
+            return 2;
+        } else if (pos <= 0.4 && pos >= 0.2) {
+            return 1;
+        } else if (pos <= 0.6 && pos >= 0.4) {
+            return 0;
+        } else if (pos <= 0.8 && pos > 0.6) {
+            return 4;
+        } else if (pos >= 0.8) {
+            return 3;
+        } else {
+            return -1;
+        }
+    }
+
     // chamber currently at the top
     // if its exactly between two chambers, default to later before
     private int getBottomChamber() {
@@ -174,55 +226,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             return 2;
         } else if (pos <= 0.9 && pos >= 0.7) {
             return 1;
-        } else {
-            return -1;
-        }
-    }
-
-    public void prepareToIntake() {
-        setTargetAngleInDegrees(INDEXER_DEGREES_PER_CHAMBER * getIntakeChamber() + CHAMBER_0_AT_TOP_POS_IN_DEGREES);
-    }
-
-    public boolean isReadyToIntake() {
-        return getIntakeChamber() == getBottomChamber();
-    }
-
-    public void prepareToShoot() {
-        setTargetAngleInDegrees(getShootChamber() * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES);
-    }
-
-    public boolean isReadyToShoot() {
-        return getShootChamber() == getTopChamber();
-    }
-
-    /**
-     * uptake into shooter
-     * 
-     * @param percentOutput percent output for the updraw
-     * @post top chamber should be empty
-     */
-    public void uptake(double percentOutput) {
-        updraw.set(ControlMode.PercentOutput, percentOutput);
-        chamberStates[getTopChamber()] = false;
-    }
-
-    private int getTopChamber() {
-
-        double pos = getPosition() % 1.0;
-        if (pos < 0) {
-            pos++;
-        }
-
-        if (pos <= 0.2 && pos >= 0) {
-            return 2;
-        } else if (pos <= 0.4 && pos >= 0.2) {
-            return 1;
-        } else if (pos <= 0.6 && pos >= 0.4) {
-            return 0;
-        } else if (pos <= 0.8 && pos > 0.6) {
-            return 4;
-        } else if (pos >= 0.8) {
-            return 3;
         } else {
             return -1;
         }
@@ -265,10 +268,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         return currentTop;
     }
 
-    // zeroed means that chamber 0 is at the top
-    public boolean isZeroed() {
-        // Probably hall sensor?
-        return false;
+    public void zeroRevolver() {
+        setTargetAngleInDegrees(CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES);
     }
 
     public boolean ballIn() {
