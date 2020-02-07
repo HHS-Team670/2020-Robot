@@ -14,18 +14,19 @@ import frc.team670.robot.utils.Logger;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+
 public class Shooter extends MustangSubsystemBase {
 
-   //Practice Values
-   public static final double kP =0.24;
-   public static final double kI =0.0;
-   public static final double kD =9.670;
-   public static final double kF =0.033818;
+  // Practice Values
+  public static final double kP = 0.24;
+  public static final double kI = 0.0;
+  public static final double kD = 9.670;
+  public static final double kF = 0.033818;
 
   private TalonSRX shooterTalonMain;
   private TalonSRX shooterTalonFollower;
 
-  public Shooter(int mainCANId, int followerCANId){
+  public Shooter(int mainCANId, int followerCANId) {
     shooterTalonMain = new TalonSRX(mainCANId);
     shooterTalonFollower.set(ControlMode.Follower, followerCANId);
     SmartDashboard.putNumber("speed", 0);
@@ -37,30 +38,30 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public void stop() {
-    shooterTalonMain.set(ControlMode.PercentOutput,0);
+    shooterTalonMain.set(ControlMode.PercentOutput, 0);
   }
 
-  public void setDefaultPID(){
+  public void setDefaultPID() {
     shooterTalonMain.config_kP(0, kP);
     shooterTalonMain.config_kI(0, kI);
     shooterTalonMain.config_kD(0, kD);
     shooterTalonMain.config_kF(0, kF);
   }
 
-  public void setPID(){
+  public void setPID() {
     shooterTalonMain.config_kP(0, SmartDashboard.getNumber("P", 0.0));
     shooterTalonMain.config_kI(0, SmartDashboard.getNumber("I", 0.0));
     shooterTalonMain.config_kD(0, SmartDashboard.getNumber("D", 0.0));
     shooterTalonMain.config_kF(0, SmartDashboard.getNumber("F", 0.0));
   }
-  
+
   public void setSpeed() {
     Logger.consoleLog("cuurent-speed %s", SmartDashboard.getNumber("speed", 0.0));
-    shooterTalonMain.set(ControlMode.Velocity,SmartDashboard.getNumber("speed", 0.0));
-    
+    shooterTalonMain.set(ControlMode.Velocity, SmartDashboard.getNumber("speed", 0.0));
+
   }
 
-  public void mustangPeriodic(){
+  public void mustangPeriodic() {
     setPID();
     setSpeed();
   }
@@ -71,7 +72,6 @@ public class Shooter extends MustangSubsystemBase {
     return null;
   }
 
-  public void initDefaultCommand(){
-    //MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret());
+  public void initDefaultCommand() {
   }
 }

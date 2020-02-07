@@ -1,6 +1,5 @@
 package frc.team670.robot.subsystems;
 
-import com.revrobotics.CANEncoder;
 import com.revrobotics.CANError;
 
 import frc.team670.robot.constants.RobotMap;
@@ -8,7 +7,6 @@ import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 
 public class Turret extends SparkMaxRotatingSubsystem {
 
-    private final double SOFT_LIMIT_IN_DEGREES = 160.0; // Default soft limit is in rotations. Will need to adjust this
     // TODO: Set these values
     public static final int SOFT_MINIMUM_DEGREES = -30;
     public static final int SOFT_MAXIMUM_DEGREES = 210;
@@ -57,12 +55,8 @@ public class Turret extends SparkMaxRotatingSubsystem {
             return -1;
         }
 
-        public double getMaxRPM() {
-            return 5700;
-        }
-
         public double getMaxVelocity() {
-            return 2000;
+            return 10;
         }
 
         public double getMinVelocity() {
@@ -70,27 +64,27 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getMaxAcceleration() {
-            return 1500;
+            return 1.5;
         }
 
         public double getAllowedError() {
-            return 50;
+            return 2;
         }
 
         public float getForwardSoftLimit() {
-            return (float)(SOFT_MAXIMUM_DEGREES*getRotatorGearRatio());
+            return (float) (SOFT_MAXIMUM_DEGREES * getRotatorGearRatio());
         }
 
         public float getReverseSoftLimit() {
-            return (float)(SOFT_MINIMUM_DEGREES*getRotatorGearRatio());
+            return (float) (SOFT_MINIMUM_DEGREES * getRotatorGearRatio());
         }
 
         public int getContinuousCurrent() {
-            return 3; //Placeholder
+            return 3; // Placeholder
         }
 
         public int getPeakCurrent() {
-            return 6; //Placeholder
+            return 6; // Placeholder
         }
 
         public Motor_Type getMotorType() {

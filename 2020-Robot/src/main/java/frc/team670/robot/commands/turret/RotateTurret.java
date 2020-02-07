@@ -12,13 +12,11 @@ import java.util.Map;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
- * Rotates the turret to a specified point
+ * Rotates the turret to a specified angle
  */
 public class RotateTurret extends CommandBase implements MustangCommand {
     private Turret turret;
-    //private double initialPos;
     private double angle;
-    private double generalSpeed;
     private double ERROR_MARGIN = 2;
 
     /**
@@ -28,26 +26,22 @@ public class RotateTurret extends CommandBase implements MustangCommand {
      */
     public RotateTurret(Turret turret, double targetAngle) {
         this.turret = turret;
-            if (targetAngle > turret.SOFT_MAXIMUM_DEGREES || targetAngle < turret.SOFT_MINIMUM_DEGREES) {
-                throw new IllegalArgumentException("Invalid angle: must be within range " + turret.SOFT_MINIMUM_DEGREES + " and " + turret.SOFT_MAXIMUM_DEGREES);
-            }
-            this.angle = angle;
+        if (targetAngle > turret.SOFT_MAXIMUM_DEGREES || targetAngle < turret.SOFT_MINIMUM_DEGREES) {
+            throw new IllegalArgumentException("Invalid angle: must be within range " + turret.SOFT_MINIMUM_DEGREES
+                    + " and " + turret.SOFT_MAXIMUM_DEGREES);
+        }
+        angle = targetAngle;
     }
-
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         Map<MustangSubsystemBase, HealthState> health = new HashMap<MustangSubsystemBase, HealthState>();
-        health.put(turret, turret.getHealth(true));
+        health.put(turret, HealthState.GREEN);
         return health;
-    }
- 
-    @Override
-    public void initialize() {
     }
 
     @Override
-    public void execute() {
+    public void initialize() {
         turret.setTargetAngleInDegrees(angle);
     }
 
@@ -60,5 +54,5 @@ public class RotateTurret extends CommandBase implements MustangCommand {
     public void end(boolean interrupted) {
         turret.setTurretSpeed(0);
     }
-        
+
 }
