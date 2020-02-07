@@ -3,13 +3,9 @@ package frc.team670.robot.subsystems;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 import frc.team670.robot.utils.motorcontroller.MotorConfig;
+import frc.team670.robot.utils.MustangNotifications;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
-import com.revrobotics.CANError;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.DriverStation;
 /**
  * Represents the subsystem for spinning the control panel/color wheel.
  * 
@@ -40,18 +36,17 @@ public class ColorWheelSpinner extends MustangSubsystemBase {
      */
     @Override
     public HealthState checkHealth() {
-        if (rotator.getLastError()!=CANError.kOk){
-            DriverStation.reportWarning("RED error: Problem with color wheel spinner motor", false);
+        if (isSparkMaxErrored(rotator)){
+            MustangNotifications.reportError("RED error: Problem with color wheel spinner motor");
             return HealthState.RED;
         }
         if (colorMatch == null){
-            DriverStation.reportWarning("YELLOW Warning: Color sensor not found", false);
+            MustangNotifications.reportWarning("YELLOW Warning: Color sensor not found");
             return HealthState.YELLOW;
         }
         return HealthState.GREEN;
     }
 
     public void mustangPeriodic(){
-
     }
 }

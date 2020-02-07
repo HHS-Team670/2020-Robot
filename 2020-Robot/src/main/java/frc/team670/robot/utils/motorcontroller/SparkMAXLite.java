@@ -1,5 +1,6 @@
 package frc.team670.robot.utils.motorcontroller;
 
+import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 
