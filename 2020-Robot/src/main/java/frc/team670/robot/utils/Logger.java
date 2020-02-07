@@ -226,6 +226,28 @@ public class Logger {
     }
 
     /**
+     * Write message to console log with optional formatting and program location.
+     * @param message Message with optional format specifiers for listed parameters. Use '%s' for formatting. It makes the parameters appear in the String where the '%s' are in order of input.
+     * @param parameters Parameter list matching format specifiers.
+     */
+    public static void consoleError(String message, Object... parameters)
+    {
+        // logs to the console as well as our log file on RR disk.
+        LOGGER.log(Level.SEVERE, String.format("robot: MatchTime:%s: %s: %s", DriverStation.getInstance().getMatchTime(), currentMethod(2), String.format(message, parameters)));
+    }
+
+    /**
+     * Write message to console log with optional formatting and program location.
+     * @param message Message with optional format specifiers for listed parameters. Use '%s' for formatting. It makes the parameters appear in the String where the '%s' are in order of input.
+     * @param parameters Parameter list matching format specifiers.
+     */
+    public static void consoleWarning(String message, Object... parameters)
+    {
+        // logs to the console as well as our log file on RR disk.
+        LOGGER.log(Level.WARNING, String.format("robot: MatchTime:%s: %s: %s", DriverStation.getInstance().getMatchTime(), currentMethod(2), String.format(message, parameters)));
+    }
+
+    /**
      * Write blank line with program location to the console log.
      */
     public static void consoleLog() {

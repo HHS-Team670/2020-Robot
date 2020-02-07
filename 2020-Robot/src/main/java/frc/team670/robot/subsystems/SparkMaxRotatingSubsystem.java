@@ -1,6 +1,7 @@
 package frc.team670.robot.subsystems;
 
 import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 
 import com.revrobotics.CANEncoder;
@@ -21,10 +22,9 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     protected CANSparkMax rotator;
     protected CANEncoder rotator_encoder;
     protected CANPIDController rotator_controller;
-    protected int offsetFromEncoderZero;
     protected static final double NO_SETPOINT = Double.NaN;
     protected double setpoint;
-    protected double kP, kI, kD, kFF, kIz, MAX_OUTPUT, MIN_OUTPUT, MAX_RPM;
+    protected double kP, kI, kD, kFF, kIz, MAX_OUTPUT, MIN_OUTPUT;
     protected double MAX_VEL, MIN_VEL, MAX_ACC, ALLOWED_ERR;
     protected int SMARTMOTION_SLOT;
 
@@ -37,6 +37,8 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         public abstract int getDeviceID();
 
         public abstract int getSlot();
+
+        public abstract MotorConfig.Motor_Type getMotorType();
 
         public abstract double getP();
 
@@ -51,8 +53,6 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         public abstract double getMaxOutput();
 
         public abstract double getMinOutput();
-
-        public abstract double getMaxRPM();
 
         public abstract double getMaxVelocity();
 
@@ -70,15 +70,12 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
 
         public abstract int getPeakCurrent();
 
-        public abstract int getOffsetFromEncoderZero();
-
     }
 
     public SparkMaxRotatingSubsystem(Config config) {
-        this.rotator = SparkMAXFactory.buildFactorySparkMAX(config.getDeviceID());
+        this.rotator = SparkMAXFactory.buildFactorySparkMAX(config.getDeviceID(), config.getMotorType());
         this.rotator_encoder = rotator.getEncoder();
         this.rotator_controller = rotator.getPIDController();
-        this.offsetFromEncoderZero = config.getOffsetFromEncoderZero();
 
         // PID coefficients
         this.kP = config.getP();
@@ -88,7 +85,6 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         this.kFF = config.getFF();
         this.MAX_OUTPUT = config.getMaxOutput();
         this.MIN_OUTPUT = config.getMinOutput();
-        this.MAX_RPM = config.getMaxRPM();
 
         // Smart Motion Coefficients
         this.MAX_VEL = config.getMaxVelocity(); // rpm
@@ -123,11 +119,17 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         return this.rotator_encoder.getPosition();
     }
 
-    public void setSmartMotionTarget(double setpoint) {
+    private void setSmartMotionTarget(double setpoint) {
         rotator_controller.setReference(setpoint, ControlType.kSmartMotion);
     }
 
-    public abstract double getAngleInDegrees();
+    public void setTargetAngleInDegrees(double angle){
+       setSmartMotionTarget(getMotorRotationsFromAngle(angle));
+    }
+
+    protected abstract double getMotorRotationsFromAngle(double angle);
+
+    public abstract double getCurrentAngleInDegrees();
 
     public void enableCoastMode() {
         rotator.setIdleMode(IdleMode.kCoast);
@@ -143,7 +145,7 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     }
 
     public void clearSetpoint() {
-        setpoint = NO_SETPOINT; // TODO: is NO_SETPOINT a good value?
+        setpoint = NO_SETPOINT;
     }
 
     public CANSparkMax getRotator() {

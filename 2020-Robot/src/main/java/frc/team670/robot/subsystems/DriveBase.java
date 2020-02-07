@@ -32,6 +32,7 @@ import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.sensors.NavX;
 import frc.team670.robot.utils.Logger;
+import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
@@ -55,12 +56,9 @@ public class DriveBase extends MustangSubsystemBase {
 
   private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
 
-  private int[] leftControllerIDs = { RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2 };
-  private int[] rightControllerIDs = { RobotMap.SPARK_RIGHT_MOTOR_1, RobotMap.SPARK_RIGHT_MOTOR_2 };
-
   public DriveBase() {
-    leftControllers = SparkMAXFactory.buildSparkMAXPair(leftControllerIDs);
-    rightControllers = SparkMAXFactory.buildSparkMAXPair(rightControllerIDs);
+    leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2, MotorConfig.Motor_Type.NEO);
+    rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1, RobotMap.SPARK_RIGHT_MOTOR_2, MotorConfig.Motor_Type.NEO);
 
     left1 = leftControllers.get(0);
     left2 = leftControllers.get(1);
@@ -90,8 +88,6 @@ public class DriveBase extends MustangSubsystemBase {
     driveTrain = new DifferentialDrive(left1, right1);
     driveTrain.setMaxOutput(1.0);
     driveTrain.setRightSideInverted(false);
-
-    setRampRate(allMotors, 0.36); // Will automatically cook some Cheezy Poofs
 
     // initialized NavX and sets Odometry
     navXMicro = new NavX(RobotMap.NAVX_PORT);
@@ -424,6 +420,13 @@ public class DriveBase extends MustangSubsystemBase {
       m.setClosedLoopRampRate(rampRate);
       m.setOpenLoopRampRate(rampRate);
     }
+  }
+
+  /**
+   * @param rampRate The ramp rate in seconds from 0 to full throttle
+   */
+  public void setTeleopRampRate() {
+    setRampRate(allMotors, 0.36); // Will automatically cook some Cheezy Poofs
   }
 
   /**
