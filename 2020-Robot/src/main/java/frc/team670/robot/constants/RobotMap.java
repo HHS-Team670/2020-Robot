@@ -18,8 +18,11 @@ public class RobotMap {
 
   // NavX
   public final static Port NAVX_PORT = SerialPort.Port.kUSB;
-  public final static int SHOOTER_ID_MAIN = 11;
-  public final static int SHOOTER_ID_FOLLOWER = 12;
+
+  //Shooter
+  public static final int SHOOTER_2_MAIN = 11;
+  public static final int SHOOTER_2_FOLLOWER = 12;
+  public static final int SHOOTER_1_VICTOR = 13;
 
   // Motors
   public static final int COLOR_WHEEL_MOTOR_ID = 10;

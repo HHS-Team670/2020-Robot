@@ -4,6 +4,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANError;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SensorCollection;
 
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.motorcontroller.MotorConfig;
@@ -23,11 +24,19 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     // Current control: updraw
     // TODO: find all these values
-    private static final double UPDRAW_CURR_P = 0.2;
+    private static final double UPDRAW_CURR_P = 0.0;
     private static final double UPDRAW_CURR_I = 0;
     private static final double UPDRAW_CURR_D = 0;
+    private static final double UPDRAW_CURR_FF = 0.2;
 
     private static final int UPDRAW_CURRENT_SLOT = 0;
+
+    private static final double UPDRAW_V_P = 0;
+    private static final double UPDRAW_V_I = 0;
+    private static final double UPDRAW_V_D = 0;
+    private static final double UPDRAW_V_FF = 0.2;
+
+    private static final int UPDRAW_VELOCITY_SLOT = 1;
 
     private static final int UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT = 0;
     private static final int UPDRAW_PEAK_CURRENT_LIMIT = 0;
@@ -125,6 +134,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     public static final Config INDEXER_CONFIG = new Config();
 
+    private SensorCollection updrawSensors;
+
     public Indexer() {
         super(INDEXER_CONFIG);
 
@@ -133,9 +144,18 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         chamberStates = new boolean[5];
 
         updraw.setNeutralMode(NeutralMode.Coast);
+        this.updrawSensors = updraw.getSensorCollection();
+
         updraw.config_kP(UPDRAW_CURRENT_SLOT, UPDRAW_CURR_P);
         updraw.config_kI(UPDRAW_CURRENT_SLOT, UPDRAW_CURR_I);
         updraw.config_kD(UPDRAW_CURRENT_SLOT, UPDRAW_CURR_D);
+        updraw.config_kF(UPDRAW_CURRENT_SLOT, UPDRAW_CURR_FF);
+
+        updraw.config_kP(UPDRAW_VELOCITY_SLOT, UPDRAW_V_P);
+        updraw.config_kI(UPDRAW_VELOCITY_SLOT, UPDRAW_V_I);
+        updraw.config_kD(UPDRAW_VELOCITY_SLOT, UPDRAW_V_D);
+        updraw.config_kF(UPDRAW_VELOCITY_SLOT, UPDRAW_V_FF);
+
         updraw.configContinuousCurrentLimit(UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT);
         updraw.configPeakCurrentLimit(UPDRAW_PEAK_CURRENT_LIMIT);
         updraw.enableCurrentLimit(true);
@@ -175,15 +195,15 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         chamberStates[getTopChamber()] = false;
     }
 
-    //TODO: check for this
+    // TODO: check for this
     public boolean updrawIsUpToSpeed() {
         return false;
     }
 
-    //TODO: check that ball has left chamber using current???
+    // TODO: check that ball has left chamber using current???
 
     public void rotateToLoadShoot() {
-        setTargetAngleInDegrees(getShootChamber() * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES)
+        setTargetAngleInDegrees((getShootChamber() * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES)
         - INDEXER_DEGREES_PER_CHAMBER/2);
     }
 
@@ -308,7 +328,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     @Override
     public double getCurrentAngleInDegrees() {
-        return (getUnadjustedPosition()/ INDEXER_TICKS_PER_ROTATION);
+        return (getUnadjustedPosition() / INDEXER_TICKS_PER_ROTATION);
     }
 
     @Override
