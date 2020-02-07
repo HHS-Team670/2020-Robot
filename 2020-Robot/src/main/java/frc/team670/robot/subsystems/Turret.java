@@ -2,14 +2,9 @@ package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANError;
-import com.revrobotics.CANPIDController;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.ControlType;
-import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import frc.team670.robot.constants.RobotMap;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 
 public class Turret extends SparkMaxRotatingSubsystem {
 
@@ -33,23 +28,23 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getP() {
-            return SmartDashboard.getNumber("P Gain", 0.001);
+            return 0.001;
         }
 
         public double getI() {
-            return SmartDashboard.getNumber("I Gain", 0.001);
+            return 0;
         }
 
         public double getD() {
-            return SmartDashboard.getNumber("D Gain", 0.001);
+            return 0;
         }
 
         public double getFF() {
-            return SmartDashboard.getNumber("Feed Forward", 0.001);
+            return 0;
         }
 
         public double getIz() {
-            return SmartDashboard.getNumber("I Zone", 0.001);
+            return 0;
         }
 
         public double getMaxOutput() {
@@ -100,6 +95,11 @@ public class Turret extends SparkMaxRotatingSubsystem {
             return 0;
         }
 
+        @Override
+        public Motor_Type getMotorType() {
+            return Motor_Type.NEO_550;
+        }
+
     }
 
     public static final Config turretConfig = new Config();
@@ -117,65 +117,22 @@ public class Turret extends SparkMaxRotatingSubsystem {
         // define degrees
 
         // there are 4096 ticks in a circle, so one degree is 11 17/45 ticks.
-        //return ((getEncoderPos() / TICKS_PER_REVOLUTION) * 360);
-        return getUnadjustedPosition()*DEGREES_PER_MOTOR_ROTATION;
+        // return ((getEncoderPos() / TICKS_PER_REVOLUTION) * 360);
+        return getUnadjustedPosition() * DEGREES_PER_MOTOR_ROTATION;
         // verify if this is counts per revolution as the input of get ticks in degrees.
-    }
-
-    /*
-     * Sets the target angle to angleGoal and rotates there.
-     */
-    public void setTargetAngle(double goalAngle){
-        //10 rotations of the motor is equal to 360 degrees for the turret
-        double angleToTurn = goalAngle-getAngleInDegrees();
-        double rotations = angleToTurn/DEGREES_PER_MOTOR_ROTATION;
-        setSmartMotionTarget(rotations);
     }
 
     /**
      * 
      * takes in double from -1 to 1 to set speed of turret motor
-     * @pre speed has to be greater than or equal to negative one and less than or equal to one.
+     * 
+     * @pre speed has to be greater than or equal to negative one and less than or
+     *      equal to one.
      * @param speed speed to set turret to
      */
 
     public void setTurretSpeed(double speed) {
         this.rotator.set(speed);
-    }
-
-    /**
-     * 
-     * @return double ratio of ticks to degrees. Can be multiplied by degrees to get
-     *         ticks
-     */
-    public double getTicksPerDegree() {
-        return TICKS_PER_REVOLUTION / 360;
-    }
-
-    /**
-     * Converts degrees to ticks
-     * 
-     * @param degrees value to convert
-     * @return
-     */
-    public double getTicks(double degrees) {
-        return degrees * getTicksPerDegree();
-    }
-
-    /**
-     * Converts ticks to degrees
-     * 
-     * @param ticks value to convert
-     */
-    public double getDegrees(double ticks) {
-        return ticks / getTicksPerDegree();
-    }
-
-    /**
-     * @return the encoder of the motor
-     */
-    public CANEncoder getEncoder() {
-        return this.rotator_encoder;
     }
 
     // TODO: define
@@ -199,61 +156,16 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     }
 
-    // Unused methods for potential later use.
+    @Override
+    public double getCurrentAngleInDegrees() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
-    // /**
-    // * motor health condition:
-    // * indicates the current working capabilities,
-    // * raises flag when turret motor is not functioning properly.
-    // *
-    // * @return
-    // */
-    // public boolean motorHealthConditions() {
-    // // sparkControl
-
-    // // This function is apparently depreciated
-    // // double currentAmps = sparkControl.getOutputCurrent();
-
-    // final double currentAmps = sparkControl.getSupplyCurrent(); // OR
-    // // double currentAmps = sparkControl.getStatorCurrent();
-
-    // final double outputVoltage = sparkControl.getMotorOutputVoltage();
-    // final double busV = sparkControl.getBusVoltage();
-
-    // /**
-    // * double quadEncoderPos = sparkControl.getSelectedSensorPosition();
-    // *
-    // */
-
-    // return false;
-    // }
-
-    /**
-     * 
-     * get encoder ticks
-     * 
-     * get power of motor, calculate potential ticks travelled.
-     * 
-     * talon
-     * 
-     * if encoder - potential = minorDifference. we are good else red flag
-     * 
-     * physical limit of turret
-     * 
-     * @param previousTicks comparing the previous ticks to current ticks lets us
-     *                      know how much distance has been travelled over time,
-     *                      helps in telling weather the encoder is working
-     *                      especially when it stops when the motor is working.
-     * @return flaggingFunctionality to return weather there is any problems with
-     *         the subsystem.
-     */
-    // public boolean encoderHealthCondition(final double previousTicks) {
-    // final double numberOfTicks = getEncoderPos();
-
-    // // calculate potential travel in ticks
-    // final double power = getSpeed();
-    // return power != 0 && numberOfTicks != previousTicks;
-
-    // }
+    @Override
+    protected double getMotorRotationsFromAngle(double angle) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 
 }
