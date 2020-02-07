@@ -20,6 +20,7 @@ import frc.team670.robot.utils.MustangNotifications;
 /**
  * Listens on network tables to keys sent over by the XKeys keyboard and calls
  * the corresponding commands
+ * 
  * @author lakshbhambhani
  */
 public class XKeys {
@@ -126,7 +127,7 @@ public class XKeys {
 
     }
 
-    private class xkeysCommands{
+    private class xkeysCommands { // do not use enums as getID has to be called over enum call
 
         public static final double run_intake_in = 0;
         public static final double run_intake_out = 1;
