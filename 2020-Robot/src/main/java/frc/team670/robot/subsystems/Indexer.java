@@ -109,16 +109,16 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
 
         public int getContinuousCurrent() {
-            return 30;
+            return 3;
         }
 
         public int getPeakCurrent() {
-            return 0;
+            return 6;
         }
 
         @Override
-        public int getRotatorGearRatio() {
-            return 1; // TODO: Update when we find out for sure
+        public double getRotatorGearRatio() {
+            return 100; // TODO: Update when we find out for sure
         }
 
     }
@@ -126,8 +126,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     public static final Config INDEXER_CONFIG = new Config();
 
     public Indexer() {
-        // TODO: find actual values for everything here. Does it make sense to require
-        // all these?
         super(INDEXER_CONFIG);
 
         this.updraw = new TalonSRXLite(RobotMap.UPDRAW_SPINNER);
@@ -309,7 +307,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     @Override
     public double getCurrentAngleInDegrees() {
-        return ((this.getPosition() / INDEXER_TICKS_PER_ROTATION) * 360);
+        return (getUnadjustedPosition()/ INDEXER_TICKS_PER_ROTATION);
     }
 
     @Override
