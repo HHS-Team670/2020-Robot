@@ -41,9 +41,6 @@ public class JoystickTurret extends CommandBase implements MustangCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
-    turret.setTargetAngle(0);
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -52,12 +49,6 @@ public class JoystickTurret extends CommandBase implements MustangCommand {
     double angle = Math
         .atan((RobotContainer.oi.getOperatorController().getY()) / (RobotContainer.oi.getOperatorController().getX()));
     // turret.setAngle(angle);
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    turret.setTargetAngle(0);
   }
 
   // Returns true when the command should end.

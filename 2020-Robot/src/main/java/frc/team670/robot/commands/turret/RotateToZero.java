@@ -8,6 +8,6 @@ import frc.team670.robot.subsystems.Turret;
 public class RotateToZero extends RotateTurret {
 
     public RotateToZero(Turret t) {
-        super(0, t, false);
+        super(t, 0);
     }
 }

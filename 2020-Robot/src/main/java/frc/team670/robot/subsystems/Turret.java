@@ -8,8 +8,10 @@ import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 
 public class Turret extends SparkMaxRotatingSubsystem {
 
-    public final int TICKS_PER_REVOLUTION = 4096;
     private final double SOFT_LIMIT_IN_DEGREES = 160.0; // Default soft limit is in rotations. Will need to adjust this
+    // TODO: Set these values
+    public static final int SOFT_MINIMUM_DEGREES = -30;
+    public static final int SOFT_MAXIMUM_DEGREES = 210;
 
     /**
      * Constants for the turret go here; this includes PID and SmartMotion values.
@@ -76,28 +78,27 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public float getForwardSoftLimit() {
-            return 1000;
+            return (float)(SOFT_MAXIMUM_DEGREES*getRotatorGearRatio());
         }
 
         public float getReverseSoftLimit() {
-            return -1000;
+            return (float)(SOFT_MINIMUM_DEGREES*getRotatorGearRatio());
         }
 
         public int getContinuousCurrent() {
-            return 30;
+            return 3; //Placeholder
         }
 
         public int getPeakCurrent() {
-            return 0;
+            return 6; //Placeholder
         }
 
-        public int getOffsetFromEncoderZero() {
-            return 0;
-        }
-
-        @Override
         public Motor_Type getMotorType() {
             return Motor_Type.NEO_550;
+        }
+
+        public double getRotatorGearRatio() {
+            return 71.166;
         }
 
     }
@@ -107,19 +108,6 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     public Turret() {
         super(turretConfig);
-    }
-
-    /**
-     * 
-     * @return the position of the turret in degrees
-     */
-    public double getAngleInDegrees() {
-        // define degrees
-
-        // there are 4096 ticks in a circle, so one degree is 11 17/45 ticks.
-        // return ((getEncoderPos() / TICKS_PER_REVOLUTION) * 360);
-        return getUnadjustedPosition() * DEGREES_PER_MOTOR_ROTATION;
-        // verify if this is counts per revolution as the input of get ticks in degrees.
     }
 
     /**
@@ -158,8 +146,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     @Override
     public double getCurrentAngleInDegrees() {
-        // TODO Auto-generated method stub
-        return 0;
+        return getUnadjustedPosition() * DEGREES_PER_MOTOR_ROTATION;
     }
 
     @Override

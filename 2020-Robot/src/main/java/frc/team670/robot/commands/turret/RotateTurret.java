@@ -26,20 +26,12 @@ public class RotateTurret extends CommandBase implements MustangCommand {
      * @param inTicks true if angle is in ticks, false if in degrees
      * 
      */
-    public RotateTurret(double angleTo, Turret turret, boolean inTicks) {
+    public RotateTurret(Turret turret, double targetAngle) {
         this.turret = turret;
-        //initialPos = turret.getEncoderPos();
-        if (!inTicks) {
-            if (angleTo > 360) {
-                throw new IllegalArgumentException("Cannot use angle greater than 360 degrees");
+            if (targetAngle > turret.SOFT_MAXIMUM_DEGREES || targetAngle < turret.SOFT_MINIMUM_DEGREES) {
+                throw new IllegalArgumentException("Invalid angle: must be within range " + turret.SOFT_MINIMUM_DEGREES + " and " + turret.SOFT_MAXIMUM_DEGREES);
             }
-            this.angle = angleTo;
-        } else {
-            if (angleTo > turret.TICKS_PER_REVOLUTION) {
-                throw new IllegalArgumentException("Cannot use tick measure greater than " + turret.TICKS_PER_REVOLUTION);
-            }
-            this.angle = turret.getDegrees(angleTo);
-        }
+            this.angle = angle;
     }
 
 
@@ -52,30 +44,20 @@ public class RotateTurret extends CommandBase implements MustangCommand {
  
     @Override
     public void initialize() {
-        if (Math.abs(angle - turret.getAngleInDegrees()) > ERROR_MARGIN) {
-            turret.setTurretSpeed(generalSpeed);
-        }
     }
 
     @Override
     public void execute() {
-        if (angle - turret.getAngleInDegrees() < -ERROR_MARGIN) {
-            turret.setTurretSpeed(generalSpeed);
-
-        } else if (angle - turret.getAngleInDegrees() > ERROR_MARGIN) {
-            turret.setTurretSpeed(-generalSpeed);
-        }
+        turret.setTargetAngleInDegrees(angle);
     }
 
     @Override
     public boolean isFinished() {
-        
-        return Math.abs(angle - turret.getAngleInDegrees()) < ERROR_MARGIN;
+        return Math.abs(angle - turret.getCurrentAngleInDegrees()) < ERROR_MARGIN;
     }
 
     @Override
     public void end(boolean interrupted) {
-        
         turret.setTurretSpeed(0);
     }
         
