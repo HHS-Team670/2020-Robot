@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.team670.robot.commands.joystick_controls;
+package frc.team670.robot.commands.joystickControls;
 
 import java.util.HashMap;
 import java.util.Map;

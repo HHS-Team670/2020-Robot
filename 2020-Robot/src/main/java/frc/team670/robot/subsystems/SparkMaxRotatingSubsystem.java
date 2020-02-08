@@ -27,10 +27,11 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     protected double kP, kI, kD, kFF, kIz, MAX_OUTPUT, MIN_OUTPUT;
     protected double MAX_VEL, MIN_VEL, MAX_ACC, ALLOWED_ERR;
     protected int SMARTMOTION_SLOT;
+    protected double ROTATOR_GEAR_RATIO;
 
     /**
-     * Configuration for this RotatingSubsystem's properties. 
-     * Use this to keep track of PID and SmartMotion constants
+     * Configuration for this RotatingSubsystem's properties. Use this to keep track
+     * of PID and SmartMotion constants
      */
     public static abstract class Config {
 
@@ -39,6 +40,8 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         public abstract int getSlot();
 
         public abstract MotorConfig.Motor_Type getMotorType();
+
+        public abstract double getRotatorGearRatio();
 
         public abstract double getP();
 
@@ -76,6 +79,8 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         this.rotator = SparkMAXFactory.buildFactorySparkMAX(config.getDeviceID(), config.getMotorType());
         this.rotator_encoder = rotator.getEncoder();
         this.rotator_controller = rotator.getPIDController();
+
+        this.ROTATOR_GEAR_RATIO = config.getRotatorGearRatio();
 
         // PID coefficients
         this.kP = config.getP();
@@ -123,11 +128,13 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         rotator_controller.setReference(setpoint, ControlType.kSmartMotion);
     }
 
-    public void setTargetAngleInDegrees(double angle){
-       setSmartMotionTarget(getMotorRotationsFromAngle(angle));
+    public void setTargetAngleInDegrees(double angle) {
+        setSmartMotionTarget(getMotorRotationsFromAngle(angle));
     }
 
-    protected abstract double getMotorRotationsFromAngle(double angle);
+    protected double getMotorRotationsFromAngle(double angle) {
+        return (angle / 360) * this.ROTATOR_GEAR_RATIO;
+    }
 
     public abstract double getCurrentAngleInDegrees();
 

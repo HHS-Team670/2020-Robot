@@ -5,8 +5,10 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.team670.robot.commands;
+package frc.team670.robot.commands.colorWheel;
 
+import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 import frc.team670.robot.subsystems.ColorWheelSpinner;
 import frc.team670.robot.subsystems.MustangSubsystemBase;

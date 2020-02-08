@@ -1,11 +1,15 @@
 package frc.team670.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import com.revrobotics.CANError;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.utils.Logger;
+import frc.team670.robot.utils.MustangNotifications;
+import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
 /**
  * Basic framework for a subsystem of the robot with defined levels of system
@@ -19,14 +23,14 @@ import frc.team670.robot.utils.Logger;
 public abstract class MustangSubsystemBase extends SubsystemBase {
 
     protected HealthState lastHealthState;
-    private boolean failedOnce = false;
+    private boolean failedLastTime = false;
 
     /**
      * Creates a new MustangSubsystemBase. By default, the subsystem's initial
      * health state is UNKNOWN (ID 0).
      */
     public MustangSubsystemBase() {
-        // RobotContainer.addSubsystem(this);
+        RobotContainer.addSubsystem(this);
         this.lastHealthState = HealthState.UNKNOWN;
     }
 
@@ -64,8 +68,9 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
      * @return The latest known state of this subsystem: GREEN, YELLOW, or RED.
      */
     public HealthState getHealth(boolean check) {
-        if (lastHealthState == HealthState.UNKNOWN || check)
+        if (lastHealthState == HealthState.UNKNOWN || check) {
             lastHealthState = checkHealth();
+        }
         return this.lastHealthState;
     }
 
@@ -82,17 +87,28 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
     public void periodic() {
         HealthState lastHealth = getHealth(false);
         if (lastHealth == HealthState.GREEN) {
-            if (failedOnce) {
-                Logger.consoleLog("Health state for " + this.getName() + " is: " + lastHealth + ". Enabling Periodic");
-                failedOnce = false;
+            if (failedLastTime) {
+                MustangNotifications
+                        .notify("Health state for " + this.getName() + " is: " + lastHealth + ". Enabling Periodic");
+                failedLastTime = false;
             }
             mustangPeriodic();
         } else {
-            if (!failedOnce) {
-                Logger.consoleLog("Health state for " + this.getName() + " is: " + lastHealth + ". Disabling Periodic");
-                failedOnce = true;
+            if (!failedLastTime) {
+                MustangNotifications.reportError(
+                        "Health state for " + this.getName() + " is: " + lastHealth + ". Disabling Periodic");
+                failedLastTime = true;
             }
         }
+    }
+
+    /**
+     * 
+     * @param sparkMax The motor which has to be checked for an error
+     * @return true if there is an issue with this SparkMax, false if the SparkMax is connected successfully and without errors. 
+     */
+    public boolean isSparkMaxErrored(SparkMAXLite sparkMax) {
+        return (sparkMax != null && sparkMax.getLastError() != CANError.kOk);
     }
 
     public abstract void mustangPeriodic();

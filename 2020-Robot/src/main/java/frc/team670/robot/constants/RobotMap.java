@@ -31,4 +31,12 @@ public class RobotMap {
   public static final int INTAKE_DEPLOYER = 3;    //SET THIS
   public static final int INTAKE_COMPRESSOR = 6;  //SET THIS
   public static final int INTAKE_SENSOR = 5;
+
+  // Conveyor
+  public static final int CONVEYOR_ROLLER = 8;
+
+  //Indexer and Updraw
+  public static final int INDEXER_ROTATOR = 9;
+  public static final int UPDRAW_SPINNER = 10;
+
 }
