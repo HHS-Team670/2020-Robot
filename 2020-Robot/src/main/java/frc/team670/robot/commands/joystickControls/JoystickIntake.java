@@ -13,39 +13,41 @@ import java.util.Map;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 public class JoystickIntake extends CommandBase implements MustangCommand {
-  /**
-   * Creates a new Joystick_Intake.
-   */
 
-  public JoystickIntake() {
-    // Use addRequirements() here to declare subsystem dependencies.
-    // this.intake = intake;
-    // addRequirements(intake);
+  Intake intake;
+  Map<MustangSubsystemBase, HealthState> healthReqs;
+
+  public JoystickIntake(Intake intake) {
+    this.intake = intake;
+    addRequirements(intake);
+    healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
+    healthReqs.put(this.intake, HealthState.GREEN);
 
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // intake.driveIntake(0);
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (RobotContainer.oi.getOperatorController().getTop()) {
-      // intake.driveIntake(RobotContainer.operatorJoystick.getY());
+      // intake.roll(RobotContainer.operatorJoystick.getY());
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // intake.driveInake(0);
+    // intake.roll(0);
   }
 
   // Returns true when the command should end.
@@ -56,10 +58,6 @@ public class JoystickIntake extends CommandBase implements MustangCommand {
 
   @Override
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-    // TODO Auto-generated method stub
-    // Map<MustangSubsystemBase, HealthState> healthRequirements = new HashMap<MustangSubsystemBase, HealthState>();
-    // healthRequirements.put(intake, HealthState.GREEN);
-    // healthRequirements.put(intakeRollers, HealthState.GREEN);
-    return null; //healthRequirements;
+    return healthReqs;
   }
 }

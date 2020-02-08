@@ -31,6 +31,7 @@ public class Intake extends MustangSubsystemBase {
 
     public void deploy(boolean isDeployed) {
         this.isDeployed = isDeployed;
+        deployer.set(isDeployed);
     }
 
     public boolean isDeployed() {
