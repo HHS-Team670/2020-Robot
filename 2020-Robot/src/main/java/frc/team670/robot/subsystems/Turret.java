@@ -28,7 +28,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getP() {
-            return 0.001;
+            return 0.00005;
         }
 
         public double getI() {
@@ -40,7 +40,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getFF() {
-            return 0;
+            return 0.0012;
         }
 
         public double getIz() {
@@ -56,7 +56,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getMaxVelocity() {
-            return 20; //TODO: probably needs to be adjusted
+            return 200; //TODO: probably needs to be adjusted
         }
 
         public double getMinVelocity() {
@@ -64,7 +64,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getMaxAcceleration() {
-            return 25; //TODO: probably needs to be adjusted
+            return 200; //TODO: probably needs to be adjusted
         }
 
         public double getAllowedError() {
