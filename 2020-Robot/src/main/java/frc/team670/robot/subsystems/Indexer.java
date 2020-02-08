@@ -35,7 +35,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     private static final double UPDRAW_CURR_D = 0;
     private static final double UPDRAW_CURR_FF = 0.2;
 
-    private static final double UPDRAW_CURRENT = 0;
+    //TODO: find these values
+    private static final double UPDRAW_SHOOT_CURRENT_CHANGE_THRESHOLD = 0;
+    private static final double UPDRAW_SHOOT_COMPLETED_CURRENT_CHANGE = 0;
 
     private static final int UPDRAW_CURRENT_SLOT = 0;
 
@@ -346,8 +348,12 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         current = updraw.getSupplyCurrent();
         currentChange = current - prevCurrent;
 
-        if (currentChange > 0){
-            
+        if (currentChange > UPDRAW_SHOOT_CURRENT_CHANGE_THRESHOLD)
+            ballIsUpdrawing = true;
+        if (currentChange < UPDRAW_SHOOT_COMPLETED_CURRENT_CHANGE) {
+            ballIsUpdrawing = false;
+            ballHasLeft = true;
+            chamberStates[getTopChamber()] = false;
         }
 
     }
