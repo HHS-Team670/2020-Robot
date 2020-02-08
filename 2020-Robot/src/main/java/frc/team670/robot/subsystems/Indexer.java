@@ -21,6 +21,12 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     private CANEncoder encoder;
     private boolean[] chamberStates;
+    private double current;
+    private double prevCurrent;
+    private double currentChange;
+
+    private boolean ballIsUpdrawing;
+    private boolean ballHasLeft;
 
     // Current control: updraw
     // TODO: find all these values
@@ -28,6 +34,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     private static final double UPDRAW_CURR_I = 0;
     private static final double UPDRAW_CURR_D = 0;
     private static final double UPDRAW_CURR_FF = 0.2;
+
+    private static final double UPDRAW_CURRENT = 0;
 
     private static final int UPDRAW_CURRENT_SLOT = 0;
 
@@ -47,6 +55,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     private static final int CHAMBER_0_AT_TOP_POS_IN_DEGREES = 252;
     private static final int CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES = 72;
+
 
     /**
      * PID and SmartMotion constants for the indexer rotator go here.
@@ -192,12 +201,13 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      */
     public void uptake(double percentOutput) {
         updraw.set(ControlMode.PercentOutput, percentOutput);
-        chamberStates[getTopChamber()] = false;
+        //chamberStates[getTopChamber()] = false;
     }
 
-    // TODO: check for this
+    // TODO: does this work
     public boolean updrawIsUpToSpeed() {
-        return false;
+        double c = updraw.getMotorOutputPercent();
+        return (Math.abs(c-0.5) < 0.0005);
     }
 
     // TODO: check that ball has left chamber using current???
@@ -308,16 +318,15 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         return rotator.get();
     }
 
-    // Preferably use this instead of getDegreePos
     public double getPosition() {
         return encoder.getPosition() / ROTATOR_GEAR_RATIO;
     }
 
     @Override
     public HealthState checkHealth() {
-        boolean isRotatorError = rotator.getLastError() != null && rotator.getLastError() != CANError.kOk;
-        if (isRotatorError)
+        if (isSparkMaxErrored(rotator)){
             return HealthState.RED;
+        }
         return HealthState.GREEN;
     }
 
@@ -333,7 +342,13 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     @Override
     public void mustangPeriodic() {
-        // TODO Auto-generated method stub
+        prevCurrent = current;
+        current = updraw.getSupplyCurrent();
+        currentChange = current - prevCurrent;
+
+        if (currentChange > 0){
+            
+        }
 
     }
 

@@ -3,9 +3,9 @@ package frc.team670.robot.subsystems;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
+import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
 import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -19,7 +19,7 @@ import com.revrobotics.CANPIDController;
  */
 public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase implements TunableSubsystem {
 
-    protected CANSparkMax rotator;
+    protected SparkMAXLite rotator;
     protected CANEncoder rotator_encoder;
     protected CANPIDController rotator_controller;
     protected static final double NO_SETPOINT = Double.NaN;
@@ -155,9 +155,11 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         setpoint = NO_SETPOINT;
     }
 
-    public CANSparkMax getRotator() {
+    public SparkMAXLite getRotator() {
         return this.rotator;
     }
+
+    
 
     public CANEncoder getRotatorEncoder() {
         return this.rotator_encoder;

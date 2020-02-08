@@ -20,6 +20,14 @@ public class SendAllBalls extends SequentialCommandGroup implements MustangComma
     public SendAllBalls(Indexer indexer) {
         addRequirements(indexer);
         this.indexer = indexer;
+        addCommands(new SendOneBall(indexer), new SendOneBall(indexer), new SendOneBall(indexer),
+            new SendOneBall(indexer), new SendOneBall(indexer));
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        super.end(interrupted);
+        indexer.uptake(0.0);
     }
 
     @Override
