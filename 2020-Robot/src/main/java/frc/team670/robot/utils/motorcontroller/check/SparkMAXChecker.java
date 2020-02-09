@@ -10,14 +10,15 @@ import java.util.ArrayList;
 
 /**
  * Basic test for motors using SparkMAX controllers
+ * 
  * @author ctychen
  */
-public class SparkMAXChecker extends MotorChecker<CANSparkMax>{
-    
+public class SparkMAXChecker extends MotorChecker<CANSparkMax> {
+
     public static class StoredSparkConfig {
         CANSparkMax leader = null;
     }
-    
+
     public ArrayList<StoredSparkConfig> mStoredConfigs = new ArrayList<>();
 
     @Override
@@ -53,9 +54,8 @@ public class SparkMAXChecker extends MotorChecker<CANSparkMax>{
         return motor.getOutputCurrent();
     }
 
-    public static boolean checkMotors(MustangSubsystemBase subsystem,
-                                      ArrayList<MotorConfig<CANSparkMax>> motorsToCheck,
-                                      Config checkerConfig) {
+    public static boolean checkMotors(MustangSubsystemBase subsystem, ArrayList<MotorConfig<CANSparkMax>> motorsToCheck,
+            Config checkerConfig) {
         SparkMAXChecker checker = new SparkMAXChecker();
         return checker.checkMotors(subsystem, motorsToCheck, checkerConfig);
     }

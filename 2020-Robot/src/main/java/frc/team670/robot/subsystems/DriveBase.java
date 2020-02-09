@@ -28,6 +28,7 @@ import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.sensors.NavX;
 import frc.team670.robot.utils.Logger;
+import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.MustangNotifications;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
@@ -53,10 +54,10 @@ public class DriveBase extends MustangSubsystemBase {
   private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
 
   public DriveBase() {
-    leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1,
-        RobotMap.SPARK_LEFT_MOTOR_2);
+    leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
+        MotorConfig.Motor_Type.NEO);
     rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
-        RobotMap.SPARK_RIGHT_MOTOR_2);
+        RobotMap.SPARK_RIGHT_MOTOR_2, MotorConfig.Motor_Type.NEO);
 
     left1 = leftControllers.get(0);
     left2 = leftControllers.get(1);
@@ -121,9 +122,10 @@ public class DriveBase extends MustangSubsystemBase {
     boolean isRight2Error = isSparkMaxErrored(right2);
     boolean isNavXError = (navXMicro == null);
 
-    // used to check if it is green first which would be the case most of the times. Then red as it is just 4 conditions and 
+    // used to check if it is green first which would be the case most of the times.
+    // Then red as it is just 4 conditions and
     // finally yellow using else as it has many conditions to check for yellow
-    if (!isLeft1Error && !isLeft2Error && !isRight1Error && !isRight2Error && !isNavXError) { 
+    if (!isLeft1Error && !isLeft2Error && !isRight1Error && !isRight2Error && !isNavXError) {
       state = HealthState.GREEN;
       Logger.consoleLog("Health check done. State is: " + state);
     } else if (isLeft1Error && isLeft2Error || isRight1Error && isRight2Error) {

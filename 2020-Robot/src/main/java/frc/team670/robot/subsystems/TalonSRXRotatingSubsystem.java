@@ -14,6 +14,7 @@ import frc.team670.robot.utils.motorcontroller.TalonSRXFactory;
  * 
  * @author ctchen
  */
+
 public abstract class TalonSRXRotatingSubsystem extends MustangSubsystemBase implements TunableSubsystem {
     protected static final int NO_SETPOINT = 99999;
     protected TalonSRX rotator;
@@ -40,7 +41,6 @@ public abstract class TalonSRXRotatingSubsystem extends MustangSubsystemBase imp
         rotator.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
         if (rotator != null) {
-            this.rotator = rotator;
             this.rotatorSensorCollection = rotator.getSensorCollection();
             this.arbitraryFeedForwardConstant = arbitraryFeedForwardConstant;
             this.timeout = timeout;
@@ -71,6 +71,7 @@ public abstract class TalonSRXRotatingSubsystem extends MustangSubsystemBase imp
             rotator.configReverseSoftLimitEnable(true);
 
         }
+
     }
 
     /**
@@ -111,16 +112,6 @@ public abstract class TalonSRXRotatingSubsystem extends MustangSubsystemBase imp
         rotator.set(ControlMode.PercentOutput, output);
     }
 
-    /**
-     * Updates the arbitrary feed forward on this subsystem
-     */
-    public synchronized void updateArbitraryFeedForward() {
-        if (setpoint != NO_SETPOINT) {
-            double value = getArbitraryFeedForwardAngleMultiplier() * arbitraryFeedForwardConstant;
-            rotator.set(ControlMode.MotionMagic, setpoint, DemandType.ArbitraryFeedForward, value);
-        }
-    }
-
     protected int getRotatorPulseWidth() {
         return getUnadjustedPulseWidth() - offsetFromEncoderZero;
     }
@@ -141,7 +132,7 @@ public abstract class TalonSRXRotatingSubsystem extends MustangSubsystemBase imp
      * Gets the multiplier for updating the arbitrary feed forward based on angle
      * and subsystem
      */
-    protected abstract double getArbitraryFeedForwardAngleMultiplier();
+    // protected abstract double getArbitraryFeedForwardAngleMultiplier();
 
     /**
      * Sets the setpoint for motion magic (in ticks)

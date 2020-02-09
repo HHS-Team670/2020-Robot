@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.MustangNotifications;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
@@ -86,6 +85,10 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
      */
     public abstract HealthState checkHealth();
 
+    protected boolean isSparkMaxHealthy(SparkMAXLite rotator){
+        return (rotator != null && rotator.getLastError() != CANError.kOk);
+    }
+
     public void initDefaultCommand(MustangCommand command) {
         CommandScheduler.getInstance().setDefaultCommand(this, (CommandBase) command);
     }
@@ -116,11 +119,9 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
     }
 
     /**
-     * Used to check if a sparkMax Motor Controller is connected successfully and
-     * has no error
      * 
      * @param sparkMax The motor which has to be checked for an error
-     * @return
+     * @return true if there is an issue with this SparkMax, false if the SparkMax is connected successfully and without errors. 
      */
     public boolean isSparkMaxErrored(SparkMAXLite sparkMax) {
         return (sparkMax != null && sparkMax.getLastError() != CANError.kOk);

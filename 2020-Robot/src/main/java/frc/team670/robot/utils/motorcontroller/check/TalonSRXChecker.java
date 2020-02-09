@@ -10,9 +10,10 @@ import java.util.ArrayList;
 
 /**
  * Basic test for motors using TalonSRX controllers
+ * 
  * @author ctychen
  */
-public class TalonSRXChecker extends MotorChecker<TalonSRX>{
+public class TalonSRXChecker extends MotorChecker<TalonSRX> {
 
     private static class StoredTalonSRXConfig {
         public ControlMode mode;
@@ -38,8 +39,7 @@ public class TalonSRXChecker extends MotorChecker<TalonSRX>{
     @Override
     public void restoreConfig() {
         for (int i = 0; i < motorsToCheck.size(); ++i) {
-            motorsToCheck.get(i).motor.set(mStoredConfigs.get(i).mode,
-                    mStoredConfigs.get(i).setValue);
+            motorsToCheck.get(i).motor.set(mStoredConfigs.get(i).mode, mStoredConfigs.get(i).setValue);
         }
     }
 
@@ -53,9 +53,8 @@ public class TalonSRXChecker extends MotorChecker<TalonSRX>{
         return motor.getStatorCurrent();
     }
 
-    public static boolean checkMotors(MustangSubsystemBase subsystem,
-                                      ArrayList<MotorConfig<TalonSRX>> motorsToCheck,
-                                      Config checkerConfig) {
+    public static boolean checkMotors(MustangSubsystemBase subsystem, ArrayList<MotorConfig<TalonSRX>> motorsToCheck,
+            Config checkerConfig) {
         TalonSRXChecker checker = new TalonSRXChecker();
         return checker.checkMotors(subsystem, motorsToCheck, checkerConfig);
     }

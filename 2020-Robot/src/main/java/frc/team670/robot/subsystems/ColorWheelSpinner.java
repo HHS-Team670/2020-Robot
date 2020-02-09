@@ -2,12 +2,10 @@ package frc.team670.robot.subsystems;
 
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
+import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.MustangNotifications;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
-import com.revrobotics.CANError;
-
-import edu.wpi.first.wpilibj.DriverStation;
 /**
  * Represents the subsystem for spinning the control panel/color wheel.
  * 
@@ -22,7 +20,7 @@ public class ColorWheelSpinner extends MustangSubsystemBase {
 
     public ColorWheelSpinner() {
         colorMatch = new ColorMatcher();
-        rotator = new SparkMAXLite(RobotMap.COLOR_WHEEL_MOTOR_ID);
+        rotator = new SparkMAXLite(RobotMap.COLOR_WHEEL_MOTOR_ID, MotorConfig.Motor_Type.NEO_550);
     }
 
     public void setSpeed(double motorSpeed) {

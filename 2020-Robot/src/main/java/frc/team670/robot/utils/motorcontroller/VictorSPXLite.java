@@ -4,8 +4,9 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
 /**
- * Wrapper class for a VictorSPX for reducing CAN bus overhead by skipping duplicate set
- * commands.
+ * Wrapper class for a VictorSPX for reducing CAN bus overhead by skipping
+ * duplicate set commands.
+ * 
  * @author ctychen
  */
 
@@ -22,14 +23,14 @@ public class VictorSPXLite extends VictorSPX {
         return this.lastSet;
     }
 
-    public ControlMode getLastMode(){
+    public ControlMode getLastMode() {
         return this.lastControlMode;
     }
 
     @Override
     /**
      * @param ControlMode mode for this motor controller
-     * @param double value output of the controller, for the appropriate mode
+     * @param double      value output of the controller, for the appropriate mode
      */
     public void set(ControlMode mode, double value) {
         if (value != lastSet || mode != lastControlMode) {
