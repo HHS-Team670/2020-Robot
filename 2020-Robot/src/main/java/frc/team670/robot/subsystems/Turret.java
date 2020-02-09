@@ -8,8 +8,8 @@ import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 public class Turret extends SparkMaxRotatingSubsystem {
 
     // TODO: Set these values. Keeping it small right now for testing.
-    public static final int SOFT_MINIMUM_DEGREES = -30;
-    public static final int SOFT_MAXIMUM_DEGREES = 30;
+    public static final int SOFT_MINIMUM_DEGREES = -270;
+    public static final int SOFT_MAXIMUM_DEGREES = 270;
 
     /**
      * Constants for the turret go here; this includes PID and SmartMotion values.
@@ -93,7 +93,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getRotatorGearRatio() {
-            return 71.166;
+            return 76.611;
         }
 
     }
@@ -103,6 +103,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     public Turret() {
         super(turretConfig);
+        rotator_encoder.setPosition(0);
     }
 
     /**
