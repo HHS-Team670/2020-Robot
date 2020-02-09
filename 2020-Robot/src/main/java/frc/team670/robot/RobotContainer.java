@@ -73,6 +73,7 @@ public class RobotContainer {
   public static void checkSubsystemsHealth() {
     for (MustangSubsystemBase s : allSubsystems) {
       s.getHealth(true);
+      s.pushHealthToDashboard();
     }
   }
 

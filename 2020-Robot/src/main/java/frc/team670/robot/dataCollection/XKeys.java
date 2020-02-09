@@ -44,78 +44,78 @@ public class XKeys {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            if (s == xkeysCommands.run_intake_in)
+            if (s == xkeysCommands.RUN_INTAKE_IN)
                 runIntakeIn();
-            else if (s == xkeysCommands.run_intake_out)
+            else if (s == xkeysCommands.RUN_INTAKE_OUT)
                 runIntakeOut();
-            else if (s == xkeysCommands.bring_intake_in)
+            else if (s == xkeysCommands.BRING_INTAKE_IN)
                 bringIntakeIn();
-            else if (s == xkeysCommands.bring_intake_out)
+            else if (s == xkeysCommands.BRING_INTAKE_OUT)
                 bringIntakeOut();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-shooter", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            if (s == xkeysCommands.init_shooter)
+            if (s == xkeysCommands.INIT_SHOOTER)
                 initShooter();
-            else if (s == xkeysCommands.shoot_high)
+            else if (s == xkeysCommands.SHOOT_HIGH)
                 shootHigh();
-            else if (s == xkeysCommands.shoot_low)
+            else if (s == xkeysCommands.SHOOT_LOW)
                 shootLow();
-            else if (s == xkeysCommands.shoot_all)
+            else if (s == xkeysCommands.SHOOT_ALL)
                 shootAll();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-updraw", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            if (s == xkeysCommands.toggle_updraw_up)
+            if (s == xkeysCommands.TOGGLE_UPDRAW_UP)
                 toggleUpdrawUp();
-            else if (s == xkeysCommands.toggle_updraw_down)
+            else if (s == xkeysCommands.TOGGLE_UPDRAW_DOWN)
                 toggleUpdrawDown();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-indexer", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            if (s == xkeysCommands.indexer_intake)
+            if (s == xkeysCommands.INDEXER_INTAKE)
                 indexerAtIntake();
-            else if (s == xkeysCommands.indexer_shoot)
+            else if (s == xkeysCommands.INDEXER_SHOOT)
                 indexerAtShoot();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-climber", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            if (s == xkeysCommands.extend_climber)
+            if (s == xkeysCommands.EXTEND_CLIMBER)
                 extendClimber();
-            else if (s == xkeysCommands.retract_climber)
+            else if (s == xkeysCommands.RETRACT_CLIMBER)
                 retractClimber();
-            else if (s == xkeysCommands.retract_climber_left)
+            else if (s == xkeysCommands.RETRACT_CLIMBER_LEFT)
                 retractClimberLeft();
-            else if (s == xkeysCommands.retract_climber_right)
+            else if (s == xkeysCommands.RETRACT_CLIMBER_RIGHT)
                 retractClimberRight();
-            else if (s == xkeysCommands.extend_climber_left)
+            else if (s == xkeysCommands.EXTEND_CLIMBER_LEFT)
                 extendClimberLeft();
-            else if (s == xkeysCommands.extend_climber_right)
+            else if (s == xkeysCommands.EXTEND_CLIMBER_RIGHT)
                 extendClimberRight();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-cancel", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            if (s == xkeysCommands.cancel_all)
+            if (s == xkeysCommands.CANCEL_ALL)
                 cancelAllCommands();
-            else if (s == xkeysCommands.cancel_intake)
+            else if (s == xkeysCommands.CANCEL_INTAKE)
                 cancelIntake();
-            else if (s == xkeysCommands.cancel_indexer)
+            else if (s == xkeysCommands.CANCEL_INDEXER)
                 cancelIndexer();
-            else if (s == xkeysCommands.cancel_updraw)
+            else if (s == xkeysCommands.CANCEL_UPDRAW)
                 cancelUpdraw();
-            else if (s == xkeysCommands.cancel_shooter)
+            else if (s == xkeysCommands.CANCEL_SHOOTER)
                 cancenShooter();
-            else if (s == xkeysCommands.cancel_climber)
+            else if (s == xkeysCommands.CANCEL_CLIMBER)
                 cancelClimber();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-autopickup", (table2, key2, entry, value, flags) -> {
@@ -129,30 +129,30 @@ public class XKeys {
 
     private class xkeysCommands { // do not use enums as getID has to be called over enum call
 
-        public static final double run_intake_in = 0;
-        public static final double run_intake_out = 1;
-        public static final double bring_intake_in = 2;
-        public static final double bring_intake_out = 3;
-        public static final double init_shooter = 4;
-        public static final double shoot_high = 5;
-        public static final double shoot_low = 6;
-        public static final double shoot_all = 7;
-        public static final double toggle_updraw_up = 8;
-        public static final double toggle_updraw_down = 9;
-        public static final double indexer_intake = 10;
-        public static final double indexer_shoot = 11;
-        public static final double extend_climber = 12;
-        public static final double retract_climber = 13;
-        public static final double extend_climber_left = 14;
-        public static final double extend_climber_right = 15;
-        public static final double retract_climber_left = 16;
-        public static final double retract_climber_right = 17;
-        public static final double cancel_all = 18;
-        public static final double cancel_intake = 19;
-        public static final double cancel_indexer = 20;
-        public static final double cancel_updraw = 21;
-        public static final double cancel_shooter = 22;
-        public static final double cancel_climber = 23;
+        public static final double RUN_INTAKE_IN = 0;
+        public static final double RUN_INTAKE_OUT = 1;
+        public static final double BRING_INTAKE_IN = 2;
+        public static final double BRING_INTAKE_OUT = 3;
+        public static final double INIT_SHOOTER = 4;
+        public static final double SHOOT_HIGH = 5;
+        public static final double SHOOT_LOW = 6;
+        public static final double SHOOT_ALL = 7;
+        public static final double TOGGLE_UPDRAW_UP = 8;
+        public static final double TOGGLE_UPDRAW_DOWN = 9;
+        public static final double INDEXER_INTAKE = 10;
+        public static final double INDEXER_SHOOT = 11;
+        public static final double EXTEND_CLIMBER = 12;
+        public static final double RETRACT_CLIMBER = 13;
+        public static final double EXTEND_CLIMBER_LEFT = 14;
+        public static final double EXTEND_CLIMBER_RIGHT = 15;
+        public static final double RETRACT_CLIMBER_LEFT = 16;
+        public static final double RETRACT_CLIMBER_RIGHT = 17;
+        public static final double CANCEL_ALL = 18;
+        public static final double CANCEL_INTAKE = 19;
+        public static final double CANCEL_INDEXER = 20;
+        public static final double CANCEL_UPDRAW = 21;
+        public static final double CANCEL_SHOOTER = 22;
+        public static final double CANCEL_CLIMBER = 23;
     }
 
     private void extendClimber() {
@@ -188,10 +188,6 @@ public class XKeys {
     }
 
     private void shootLow() {
-        MustangScheduler.getInstance().schedule();
-    }
-
-    private void shoot() {
         MustangScheduler.getInstance().schedule();
     }
 
