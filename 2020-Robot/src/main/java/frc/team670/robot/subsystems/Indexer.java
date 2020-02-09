@@ -6,7 +6,11 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.I2C;
+
 import frc.team670.robot.constants.RobotMap;
+import frc.team670.robot.dataCollection.sensors.TimeOfFlightSensor;
 import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.motorcontroller.TalonSRXLite;
 
@@ -20,6 +24,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     private TalonSRXLite updraw;
 
     private CANEncoder encoder;
+
+    private TimeOfFlightSensor indexer_ball_in_sensor; 
+
     private boolean[] chamberStates;
     private double current;
     private double prevCurrent;
@@ -27,6 +34,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     private boolean ballIsUpdrawing;
     private boolean ballHasLeft;
+
+    // For testing purposes
+    private double UPDRAW_SPEED = 0.3;
 
     // Current control: updraw
     // TODO: find all these values
@@ -138,24 +148,28 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
         @Override
         public double getRotatorGearRatio() {
-            return 100; // TODO: Update when we find out for sure
+            return 35; // TODO: Update when we find out for sure
         }
 
     }
 
     public static final Config INDEXER_CONFIG = new Config();
 
-    private SensorCollection updrawSensors;
+    // private SensorCollection updrawSensors;
 
     public Indexer() {
         super(INDEXER_CONFIG);
 
         this.updraw = new TalonSRXLite(RobotMap.UPDRAW_SPINNER);
+        this.indexer_ball_in_sensor = new TimeOfFlightSensor(I2C.Port.kMXP);
+
+        // For testing purposes
+        SmartDashboard.putNumber("Updraw speed", 0.3);
 
         chamberStates = new boolean[5];
 
         updraw.setNeutralMode(NeutralMode.Coast);
-        this.updrawSensors = updraw.getSensorCollection();
+        // this.updrawSensors = updraw.getSensorCollection();
 
         updraw.config_kP(UPDRAW_CURRENT_SLOT, UPDRAW_CURR_P);
         updraw.config_kI(UPDRAW_CURRENT_SLOT, UPDRAW_CURR_I);
@@ -344,18 +358,26 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     @Override
     public void mustangPeriodic() {
-        prevCurrent = current;
-        current = updraw.getSupplyCurrent();
-        currentChange = current - prevCurrent;
+        // prevCurrent = current;
+        // current = updraw.getSupplyCurrent();
+        // currentChange = current - prevCurrent;
 
-        if (currentChange > UPDRAW_SHOOT_CURRENT_CHANGE_THRESHOLD)
-            ballIsUpdrawing = true;
-        if (currentChange < UPDRAW_SHOOT_COMPLETED_CURRENT_CHANGE) {
-            ballIsUpdrawing = false;
-            ballHasLeft = true;
-            chamberStates[getTopChamber()] = false;
+        // if (currentChange > UPDRAW_SHOOT_CURRENT_CHANGE_THRESHOLD)
+        //     ballIsUpdrawing = true;
+        // if (currentChange < UPDRAW_SHOOT_COMPLETED_CURRENT_CHANGE) {
+        //     ballIsUpdrawing = false;
+        //     ballHasLeft = true;
+        //     chamberStates[getTopChamber()] = false;
+        // }
+    }
+    
+    // For testing purposes
+    public void test(){        
+        double u = SmartDashboard.getNumber("Updraw speed", 0.3);
+        if ((u != UPDRAW_SPEED)) {
+          updraw.set(ControlMode.PercentOutput, SmartDashboard.getNumber("Updraw speed", u));
+          UPDRAW_SPEED = u;
         }
-
     }
 
 }

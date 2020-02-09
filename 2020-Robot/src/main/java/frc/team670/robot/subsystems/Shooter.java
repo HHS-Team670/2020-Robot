@@ -41,6 +41,8 @@ public class Shooter extends MustangSubsystemBase {
   private CANEncoder stage2_mainEncoder;
   private CANPIDController stage2_mainPIDController;
 
+  private double STAGE_1_SPEED = 0.3;
+
   // Stage 1 Values (TODO: Tune)
   private static final double STAGE_1_V_P = 0;
   private static final double STAGE_1_V_I = 0;
@@ -59,7 +61,11 @@ public class Shooter extends MustangSubsystemBase {
 
   public Shooter() {
     stage1 = new VictorSPXLite(RobotMap.SHOOTER_STAGE_1);
-    stage2Controllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SHOOTER_STAGE_2_MAIN, RobotMap.SHOOTER_STAGE_2_FOLLOWER, Motor_Type.NEO);
+
+    SmartDashboard.putNumber("Stage 1 speed", 0.3);
+
+    stage2Controllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SHOOTER_STAGE_2_MAIN,
+        RobotMap.SHOOTER_STAGE_2_FOLLOWER, Motor_Type.NEO);
 
     stage2_mainController = stage2Controllers.get(0);
     stage2_followerController = stage2Controllers.get(1);
@@ -67,19 +73,19 @@ public class Shooter extends MustangSubsystemBase {
     stage2_mainEncoder = stage2_mainController.getEncoder();
     stage2_mainPIDController = stage2_mainController.getPIDController();
 
-    SmartDashboard.putNumber("speed_Stage1", stage1.getSelectedSensorVelocity());
-    SmartDashboard.putNumber("P_Stage1", STAGE_1_V_P);
-    SmartDashboard.putNumber("I_Stage1", STAGE_1_V_I);
-    SmartDashboard.putNumber("D_Stage1", STAGE_1_V_D);
-    SmartDashboard.putNumber("F_Stage1", STAGE_1_V_FF);
-    setPIDStage1();
+    // SmartDashboard.putNumber("speed_Stage1", stage1.getSelectedSensorVelocity());
+    // SmartDashboard.putNumber("P_Stage1", STAGE_1_V_P);
+    // SmartDashboard.putNumber("I_Stage1", STAGE_1_V_I);
+    // SmartDashboard.putNumber("D_Stage1", STAGE_1_V_D);
+    // SmartDashboard.putNumber("F_Stage1", STAGE_1_V_FF);
+    // setPIDStage1();
 
-    SmartDashboard.putNumber("speed_Stage2", stage2_mainEncoder.getVelocity()); // Should display 2nd stage RPM
-    SmartDashboard.putNumber("P_Stage2", STAGE_2_V_P);
-    SmartDashboard.putNumber("I_Stage2", STAGE_2_V_I);
-    SmartDashboard.putNumber("D_Stage2", STAGE_2_V_D);
-    SmartDashboard.putNumber("F_Stage2", STAGE_2_V_FF);
-    setPIDStage2();
+    // SmartDashboard.putNumber("speed_Stage2", stage2_mainEncoder.getVelocity()); // Should display 2nd stage RPM
+    // SmartDashboard.putNumber("P_Stage2", STAGE_2_V_P);
+    // SmartDashboard.putNumber("I_Stage2", STAGE_2_V_I);
+    // SmartDashboard.putNumber("D_Stage2", STAGE_2_V_D);
+    // SmartDashboard.putNumber("F_Stage2", STAGE_2_V_FF);
+    // setPIDStage2();
   }
 
   public void stop() {
@@ -127,10 +133,17 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public void periodic() {
-    setPIDStage1();
-    setSpeedStage1();
-    setPIDStage2();
-    setSpeedStage1();
+
+  }
+
+  public void test() {
+    double s1 = SmartDashboard.getNumber("Stage 1 speed", 0.3);
+    if ((s1 != STAGE_1_SPEED)) {
+      stage1.set(ControlMode.PercentOutput, SmartDashboard.getNumber("Stage 1 speed", s1));
+      STAGE_1_SPEED = s1;
+    }
+    stage2_mainController.set(0.5);
+    SmartDashboard.putNumber("Stage 2 RPM", stage2_mainController.getEncoder().getVelocity());
   }
 
   @Override
