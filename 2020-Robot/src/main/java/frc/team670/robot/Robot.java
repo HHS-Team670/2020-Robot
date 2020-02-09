@@ -7,7 +7,6 @@
 
 package frc.team670.robot;
 
-import edu.wpi.first.hal.sim.DriverStationSim;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import frc.team670.robot.commands.MustangCommand;
