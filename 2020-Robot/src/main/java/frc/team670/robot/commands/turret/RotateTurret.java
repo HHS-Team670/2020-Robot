@@ -1,7 +1,6 @@
 package frc.team670.robot.commands.turret;
 
 import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.commands.joystick_controls.JoystickTurret;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Turret;
