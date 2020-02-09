@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
@@ -46,6 +47,7 @@ public class RobotContainer {
 
   private static DriveBase driveBase = new DriveBase();
   private static Shooter shooter;// = new Shooter();
+  public static Turret turret = new Turret();
   private final ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
 
   private Trajectory trajectory;

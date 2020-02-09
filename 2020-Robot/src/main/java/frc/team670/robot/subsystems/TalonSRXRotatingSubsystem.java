@@ -112,16 +112,6 @@ public abstract class TalonSRXRotatingSubsystem extends MustangSubsystemBase imp
         rotator.set(ControlMode.PercentOutput, output);
     }
 
-    /**
-     * Updates the arbitrary feed forward on this subsystem
-     */
-    public synchronized void updateArbitraryFeedForward() {
-        if (setpoint != NO_SETPOINT) {
-            double value = getArbitraryFeedForwardAngleMultiplier() * arbitraryFeedForwardConstant;
-            rotator.set(ControlMode.MotionMagic, setpoint, DemandType.ArbitraryFeedForward, value);
-        }
-    }
-
     protected int getRotatorPulseWidth() {
         return getUnadjustedPulseWidth() - offsetFromEncoderZero;
     }
@@ -142,7 +132,7 @@ public abstract class TalonSRXRotatingSubsystem extends MustangSubsystemBase imp
      * Gets the multiplier for updating the arbitrary feed forward based on angle
      * and subsystem
      */
-    protected abstract double getArbitraryFeedForwardAngleMultiplier();
+    // protected abstract double getArbitraryFeedForwardAngleMultiplier();
 
     /**
      * Sets the setpoint for motion magic (in ticks)

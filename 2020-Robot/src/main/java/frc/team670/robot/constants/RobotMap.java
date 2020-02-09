@@ -15,22 +15,25 @@ public class RobotMap {
   public static final int SPARK_LEFT_MOTOR_2 = 21;
   public static final int SPARK_RIGHT_MOTOR_1 = 22;
   public static final int SPARK_RIGHT_MOTOR_2 = 23;
-
+  
   // NavX
   public final static Port NAVX_PORT = SerialPort.Port.kUSB;
   public final static int SHOOTER_ID_MAIN = 11;
   public final static int SHOOTER_ID_FOLLOWER = 12;
+  
+   // PC Module
+   public static final int PCMODULE = 2;
+
+  //Turret 
+  public static final int TURRET_ROTATOR = 24;
 
   // Motors
-  public static final int COLOR_WHEEL_MOTOR_ID = 10;
-  // PC Module
-  public static final int PCMODULE = 2;
+  public static final int COLOR_WHEEL_MOTOR_ID = 7;
 
   // Intake
   public static final int INTAKE_ROLLER = 4;
   public static final int INTAKE_DEPLOYER = 3;    //SET THIS
   public static final int INTAKE_COMPRESSOR = 6;  //SET THIS
-  public static final int INTAKE_SENSOR = 5;
 
   // Conveyor
   public static final int CONVEYOR_ROLLER = 8;
