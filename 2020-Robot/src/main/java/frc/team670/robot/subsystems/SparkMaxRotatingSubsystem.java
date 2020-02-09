@@ -6,7 +6,6 @@ import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
 import com.revrobotics.CANEncoder;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -156,9 +155,11 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         setpoint = NO_SETPOINT;
     }
 
-    public CANSparkMax getRotator() {
+    public SparkMAXLite getRotator() {
         return this.rotator;
     }
+
+    
 
     public CANEncoder getRotatorEncoder() {
         return this.rotator_encoder;

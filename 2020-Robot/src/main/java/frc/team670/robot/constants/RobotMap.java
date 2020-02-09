@@ -18,8 +18,11 @@ public class RobotMap {
   
   // NavX
   public final static Port NAVX_PORT = SerialPort.Port.kUSB;
-  public final static int SHOOTER_ID_MAIN = 11;
-  public final static int SHOOTER_ID_FOLLOWER = 12;
+
+  // Shooter
+  public final static int SHOOTER_STAGE_2_MAIN = 11;
+  public final static int SHOOTER_STAGE_2_FOLLOWER = 12;
+  public static final int SHOOTER_STAGE_1 = 13;
   
    // PC Module
    public static final int PCMODULE = 2;
@@ -41,5 +44,7 @@ public class RobotMap {
   //Indexer and Updraw
   public static final int INDEXER_ROTATOR = 9;
   public static final int UPDRAW_SPINNER = 10;
+
+public static final int SHOOTER_2_MAIN = 0;
 
 }

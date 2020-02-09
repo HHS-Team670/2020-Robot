@@ -28,9 +28,9 @@ import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
-import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -46,10 +46,12 @@ public class RobotContainer {
 
   public static OI oi = new OI();
 
+  public static Joystick operatorJoystick;
   private static DriveBase driveBase = new DriveBase();
-  private static Shooter shooter;// = new Shooter();
+  private static Shooter shooter = new Shooter();
   private static Turret turret = new Turret();
   private static Intake intake = new Intake();
+  private static Indexer indexer = new Indexer();
   private final ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
 
   private Trajectory trajectory;
