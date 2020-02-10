@@ -2,6 +2,8 @@ package frc.team670.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.revrobotics.CANError;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -113,6 +115,15 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
      */
     public boolean isSparkMaxErrored(SparkMAXLite sparkMax) {
         return (sparkMax != null && sparkMax.getLastError() != CANError.kOk);
+    }
+
+    /**
+     * 
+     * @param controller The TalonSRX or VictorSPX controller to be checked
+     * @return true if there is an issue with this controller, false if it is connected successfully and without errors
+     */
+    public boolean isPhoenixControllerErrored(BaseMotorController controller){
+        return (controller != null && controller.getLastError() != ErrorCode.OK);
     }
 
     public abstract void mustangPeriodic();

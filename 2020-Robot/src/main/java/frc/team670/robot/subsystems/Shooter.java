@@ -149,9 +149,7 @@ public class Shooter extends MustangSubsystemBase {
   @Override
   public HealthState checkHealth() {
     // Can't use the shooter if stage 1 is dead
-    ErrorCode stage1Error = stage1.getLastError();
-
-    if (stage1Error != null && stage1Error != ErrorCode.OK) {
+    if (isPhoenixControllerErrored(stage1)) {
       return HealthState.RED;
     }
     if (isSparkMaxErrored(stage2_mainController) || isSparkMaxErrored(stage2_followerController)) {

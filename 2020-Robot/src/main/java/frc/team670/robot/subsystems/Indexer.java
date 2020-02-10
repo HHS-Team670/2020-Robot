@@ -27,6 +27,11 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     private TimeOfFlightSensor indexer_ball_in_sensor; 
 
+    /* Ranges (in mm) from the TOF sensor for which we know the ball 
+    was fully intaked into the bottom chamber. */
+    private double TOF_BALL_IN_MIN_RANGE = 15;
+    private double TOF_BALL_IN_MAX_RANGE = 40;
+
     private boolean[] chamberStates;
     private double current;
     private double prevCurrent;
@@ -198,7 +203,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     // TODO: figure this out once we have sensor(s)
     public void setChamberStates() {
-        chamberStates[getBottomChamber()] = true;
+        double range = indexer_ball_in_sensor.getDistance();
+        if (range >= TOF_BALL_IN_MIN_RANGE && range <= TOF_BALL_IN_MAX_RANGE){
+            chamberStates[getBottomChamber()] = true;
+        }
     }
 
     public void prepareToIntake() {
@@ -340,7 +348,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     @Override
     public HealthState checkHealth() {
-        if (isSparkMaxErrored(rotator)){
+        if (isSparkMaxErrored(rotator) || isPhoenixControllerErrored(updraw)){
             return HealthState.RED;
         }
         return HealthState.GREEN;
