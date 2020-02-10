@@ -8,7 +8,7 @@ import java.util.TimerTask;
  * I2C VL6180X Time of Flight sensor. Based on
  * //https://github.com/adafruit/Adafruit_VL6180X/blob/master/Adafruit_VL6180X.cpp.
  * 
- * @author meganchoy
+ * @author riyagupta, meganchoy
  */
 public class TimeOfFlightSensor {
     private I2C sensor;
@@ -92,6 +92,9 @@ public class TimeOfFlightSensor {
         // Ready threshold event'
     }
 
+    /**
+     * @return the distance from the sensor, in mm
+     */
     public int getDistance() {
         return range;
     }

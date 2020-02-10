@@ -25,10 +25,12 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     private CANEncoder encoder;
 
-    private TimeOfFlightSensor indexer_ball_in_sensor; 
+    private TimeOfFlightSensor indexer_intake_sensor; 
 
-    /* Ranges (in mm) from the TOF sensor for which we know the ball 
-    was fully intaked into the bottom chamber. */
+    /* 
+    Ranges (in mm) from the TOF sensor for which we know the ball 
+    was fully intaked into the bottom chamber. 
+    */
     private double TOF_BALL_IN_MIN_RANGE = 15;
     private double TOF_BALL_IN_MAX_RANGE = 40;
 
@@ -166,7 +168,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         super(INDEXER_CONFIG);
 
         this.updraw = new TalonSRXLite(RobotMap.UPDRAW_SPINNER);
-        this.indexer_ball_in_sensor = new TimeOfFlightSensor(I2C.Port.kMXP);
+        this.indexer_intake_sensor = new TimeOfFlightSensor(I2C.Port.kMXP);
 
         // For testing purposes
         SmartDashboard.putNumber("Updraw speed", 0.3);
@@ -203,14 +205,14 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     // TODO: figure this out once we have sensor(s)
     public void setChamberStates() {
-        double range = indexer_ball_in_sensor.getDistance();
-        if (range >= TOF_BALL_IN_MIN_RANGE && range <= TOF_BALL_IN_MAX_RANGE){
+        if (ballIn()){
             chamberStates[getBottomChamber()] = true;
         }
     }
 
     public void prepareToIntake() {
         setTargetAngleInDegrees(INDEXER_DEGREES_PER_CHAMBER * getIntakeChamber() + CHAMBER_0_AT_TOP_POS_IN_DEGREES);
+        indexer_intake_sensor.start();
     }
 
     public void prepareToShoot() {
@@ -218,14 +220,14 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     }
 
     /**
-     * uptake into shooter
+     * Run the uptake, emptying the top chamber of the indexer
      * 
      * @param percentOutput percent output for the updraw
      * @post top chamber should be empty
      */
     public void uptake(double percentOutput) {
         updraw.set(ControlMode.PercentOutput, percentOutput);
-        //chamberStates[getTopChamber()] = false;
+        chamberStates[getTopChamber()] = false;
     }
 
     // TODO: does this work
@@ -326,8 +328,14 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         setTargetAngleInDegrees(CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES);
     }
 
+    /**
+     * @return whether a ball has been fully intaked (i.e. is all the way in the bottom chamber) 
+     */
     public boolean ballIn() {
-        // FSR maybe?
+        double range = indexer_intake_sensor.getDistance();
+        if (range >= TOF_BALL_IN_MIN_RANGE && range <= TOF_BALL_IN_MAX_RANGE){
+            return true;
+        }
         return false;
     }
 
@@ -342,14 +350,23 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         return rotator.get();
     }
 
+    /**
+     * @return the position, in number of rotations of the indexer
+     */
     public double getPosition() {
         return encoder.getPosition() / ROTATOR_GEAR_RATIO;
     }
 
     @Override
     public HealthState checkHealth() {
+        // if either the rotator or updraw breaks, we can't use the indexer anymore
         if (isSparkMaxErrored(rotator) || isPhoenixControllerErrored(updraw)){
             return HealthState.RED;
+        }
+        // if the ToF sensor breaks but nothing else, 
+        // the next option would be manual control -- not fatal
+        if (indexer_intake_sensor == null){
+            return HealthState.YELLOW;
         }
         return HealthState.GREEN;
     }
@@ -359,9 +376,12 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     }
 
+    /**
+     * @return the angle the indexer is currently turned to, between 0 and 360
+     */
     @Override
     public double getCurrentAngleInDegrees() {
-        return (getUnadjustedPosition() / INDEXER_TICKS_PER_ROTATION);
+        return (getUnadjustedPosition() % INDEXER_TICKS_PER_ROTATION)*360;
     }
 
     @Override
