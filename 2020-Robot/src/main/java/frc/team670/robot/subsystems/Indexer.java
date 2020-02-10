@@ -68,8 +68,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     private static final int UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT = 0;
     private static final int UPDRAW_PEAK_CURRENT_LIMIT = 0;
 
-    private static final int INDEXER_TICKS_PER_ROTATION = 42; // NEO550 integrated encoder is 42 counts per rev
-
     private static final double INDEXER_DEGREES_PER_CHAMBER = 72;
 
     private static final int CHAMBER_0_AT_TOP_POS_IN_DEGREES = 252;
