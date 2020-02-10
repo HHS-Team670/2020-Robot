@@ -31,8 +31,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     Ranges (in mm) from the TOF sensor for which we know the ball 
     was fully intaked into the bottom chamber. 
     */
-    private double TOF_BALL_IN_MIN_RANGE = 15;
-    private double TOF_BALL_IN_MAX_RANGE = 40;
+    private int TOF_BALL_IN_MIN_RANGE = 15;
+    private int TOF_BALL_IN_MAX_RANGE = 40;
 
     private boolean[] chamberStates;
     private double current;
@@ -203,10 +203,13 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         return totalNumBalls;
     }
 
-    // TODO: figure this out once we have sensor(s)
+    /**
+     * Updates the states of the chambers.
+     */
     public void setChamberStates() {
         if (ballIn()){
             chamberStates[getBottomChamber()] = true;
+            indexer_intake_sensor.stop();
         }
     }
 
@@ -227,7 +230,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      */
     public void uptake(double percentOutput) {
         updraw.set(ControlMode.PercentOutput, percentOutput);
-        chamberStates[getTopChamber()] = false;
+        // TODO: check for current going above a certain level when ball exits. 
+        // Either here or periodic
+        chamberStates[getTopChamber()] = false;  
     }
 
     // TODO: does this work
@@ -332,7 +337,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * @return whether a ball has been fully intaked (i.e. is all the way in the bottom chamber) 
      */
     public boolean ballIn() {
-        double range = indexer_intake_sensor.getDistance();
+        int range = indexer_intake_sensor.getDistance();
         if (range >= TOF_BALL_IN_MIN_RANGE && range <= TOF_BALL_IN_MAX_RANGE){
             return true;
         }
@@ -365,7 +370,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
         // if the ToF sensor breaks but nothing else, 
         // the next option would be manual control -- not fatal
-        if (indexer_intake_sensor == null){
+        if (indexer_intake_sensor == null || !indexer_intake_sensor.isHealthy()){
             return HealthState.YELLOW;
         }
         return HealthState.GREEN;
@@ -381,7 +386,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      */
     @Override
     public double getCurrentAngleInDegrees() {
-        return (getUnadjustedPosition() % INDEXER_TICKS_PER_ROTATION)*360;
+        return (getUnadjustedPosition() % this.ROTATOR_GEAR_RATIO)*360;
     }
 
     @Override
