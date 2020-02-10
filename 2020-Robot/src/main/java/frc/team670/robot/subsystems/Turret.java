@@ -12,9 +12,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     public static final int SOFT_MAXIMUM_DEGREES = 270;
 
     /**
-     * Constants for the turret go here; this includes PID and SmartMotion values.
-     * TODO: find what these values should be, because everything in here is a
-     * placeholder
+     * Constants for the turret, including PIDF and SmartMotion values.
      */
     public static class Config extends SparkMaxRotatingSubsystem.Config {
 
@@ -107,12 +105,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     }
 
     /**
-     * 
-     * takes in double from -1 to 1 to set speed of turret motor
-     * 
-     * @pre speed has to be greater than or equal to negative one and less than or
-     *      equal to one.
-     * @param speed speed to set turret to
+     * @param speed to set turret to, [1, 1]
      */
 
     public void setTurretSpeed(double speed) {
@@ -121,7 +114,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     @Override
     public HealthState checkHealth() {
-        if (isSparkMaxHealthy(rotator)) {
+        if (isSparkMaxErrored(rotator)) {
             return HealthState.RED;
         }
         return HealthState.GREEN;

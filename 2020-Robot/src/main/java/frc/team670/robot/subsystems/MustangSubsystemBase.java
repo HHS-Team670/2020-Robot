@@ -81,10 +81,6 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
      */
     public abstract HealthState checkHealth();
 
-    protected boolean isSparkMaxHealthy(SparkMAXLite rotator){
-        return (rotator != null && rotator.getLastError() != CANError.kOk);
-    }
-
     public void initDefaultCommand(MustangCommand command) {
         CommandScheduler.getInstance().setDefaultCommand(this, (CommandBase) command);
     }
