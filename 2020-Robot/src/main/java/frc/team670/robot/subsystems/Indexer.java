@@ -1,7 +1,6 @@
 package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
-import com.revrobotics.CANError;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.SensorCollection;
@@ -11,6 +10,7 @@ import edu.wpi.first.wpilibj.I2C;
 
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.sensors.TimeOfFlightSensor;
+import frc.team670.robot.utils.functions.MathUtils;
 import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.motorcontroller.TalonSRXLite;
 
@@ -25,19 +25,24 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     private CANEncoder encoder;
 
-    private TimeOfFlightSensor indexer_intake_sensor; 
+    private TimeOfFlightSensor indexer_intake_sensor;
 
-    /* 
-    Ranges (in mm) from the TOF sensor for which we know the ball 
-    was fully intaked into the bottom chamber. 
-    */
+    /*
+     * Ranges (in mm) from the TOF sensor for which we know the ball was fully
+     * intaked into the bottom chamber.
+     */
     private int TOF_BALL_IN_MIN_RANGE = 15;
     private int TOF_BALL_IN_MAX_RANGE = 40;
 
     private boolean[] chamberStates;
-    private double current;
-    private double prevCurrent;
-    private double currentChange;
+    private double updraw_current;
+    private double updraw_prevCurrent;
+    private double updraw_currentChange;
+
+    private double indexer_current;
+    private double indexer_prevCurrent;
+
+    private boolean indexerIsJammed;
 
     private boolean ballIsUpdrawing;
     private boolean ballHasLeft;
@@ -52,7 +57,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     private static final double UPDRAW_CURR_D = 0;
     private static final double UPDRAW_CURR_FF = 0.2;
 
-    //TODO: find these values
+    // TODO: find these values
     private static final double UPDRAW_SHOOT_CURRENT_CHANGE_THRESHOLD = 0;
     private static final double UPDRAW_SHOOT_COMPLETED_CURRENT_CHANGE = 0;
 
@@ -65,6 +70,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     private static final int UPDRAW_VELOCITY_SLOT = 1;
 
+    // TODO: Set these
     private static final int UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT = 0;
     private static final int UPDRAW_PEAK_CURRENT_LIMIT = 0;
 
@@ -72,7 +78,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     private static final int CHAMBER_0_AT_TOP_POS_IN_DEGREES = 252;
     private static final int CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES = 72;
-
 
     /**
      * PID and SmartMotion constants for the indexer rotator go here.
@@ -205,7 +210,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * Updates the states of the chambers.
      */
     public void setChamberStates() {
-        if (ballIn()){
+        if (ballIn()) {
             chamberStates[getBottomChamber()] = true;
             indexer_intake_sensor.stop();
         }
@@ -228,22 +233,20 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      */
     public void uptake(double percentOutput) {
         updraw.set(ControlMode.PercentOutput, percentOutput);
-        // TODO: check for current going above a certain level when ball exits. 
-        // Either here or periodic
-        chamberStates[getTopChamber()] = false;  
+        chamberStates[getTopChamber()] = false;
     }
 
     // TODO: does this work
     public boolean updrawIsUpToSpeed() {
         double c = updraw.getMotorOutputPercent();
-        return (Math.abs(c-0.5) < 0.0005);
+        return (Math.abs(c - 0.5) < 0.0005);
     }
 
     // TODO: check that ball has left chamber using current???
 
     public void rotateToLoadShoot() {
         setTargetAngleInDegrees((getShootChamber() * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES)
-        - INDEXER_DEGREES_PER_CHAMBER/2);
+                - INDEXER_DEGREES_PER_CHAMBER / 2);
     }
 
     private int getTopChamber() {
@@ -332,11 +335,12 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     }
 
     /**
-     * @return whether a ball has been fully intaked (i.e. is all the way in the bottom chamber) 
+     * @return whether a ball has been fully intaked (i.e. is all the way in the
+     *         bottom chamber)
      */
     public boolean ballIn() {
         int range = indexer_intake_sensor.getDistance();
-        if (range >= TOF_BALL_IN_MIN_RANGE && range <= TOF_BALL_IN_MAX_RANGE){
+        if (range >= TOF_BALL_IN_MIN_RANGE && range <= TOF_BALL_IN_MAX_RANGE) {
             return true;
         }
         return false;
@@ -363,12 +367,12 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     @Override
     public HealthState checkHealth() {
         // if either the rotator or updraw breaks, we can't use the indexer anymore
-        if (isSparkMaxErrored(rotator) || isPhoenixControllerErrored(updraw)){
+        if (isSparkMaxErrored(rotator) || isPhoenixControllerErrored(updraw)) {
             return HealthState.RED;
         }
-        // if the ToF sensor breaks but nothing else, 
+        // if the ToF sensor breaks but nothing else,
         // the next option would be manual control -- not fatal
-        if (indexer_intake_sensor == null || !indexer_intake_sensor.isHealthy()){
+        if (indexer_intake_sensor == null || !indexer_intake_sensor.isHealthy()) {
             return HealthState.YELLOW;
         }
         return HealthState.GREEN;
@@ -384,30 +388,49 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      */
     @Override
     public double getCurrentAngleInDegrees() {
-        return (getUnadjustedPosition() % this.ROTATOR_GEAR_RATIO)*360;
+        return (getUnadjustedPosition() % this.ROTATOR_GEAR_RATIO) * 360;
+    }
+
+    public boolean isIndexerJammed() {
+        return this.indexerIsJammed;
     }
 
     @Override
     public void mustangPeriodic() {
-        // prevCurrent = current;
-        // current = updraw.getSupplyCurrent();
-        // currentChange = current - prevCurrent;
+        updraw_prevCurrent = updraw_current;
+        updraw_current = updraw.getSupplyCurrent();
+        updraw_currentChange = updraw_current - updraw_prevCurrent;
 
-        // if (currentChange > UPDRAW_SHOOT_CURRENT_CHANGE_THRESHOLD)
-        //     ballIsUpdrawing = true;
-        // if (currentChange < UPDRAW_SHOOT_COMPLETED_CURRENT_CHANGE) {
-        //     ballIsUpdrawing = false;
-        //     ballHasLeft = true;
-        //     chamberStates[getTopChamber()] = false;
-        // }
+        indexer_prevCurrent = indexer_current;
+        indexer_current = rotator.getOutputCurrent();
+
+        // Check if indexer is jammed: if the indexer rotator's current stays under the
+        // peak allowed (which needs to be defined), then we're good.
+        // If the indexer is running at a current above the defined peak for longer than
+        // a single instant, then the indexer may be jammed.
+        if (indexer_current < UPDRAW_PEAK_CURRENT_LIMIT) {
+            indexerIsJammed = false;
+        } else if (MathUtils.doublesEqual(indexer_current, indexer_prevCurrent, 0.01)) {
+            indexerIsJammed = true;
+        }
+
+        // Use current to check if a ball has successfully left the indexer through the
+        // updraw.
+        if (updraw_currentChange > UPDRAW_SHOOT_CURRENT_CHANGE_THRESHOLD)
+            ballIsUpdrawing = true;
+        if (updraw_currentChange < UPDRAW_SHOOT_COMPLETED_CURRENT_CHANGE) {
+            ballIsUpdrawing = false;
+            ballHasLeft = true;
+            chamberStates[getTopChamber()] = false;
+        }
     }
-    
+
     // For testing purposes
-    public void test(){        
+    public void test() {
         double u = SmartDashboard.getNumber("Updraw speed", 0.3);
         if ((u != UPDRAW_SPEED)) {
-          updraw.set(ControlMode.PercentOutput, SmartDashboard.getNumber("Updraw speed", u));
-          UPDRAW_SPEED = u;
+            updraw.set(ControlMode.PercentOutput, SmartDashboard.getNumber("Updraw speed", u));
+            UPDRAW_SPEED = u;
         }
     }
 
