@@ -1,31 +1,29 @@
-package frc.team670.robot.commands.shooter;
+package frc.team670.robot.commands.intake;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
 import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Conveyor;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
 
-public class Shoot extends CommandBase implements MustangCommand {
+public class RunConveyor extends CommandBase implements MustangCommand {
 
-    private Shooter shooter;
+    private Conveyor conveyor;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public Shoot(Shooter shooter){
-        this.shooter = shooter;
-        addRequirements(shooter);
+    public RunConveyor(Conveyor conveyor) {
+        this.conveyor = conveyor;
+        addRequirements(conveyor);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-        healthReqs.put(shooter, HealthState.GREEN);
+        healthReqs.put(conveyor, HealthState.GREEN);
     }
-
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         return healthReqs;
     }
-    
+
 }

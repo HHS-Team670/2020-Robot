@@ -3,7 +3,6 @@ package frc.team670.robot.subsystems;
 import com.revrobotics.CANEncoder;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.SensorCollection;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.I2C;
@@ -165,8 +164,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     public static final Config INDEXER_CONFIG = new Config();
 
-    // private SensorCollection updrawSensors;
-
     public Indexer() {
         super(INDEXER_CONFIG);
 
@@ -179,7 +176,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         chamberStates = new boolean[5];
 
         updraw.setNeutralMode(NeutralMode.Coast);
-        // this.updrawSensors = updraw.getSensorCollection();
 
         updraw.config_kP(UPDRAW_CURRENT_SLOT, UPDRAW_CURR_P);
         updraw.config_kI(UPDRAW_CURRENT_SLOT, UPDRAW_CURR_I);
@@ -232,18 +228,25 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * @post top chamber should be empty
      */
     public void uptake(double percentOutput) {
-        updraw.set(ControlMode.PercentOutput, percentOutput);
+        UPDRAW_SPEED = percentOutput;
+        updraw.set(ControlMode.PercentOutput, UPDRAW_SPEED);
         chamberStates[getTopChamber()] = false;
     }
 
-    // TODO: does this work
+    /**
+     * 
+     * @return true if the updraw is spinning at close to its target speed for
+     *         updraw-ing
+     */
     public boolean updrawIsUpToSpeed() {
         double c = updraw.getMotorOutputPercent();
-        return (Math.abs(c - 0.5) < 0.0005);
+        return MathUtils.doublesEqual(c, UPDRAW_SPEED, 0.0005);
     }
 
-    // TODO: check that ball has left chamber using current???
-
+    /**
+     * Sets the indexer target position to a "staging" position -- 1/2 chamber off
+     * -- for holding the ball before the updraw is ready.
+     */
     public void rotateToLoadShoot() {
         setTargetAngleInDegrees((getShootChamber() * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES)
                 - INDEXER_DEGREES_PER_CHAMBER / 2);

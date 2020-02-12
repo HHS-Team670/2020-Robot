@@ -3,10 +3,10 @@ package frc.team670.robot.commands.routines;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandGroupBase;
-
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.robot.commands.intake.DeployIntake;
+import frc.team670.robot.commands.intake.RunConveyor;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.intake.StopIntake;
 import frc.team670.robot.subsystems.Indexer;
@@ -17,7 +17,7 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.RotateToIntakePosition;
 
-public class IntakeBallToIndexer extends CommandGroupBase implements MustangCommand {
+public class IntakeBallToIndexer extends SequentialCommandGroup implements MustangCommand {
 
     private Intake intake;
     private Conveyor conveyor;
@@ -34,18 +34,16 @@ public class IntakeBallToIndexer extends CommandGroupBase implements MustangComm
         healthReqs.put(intake, HealthState.GREEN);
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(indexer, HealthState.GREEN);
-    }
-
-    @Override
-    public void addCommands(Command... commands) {
         if (!intake.isDeployed()) {
             addCommands(new DeployIntake(true, intake));
         }
-        // Roll intake once it's deployed
-        // Move conveyor 
-        // Once conveyor starts moving, spin indexer so empty slot on bottom
-        // Intake ball into indexer
+        addCommands(
+            new RunIntake(0.5, intake), // Speed for testing purposes
+            new ParallelCommandGroup(new RunConveyor(conveyor),
+            new RotateToIntakePosition(indexer))
+        );
     }
+ 
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {

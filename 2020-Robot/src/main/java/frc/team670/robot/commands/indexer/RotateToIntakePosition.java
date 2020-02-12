@@ -13,10 +13,13 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 public class RotateToIntakePosition extends InstantCommand implements MustangCommand {
 
     private Indexer indexer;
+    private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     public RotateToIntakePosition(Indexer indexer) {
         addRequirements(indexer);
         this.indexer = indexer;
+        healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
+        healthReqs.put(indexer, HealthState.GREEN);
     }
 
     @Override
@@ -26,8 +29,6 @@ public class RotateToIntakePosition extends InstantCommand implements MustangCom
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-        Map<MustangSubsystemBase, HealthState> healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-        healthReqs.put(indexer, HealthState.GREEN);
         return healthReqs;
     }
 
