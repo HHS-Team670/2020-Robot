@@ -47,4 +47,7 @@ public class RobotMap {
 
 public static final int SHOOTER_2_MAIN = 0;
 
+  //Climber
+  public static final int CLIMBER_MOTOR_ID_1 = 25; //SET THIS
+  public static final int CLIMBER_MOTOR_ID_2 = 26; //SET THIS
 }

@@ -1,12 +1,14 @@
 package frc.team670.robot.subsystems.climber;
- 
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.ControlType;
- 
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
+import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.robot.constants.RobotMap;
  
 public class Pull extends MustangSubsystemBase {
@@ -29,10 +31,10 @@ public class Pull extends MustangSubsystemBase {
  
     public Pull(boolean inverted) {
         if(inverted) {
-            motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER__MOTOR); //TODO: set motor id + decide which motor is inverted
+            motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR_ID_1, Motor_Type.NEO); //TODO: set motor id + decide which motor is inverted
             inversionFactor = -1;
         } else {
-            motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER__MOTOR); //TODO: set motor id + decide which motor is inverted
+            motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR_ID_2, Motor_Type.NEO); //TODO: set motor id + decide which motor is inverted
             inversionFactor = 1;
         }
         controller = motor.getPIDController();
@@ -84,7 +86,6 @@ public class Pull extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() {
         // TODO Auto-generated method stub
-
     }
  
 }
