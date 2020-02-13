@@ -27,6 +27,7 @@ import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Turret;
+import frc.team670.robot.subsystems.climber.Climber;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
@@ -52,7 +53,8 @@ public class RobotContainer {
   private static Turret turret = new Turret();
   private static Intake intake = new Intake();
   private static Indexer indexer = new Indexer();
-  private final ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
+  private static ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
+  private static Climber climber = new Climber();
 
   private Trajectory trajectory;
   private String pathname;

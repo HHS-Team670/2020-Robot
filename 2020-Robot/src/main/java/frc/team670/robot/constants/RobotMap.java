@@ -23,6 +23,10 @@ public class RobotMap {
   public final static int SHOOTER_STAGE_2_MAIN = 11;
   public final static int SHOOTER_STAGE_2_FOLLOWER = 12;
   public static final int SHOOTER_STAGE_1 = 13;
+
+  // Climber
+  public static final int CLIMBER_MOTOR_ID_1 = 14;
+  public static final int CLIMBER_MOTOR_ID_2 = 15;
   
    // PC Module
    public static final int PCMODULE = 2;
@@ -30,7 +34,7 @@ public class RobotMap {
   //Turret 
   public static final int TURRET_ROTATOR = 24;
 
-  // Motors
+  // Color Wheel
   public static final int COLOR_WHEEL_MOTOR_ID = 7;
 
   // Intake
@@ -44,7 +48,5 @@ public class RobotMap {
   //Indexer and Updraw
   public static final int INDEXER_ROTATOR = 9;
   public static final int UPDRAW_SPINNER = 10;
-
-public static final int SHOOTER_2_MAIN = 0;
 
 }
