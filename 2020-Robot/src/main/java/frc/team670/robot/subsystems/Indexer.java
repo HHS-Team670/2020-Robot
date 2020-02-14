@@ -44,10 +44,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     private boolean indexerIsJammed;
 
     private boolean ballIsUpdrawing;
-    private boolean ballHasLeft;
 
     // For testing purposes
-    private double UPDRAW_SPEED = 0.3;
+    private final double UPDRAW_SPEED = 0.3;
 
     // Current control: updraw
     // TODO: find all these values
@@ -136,7 +135,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
 
         public double getAllowedError() {
-            return 50;
+            // return 0.0243;
+            // 0.25 degree minimum from count / 360 deg per rotation
+            return (0.25 / 360) * getRotatorGearRatio();
         }
 
         public float getForwardSoftLimit() {
@@ -217,8 +218,12 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         indexer_intake_sensor.start();
     }
 
-    public void prepareToShoot() {
+    public void shoot() {
         setTargetAngleInDegrees(getShootChamber() * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES);
+    }
+
+    public boolean hasReachedTargetPosition() {
+        return (MathUtils.doublesEqual(encoder.getPosition(), setpoint, ALLOWED_ERR));
     }
 
     /**
@@ -227,10 +232,13 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * @param percentOutput percent output for the updraw
      * @post top chamber should be empty
      */
-    public void uptake(double percentOutput) {
-        UPDRAW_SPEED = percentOutput;
+    public void uptake() {
         updraw.set(ControlMode.PercentOutput, UPDRAW_SPEED);
         chamberStates[getTopChamber()] = false;
+    }
+
+    public void stopUptake() {
+        updraw.set(ControlMode.PercentOutput, 0);
     }
 
     /**
@@ -239,7 +247,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      *         updraw-ing
      */
     public boolean updrawIsUpToSpeed() {
-        double c = updraw.getMotorOutputPercent();
+        double c = updraw.getMotorOutputPercent(); // TODO: Need to get your actual speed/power, this only returns what
+                                                   // you give it
         return MathUtils.doublesEqual(c, UPDRAW_SPEED, 0.0005);
     }
 
@@ -423,18 +432,12 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             ballIsUpdrawing = true;
         if (updraw_currentChange < UPDRAW_SHOOT_COMPLETED_CURRENT_CHANGE) {
             ballIsUpdrawing = false;
-            ballHasLeft = true;
             chamberStates[getTopChamber()] = false;
         }
     }
 
-    // For testing purposes
-    public void test() {
-        double u = SmartDashboard.getNumber("Updraw speed", 0.3);
-        if ((u != UPDRAW_SPEED)) {
-            updraw.set(ControlMode.PercentOutput, SmartDashboard.getNumber("Updraw speed", u));
-            UPDRAW_SPEED = u;
-        }
+    public boolean isShootingChamberEmpty() {
+        return chamberStates[getTopChamber()];
     }
 
 }

@@ -39,8 +39,8 @@ public class IntakeBallToIndexer extends SequentialCommandGroup implements Musta
         }
         addCommands(
             new RunIntake(0.5, intake), // Speed for testing purposes
-            new ParallelCommandGroup(new RunConveyor(conveyor),
-            new RotateToIntakePosition(indexer))
+            new RotateToIntakePosition(indexer),
+            new RunConveyor(conveyor)
         );
     }
  

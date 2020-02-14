@@ -22,6 +22,16 @@ public class Shoot extends CommandBase implements MustangCommand {
         healthReqs.put(shooter, HealthState.GREEN);
     }
 
+    @Override
+    public void initialize() {
+        // TODO Auto-generated method stub
+        super.initialize();
+    }
+
+    @Override
+    public void execute(){
+        
+    }
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {

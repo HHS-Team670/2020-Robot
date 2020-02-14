@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.SendOneBall;
-import frc.team670.robot.commands.shooter.GetShooterUpToSpeed;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
@@ -32,8 +31,8 @@ public class RotateIndexerToUptakeThenShoot extends SequentialCommandGroup imple
         healthReqs.put(shooter, HealthState.GREEN);
         
         // Stage and uptake 1 ball while preparing the shooter, then, shoot
-        addCommands(new ParallelCommandGroup(new SendOneBall(indexer), new GetShooterUpToSpeed(shooter)),
-                new Shoot(shooter));
+        addCommands(new ParallelCommandGroup(new SendOneBall(indexer),
+                new Shoot(shooter)));
 
     }
 

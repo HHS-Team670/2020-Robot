@@ -40,7 +40,7 @@ public class SendOneBall extends CommandBase implements MustangCommand {
      */
     @Override
     public void execute() {
-        indexer.uptake(0.5); // Find speed after testing
+        indexer.uptake(); 
     }
 
     /**
@@ -49,7 +49,7 @@ public class SendOneBall extends CommandBase implements MustangCommand {
     @Override
     public void end(boolean isInterrupted) {
         if (!isInterrupted) {
-            indexer.prepareToShoot();
+            indexer.shoot();
         }
     }
 
@@ -59,7 +59,7 @@ public class SendOneBall extends CommandBase implements MustangCommand {
      */
     @Override
     public boolean isFinished() {
-        return indexer.updrawIsUpToSpeed();
+        return indexer.isShootingChamberEmpty();
     }
 
     @Override

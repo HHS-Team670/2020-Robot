@@ -126,6 +126,7 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
 
     private void setSmartMotionTarget(double setpoint) {
         rotator_controller.setReference(setpoint, ControlType.kSmartMotion);
+        this.setpoint = setpoint;
     }
 
     public void setTargetAngleInDegrees(double angle) {
