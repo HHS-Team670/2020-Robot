@@ -249,7 +249,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     public boolean updrawIsUpToSpeed() {
         double c = updraw.getMotorOutputPercent(); // TODO: Need to get your actual speed/power, this only returns what
                                                    // you give it
-        return MathUtils.doublesEqual(c, UPDRAW_SPEED, 0.0005);
+        return MathUtils.doublesEqual(c, UPDRAW_SPEED, 0.05);
     }
 
     /**

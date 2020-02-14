@@ -21,6 +21,7 @@ import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.Logger;
+import frc.team670.robot.utils.functions.MathUtils;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.utils.motorcontroller.VictorSPXLite;
@@ -42,8 +43,16 @@ public class Shooter extends MustangSubsystemBase {
   private CANPIDController stage2_mainPIDController;
 
   private double STAGE_1_SPEED = 0.3; // Change this later
+  private double STAGE_2_SPEED = 5700; // In RPM; TODO
 
   private final double STAGE_2_PULLEY_RATIO = 2; // Need to check this
+
+  private boolean ballHasBeenShot;
+  private double stage2_current;
+  private double stage2_prevCurrent;
+  private double stage2_currentChange;
+
+  private static final double SHOOTING_CURRENT_CHANGE_THRESHOLD = 0; //TODO: what is this?
 
   // Stage 1 Values (TODO: Tune)
   private static final double STAGE_1_V_P = 0;
@@ -76,13 +85,22 @@ public class Shooter extends MustangSubsystemBase {
     stage2_mainPIDController = stage2_mainController.getPIDController();
   }
 
-  public double getStage2Velocity(){
-    return stage2_mainEncoder.getVelocity()*STAGE_2_PULLEY_RATIO;
+  private double getStage2Velocity() {
+    return stage2_mainEncoder.getVelocity() * STAGE_2_PULLEY_RATIO;
+  }
+
+  public void run() {
+    stage1.set(ControlMode.PercentOutput, STAGE_1_SPEED);
+    stage2_mainPIDController.setReference(STAGE_2_SPEED, ControlType.kVelocity);
   }
 
   public void stop() {
     stage2_mainController.set(0);
     stage1.set(ControlMode.PercentOutput, 0);
+  }
+
+  public boolean isUpToSpeed() {
+    return MathUtils.doublesEqual(getStage2Velocity(), STAGE_2_SPEED, 0.05); // TODO: margin of error
   }
 
   public void setDefaultPID1() {
@@ -123,7 +141,17 @@ public class Shooter extends MustangSubsystemBase {
 
   @Override
   public void mustangPeriodic() {
-    // TODO Auto-generated method stub
+    stage2_prevCurrent = stage2_current;
+    stage2_current = stage2_mainController.getOutputCurrent();
+    stage2_currentChange = stage2_current - stage2_prevCurrent;
+    if (stage2_currentChange > SHOOTING_CURRENT_CHANGE_THRESHOLD) {
+      ballHasBeenShot = true;
+    } else {
+      ballHasBeenShot = false;
+    }
+  }
 
+  public boolean hasBallBeenShot() {
+    return this.ballHasBeenShot;
   }
 }

@@ -10,12 +10,16 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
 
-public class Shoot extends CommandBase implements MustangCommand {
+/**
+ * "So anyway, I started blasting..." 
+ * - Frank Reynolds
+ */
+public class StartShooter extends CommandBase implements MustangCommand {
 
     private Shooter shooter;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public Shoot(Shooter shooter){
+    public StartShooter(Shooter shooter){
         this.shooter = shooter;
         addRequirements(shooter);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -23,14 +27,8 @@ public class Shoot extends CommandBase implements MustangCommand {
     }
 
     @Override
-    public void initialize() {
-        // TODO Auto-generated method stub
-        super.initialize();
-    }
-
-    @Override
     public void execute(){
-        
+        shooter.run();
     }
 
     @Override

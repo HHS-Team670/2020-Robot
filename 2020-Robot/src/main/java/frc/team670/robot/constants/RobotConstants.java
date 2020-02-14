@@ -1,6 +1,7 @@
 package frc.team670.robot.constants;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 
 public class RobotConstants {
 
@@ -52,6 +53,10 @@ public class RobotConstants {
 
     public static final double kMaxSpeedMetersPerSecond = 0.305;//1; //0.305;
     public static final double kMaxAccelerationMetersPerSecondSquared = 0.305;//1; //0.305;
+
+    public static final DifferentialDriveKinematicsConstraint kAutoPathConstraints =
+    new DifferentialDriveKinematicsConstraint(kDriveKinematics,
+                                              kMaxSpeedMetersPerSecond);
 
     // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
     public static final double kRamseteB = 2;
