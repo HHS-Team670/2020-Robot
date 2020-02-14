@@ -22,6 +22,11 @@ public class RunConveyor extends CommandBase implements MustangCommand {
     }
 
     @Override
+    public void execute() {
+        conveyor.run();
+    }
+
+    @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         return healthReqs;
     }
