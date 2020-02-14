@@ -54,7 +54,7 @@ public class RotateTurret extends CommandBase implements MustangCommand {
 
     @Override
     public void end(boolean interrupted) {
-        turret.setTurretSpeed(0);
+        turret.moveByPercentOutput(0);
     }
 
 }

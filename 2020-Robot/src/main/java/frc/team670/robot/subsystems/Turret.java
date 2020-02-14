@@ -54,7 +54,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getMaxVelocity() {
-            return 200; //TODO: probably needs to be adjusted
+            return 200; // TODO: probably needs to be adjusted
         }
 
         public double getMinVelocity() {
@@ -62,7 +62,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getMaxAcceleration() {
-            return 200; //TODO: probably needs to be adjusted
+            return 200; // TODO: probably needs to be adjusted
         }
 
         public double getAllowedError() {
@@ -97,19 +97,11 @@ public class Turret extends SparkMaxRotatingSubsystem {
     }
 
     public static final Config turretConfig = new Config();
-    private final double DEGREES_PER_MOTOR_ROTATION = 360/turretConfig.getRotatorGearRatio();
+    private final double DEGREES_PER_MOTOR_ROTATION = 360 / turretConfig.getRotatorGearRatio();
 
     public Turret() {
         super(turretConfig);
         rotator_encoder.setPosition(0);
-    }
-
-    /**
-     * @param speed to set turret to, [1, 1]
-     */
-
-    public void setTurretSpeed(double speed) {
-        this.rotator.set(speed);
     }
 
     @Override
@@ -141,10 +133,12 @@ public class Turret extends SparkMaxRotatingSubsystem {
         return getUnadjustedPosition() * DEGREES_PER_MOTOR_ROTATION;
     }
 
+    /**
+     * @param speed to set turret to, [1, 1]
+     */
     @Override
     public void moveByPercentOutput(double output) {
-        // TODO Auto-generated method stub
-
+        this.rotator.set(output);
     }
 
 }
