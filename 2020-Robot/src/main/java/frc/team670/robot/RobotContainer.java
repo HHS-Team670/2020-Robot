@@ -13,7 +13,7 @@ import java.util.List;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.team670.robot.constants.OI;
-import frc.team670.robot.dataCollection.sensors.ColorMatcher;
+import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.ColorWheelSpinner;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
@@ -52,7 +52,8 @@ public class RobotContainer {
   private static Turret turret = new Turret();
   private static Intake intake = new Intake();
   private static Indexer indexer = new Indexer();
-  private final ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
+  private static ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
+  private static MustangCoprocessor coprocessor = new MustangCoprocessor();
 
   private Trajectory trajectory;
   private String pathname;
