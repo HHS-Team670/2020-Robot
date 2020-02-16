@@ -6,6 +6,9 @@ import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.revrobotics.CANError;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team670.robot.RobotContainer;
@@ -26,6 +29,9 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
 
     protected HealthState lastHealthState;
     private boolean failedLastTime = false;
+
+    private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
+    private static NetworkTable table = instance.getTable("/SmartDashboard");
 
     /**
      * Creates a new MustangSubsystemBase. By default, the subsystem's initial
@@ -102,6 +108,12 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
                 failedLastTime = true;
             }
         }
+    }
+
+    public void pushHealthToDashboard() {
+        NetworkTableEntry subsystem = table.getEntry(this.getName());
+        subsystem.forceSetString(getHealth(false).toString());
+        Logger.consoleLog("%s Health %s pushed to dashboard", this.getName(), getHealth(false).toString());
     }
 
     /**

@@ -7,7 +7,6 @@
 
 package frc.team670.robot;
 
-import edu.wpi.first.hal.sim.DriverStationSim;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import frc.team670.robot.commands.MustangCommand;
@@ -29,6 +28,8 @@ public class Robot extends TimedRobot {
 
   private Timer timer;
   private double SYSTEM_CHECK_PERIOD = 5;
+
+  public static boolean overrideAtCompetition = true;
 
   /**
    * This function is run when the robot is first started up and should be used

@@ -87,6 +87,16 @@ public class XKeys {
             else if (s == xkeysCommands.SHOOT_ALL)
                 shootAll();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        table.addEntryListener("xkeys-updraw", (table2, key2, entry, value, flags) -> {
+            if (value.getType() != NetworkTableType.kDouble)
+                return;
+            double s = value.getDouble();
+            if (s == xkeysCommands.TOGGLE_UPDRAW_UP)
+                toggleUpdrawUp();
+            else if (s == xkeysCommands.TOGGLE_UPDRAW_DOWN)
+                toggleUpdrawDown();
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-indexer", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
