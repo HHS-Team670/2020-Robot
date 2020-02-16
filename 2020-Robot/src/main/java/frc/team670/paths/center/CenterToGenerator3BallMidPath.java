@@ -28,6 +28,7 @@ import frc.team670.robot.subsystems.DriveBase;
 public class CenterToGenerator3BallMidPath {
 
         public static Trajectory generateTrajectory(DriveBase driveBase) {
+
                 driveBase.zeroHeading();
                 driveBase.resetOdometry(new Pose2d(3.186, 4.296, Rotation2d.fromDegrees(0)));
                 // Create a voltage constraint to ensure we don't accelerate too fast
@@ -45,11 +46,12 @@ public class CenterToGenerator3BallMidPath {
                                                 .addConstraint(RobotConstants.kAutoPathConstraints)
                                                 .addConstraint(autoVoltageConstraint);
 
-                Trajectory trajectory = TrajectoryGenerator
-                                .generateTrajectory(
-                                                List.of(new Pose2d(3.186, 4.296, Rotation2d.fromDegrees(0)),
-                                                                new Pose2d(5.687, 3.6, Rotation2d.fromDegrees(18))),
-                                                config);
+                Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+                        List.of(
+                                new Pose2d(3.186, 4.296, Rotation2d.fromDegrees(0)),
+                                new Pose2d(5.687, 3.6, Rotation2d.fromDegrees(18))
+                        ),
+                config);
 
                 return trajectory;
         }

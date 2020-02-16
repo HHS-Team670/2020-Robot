@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.team670.paths.left;
+package frc.team670.paths.center;
 
 import java.util.List;
 
@@ -20,17 +20,17 @@ import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Trajectory starting on the line near the opponent's loading station (robot facing towards your own driverstation)
- * and facing the 3 Power Cells under the middle of the generator.
+ * Trajectory starting from middle of the initiation line (facing towards your driver station) 
+ * and going through the trench.
  * 
  * @author meganchoy, ctychen
  */
-public class LeftToGenerator3BallMidPath {
+public class CenterToTrench {
 
     public static Trajectory generateTrajectory(DriveBase driveBase) {
 
         driveBase.zeroHeading();
-        driveBase.resetOdometry(new Pose2d(3.186, 1, Rotation2d.fromDegrees(0)));
+        driveBase.resetOdometry(new Pose2d(3.201, 7.451, Rotation2d.fromDegrees(0)));
         // Create a voltage constraint to ensure we don't accelerate too fast
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
                 new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
@@ -48,13 +48,13 @@ public class LeftToGenerator3BallMidPath {
 
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
             List.of(
-                new Pose2d(3.186, 1, Rotation2d.fromDegrees(0)),
-                new Pose2d(3.186, 1, Rotation2d.fromDegrees(65.511)),
-                new Pose2d(5.687, 3.6, Rotation2d.fromDegrees(18))
+                new Pose2d(3.194, 4.296, Rotation2d.fromDegrees(0)),
+                new Pose2d(3.194, 4.296, Rotation2d.fromDegrees(80.404)),
+                new Pose2d(6.363, 7.519, Rotation2d.fromDegrees(0)),
+                new Pose2d(8.008, 7.508, Rotation2d.fromDegrees(0))
             ),
         config);
-
-    return trajectory;
-
+                             
+        return trajectory;
     }
 }

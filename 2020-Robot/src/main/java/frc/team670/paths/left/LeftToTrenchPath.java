@@ -20,12 +20,12 @@ import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Trajectory starting on the line near the opponent's loading station (robot facing towards your own driverstation)
- * and facing the 3 Power Cells under the middle of the generator.
+ * Trajectory starting on intitiation line closest to enemy loading station (facing towards your driverstation)
+ * and going through the trench
  * 
  * @author meganchoy, ctychen
  */
-public class LeftToGenerator3BallMidPath {
+public class LeftToTrenchPath {
 
     public static Trajectory generateTrajectory(DriveBase driveBase) {
 
@@ -49,12 +49,12 @@ public class LeftToGenerator3BallMidPath {
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
             List.of(
                 new Pose2d(3.186, 1, Rotation2d.fromDegrees(0)),
-                new Pose2d(3.186, 1, Rotation2d.fromDegrees(65.511)),
-                new Pose2d(5.687, 3.6, Rotation2d.fromDegrees(18))
+                new Pose2d(3.186, 1, Rotation2d.fromDegrees(82.163)),
+                new Pose2d(3.857, 5.602, Rotation2d.fromDegrees(80.541)),
+                new Pose2d(7.989, 7.504, Rotation2d.fromDegrees(-0.201))
             ),
         config);
 
-    return trajectory;
-
+            return trajectory;
     }
 }

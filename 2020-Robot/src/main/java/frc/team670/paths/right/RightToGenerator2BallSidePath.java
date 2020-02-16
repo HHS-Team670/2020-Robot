@@ -29,6 +29,7 @@ import frc.team670.robot.subsystems.DriveBase;
 public class RightToGenerator2BallSidePath {
 
     public static Trajectory generateTrajectory(DriveBase driveBase) {
+
         driveBase.zeroHeading();
         driveBase.resetOdometry(new Pose2d(3.201, 7.451, Rotation2d.fromDegrees(0)));
         // Create a voltage constraint to ensure we don't accelerate too fast
@@ -43,11 +44,16 @@ public class RightToGenerator2BallSidePath {
                         // Add kinematics to ensure max speed is actually obeyed
                         .setKinematics(RobotConstants.kDriveKinematics)
                         // Apply the voltage constraint
-                        .addConstraint(RobotConstants.kAutoPathConstraints).addConstraint(autoVoltageConstraint);
+                        .addConstraint(RobotConstants.kAutoPathConstraints)
+                        .addConstraint(autoVoltageConstraint);
 
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-                new Pose2d(3.201, 7.451, Rotation2d.fromDegrees(0)), List.of(new Translation2d(4.995, 6.673)),
-                new Pose2d(5.8, 5.445, Rotation2d.fromDegrees(-65)), config);
+                new Pose2d(3.201, 7.451, Rotation2d.fromDegrees(0)),
+                List.of(
+                        new Translation2d(4.995, 6.673)
+                ),
+                new Pose2d(5.8, 5.445, Rotation2d.fromDegrees(-65)), 
+        config);
 
         return trajectory;
 

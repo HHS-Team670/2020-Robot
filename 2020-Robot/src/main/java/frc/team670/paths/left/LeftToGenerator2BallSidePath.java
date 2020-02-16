@@ -36,14 +36,15 @@ public class LeftToGenerator2BallSidePath {
                         // Add kinematics to ensure max speed is actually obeyed
                         .setKinematics(RobotConstants.kDriveKinematics)
                         // Apply the voltage constraint
-                        .addConstraint(RobotConstants.kAutoPathConstraints).addConstraint(autoVoltageConstraint);
+                        .addConstraint(RobotConstants.kAutoPathConstraints)
+                        .addConstraint(autoVoltageConstraint);
 
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
                 List.of(
                         new Pose2d(3.186, 1, Rotation2d.fromDegrees(0)),
                         new Pose2d(3.186, 1, Rotation2d.fromDegrees(82.163)),
                         new Pose2d(5.8, 5.445, Rotation2d.fromDegrees(-65))
-                    ),
+                ),
 
         config);
 
