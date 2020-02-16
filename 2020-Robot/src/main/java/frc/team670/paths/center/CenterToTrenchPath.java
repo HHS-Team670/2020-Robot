@@ -25,7 +25,7 @@ import frc.team670.robot.subsystems.DriveBase;
  * 
  * @author meganchoy, ctychen
  */
-public class CenterToTrench {
+public class CenterToTrenchPath {
 
     public static Trajectory generateTrajectory(DriveBase driveBase) {
 
