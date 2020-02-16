@@ -70,12 +70,13 @@ public class Turret extends SparkMaxRotatingSubsystem {
             return (2 / 360) * this.getRotatorGearRatio();
         }
 
-        public float getForwardSoftLimit() {
-            return (float) (SOFT_MAXIMUM_DEGREES * getRotatorGearRatio());
+        public boolean enableSoftLimits() {
+            return true;
         }
 
-        public float getReverseSoftLimit() {
-            return (float) (SOFT_MINIMUM_DEGREES * getRotatorGearRatio());
+        public float[] setSoftLimits() {
+            return new float[] { (float) (SOFT_MAXIMUM_DEGREES * getRotatorGearRatio()),
+                    (float) (SOFT_MAXIMUM_DEGREES * getRotatorGearRatio()) };
         }
 
         public int getContinuousCurrent() {

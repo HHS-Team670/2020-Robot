@@ -40,7 +40,7 @@ public class SendOneBall extends CommandBase implements MustangCommand {
      */
     @Override
     public void execute() {
-        indexer.uptake(); 
+        indexer.updraw(); 
     }
 
     /**

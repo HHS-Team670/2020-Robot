@@ -65,14 +65,16 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
 
         public abstract double getAllowedError();
 
-        public abstract float getForwardSoftLimit();
-
-        public abstract float getReverseSoftLimit();
+        /**
+         * @return An array of soft limits, in rotations, for this system:
+         *         [forwardLimit, reverseLimit].
+         * @return null if this system does not have soft limits.
+         */
+        public abstract float[] setSoftLimits();
 
         public abstract int getContinuousCurrent();
 
         public abstract int getPeakCurrent();
-
     }
 
     public SparkMaxRotatingSubsystem(Config config) {
@@ -112,11 +114,13 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
 
         rotator.setSmartCurrentLimit(config.getPeakCurrent(), config.getContinuousCurrent());
 
-        rotator.setSoftLimit(SoftLimitDirection.kForward, config.getForwardSoftLimit());
-        rotator.setSoftLimit(SoftLimitDirection.kReverse, config.getReverseSoftLimit());
-
-        rotator.enableSoftLimit(SoftLimitDirection.kForward, true);
-        rotator.enableSoftLimit(SoftLimitDirection.kReverse, true);
+        if (config.setSoftLimits() == null || config.setSoftLimits().length > 2) {
+            rotator.enableSoftLimit(SoftLimitDirection.kForward, false);
+            rotator.enableSoftLimit(SoftLimitDirection.kReverse, false);
+        } else {
+            rotator.setSoftLimit(SoftLimitDirection.kForward, config.setSoftLimits()[0]);
+            rotator.setSoftLimit(SoftLimitDirection.kReverse, config.setSoftLimits()[1]);
+        }
 
     }
 
@@ -124,7 +128,7 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         return this.rotator_encoder.getPosition();
     }
 
-    private void setSmartMotionTarget(double setpoint) {
+    protected void setSmartMotionTarget(double setpoint) {
         rotator_controller.setReference(setpoint, ControlType.kSmartMotion);
         this.setpoint = setpoint;
     }
@@ -159,8 +163,6 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     public SparkMAXLite getRotator() {
         return this.rotator;
     }
-
-    
 
     public CANEncoder getRotatorEncoder() {
         return this.rotator_encoder;
