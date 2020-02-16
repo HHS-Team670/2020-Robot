@@ -17,14 +17,10 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.team670.paths.center.CenterToGenerator3BallMidPath;
-import frc.team670.paths.left.LeftToGenerator3BallMidPath;
-import frc.team670.paths.right.RightToGenerator3BallMidPath;
+import frc.team670.paths.Generator3BallMidToGenerator2BallSidePath;
 import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.commands.indexer.RotateToIntakePosition;
 import frc.team670.robot.commands.indexer.SendAllBalls;
-import frc.team670.robot.commands.intake.RunConveyor;
-import frc.team670.robot.commands.intake.RunIntake;
+import frc.team670.robot.commands.intake.StopIntake;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.constants.RobotConstants;
@@ -37,13 +33,12 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
 
 /**
- * Autonomous routine starting with shooting from the initiation line (facing
- * towards your driver station), ending at (and hopefully intaking and indexing)
- * 3 Power Cells under the generator.
+ * Autonomous routine starting in front of the 2 power cells under the generator, then towards the control panel, straight
+ * go through the trench, and shoot by the initiation line
  * 
  * @author ctychen, meganchoy
  */
-public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandGroup implements MustangCommand {
+public class Generator2BallSideThroughTrenchThenShoot extends SequentialCommandGroup implements MustangCommand {
 
   private DriveBase driveBase;
   private Shooter shooter;
@@ -58,23 +53,16 @@ public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandG
   private PIDController rightPIDController = new PIDController(RobotConstants.kPDriveVel, RobotConstants.kIDriveVel,
       RobotConstants.kDDriveVel);
 
-  private enum StartPosition {
-    LEFT, CENTER, RIGHT;
-  }
-
-  public ShootFromBaseLineThenToGenerator3BallMid(StartPosition startPosition, DriveBase driveBase, Intake intake,
+  public Generator2BallSideThroughTrenchThenShoot(DriveBase driveBase, Intake intake,
       Conveyor conveyor, Shooter shooter, Indexer indexer) {
     this.driveBase = driveBase;
     this.shooter = shooter;
     this.intake = intake;
     this.conveyor = conveyor;
     this.indexer = indexer;
-    if (startPosition == StartPosition.LEFT)
-      trajectory = LeftToGenerator3BallMidPath.generateTrajectory(driveBase);
-    if (startPosition == StartPosition.CENTER)
-      trajectory = CenterToGenerator3BallMidPath.generateTrajectory(driveBase);
-    if (startPosition == StartPosition.RIGHT)
-      trajectory = RightToGenerator3BallMidPath.generateTrajectory(driveBase);
+
+    trajectory = Generator3BallMidToGenerator2BallSidePath.generateTrajectory();
+
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(this.driveBase, HealthState.GREEN);
     healthReqs.put(this.shooter, HealthState.GREEN);
@@ -82,9 +70,14 @@ public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandG
     healthReqs.put(this.conveyor, HealthState.GREEN);
     healthReqs.put(this.indexer, HealthState.GREEN);
     addCommands(
-        new StartShooter(shooter),
-        new SendAllBalls(indexer),
+        // TODO If you call this when the shooter is already stopped would it break anything
         new StopShooter(shooter),
+        // Intake is already running 
+        // new ParallelCommandGroup(
+        //   new RunIntake(0.5, intake), 
+        //   new RunConveyor(conveyor),
+        //   new RotateToIntakePosition(indexer)
+        // ),
         new RamseteCommand(trajectory, driveBase::getPose,
             new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
               new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
@@ -92,11 +85,12 @@ public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandG
               RobotConstants.kDriveKinematics, driveBase::getWheelSpeeds, leftPIDController, rightPIDController,
             // RamseteCommand passes volts to the callback
             driveBase::tankDriveVoltage, driveBase),
-        new ParallelCommandGroup( 
-          new RunIntake(0.5, intake), 
-          new RunConveyor(conveyor),
-          new RotateToIntakePosition(indexer)
-      ));
+        new ParallelCommandGroup(
+          new StopIntake(intake),
+          new StartShooter(shooter)
+        ),
+        new SendAllBalls(indexer)
+    );
   }
 
   @Override

@@ -22,6 +22,7 @@ import frc.team670.paths.left.LeftToTrenchPath;
 import frc.team670.paths.right.RightToTrenchPath;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.RotateToIntakePosition;
+import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.intake.RunConveyor;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.shooter.StartShooter;
@@ -37,8 +38,8 @@ import frc.team670.robot.subsystems.Shooter;
 
 /**
  * Autonomous routine starting with shooting from the initiation line (facing
- * towards your driver station), ending at (and hopefully intaking and indexing)
- * 2 Power Cells under the generator near your trench.
+ * towards your driver station), going through the trench, and ending near the 
+ * control panel.
  * 
  * @author ctychen, meganchoy
  */
@@ -82,6 +83,14 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
         healthReqs.put(this.indexer, HealthState.GREEN);
         addCommands(
             new StartShooter(shooter),
+            new SendAllBalls(indexer),
+            // Roll intake out as it runs the path
+            new ParallelCommandGroup(
+                new StopShooter(shooter), 
+                new RunIntake(0.5, intake),
+                new RunConveyor(conveyor), 
+                new RotateToIntakePosition(indexer)
+            ),
             new RamseteCommand(trajectory, driveBase::getPose,
                     new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
                     new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
@@ -89,13 +98,7 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
                         RobotConstants.kDriveKinematics, driveBase::getWheelSpeeds, leftPIDController,
                         rightPIDController,
                         // RamseteCommand passes volts to the callback
-                    driveBase::tankDriveVoltage, driveBase),
-            new ParallelCommandGroup(
-                new StopShooter(shooter), 
-                new RunIntake(0.5, intake),
-                new RunConveyor(conveyor), 
-                new RotateToIntakePosition(indexer)
-            )
+                    driveBase::tankDriveVoltage, driveBase)
         );
     }
 

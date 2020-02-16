@@ -15,6 +15,7 @@ import frc.team670.paths.left.LeftToGenerator2BallSidePath;
 import frc.team670.paths.right.RightToGenerator2BallSidePath;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.RotateToIntakePosition;
+import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.intake.RunConveyor;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.shooter.StartShooter;
@@ -74,6 +75,8 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
                 healthReqs.put(this.indexer, HealthState.GREEN);
                 addCommands(
                         new StartShooter(shooter), 
+                        new SendAllBalls(indexer),
+                        new StopShooter(shooter),
                         new RamseteCommand(trajectory, driveBase::getPose,
                                 new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
                                 new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
@@ -82,8 +85,7 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
                                 rightPIDController,
                                 // RamseteCommand passes volts to the callback
                                 driveBase::tankDriveVoltage, driveBase),
-                        new ParallelCommandGroup(
-                                new StopShooter(shooter), 
+                        new ParallelCommandGroup( 
                                 new RunIntake(0.5, intake),                  
                                 new RunConveyor(conveyor), 
                                 new RotateToIntakePosition(indexer)

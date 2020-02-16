@@ -24,7 +24,7 @@ import frc.team670.robot.constants.RobotConstants;
  * 
  * @author meganchoy, ctychen
  */
-public class Generator3BallMidToGenerator2BallSide {
+public class Generator3BallMidToGenerator2BallSidePath {
 
     public static Trajectory generateTrajectory() {
         // Create a voltage constraint to ensure we don't accelerate too fast
