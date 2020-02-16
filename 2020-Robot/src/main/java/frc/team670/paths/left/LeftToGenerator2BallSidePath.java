@@ -18,7 +18,7 @@ import frc.team670.robot.constants.RobotConstants;
  * 
  * @author meganchoy, ctychen
  */
-public class LeftToGenerator2BallSide {
+public class LeftToGenerator2BallSidePath {
 
     public static Trajectory generateTrajectory(DriveBase driveBase) {
 

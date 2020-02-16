@@ -26,7 +26,7 @@ import frc.team670.robot.subsystems.DriveBase;
  * 
  * @author meganchoy, ctychen
  */
-public class RightToGenerator2BallSide {
+public class RightToGenerator2BallSidePath {
 
     public static Trajectory generateTrajectory(DriveBase driveBase) {
         driveBase.zeroHeading();

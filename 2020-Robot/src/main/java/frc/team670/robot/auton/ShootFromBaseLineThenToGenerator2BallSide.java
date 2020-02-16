@@ -1,4 +1,4 @@
-package frc.team670.robot.auton.centerDS;
+package frc.team670.robot.auton;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.team670.paths.center.CenterToGenerator2BallSidePath;
+import frc.team670.paths.left.LeftToGenerator2BallSidePath;
+import frc.team670.paths.right.RightToGenerator2BallSidePath;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.RotateToIntakePosition;
 import frc.team670.robot.commands.intake.RunConveyor;
@@ -22,18 +25,17 @@ import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
-import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.paths.center.CenterToGenerator2BallSidePath;
+import frc.team670.robot.subsystems.Shooter;
 
 /**
- * Autonomous routine starting with shooting from the middle of the initiation
- * line (facing towards your driver station), ending at (and hopefully intaking
- * and indexing) 2 Power Cells under the generator near your trench.
+ * Autonomous routine starting with shooting from the initiation line (facing
+ * towards your driver station), ending at (and hopefully intaking and indexing)
+ * 2 Power Cells under the generator near your trench.
  * 
- * @author meganchoy, ctychen
+ * @author ctychen, meganchoy
  */
-public class ShootCenterThenToGenerator2BallSide extends SequentialCommandGroup implements MustangCommand {
+public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommandGroup implements MustangCommand {
 
         private DriveBase driveBase;
         private Shooter shooter;
@@ -48,14 +50,22 @@ public class ShootCenterThenToGenerator2BallSide extends SequentialCommandGroup 
         private PIDController rightPIDController = new PIDController(RobotConstants.kPDriveVel,
                         RobotConstants.kIDriveVel, RobotConstants.kDDriveVel);
 
-        public ShootCenterThenToGenerator2BallSide(DriveBase driveBase, Shooter shooter, Intake intake,
-                        Conveyor conveyor, Indexer indexer) {
+        private enum StartPosition{
+                LEFT, CENTER, RIGHT;
+        }
+
+        public ShootFromBaseLineThenToGenerator2BallSide(StartPosition startPosition, DriveBase driveBase, Intake intake, Conveyor conveyor, Shooter shooter, Indexer indexer) {
                 this.driveBase = driveBase;
                 this.shooter = shooter;
                 this.intake = intake;
-                this.conveyor = conveyor;
+                this.conveyor = conveyor;       
                 this.indexer = indexer;
-                trajectory = CenterToGenerator2BallSidePath.generateTrajectory(driveBase);
+                if (startPosition == StartPosition.LEFT)
+                        trajectory = LeftToGenerator2BallSidePath.generateTrajectory(driveBase);
+                if (startPosition == StartPosition.CENTER)
+                        trajectory = CenterToGenerator2BallSidePath.generateTrajectory(driveBase);
+                if (startPosition == StartPosition.RIGHT)
+                        trajectory = RightToGenerator2BallSidePath.generateTrajectory(driveBase);
                 healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
                 healthReqs.put(this.driveBase, HealthState.GREEN);
                 healthReqs.put(this.shooter, HealthState.GREEN);

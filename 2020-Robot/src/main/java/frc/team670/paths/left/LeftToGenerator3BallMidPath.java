@@ -25,7 +25,7 @@ import frc.team670.robot.subsystems.DriveBase;
  * 
  * @author meganchoy, ctychen
  */
-public class LeftToGenerator3BallMid {
+public class LeftToGenerator3BallMidPath {
 
     public static Trajectory generateTrajectory(DriveBase driveBase) {
         driveBase.zeroHeading();
