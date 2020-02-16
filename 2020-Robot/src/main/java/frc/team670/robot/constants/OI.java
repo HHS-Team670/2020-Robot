@@ -5,66 +5,56 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.robot.commands.cameras.FlipDriverCameraMode;
 import frc.team670.robot.commands.drive.teleop.FlipDriveAndCamera;
 import frc.team670.robot.dataCollection.XKeys;
+import frc.team670.robot.subsystems.Conveyor;
+import frc.team670.robot.subsystems.Indexer;
+import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.climber.Climber;
 import frc.team670.robot.utils.MustangController;
 import frc.team670.robot.utils.MustangController.XboxButtons;
 
 public class OI {
 
-    private MustangController driverController;
-    private Joystick operatorController;
+  private MustangController driverController;
+  private Joystick operatorController;
 
-    private JoystickButton toggleReverseDrive, toggleDriverCameraMode;
+  private JoystickButton toggleReverseDrive, toggleDriverCameraMode;
 
-    private XKeys xkeys;
+  private XKeys xkeys;
 
-    public OI() {
-        driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
-        toggleReverseDrive = new JoystickButton(driverController, XboxButtons.LEFT_BUMPER);
-        toggleReverseDrive.whenPressed(new FlipDriveAndCamera());
-        toggleDriverCameraMode = new JoystickButton(driverController, XboxButtons.B);
-        toggleDriverCameraMode.whenPressed(new FlipDriverCameraMode());
-        operatorController = new Joystick(RobotMap.OPERATOR_CONTROLLER_PORT);
-        xkeys = new XKeys();
-      }
+  public OI(Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Climber climber) {
+    driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
+    toggleReverseDrive = new JoystickButton(driverController, XboxButtons.LEFT_BUMPER);
+    toggleReverseDrive.whenPressed(new FlipDriveAndCamera());
+    toggleDriverCameraMode = new JoystickButton(driverController, XboxButtons.B);
+    toggleDriverCameraMode.whenPressed(new FlipDriverCameraMode());
+    operatorController = new Joystick(RobotMap.OPERATOR_CONTROLLER_PORT);
+    xkeys = new XKeys(intake, conveyor, indexer, shooter, climber);
+  }
 
-      public boolean isQuickTurnPressed() {
-        return driverController.getRightBumper();
-      }
-
-      public boolean isManualSpinColorWheelButtonPressed() { // returns true when the button that triggers the motor that spins the color wheel is pressed
-        return driverController.getAButton(); // TODO: change depending on driver preferences
-      }
-
-
-      /**
-   * Sets the rumble on the driver controller
-   * 
-   * @param power The desired power of the rumble [0, 1]
-   * @param time The time to rumble for in seconds
-   */
-  public void rumbleDriverController(double power, double time) {
-    rumbleController(driverController, power, time);
+  public boolean isQuickTurnPressed() {
+    return driverController.getRightBumper();
   }
 
   /**
-   * Sets the rumble on the operator controller
+   * Sets the rumble on the driver controller
    * 
    * @param power The desired power of the rumble [0, 1]
-   * @param time The time to rumble for in seconds
+   * @param time  The time to rumble for in seconds
    */
-  public void rumbleOperatorController(double power, double time) {
-    // rumbleController(operatorController, power, time);
+  public void rumbleDriverController(double power, double time) {
+    rumbleController(driverController, power, time);
   }
 
   private void rumbleController(MustangController controller, double power, double time) {
     controller.rumble(power, time);
   }
 
-  public MustangController getDriverController(){
-      return driverController;
+  public MustangController getDriverController() {
+    return driverController;
   }
 
-  public Joystick getOperatorController(){
+  public Joystick getOperatorController() {
     return operatorController;
   }
 

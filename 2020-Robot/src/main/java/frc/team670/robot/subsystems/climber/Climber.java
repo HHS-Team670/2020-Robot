@@ -14,9 +14,9 @@ public class Climber extends MustangSubsystemBase{
    private boolean leftPullHookedOnBar;
    private boolean rightPullHookedOnBar;
  
-   public Climber(Pull rightPull, Pull leftPull) {
-       this.leftPull = leftPull;
-       this.rightPull = rightPull;
+   public Climber() {
+       this.leftPull = new Pull(false);
+       this.rightPull = new Pull(true);
        leftPullHookedOnBar = false;
        rightPullHookedOnBar = false;
    }

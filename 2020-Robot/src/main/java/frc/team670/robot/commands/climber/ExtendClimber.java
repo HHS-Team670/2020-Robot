@@ -4,13 +4,19 @@
 /* must be accompanied by the FIRST BSD license file in the root directory of */
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
- 
+
 package frc.team670.robot.commands.climber;
+
+import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.climber.Climber;
- 
+
+import java.util.Map;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
  
-public class ExtendClimber extends CommandBase {
+public class ExtendClimber extends CommandBase implements MustangCommand{
   private Climber climber;
   private double heightCM;
  
@@ -44,4 +50,10 @@ public class ExtendClimber extends CommandBase {
   public boolean isFinished() {
     return climber.isAtTarget();
   }
+
+@Override
+public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+	// TODO Auto-generated method stub
+	return null;
+}
 }
