@@ -5,7 +5,7 @@ import com.revrobotics.CANEncoder;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
-import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.sensors.TimeOfFlightSensor;
@@ -24,7 +24,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     private CANEncoder encoder;
 
-    private TimeOfFlightSensor indexer_intake_sensor;
+    private TimeOfFlightSensor indexerIntakeSensor;
+    private DutyCycleEncoder revolverAbsoluteEncoder;
 
     /*
      * Ranges (in mm) from the TOF sensor for which we know the ball was fully
@@ -169,8 +170,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         super(INDEXER_CONFIG);
 
         this.updraw = new TalonSRXLite(RobotMap.UPDRAW_SPINNER);
-        this.indexer_intake_sensor = new TimeOfFlightSensor(I2C.Port.kMXP);
-
+        this.indexerIntakeSensor = new TimeOfFlightSensor(RobotMap.INDEXER_ToF_SENSOR_PORT);
+        this.revolverAbsoluteEncoder = new DutyCycleEncoder(RobotMap.INDEXER_DIO_ENCODER_PORT);
+        
         chamberStates = new boolean[5];
 
         updraw.setNeutralMode(NeutralMode.Coast);
@@ -207,7 +209,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     public void intakeBall() {
         if (ballIn()) {
             chamberStates[getBottomChamber()] = true;
-            indexer_intake_sensor.stop();
+            indexerIntakeSensor.stop();
         }
     }
 
@@ -217,7 +219,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      */
     public void prepareToIntake() {
         setTargetAngleInDegrees(INDEXER_DEGREES_PER_CHAMBER * getIntakeChamber() + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES);
-        indexer_intake_sensor.start();
+        indexerIntakeSensor.start();
     }
 
     /**
@@ -229,6 +231,13 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     public boolean hasReachedTargetPosition() {
         return (MathUtils.doublesEqual(encoder.getPosition(), setpoint, ALLOWED_ERR));
+    }
+
+    /**
+     * TODO: Use absolute encoder
+     */
+    public void zeroRevolver() {
+        
     }
 
     /**
@@ -383,7 +392,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      *         bottom chamber)
      */
     public boolean ballIn() {
-        int range = indexer_intake_sensor.getDistance();
+        int range = indexerIntakeSensor.getDistance();
         if (range >= TOF_BALL_IN_MIN_RANGE && range <= TOF_BALL_IN_MAX_RANGE) {
             return true;
         }
@@ -410,7 +419,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
         // if the ToF sensor breaks but nothing else,
         // the next option would be manual control -- not a fatal issue
-        if (indexer_intake_sensor == null || !indexer_intake_sensor.isHealthy()) {
+        if (indexerIntakeSensor == null || !indexerIntakeSensor.isHealthy()) {
             return HealthState.YELLOW;
         }
         return HealthState.GREEN;

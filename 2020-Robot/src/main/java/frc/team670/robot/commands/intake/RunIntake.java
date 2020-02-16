@@ -3,17 +3,15 @@ package frc.team670.robot.commands.intake;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.utils.Logger;
-
 /**
  *
  */
-public class RunIntake extends InstantCommand implements MustangCommand {
+public class RunIntake extends CommandBase implements MustangCommand {
 
 	Map<MustangSubsystemBase, HealthState> healthReqs;
 	private double speed;

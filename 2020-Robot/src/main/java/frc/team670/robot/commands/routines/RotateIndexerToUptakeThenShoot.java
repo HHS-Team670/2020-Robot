@@ -3,7 +3,6 @@ package frc.team670.robot.commands.routines;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.robot.commands.MustangCommand;
@@ -30,9 +29,12 @@ public class RotateIndexerToUptakeThenShoot extends SequentialCommandGroup imple
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
         
-        // Stage and uptake 1 ball while preparing the shooter, then, shoot
-        addCommands(new ParallelCommandGroup(new SendOneBall(indexer),
-                new StartShooter(shooter)));
+        // Stage and uptake 1 ball while preparing the shooter
+        addCommands(
+            new ParallelCommandGroup(
+            new SendOneBall(indexer),
+            new StartShooter(shooter))
+            );
 
     }
 

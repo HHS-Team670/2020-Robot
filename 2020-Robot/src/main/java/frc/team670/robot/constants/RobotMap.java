@@ -2,6 +2,7 @@ package frc.team670.robot.constants;
 
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.I2C;
 
 public class RobotMap {
 
@@ -45,8 +46,20 @@ public class RobotMap {
   // Conveyor
   public static final int CONVEYOR_ROLLER = 8;
 
-  //Indexer and Updraw
+  // Indexer and Updraw
   public static final int INDEXER_ROTATOR = 9;
   public static final int UPDRAW_SPINNER = 10;
+
+
+  // Sensors
+
+  // Indexer sensors
+  public static final int INDEXER_DIO_ENCODER_PORT = 0;
+  public static final I2C.Port INDEXER_ToF_SENSOR_PORT = I2C.Port.kMXP;
+
+  // LEDs (connected on RoboRIO PWM)
+  public static final int LEFT_SIDE_LEDS_PWM = 0;
+  public static final int RIGHT_SIDE_LEDS_PWM = 1;
+
 
 }
