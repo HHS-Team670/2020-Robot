@@ -11,26 +11,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.team670.robot.constants.OI;
-import frc.team670.robot.dataCollection.sensors.ColorMatcher;
-import frc.team670.robot.subsystems.ColorWheelSpinner;
+import frc.team670.robot.dataCollection.MustangCoprocessor;
+import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.constants.OI;
-import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.commands.intake.DeployIntake;
+import frc.team670.robot.commands.intake.RunIntake;
+import frc.team670.robot.commands.routines.IntakeBallToIndexer;
+import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.subsystems.Turret;
+import frc.team670.robot.subsystems.climber.Climber;
+import frc.team670.robot.utils.MustangController;
 import frc.team670.robot.subsystems.Intake;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
-import frc.team670.robot.subsystems.Shooter;
-import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.subsystems.Indexer;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -44,13 +45,19 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private static List<MustangSubsystemBase> allSubsystems = new ArrayList<MustangSubsystemBase>();
 
-  public static OI oi = new OI();
 
   private static DriveBase driveBase = new DriveBase();
-  private static Shooter shooter;// = new Shooter();
-  private static Turret turret = new Turret();
   private static Intake intake = new Intake();
-  private final ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
+  private static Conveyor conveyor = new Conveyor();
+  private static Indexer indexer = new Indexer();
+  private static Turret turret = new Turret();
+  private static Shooter shooter = new Shooter();
+  private static Climber climber = new Climber();
+  // private static ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
+  private static MustangCoprocessor coprocessor = new MustangCoprocessor();
+
+  private static OI oi = new OI(intake, conveyor, indexer, shooter, climber);
+
 
   private Trajectory trajectory;
   private String pathname;
@@ -62,7 +69,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    addSubsystem(driveBase);
+    addSubsystem(driveBase, intake, conveyor, indexer, turret, shooter);
   }
 
   public static void addSubsystem(MustangSubsystemBase... subsystems) {
@@ -89,12 +96,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     JoystickButton toggleIntake = new JoystickButton(oi.getOperatorController(), 1);
-    JoystickButton runIntakeOut = new JoystickButton(oi.getOperatorController(), 3);
-    JoystickButton runIntakeIn = new JoystickButton(oi.getOperatorController(), 2);
+    JoystickButton runIntakeOut = new JoystickButton(oi.getOperatorController(), 5);
+    JoystickButton runIntakeIn = new JoystickButton(oi.getOperatorController(), 3);
+    JoystickButton toggleShooter = new JoystickButton(oi.getOperatorController(), 6);
 
-    // toggleIntake.whenPressed(new toggleIntake()); // schedules the command when the button is pressed
-    // runIntakeIn.whenHeld(new runIntakeIn());
-    // runIntakeOut.whenHeld(new runIntakeOut());
+    toggleIntake.whenPressed(new DeployIntake(!intake.isDeployed(), intake));
+    runIntakeIn.whenHeld(new IntakeBallToIndexer(intake, conveyor, indexer));
+    runIntakeOut.whenHeld(new RunIntake(0.5, intake));
+    toggleShooter.toggleWhenPressed(new StartShooter(shooter));
   }
 
   /**
@@ -115,5 +124,23 @@ public class RobotContainer {
   public static List<MustangSubsystemBase> getSubsystems(){
     return allSubsystems;
   }
+
+  public static Joystick getOperatorController(){
+    return oi.getOperatorController();
+  }
+
+  public static void rumbleDriverController(){
+    oi.rumbleDriverController(0.7, 0.2);
+  }
+
+  public static MustangController getDriverController(){
+    return oi.getDriverController();
+  }
+
+  public static boolean isQuickTurnPressed(){
+    return oi.isQuickTurnPressed();
+  }
+
+
 
 }

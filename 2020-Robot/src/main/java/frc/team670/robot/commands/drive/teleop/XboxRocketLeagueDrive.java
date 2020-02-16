@@ -44,9 +44,9 @@ public class XboxRocketLeagueDrive extends CommandBase implements MustangCommand
     // Sets the speed to the reading given by the trigger axes on the controller.
     // Left is positive, but we multiply
     // by -1 to reverse that because we want right trigger to correspond to forward.
-    double speed = -1 * (RobotContainer.oi.getDriverController().getLeftTriggerAxis()
-        - RobotContainer.oi.getDriverController().getRightTriggerAxis());
-    double steer = RobotContainer.oi.getDriverController().getLeftStickX();
+    double speed = -1 * (RobotContainer.getDriverController().getLeftTriggerAxis()
+        - RobotContainer.getDriverController().getRightTriggerAxis());
+    double steer = RobotContainer.getDriverController().getLeftStickX();
     System.out.println(speed);
 
     // Decides whether or not to smooth the Steering and Trigger. Smoothing helps
@@ -61,32 +61,32 @@ public class XboxRocketLeagueDrive extends CommandBase implements MustangCommand
       speed *= -1;
     }
 
-    if (RobotContainer.oi.isQuickTurnPressed()) {
+    if (RobotContainer.isQuickTurnPressed()) {
 
       if (speed < -0.0001) {
         if (!XboxRocketLeagueDrive.isDriveReversed()) {
-          driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
+          driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.isQuickTurnPressed());
         } else {
-          driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
+          driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.isQuickTurnPressed());
         }
       } else if (speed > 0.0001) {
         if (!XboxRocketLeagueDrive.isDriveReversed()) {
-          driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
+          driveBase.curvatureDrive(speed, steer, RobotContainer.isQuickTurnPressed());
         } else {
-          driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
+          driveBase.curvatureDrive(speed, steer, RobotContainer.isQuickTurnPressed());
         }
       } else {
         if (!XboxRocketLeagueDrive.isDriveReversed()) {
-          driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
+          driveBase.curvatureDrive(speed, steer, RobotContainer.isQuickTurnPressed());
         } else {
-          driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
+          driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.isQuickTurnPressed());
         }
       }
     } else {
       if (speed < -0.0001) {
-        driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.oi.isQuickTurnPressed());
+        driveBase.curvatureDrive(speed, -1 * steer, RobotContainer.isQuickTurnPressed());
       } else {
-        driveBase.curvatureDrive(speed, steer, RobotContainer.oi.isQuickTurnPressed());
+        driveBase.curvatureDrive(speed, steer, RobotContainer.isQuickTurnPressed());
       }
     }
   }

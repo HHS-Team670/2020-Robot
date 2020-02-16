@@ -22,10 +22,10 @@ public class JoystickTurret extends CommandBase implements MustangCommand {
 
   private Turret turret;
   private Map<MustangSubsystemBase, HealthState> healthReqs;
-  
+
   public JoystickTurret(Turret turret) {
     super();
-    this.turret=turret;
+    this.turret = turret;
     addRequirements(turret);
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(this.turret, HealthState.YELLOW);
@@ -40,8 +40,10 @@ public class JoystickTurret extends CommandBase implements MustangCommand {
   @Override
   public void execute() {
     double angle = Math
-        .atan((RobotContainer.oi.getOperatorController().getY()) / (RobotContainer.oi.getOperatorController().getX()));
-    turret.setTargetAngleInDegrees(angle);
+        .atan((RobotContainer.getOperatorController().getY()) / (RobotContainer.getOperatorController().getX()));
+    if (RobotContainer.getOperatorController().getPOV(0) == 0) {
+      turret.setTargetAngleInDegrees(angle);
+    }
   }
 
   @Override

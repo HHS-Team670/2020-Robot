@@ -12,9 +12,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     public static final int SOFT_MAXIMUM_DEGREES = 270;
 
     /**
-     * Constants for the turret go here; this includes PID and SmartMotion values.
-     * TODO: find what these values should be, because everything in here is a
-     * placeholder
+     * Constants for the turret, including PIDF and SmartMotion values.
      */
     public static class Config extends SparkMaxRotatingSubsystem.Config {
 
@@ -56,7 +54,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getMaxVelocity() {
-            return 200; //TODO: probably needs to be adjusted
+            return 200; // TODO: probably needs to be adjusted
         }
 
         public double getMinVelocity() {
@@ -64,7 +62,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getMaxAcceleration() {
-            return 200; //TODO: probably needs to be adjusted
+            return 200; // TODO: probably needs to be adjusted
         }
 
         public double getAllowedError() {
@@ -99,29 +97,16 @@ public class Turret extends SparkMaxRotatingSubsystem {
     }
 
     public static final Config turretConfig = new Config();
-    private final double DEGREES_PER_MOTOR_ROTATION = 360/turretConfig.getRotatorGearRatio();
+    private final double DEGREES_PER_MOTOR_ROTATION = 360 / turretConfig.getRotatorGearRatio();
 
     public Turret() {
         super(turretConfig);
         rotator_encoder.setPosition(0);
     }
 
-    /**
-     * 
-     * takes in double from -1 to 1 to set speed of turret motor
-     * 
-     * @pre speed has to be greater than or equal to negative one and less than or
-     *      equal to one.
-     * @param speed speed to set turret to
-     */
-
-    public void setTurretSpeed(double speed) {
-        this.rotator.set(speed);
-    }
-
     @Override
     public HealthState checkHealth() {
-        if (isSparkMaxHealthy(rotator)) {
+        if (isSparkMaxErrored(rotator)) {
             return HealthState.RED;
         }
         return HealthState.GREEN;
@@ -148,10 +133,12 @@ public class Turret extends SparkMaxRotatingSubsystem {
         return getUnadjustedPosition() * DEGREES_PER_MOTOR_ROTATION;
     }
 
+    /**
+     * @param speed to set turret to, [1, 1]
+     */
     @Override
     public void moveByPercentOutput(double output) {
-        // TODO Auto-generated method stub
-
+        this.rotator.set(output);
     }
 
 }

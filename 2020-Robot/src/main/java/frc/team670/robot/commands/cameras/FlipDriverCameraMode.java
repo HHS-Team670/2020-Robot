@@ -35,7 +35,7 @@ public class FlipDriverCameraMode extends InstantCommand implements MustangComma
   public void initialize() {
     doubleCamera = !doubleCamera;
     SmartDashboard.putString("driver-camera-mode", doubleCamera ? "double" : "single");
-    RobotContainer.oi.rumbleDriverController(0.7, 0.2);
+    RobotContainer.rumbleDriverController();
   }
 
   @Override
