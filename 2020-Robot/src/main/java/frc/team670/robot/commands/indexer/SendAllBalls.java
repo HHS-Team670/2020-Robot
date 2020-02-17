@@ -11,7 +11,8 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 /**
- * Sends all the balls to the shooter, use when all 5 chambers are filled to rapidly dispense balls
+ * Sends all balls to the shooter. Use when the indexer is full and you want to
+ * empty it fast.
  */
 public class SendAllBalls extends SequentialCommandGroup implements MustangCommand {
 
@@ -20,8 +21,10 @@ public class SendAllBalls extends SequentialCommandGroup implements MustangComma
     public SendAllBalls(Indexer indexer) {
         addRequirements(indexer);
         this.indexer = indexer;
-        addCommands(new SendOneBall(indexer), new SendOneBall(indexer), new SendOneBall(indexer),
-            new SendOneBall(indexer), new SendOneBall(indexer));
+        addCommands(new StageOneBallToShoot(indexer), new SendOneBallToShoot(indexer), new StageOneBallToShoot(indexer),
+                new SendOneBallToShoot(indexer), new StageOneBallToShoot(indexer), new SendOneBallToShoot(indexer),
+                new StageOneBallToShoot(indexer), new SendOneBallToShoot(indexer), new StageOneBallToShoot(indexer),
+                new SendOneBallToShoot(indexer));
     }
 
     @Override
@@ -37,7 +40,4 @@ public class SendAllBalls extends SequentialCommandGroup implements MustangComma
         return healthReqs;
     }
 
-
-
-    
 }

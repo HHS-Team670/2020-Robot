@@ -14,11 +14,11 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 public class RunIntake extends CommandBase implements MustangCommand {
 
 	Map<MustangSubsystemBase, HealthState> healthReqs;
-	private double speed;
+	private boolean reversed;
 	private Intake intake;
 
-	public RunIntake (double speed, Intake intake) {
-		this.speed = speed;
+	public RunIntake (boolean reversed, Intake intake) {
+		this.reversed = reversed;
 		this.intake = intake;
 		healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
 		healthReqs.put(intake, HealthState.YELLOW);
@@ -26,7 +26,7 @@ public class RunIntake extends CommandBase implements MustangCommand {
 	}
 	
 	public void initialize() {
-		intake.roll(speed);
+		intake.roll(reversed);
 	}
 
 

@@ -18,6 +18,8 @@ public class Intake extends MustangSubsystemBase {
     private Solenoid deployer;
     private boolean isDeployed;
 
+    private double INTAKE_ROLLER_SPEED = 0.5; // TODO: exists for testing; may need to change for current control
+
     public Intake() {
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
         compressor = new Compressor(RobotMap.INTAKE_COMPRESSOR);
@@ -38,10 +40,18 @@ public class Intake extends MustangSubsystemBase {
         return isDeployed;
     }
 
-    public void roll(double speed) {
+    public void roll(boolean reversed) {
         if (isDeployed) {
-            roller.set(speed);
+            if (reversed) {
+                roller.set(INTAKE_ROLLER_SPEED * -1);
+            } else {
+                roller.set(INTAKE_ROLLER_SPEED);
+            }
         }
+    }
+
+    public void stop(){
+        roller.set(0);
     }
 
     @Override

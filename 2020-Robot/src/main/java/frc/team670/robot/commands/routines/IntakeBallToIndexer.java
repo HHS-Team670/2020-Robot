@@ -38,17 +38,17 @@ public class IntakeBallToIndexer extends SequentialCommandGroup implements Musta
             addCommands(new DeployIntake(true, intake));
         }
         addCommands(
-            new RunIntake(0.5, intake), // Speed for testing purposes
-            new RotateToIntakePosition(indexer),
-            new RunConveyor(conveyor)
+                new RotateToIntakePosition(indexer),
+                new ParallelCommandGroup(
+                    new RunIntake(false, intake), 
+                    new RunConveyor(conveyor)
+                )
         );
     }
- 
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         return healthReqs;
     }
 
-    
 }
