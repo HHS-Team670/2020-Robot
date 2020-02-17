@@ -50,8 +50,7 @@ public class MustangCoprocessor {
         }
         wallTarget = new VisionValues(NETWORK_TABLE_KEYS[0]);
         cameraLEDs = new Solenoid(RobotMap.PCMODULE, RobotMap.VISION_LED_PCM);
-        SmartDashboard.putBoolean("LEDs on", true);
-        cameraLEDs.set(false);
+        SmartDashboard.putBoolean("LEDs on", false);
     }
 
     private class NetworkTableObject {
@@ -108,8 +107,8 @@ public class MustangCoprocessor {
     }
 
     /**
-     * @return the vertical angle, in degrees, to the vision target as a PIDSource. 
-     * If no value is found, @return the VISION_ERROR_CODE.
+     * @return the vertical angle, in degrees, to the vision target as a PIDSource.
+     *         If no value is found, @return the VISION_ERROR_CODE.
      */
     public VisionValue_PIDSource getVAnglePIDSource() {
         return wallTarget.getVAngle_PIDSource();
@@ -137,7 +136,7 @@ public class MustangCoprocessor {
     private double getOffsetDepth() {
         double vangle = Math.abs(wallTarget.getVAngle() + verticalCameraOffsetAngle);
         double hangle = wallTarget.getHAngle(); // Not need unless diagonal distance below is needed
-        double offset_depth = (OUTER_TARGET_CENTER- cameraHeight) / Math.tan(Math.toRadians(vangle));
+        double offset_depth = (OUTER_TARGET_CENTER - cameraHeight) / Math.tan(Math.toRadians(vangle));
         offset_depth = offset_depth / Math.cos(Math.toRadians(Math.abs(hangle))); // This finds diagonal distance
         SmartDashboard.putNumber("Depth To Camera", offset_depth);
         return offset_depth;
@@ -159,12 +158,15 @@ public class MustangCoprocessor {
         double depth_offset = getOffsetDepth();
         // double phi = Robot.sensors.getAngleToTarget();
         // double alpha = 90 - hangle_offset - phi;
-        // double y = (depth_offset * Math.sin(Math.toRadians(90 - phi))) / (Math.sin(Math.toRadians(alpha)));
+        // double y = (depth_offset * Math.sin(Math.toRadians(90 - phi))) /
+        // (Math.sin(Math.toRadians(alpha)));
         // double temp = cameraHorizontalOffset * cameraHorizontalOffset + y * y
-        //         - (2 * cameraHorizontalOffset * y * Math.cos(Math.PI / 2 - hangle_offset_radians));
+        // - (2 * cameraHorizontalOffset * y * Math.cos(Math.PI / 2 -
+        // hangle_offset_radians));
         // double realDiagonalToTarget = Math.sqrt(temp);
         // double beta = Math
-        //         .toDegrees(Math.asin((y * Math.sin(Math.PI / 2 - hangle_offset_radians) / realDiagonalToTarget)));
+        // .toDegrees(Math.asin((y * Math.sin(Math.PI / 2 - hangle_offset_radians) /
+        // realDiagonalToTarget)));
         // double real_angle = beta - 90;
 
         // if(hangle_offset <0)
@@ -176,7 +178,7 @@ public class MustangCoprocessor {
 
     /**
      * @return an array containing the calculated vision values - [horizontal angle,
-     * distance to target]
+     *         distance to target]
      */
     public double[] getVisionValues() {
         double[] values = { getAngleToWallTarget(), getDistanceToWallTarget(), getTimestamp() };
@@ -277,8 +279,8 @@ public class MustangCoprocessor {
         }
 
         /**
-         * @return the entry at the given index in the array at the NetworkTable entry that
-         * corresponds to this object's key.
+         * @return the entry at the given index in the array at the NetworkTable entry
+         *         that corresponds to this object's key.
          */
         public double getEntry(int index) {
             if (entries.get(key) == null) {
@@ -297,7 +299,7 @@ public class MustangCoprocessor {
         cameraLEDs.set(false);
     }
 
-    public void testLEDS(){
+    public void testLEDS() {
         cameraLEDs.set(SmartDashboard.getBoolean("LEDs on", true));
     }
 

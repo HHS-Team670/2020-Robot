@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.team670.paths.right;
+package frc.team670.paths;
 
 import java.util.List;
 
@@ -17,20 +17,16 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import frc.team670.robot.constants.RobotConstants;
-import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Trajectory starting on the line near your power port and facing the 3 Power Cells under
- * the middle of the generator.
+ * Assuming the robot is already at the 2 power cells at the side of the generator, drive to through the trench,
+ * and end facing the initiation line
  * 
  * @author meganchoy, ctychen
  */
-public class RightToGenerator3BallMidPath {
+public class Generator2BallSideToTrenchPath {
 
-    public static Trajectory generateTrajectory(DriveBase driveBase) {
-
-        driveBase.zeroHeading();
-        driveBase.resetOdometry(new Pose2d(3.201, 7.451, Rotation2d.fromDegrees(0)));
+    public static Trajectory generateTrajectory() {
         // Create a voltage constraint to ensure we don't accelerate too fast
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
                 new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
@@ -46,14 +42,16 @@ public class RightToGenerator3BallMidPath {
                         .addConstraint(RobotConstants.kAutoPathConstraints)
                         .addConstraint(autoVoltageConstraint);
 
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-            List.of(
-                new Pose2d(3.201, 7.451, Rotation2d.fromDegrees(0)),
-                new Pose2d(3.201, 7.451, Rotation2d.fromDegrees(-90)),
-                new Pose2d(5.687, 3.6, Rotation2d.fromDegrees(18))),
-            config);
-            
-        return trajectory;
+        Trajectory trajectory = TrajectoryGenerator
+                .generateTrajectory(
+                    List.of(
+                        // new Pose2d(5.8, 5.445, Rotation2d.fromDegrees(-65)),
+                        new Pose2d(7.138, 6.178, Rotation2d.fromDegrees(23.92)),
+                        new Pose2d(7.99, 6.816, Rotation2d.fromDegrees(68.689)),
+                        new Pose2d(5.555, 7.437, Rotation2d.fromDegrees(180))
+                    ),
+                config);
 
+        return trajectory;
     }
 }

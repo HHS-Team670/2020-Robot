@@ -38,7 +38,7 @@ public class FlipDriveAndCamera extends InstantCommand implements MustangCommand
         // Robot.leds.setForwardData(true);
         // }
         XboxRocketLeagueDrive.setDriveReversed(!isReversed);
-        RobotContainer.oi.rumbleDriverController(0.7, 0.2);
+        RobotContainer.rumbleDriverController();
         Logger.consoleLog("Flipped Drive: %s", (!isReversed));
     }
 

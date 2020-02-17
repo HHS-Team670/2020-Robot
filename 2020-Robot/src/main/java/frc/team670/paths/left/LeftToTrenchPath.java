@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.team670.paths.right;
+package frc.team670.paths.left;
 
 import java.util.List;
 
@@ -20,17 +20,17 @@ import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Trajectory starting on the line near your power port and facing the 3 Power Cells under
- * the middle of the generator.
+ * Trajectory starting on intitiation line closest to enemy loading station (facing towards your driverstation)
+ * and going through the trench
  * 
  * @author meganchoy, ctychen
  */
-public class RightToGenerator3BallMidPath {
+public class LeftToTrenchPath {
 
     public static Trajectory generateTrajectory(DriveBase driveBase) {
 
         driveBase.zeroHeading();
-        driveBase.resetOdometry(new Pose2d(3.201, 7.451, Rotation2d.fromDegrees(0)));
+        driveBase.resetOdometry(new Pose2d(3.186, 1, Rotation2d.fromDegrees(0)));
         // Create a voltage constraint to ensure we don't accelerate too fast
         var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
                 new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
@@ -48,12 +48,13 @@ public class RightToGenerator3BallMidPath {
 
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
             List.of(
-                new Pose2d(3.201, 7.451, Rotation2d.fromDegrees(0)),
-                new Pose2d(3.201, 7.451, Rotation2d.fromDegrees(-90)),
-                new Pose2d(5.687, 3.6, Rotation2d.fromDegrees(18))),
-            config);
-            
-        return trajectory;
+                new Pose2d(3.186, 1, Rotation2d.fromDegrees(0)),
+                new Pose2d(3.186, 1, Rotation2d.fromDegrees(82.163)),
+                new Pose2d(3.857, 5.602, Rotation2d.fromDegrees(80.541)),
+                new Pose2d(7.989, 7.504, Rotation2d.fromDegrees(-0.201))
+            ),
+        config);
 
+            return trajectory;
     }
 }

@@ -17,7 +17,6 @@ import java.util.Map;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class RetractClimber extends CommandBase implements MustangCommand {
-
   private Climber climber;
   private boolean hooked;
   private boolean climbing;

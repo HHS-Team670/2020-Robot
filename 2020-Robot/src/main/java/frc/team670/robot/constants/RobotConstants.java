@@ -31,7 +31,6 @@ public class RobotConstants {
      */
     public static final int SPARK_TICKS_PER_ROTATION = 1024;
 
-    // VISION Constants
     public static final double WHEEL_BASE = 25.662; // measured 1/26/19
 
     /** The number of meters per roatation of a drivebase wheel */

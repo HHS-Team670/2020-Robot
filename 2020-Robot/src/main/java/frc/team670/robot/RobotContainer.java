@@ -30,7 +30,6 @@ import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.climber.Climber;
-import frc.team670.robot.subsystems.climber.Pull;
 import frc.team670.robot.utils.MustangController;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Indexer;
@@ -53,14 +52,12 @@ public class RobotContainer {
   private static Indexer indexer = new Indexer();
   private static Turret turret = new Turret();
   private static Shooter shooter = new Shooter();
-  private static Pull leftPull = new Pull(false);
-  private static Pull rightPull = new Pull(true);
-  private static Climber climber = new Climber(leftPull, rightPull);
+  private static Climber climber = new Climber();
   // private static ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
   private static MustangCoprocessor coprocessor = new MustangCoprocessor();
 
   private static OI oi = new OI(intake, conveyor, indexer, shooter, climber);
-
+  
   private Trajectory trajectory;
   private String pathname;
 
@@ -135,20 +132,22 @@ public class RobotContainer {
     return allSubsystems;
   }
 
-  public static Joystick getOperatorController() {
+  public static Joystick getOperatorController(){
     return oi.getOperatorController();
   }
 
-  public static void rumbleDriverController() {
+  public static void rumbleDriverController(){
     oi.rumbleDriverController(0.7, 0.2);
   }
 
-  public static MustangController getDriverController() {
+  public static MustangController getDriverController(){
     return oi.getDriverController();
   }
 
-  public static boolean isQuickTurnPressed() {
+  public static boolean isQuickTurnPressed(){
     return oi.isQuickTurnPressed();
   }
+
+
 
 }

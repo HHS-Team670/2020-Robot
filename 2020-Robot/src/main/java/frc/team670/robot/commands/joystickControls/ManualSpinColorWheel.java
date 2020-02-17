@@ -44,7 +44,7 @@ public class ManualSpinColorWheel extends CommandBase implements MustangCommand 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (RobotContainer.oi.isManualSpinColorWheelButtonPressed()) {
+    if (RobotContainer.getOperatorController().getRawButton(4)) {
       spinner.setSpeed(MOTOR_SPEED);
     }
   }
@@ -58,7 +58,7 @@ public class ManualSpinColorWheel extends CommandBase implements MustangCommand 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (!RobotContainer.oi.isManualSpinColorWheelButtonPressed()) {
+    if (!RobotContainer.getOperatorController().getRawButton(4)) {
       return true;
     }
     return false;

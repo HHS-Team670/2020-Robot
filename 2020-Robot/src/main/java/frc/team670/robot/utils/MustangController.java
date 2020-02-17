@@ -2,12 +2,9 @@ package frc.team670.robot.utils;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.XboxController;
 
-public class MustangController extends Joystick {
-
-    private Notifier rumbler;
-    private boolean isRumbling;
-    private long targetRumbleTime;
+public class MustangController extends XboxController {
 
     public enum DPadState {
         NEUTRAl, UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT;
@@ -55,26 +52,11 @@ public class MustangController extends Joystick {
 
     public MustangController(int port) {
         super(port);
-        isRumbling = false;
-        targetRumbleTime = System.currentTimeMillis() - 10;
-        rumbler = new Notifier(new Runnable() {
-            public void run() {
-                if (isRumbling) {
-                    checkRumble();
-                }
-            }
-        });
-        rumbler.startPeriodic(0.125);
     }
 
     // helps you get varoius axis and buttons on the XBox controller
     public double getLeftStickX() {
-        double value = super.getRawAxis(XboxButtons.LEFT_STICK_X);
-        // with deadband - value to exceed is 0.06299
-        if (value > 0.063 || value < 0)
-            return super.getRawAxis(XboxButtons.LEFT_STICK_X);
-        else
-            return 0;
+        return super.getRawAxis(XboxButtons.LEFT_STICK_X);
     }
 
     public double getLeftStickY() {
@@ -82,11 +64,11 @@ public class MustangController extends Joystick {
     }
 
     public double getLeftTriggerAxis() {
-        return super.getRawAxis(XboxButtons.LEFT_TRIGGER_AXIS);
+        return super.getTriggerAxis(Hand.kLeft);
     }
 
     public double getRightTriggerAxis() {
-        return super.getRawAxis(XboxButtons.RIGHT_TRIGGER_AXIS);
+        return super.getTriggerAxis(Hand.kRight);
     }
 
     public double getRightStickX() {
@@ -97,44 +79,20 @@ public class MustangController extends Joystick {
         return super.getRawAxis(XboxButtons.RIGHT_STICK_Y);
     }
 
-    public boolean getAButton() {
-        return super.getRawButton(XboxButtons.A);
-    }
-
-    public boolean getBButton() {
-        return super.getRawButton(XboxButtons.B);
-    }
-
-    public boolean getXButton() {
-        return super.getRawButton(XboxButtons.X);
-    }
-
-    public boolean getYButton() {
-        return super.getRawButton(XboxButtons.Y);
-    }
-
     public boolean getLeftBumper() {
-        return super.getRawButton(XboxButtons.LEFT_BUMPER);
+        return super.getBumper(Hand.kLeft);
     }
 
     public boolean getRightBumper() {
-        return super.getRawButton(XboxButtons.RIGHT_BUMPER);
-    }
-
-    public boolean getBackButton() {
-        return super.getRawButton(XboxButtons.BACK);
-    }
-
-    public boolean getStartButton() {
-        return super.getRawButton(XboxButtons.START);
+        return super.getBumper(Hand.kRight);
     }
 
     public boolean getLeftJoystickButton() {
-        return super.getRawButton(XboxButtons.LEFT_JOYSTICK_BUTTON);
+        return super.getStickButton(Hand.kLeft);
     }
 
     public boolean getRightJoystickButton() {
-        return super.getRawButton(XboxButtons.RIGHT_JOYSTICK_BUTTON);
+        return super.getStickButton(Hand.kRight);
     }
 
     public int getPOVValue() {
@@ -148,21 +106,8 @@ public class MustangController extends Joystick {
      * @param time  The time to rumble for in seconds
      */
     public void rumble(double power, double time) {
-        setRumblePower(power);
-        isRumbling = true;
-        targetRumbleTime = System.currentTimeMillis() + (long) (time * 1000);
-    }
-
-    private void setRumblePower(double power) {
-        super.setRumble(RumbleType.kLeftRumble, power);
-        super.setRumble(RumbleType.kRightRumble, power);
-    }
-
-    private void checkRumble() {
-        if (System.currentTimeMillis() >= targetRumbleTime) {
-            setRumblePower(0);
-            isRumbling = false;
-        }
+        setRumble(RumbleType.kLeftRumble, 0.7);
+        setRumble(RumbleType.kRightRumble, 0.7);
     }
 
     // gets angle of the DPad on the XBox controller pressed with increments of 45

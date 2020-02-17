@@ -404,7 +404,7 @@ public class DriveBase extends MustangSubsystemBase {
   /**
    * Returns the Left Motor Controllers
    * 
-   * @return The list of the motor controller on the left side of the robot
+   * @return The list of the motor controllers on the left side of the robot
    */
   public List<SparkMAXLite> getLeftControllers() {
     return leftControllers;
@@ -413,7 +413,7 @@ public class DriveBase extends MustangSubsystemBase {
   /**
    * Returns the Right Motor Controller
    * 
-   * @return The list of hte motor controller on the right side of the robot
+   * @return The list of the motor controllers on the right side of the robot
    */
   public List<SparkMAXLite> getRightControllers() {
     return rightControllers;

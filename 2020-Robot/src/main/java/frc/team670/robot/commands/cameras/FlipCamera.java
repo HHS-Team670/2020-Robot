@@ -28,7 +28,7 @@ public class FlipCamera extends InstantCommand implements MustangCommand {
     // called once when the command executes
     public void initialize() {
         flipCameraDirection();
-        RobotContainer.oi.rumbleDriverController(0.7, 0.2);
+        RobotContainer.rumbleDriverController();
     }
 
     public static void flipCameraDirection() {

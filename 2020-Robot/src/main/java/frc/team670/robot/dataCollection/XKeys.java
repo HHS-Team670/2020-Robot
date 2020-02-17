@@ -46,7 +46,6 @@ public class XKeys {
     private Shooter shooter;
     private Conveyor conveyor;
     private Indexer indexer;
-
     private class xkeysCommands { // do not use enums as getID has to be called over enum call
 
         public static final double RUN_INTAKE_IN = 0;
@@ -101,15 +100,14 @@ public class XKeys {
             else if (s == xkeysCommands.SHOOT_ALL)
                 shootAll();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-updraw", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
-            double s = value.getDouble();
-            if (s == xkeysCommands.TOGGLE_UPDRAW_UP)
-                toggleUpdrawUp();
-            else if (s == xkeysCommands.TOGGLE_UPDRAW_DOWN)
-                toggleUpdrawDown();
+            // double s = value.getDouble();
+            // if (s == xkeysCommands.TOGGLE_UPDRAW_UP)
+            //     toggleUpdrawUp();
+            // else if (s == xkeysCommands.TOGGLE_UPDRAW_DOWN)
+            //     toggleUpdrawDown();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-indexer", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
@@ -168,11 +166,11 @@ public class XKeys {
     }
 
     private void runIntakeIn() {
-        MustangScheduler.getInstance().schedule(new RunIntake(true, intake));
+        MustangScheduler.getInstance().schedule(new RunIntake(false, intake));
     }
 
     private void runIntakeOut() {
-        MustangScheduler.getInstance().schedule(new RunIntake(false, intake));
+        MustangScheduler.getInstance().schedule(new RunIntake(true, intake));
     }
 
     private void autoPickupBall() {
