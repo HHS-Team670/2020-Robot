@@ -124,7 +124,7 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
      *         is connected successfully and without errors.
      */
     public boolean isSparkMaxErrored(SparkMAXLite sparkMax) {
-        return (sparkMax != null && sparkMax.getLastError() != CANError.kOk);
+        return (sparkMax == null || sparkMax.getLastError() != CANError.kOk);
     }
 
     /**
@@ -134,7 +134,7 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
      *         connected successfully and without errors
      */
     public boolean isPhoenixControllerErrored(BaseMotorController controller) {
-        return (controller != null && controller.getLastError() != ErrorCode.OK);
+        return (controller == null || controller.getLastError() != ErrorCode.OK);
     }
 
     public abstract void mustangPeriodic();
