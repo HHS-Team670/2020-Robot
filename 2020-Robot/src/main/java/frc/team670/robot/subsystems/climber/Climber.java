@@ -1,9 +1,10 @@
 package frc.team670.robot.subsystems.climber;
 
+import frc.team670.robot.subsystems.climber.Pull;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 
 /**
- * @author Pallavi & Eugenia
+ * @author Pallavi, Eugenia, & Sofia
  */
 
 public class Climber extends MustangSubsystemBase {
@@ -12,12 +13,7 @@ public class Climber extends MustangSubsystemBase {
     private Pull leftPull;
     private boolean leftPullHookedOnBar;
     private boolean rightPullHookedOnBar;
-
-    public Climber() {
-        // This has the left pull set to be inverted, and right pull is not inverted,
-        // change if needed
-        this(new Pull(true), new Pull(false));
-    }
+    private boolean isExtending; // true: extending, false: retracting
 
     public Climber(Pull rightPull, Pull leftPull) {
         this.leftPull = leftPull;
@@ -42,11 +38,24 @@ public class Climber extends MustangSubsystemBase {
     public void climb(double heightCM) {
         leftPull.climb(heightCM);
         rightPull.climb(heightCM);
+
+    }
+
+    public void setIsExtending(boolean isExtending) {
+        this.isExtending = isExtending;
+        if (isExtending) {
+            leftPull.solenoidOn();
+            rightPull.solenoidOn();
+        } else {
+            leftPull.solenoidOff();
+            rightPull.solenoidOff();
+        }
+
     }
 
     public boolean hookOnBar() {
-        leftPullHookedOnBar = leftPull.hookOnBar();
-        rightPullHookedOnBar = rightPull.hookOnBar();
+        leftPullHookedOnBar = leftPull.isHookedOnBar();
+        rightPullHookedOnBar = rightPull.isHookedOnBar();
         return rightPullHookedOnBar && leftPullHookedOnBar;
     }
 
@@ -56,14 +65,7 @@ public class Climber extends MustangSubsystemBase {
 
     @Override
     public HealthState checkHealth() {
-        HealthState left = leftPull.getHealth(false), right = rightPull.getHealth(false);
-        if (left.equals(HealthState.UNKNOWN)) {
-            left = leftPull.getHealth(true);
-        }
-        if (right.equals(HealthState.UNKNOWN)) {
-            right = rightPull.getHealth(true);
-        }
-        if (left != HealthState.GREEN || right != HealthState.GREEN) {
+        if (leftPull.getHealth(false) == HealthState.RED || rightPull.getHealth(false) == HealthState.RED) {
             return HealthState.RED;
         }
         return HealthState.GREEN;

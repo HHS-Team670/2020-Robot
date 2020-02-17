@@ -1,16 +1,15 @@
 package frc.team670.robot.subsystems.climber;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANPIDController;
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANPIDController;
 import com.revrobotics.ControlType;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Solenoid;
+import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
-import frc.team670.robot.constants.RobotMap;
 
 /**
  * @author Pallavi & Eugenia
@@ -32,22 +31,19 @@ public class Pull extends MustangSubsystemBase {
     private boolean hookedOnBar;
     private int inversionFactor;
     private double target;
+    private Solenoid solenoid;
 
     public Pull(boolean inverted) {
         if (inverted) {
-            motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR_ID_1, Motor_Type.NEO); // TODO: set
-                                                                                                       // motor id +
-                                                                                                       // decide which
-                                                                                                       // motor is
-                                                                                                       // inverted
+            motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_RIGHT_MOTOR, Motor_Type.NEO);
             inversionFactor = -1;
+            solenoid = new Solenoid(RobotMap.PCMODULE, RobotMap.CLIMBER_RIGHT_SOLENOID);
+
         } else {
-            motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR_ID_2, Motor_Type.NEO); // TODO: set
-                                                                                                       // motor id +
-                                                                                                       // decide which
-                                                                                                       // motor is
-                                                                                                       // inverted
+            motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_LEFT_MOTOR, Motor_Type.NEO);
             inversionFactor = 1;
+            solenoid = new Solenoid(RobotMap.PCMODULE, RobotMap.CLIMBER_LEFT_SOLENOID);
+
         }
         controller = motor.getPIDController();
         encoder = motor.getEncoder();
@@ -59,10 +55,17 @@ public class Pull extends MustangSubsystemBase {
         controller.setI(PULL_I);
         controller.setD(PULL_D);
         controller.setFF(PULL_FF);
-
     }
 
-    public boolean hookOnBar() {
+    public void solenoidOff() {
+        solenoid.set(false);
+    }
+
+    public void solenoidOn() {
+        solenoid.set(true);
+    }
+
+    public boolean isHookedOnBar() {
         if (motor.getOutputCurrent() > NORMAL_OUTPUT && !hookedOnBar) {
             setPower(0);
             hookedOnBar = true;
@@ -79,7 +82,6 @@ public class Pull extends MustangSubsystemBase {
     }
 
     public void climb(double heightCM) {
-        encoder.setPosition(0);
         double rotations = heightCM / ROTATIONS_PER_CM * inversionFactor;
         target = rotations;
         controller.setReference(rotations, ControlType.kPosition);
@@ -87,7 +89,7 @@ public class Pull extends MustangSubsystemBase {
 
     @Override
     public HealthState checkHealth() {
-        if (isSparkMaxErrored(motor)) {
+        if (isSparkMaxErrored(motor) || solenoid == null) {
             return HealthState.RED;
         }
         return HealthState.GREEN;
@@ -100,6 +102,7 @@ public class Pull extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() {
         // TODO Auto-generated method stub
+
     }
 
 }

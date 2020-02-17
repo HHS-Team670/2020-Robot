@@ -16,7 +16,7 @@ public class RobotMap {
   public static final int SPARK_LEFT_MOTOR_2 = 21;
   public static final int SPARK_RIGHT_MOTOR_1 = 22;
   public static final int SPARK_RIGHT_MOTOR_2 = 23;
-  
+
   // NavX
   public final static Port NAVX_PORT = SerialPort.Port.kUSB;
 
@@ -25,14 +25,7 @@ public class RobotMap {
   public final static int SHOOTER_STAGE_2_FOLLOWER = 12;
   public static final int SHOOTER_STAGE_1 = 13;
 
-  // Climber
-  public static final int CLIMBER_MOTOR_ID_1 = 14;
-  public static final int CLIMBER_MOTOR_ID_2 = 15;
-  
-   // PC Module
-   public static final int PCMODULE = 2;
-
-  //Turret 
+  // Turret
   public static final int TURRET_ROTATOR = 24;
 
   // Color Wheel
@@ -40,8 +33,6 @@ public class RobotMap {
 
   // Intake
   public static final int INTAKE_ROLLER = 4;
-  public static final int INTAKE_DEPLOYER = 3;    //SET THIS
-  public static final int INTAKE_COMPRESSOR = 6;  //SET THIS
 
   // Conveyor
   public static final int CONVEYOR_ROLLER = 8;
@@ -50,8 +41,21 @@ public class RobotMap {
   public static final int INDEXER_ROTATOR = 9;
   public static final int UPDRAW_SPINNER = 10;
 
+  // Climber
+  public static final int CLIMBER_LEFT_MOTOR = 14;
+  public static final int CLIMBER_RIGHT_MOTOR = 15;
 
-  // Sensors
+
+  // PNEUMATICS
+  public static final int PCMODULE = 2; // PCM CAN ID
+
+  public static final int VISION_LED_PCM = 0;
+  public static final int CLIMBER_LEFT_SOLENOID = 1;
+  public static final int CLIMBER_RIGHT_SOLENOID = 2;
+  public static final int INTAKE_DEPLOYER = 3; 
+
+
+  // SENSORS
 
   // Indexer sensors
   public static final int INDEXER_DIO_ENCODER_PORT = 0;
@@ -60,6 +64,5 @@ public class RobotMap {
   // LEDs (connected on RoboRIO PWM)
   public static final int LEFT_SIDE_LEDS_PWM = 0;
   public static final int RIGHT_SIDE_LEDS_PWM = 1;
-
 
 }

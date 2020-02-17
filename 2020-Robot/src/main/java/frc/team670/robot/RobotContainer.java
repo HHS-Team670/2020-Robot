@@ -13,8 +13,10 @@ import java.util.List;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.team670.robot.constants.OI;
+import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.dataCollection.sensors.ColorMatcher;
 import frc.team670.robot.subsystems.ColorWheelSpinner;
+import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
@@ -24,15 +26,17 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.commands.indexer.TestIndexerEncoder;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Turret;
-import frc.team670.robot.subsystems.climber.Climber;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -49,13 +53,15 @@ public class RobotContainer {
   public static OI oi = new OI();
 
   public static Joystick operatorJoystick;
-  // private static DriveBase driveBase = new DriveBase();
+  private static DriveBase driveBase = new DriveBase();
   private static Shooter shooter = new Shooter();
   // private static Turret turret = new Turret();
-  // private static Intake intake = new Intake();
+  private static Intake intake = new Intake();
+  private static Conveyor conveyor = new Conveyor();
   private static Indexer indexer = new Indexer();
   // private static ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
   // private static Climber climber = new Climber();
+  private static MustangCoprocessor pi = new MustangCoprocessor();
 
   private Trajectory trajectory;
   private String pathname;
@@ -116,19 +122,24 @@ public class RobotContainer {
    */
   public MustangCommand getAutonomousCommand() {
     // Create a voltage constraint to ensure we don't accelerate too fast
-    return null;
+    //return null;
+    return new TestIndexerEncoder(indexer);
 
   }
 
   public static void teleopInit() {
     resetSystemPositions();
-    // driveBase.setTeleopRampRate();
-    // driveBase.initDefaultCommand();
+    driveBase.setTeleopRampRate();
+    driveBase.initDefaultCommand();
   }
 
   public static void teleopPeriodic() {
+    intake.test();          
+    conveyor.test();
     shooter.test();
     indexer.test();
+    pi.testLEDS();
+    SmartDashboard.putNumber("Encoder", indexer.getAbsoluteEncoderRotations());
   }
 
   public static List<MustangSubsystemBase> getSubsystems() {

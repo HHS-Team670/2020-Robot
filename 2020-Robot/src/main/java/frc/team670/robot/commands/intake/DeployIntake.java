@@ -29,7 +29,7 @@ public class DeployIntake extends InstantCommand implements MustangCommand {
     }
 
     public void initialize() {
-        intake.deploy(isDeploy);
+       // intake.deploy(isDeploy);
     }
 
     // Called once after isFinished returns true

@@ -30,8 +30,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * Ranges (in mm) from the TOF sensor for which we know the ball was fully
      * intaked into the bottom chamber.
      */
-    private int TOF_BALL_IN_MIN_RANGE = 15;
-    private int TOF_BALL_IN_MAX_RANGE = 40;
+    private int TOF_BALL_IN_MIN_RANGE = 20; // from testing 2/16
+    private int TOF_BALL_IN_MAX_RANGE = 40; // from testing 2/16
 
     private boolean[] chamberStates;
     private double updrawCurrent;
@@ -83,7 +83,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
 
         public double getP() {
-            return 0.000;
+            return 0.00001; // Good enough for 2/16
         }
 
         public double getI() {
@@ -94,8 +94,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             return 0;
         }
 
-        public double getFF() { // TODO: tune
-            return 0;
+        public double getFF() {  // Good enough for 2/16
+            return 0.0001;
         }
 
         public double getIz() {
@@ -167,6 +167,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
         this.indexerIntakeSensor = new TimeOfFlightSensor(RobotMap.INDEXER_ToF_SENSOR_PORT);
         this.revolverAbsoluteEncoder = new DutyCycleEncoder(RobotMap.INDEXER_DIO_ENCODER_PORT);
+        this.indexerIntakeSensor.start();
+        SmartDashboard.putNumber("ToF Sensor", indexerIntakeSensor.getDistance());
 
         chamberStates = new boolean[5];
 
@@ -405,6 +407,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
         SmartDashboard.putNumber("Rotator velocity", rotator.getEncoder().getVelocity());
 
+        SmartDashboard.putNumber("ToF Sensor", indexerIntakeSensor.getDistance());
     }
 
     @Override

@@ -24,6 +24,7 @@ public class TestIndexerEncoder extends CommandBase implements MustangCommand {
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(indexer, HealthState.YELLOW);
         addRequirements(indexer);
+        SmartDashboard.putNumber("Indexer absolute encoder rotations", indexer.getAbsoluteEncoderRotations());
     }
 
     /**

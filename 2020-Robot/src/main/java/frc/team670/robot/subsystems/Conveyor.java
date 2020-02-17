@@ -7,6 +7,7 @@ import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.RobotMap;
 
 public class Conveyor extends MustangSubsystemBase{
@@ -21,10 +22,11 @@ public class Conveyor extends MustangSubsystemBase{
 
     public Conveyor(){
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CONVEYOR_ROLLER, Motor_Type.NEO_550);
-        roller_controller = roller.getPIDController();
-        roller_controller.setP(v_P);
-        roller_controller.setI(v_I);
-        roller_controller.setD(v_D);
+        SmartDashboard.putNumber("Conveyor Speed", 0.0);
+        // roller_controller = roller.getPIDController();
+        // roller_controller.setP(v_P);
+        // roller_controller.setI(v_I);
+        // roller_controller.setD(v_D);
     }
 
     public void run(){
@@ -43,6 +45,10 @@ public class Conveyor extends MustangSubsystemBase{
     public void mustangPeriodic() {
         // TODO Auto-generated method stub
 
+    }
+
+    public void test() {
+        roller.set(SmartDashboard.getNumber("Conveyor Speed", 0.0));
     }
     
 }
