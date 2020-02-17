@@ -15,15 +15,9 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 public class RotateIndexerToUptakeThenShoot extends SequentialCommandGroup implements MustangCommand {
 
-    private Indexer indexer;
-    private Shooter shooter;
-    // private Turret turret;
-
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     public RotateIndexerToUptakeThenShoot(Indexer indexer, Shooter shooter) {
-        this.indexer = indexer;
-        this.shooter = shooter;
         addRequirements(indexer, shooter);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(indexer, HealthState.GREEN);

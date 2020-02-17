@@ -7,17 +7,14 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.center.CenterToGenerator2BallSidePath;
 import frc.team670.paths.left.LeftToGenerator2BallSidePath;
 import frc.team670.paths.right.RightToGenerator2BallSidePath;
 import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.commands.indexer.RotateToIntakePosition;
 import frc.team670.robot.commands.indexer.SendAllBalls;
-import frc.team670.robot.commands.intake.RunConveyor;
-import frc.team670.robot.commands.intake.RunIntake;
+import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.constants.RobotConstants;
@@ -85,11 +82,7 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
                                 rightPIDController,
                                 // RamseteCommand passes volts to the callback
                                 driveBase::tankDriveVoltage, driveBase),
-                        new ParallelCommandGroup( 
-                                new RunIntake(0.5, intake),                  
-                                new RunConveyor(conveyor), 
-                                new RotateToIntakePosition(indexer)
-                        )
+                        new IntakeBallToIndexer(intake, conveyor, indexer)
                 );
 
         }
