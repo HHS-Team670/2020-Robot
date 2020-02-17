@@ -24,6 +24,7 @@ import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.functions.MathUtils;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
+import frc.team670.robot.utils.motorcontroller.VictorSPXFactory;
 import frc.team670.robot.utils.motorcontroller.VictorSPXLite;
 import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 
@@ -43,7 +44,7 @@ public class Shooter extends MustangSubsystemBase {
   private CANPIDController stage2_mainPIDController;
 
   private double STAGE_1_SPEED = 0.3; // Change this later
-  private double STAGE_2_SPEED = 5700; // In RPM; TODO
+  private double STAGE_2_SPEED = 0.5; // Percent output for testing (will use velocity setpoint later)
 
   private final double STAGE_2_PULLEY_RATIO = 2; // Need to check this
 
@@ -52,7 +53,7 @@ public class Shooter extends MustangSubsystemBase {
   private double stage2_prevCurrent;
   private double stage2_currentChange;
 
-  private static final double SHOOTING_CURRENT_CHANGE_THRESHOLD = 0; //TODO: what is this?
+  private static final double SHOOTING_CURRENT_CHANGE_THRESHOLD = 0; // TODO: what is this?
 
   // Stage 1 Values (TODO: Tune)
   private static final double STAGE_1_V_P = 0;
@@ -71,12 +72,15 @@ public class Shooter extends MustangSubsystemBase {
   private static final int STAGE_2_VELOCITY_SLOT = 0;
 
   public Shooter() {
-    stage1 = new VictorSPXLite(RobotMap.SHOOTER_STAGE_1);
 
-    SmartDashboard.putNumber("Stage 1 speed", 0.3);
+    SmartDashboard.putNumber("Stage 1 speed", 0.0);
+    SmartDashboard.putNumber("Stage 2 speed", 0.0);
+
+    // Stage 1 Victor should be inverted
+    stage1 = VictorSPXFactory.buildFactoryVictorSPX(RobotMap.SHOOTER_STAGE_1, true);
 
     stage2Controllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SHOOTER_STAGE_2_MAIN,
-        RobotMap.SHOOTER_STAGE_2_FOLLOWER, Motor_Type.NEO);
+        RobotMap.SHOOTER_STAGE_2_FOLLOWER, true, Motor_Type.NEO);
 
     stage2_mainController = stage2Controllers.get(0);
     stage2_followerController = stage2Controllers.get(1);
@@ -118,12 +122,11 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public void test() {
-    double s1 = SmartDashboard.getNumber("Stage 1 speed", 0.3);
-    if ((s1 != STAGE_1_SPEED)) {
-      stage1.set(ControlMode.PercentOutput, SmartDashboard.getNumber("Stage 1 speed", s1));
-      STAGE_1_SPEED = s1;
-    }
-    stage2_mainController.set(0.5);
+
+    stage1.set(ControlMode.PercentOutput, SmartDashboard.getNumber("Stage 1 speed", 0.0));
+
+    stage2_mainController.set(SmartDashboard.getNumber("Stage 2 speed", 0.0));
+
     SmartDashboard.putNumber("Stage 2 RPM", stage2_mainController.getEncoder().getVelocity());
   }
 

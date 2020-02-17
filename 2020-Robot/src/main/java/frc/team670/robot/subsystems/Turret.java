@@ -1,6 +1,7 @@
 package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANError;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -18,6 +19,10 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
         public int getDeviceID() {
             return RobotMap.TURRET_ROTATOR;
+        }
+
+        public IdleMode setRotatorIdleMode(){
+            return IdleMode.kBrake;
         }
 
         // Slot for SmartMotion control

@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Turret;
@@ -48,17 +49,16 @@ public class RobotContainer {
   public static OI oi = new OI();
 
   public static Joystick operatorJoystick;
-  private static DriveBase driveBase = new DriveBase();
+  // private static DriveBase driveBase = new DriveBase();
   private static Shooter shooter = new Shooter();
-  private static Turret turret = new Turret();
-  private static Intake intake = new Intake();
+  // private static Turret turret = new Turret();
+  // private static Intake intake = new Intake();
   private static Indexer indexer = new Indexer();
-  private static ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
-  private static Climber climber = new Climber();
+  // private static ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
+  // private static Climber climber = new Climber();
 
   private Trajectory trajectory;
   private String pathname;
-
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -66,7 +66,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    addSubsystem(driveBase);
+    // addSubsystem(driveBase);
   }
 
   public static void addSubsystem(MustangSubsystemBase... subsystems) {
@@ -85,6 +85,14 @@ public class RobotContainer {
   }
 
   /**
+   * Resets subsystem points of reference.
+   */
+  public static void resetSystemPositions() {
+    indexer.setEncoderPositionFromAbsolute();
+    // TODO: if we have something similar for the turret, that goes here
+  }
+
+  /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by instantiating a {@link GenericHID} or one of its subclasses
    * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
@@ -95,7 +103,8 @@ public class RobotContainer {
     JoystickButton runIntakeOut = new JoystickButton(oi.getOperatorController(), 3);
     JoystickButton runIntakeIn = new JoystickButton(oi.getOperatorController(), 2);
 
-    // toggleIntake.whenPressed(new toggleIntake()); // schedules the command when the button is pressed
+    // toggleIntake.whenPressed(new toggleIntake()); // schedules the command when
+    // the button is pressed
     // runIntakeIn.whenHeld(new runIntakeIn());
     // runIntakeOut.whenHeld(new runIntakeOut());
   }
@@ -108,14 +117,21 @@ public class RobotContainer {
   public MustangCommand getAutonomousCommand() {
     // Create a voltage constraint to ensure we don't accelerate too fast
     return null;
+
   }
 
   public static void teleopInit() {
-    driveBase.setTeleopRampRate();
-    driveBase.initDefaultCommand();
+    resetSystemPositions();
+    // driveBase.setTeleopRampRate();
+    // driveBase.initDefaultCommand();
   }
 
-  public static List<MustangSubsystemBase> getSubsystems(){
+  public static void teleopPeriodic() {
+    shooter.test();
+    indexer.test();
+  }
+
+  public static List<MustangSubsystemBase> getSubsystems() {
     return allSubsystems;
   }
 

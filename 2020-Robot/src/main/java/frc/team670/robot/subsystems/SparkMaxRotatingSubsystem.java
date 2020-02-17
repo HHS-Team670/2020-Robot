@@ -41,6 +41,8 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
 
         public abstract MotorConfig.Motor_Type getMotorType();
 
+        public abstract IdleMode setRotatorIdleMode();
+
         public abstract double getRotatorGearRatio();
 
         public abstract double getP();
