@@ -10,7 +10,6 @@ import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
-
 public class DeployIntake extends InstantCommand implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
@@ -29,7 +28,7 @@ public class DeployIntake extends InstantCommand implements MustangCommand {
     }
 
     public void initialize() {
-       // intake.deploy(isDeploy);
+        intake.deploy(isDeploy);
     }
 
     // Called once after isFinished returns true

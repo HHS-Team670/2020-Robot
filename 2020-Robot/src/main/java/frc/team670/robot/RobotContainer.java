@@ -57,7 +57,7 @@ public class RobotContainer {
   private static MustangCoprocessor coprocessor = new MustangCoprocessor();
 
   private static OI oi = new OI(intake, conveyor, indexer, shooter, climber);
-  
+
   private Trajectory trajectory;
   private String pathname;
 
@@ -84,6 +84,14 @@ public class RobotContainer {
       s.getHealth(true);
       s.pushHealthToDashboard();
     }
+  }
+
+  /**
+   * Resets subsystem points of reference.
+   */
+  public static void resetSystemPositions() {
+    indexer.setEncoderPositionFromAbsolute();
+    // TODO: if we have something similar for the turret, that goes here
   }
 
   /**
@@ -132,22 +140,20 @@ public class RobotContainer {
     return allSubsystems;
   }
 
-  public static Joystick getOperatorController(){
+  public static Joystick getOperatorController() {
     return oi.getOperatorController();
   }
 
-  public static void rumbleDriverController(){
+  public static void rumbleDriverController() {
     oi.rumbleDriverController(0.7, 0.2);
   }
 
-  public static MustangController getDriverController(){
+  public static MustangController getDriverController() {
     return oi.getDriverController();
   }
 
-  public static boolean isQuickTurnPressed(){
+  public static boolean isQuickTurnPressed() {
     return oi.isQuickTurnPressed();
   }
-
-
 
 }
