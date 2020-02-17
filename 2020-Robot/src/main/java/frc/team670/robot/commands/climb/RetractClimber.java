@@ -6,23 +6,32 @@
 /*----------------------------------------------------------------------------*/
 package frc.team670.robot.commands.climb;
 
+import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.climber.Climber;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class RetractClimber extends CommandBase {
+public class RetractClimber extends CommandBase implements MustangCommand {
+
   private Climber climber;
   private boolean hooked;
   private boolean climbing;
   private double heightCM;
+  private Map<MustangSubsystemBase, HealthState> healthReqs;
 
   public RetractClimber(Climber climber, double heightCM) {
-    super();
     this.climber = climber;
     this.heightCM = heightCM;
     addRequirements(climber);
     hooked = false;
     climbing = false;
+    healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
+    healthReqs.put(climber, HealthState.GREEN);
   }
 
   // Called when the command is initially scheduled.
@@ -58,5 +67,10 @@ public class RetractClimber extends CommandBase {
   @Override
   public boolean isFinished() {
     return climbing;
+  }
+
+  @Override
+  public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+    return healthReqs;
   }
 }

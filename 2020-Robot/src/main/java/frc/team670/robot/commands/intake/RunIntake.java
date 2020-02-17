@@ -17,6 +17,9 @@ public class RunIntake extends CommandBase implements MustangCommand {
 	private boolean reversed;
 	private Intake intake;
 
+	/**
+	 * @param reversed true to run the intake in reverse, false to run it normally
+	 */
 	public RunIntake (boolean reversed, Intake intake) {
 		this.reversed = reversed;
 		this.intake = intake;

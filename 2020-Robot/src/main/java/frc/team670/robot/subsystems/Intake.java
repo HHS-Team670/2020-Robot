@@ -18,10 +18,13 @@ public class Intake extends MustangSubsystemBase {
     private Solenoid deployer;
     private boolean isDeployed;
 
-    private double INTAKE_ROLLER_SPEED = 0.5; // TODO: exists for testing; may need to change for current control
+    private double INTAKE_ROLLER_SPEED = 0.6; // From testing 2/16
 
     public Intake() {
+        // Intake roller should be inverted
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
+        roller.setInverted(true);
+        
         compressor = new Compressor(RobotMap.PCMODULE);
         compressor.setClosedLoopControl(true);
         SmartDashboard.putNumber("Intake Speed", 0.0);

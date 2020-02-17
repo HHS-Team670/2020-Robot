@@ -14,28 +14,26 @@ public class RotateByOneChamber extends CommandBase implements MustangCommand {
     private Indexer indexer;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public RotateByOneChamber(Indexer indexer){
+    public RotateByOneChamber(Indexer indexer) {
         this.indexer = indexer;
         addRequirements(indexer);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(indexer, HealthState.YELLOW); // This can work without ToF
-
-    }    
-
-    @Override
-    public void initialize(){
-
     }
 
     @Override
-    public void execute(){
-        
+    public void initialize() {
+        indexer.rotateByOneChamber();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return indexer.hasReachedTargetPosition();
     }
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-        // TODO Auto-generated method stub
-        return null;
+        return healthReqs;
     }
-    
+
 }

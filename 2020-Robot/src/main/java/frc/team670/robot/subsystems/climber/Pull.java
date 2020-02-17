@@ -78,7 +78,7 @@ public class Pull extends MustangSubsystemBase {
     }
 
     public void setPower(double power) {
-        motor.set(power * inversionFactor);
+        motor.set(power);
     }
 
     public void climb(double heightCM) {

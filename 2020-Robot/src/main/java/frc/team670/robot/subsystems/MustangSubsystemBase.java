@@ -6,10 +6,14 @@ import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.revrobotics.CANError;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.MustangNotifications;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
@@ -26,6 +30,9 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
 
     protected HealthState lastHealthState;
     private boolean failedLastTime = false;
+
+    private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
+    private static NetworkTable table = instance.getTable("/SmartDashboard");
 
     /**
      * Creates a new MustangSubsystemBase. By default, the subsystem's initial
@@ -104,10 +111,17 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
         }
     }
 
+    public void pushHealthToDashboard() {
+        NetworkTableEntry subsystem = table.getEntry(this.getName());
+        subsystem.forceSetString(getHealth(false).toString());
+        Logger.consoleLog("%s Health %s pushed to dashboard", this.getName(), getHealth(false).toString());
+    }
+
     /**
      * 
      * @param sparkMax The motor which has to be checked for an error
-     * @return true if there is an issue with this SparkMax, false if the SparkMax is connected successfully and without errors. 
+     * @return true if there is an issue with this SparkMax, false if the SparkMax
+     *         is connected successfully and without errors.
      */
     public boolean isSparkMaxErrored(SparkMAXLite sparkMax) {
         return (sparkMax != null && sparkMax.getLastError() != CANError.kOk);
@@ -116,9 +130,10 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
     /**
      * 
      * @param controller The TalonSRX or VictorSPX controller to be checked
-     * @return true if there is an issue with this controller, false if it is connected successfully and without errors
+     * @return true if there is an issue with this controller, false if it is
+     *         connected successfully and without errors
      */
-    public boolean isPhoenixControllerErrored(BaseMotorController controller){
+    public boolean isPhoenixControllerErrored(BaseMotorController controller) {
         return (controller != null && controller.getLastError() != ErrorCode.OK);
     }
 

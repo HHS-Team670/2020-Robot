@@ -18,10 +18,12 @@ public class Conveyor extends MustangSubsystemBase{
     private final double v_I = 0.0;
     private final double v_D = 0.0;
 
-    private double CONVEYOR_SPEED = 0.3; // Set this to whatever target RPM if doing velocity
+    private double CONVEYOR_SPEED = 0.65; // % output from testing 2/16.
 
     public Conveyor(){
+        // Conveyor motor should not be inverted
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CONVEYOR_ROLLER, Motor_Type.NEO_550);
+        
         SmartDashboard.putNumber("Conveyor Speed", 0.0);
         // roller_controller = roller.getPIDController();
         // roller_controller.setP(v_P);

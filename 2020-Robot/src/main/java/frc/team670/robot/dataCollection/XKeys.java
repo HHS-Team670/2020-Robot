@@ -12,6 +12,19 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableType;
 import frc.team670.robot.commands.MustangScheduler;
+import frc.team670.robot.commands.climb.ExtendClimber;
+import frc.team670.robot.commands.climb.RetractClimber;
+import frc.team670.robot.commands.indexer.RotateToIntakePosition;
+import frc.team670.robot.commands.intake.DeployIntake;
+import frc.team670.robot.commands.intake.RunIntake;
+import frc.team670.robot.commands.routines.IntakeBallToIndexer;
+import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
+import frc.team670.robot.commands.shooter.StartShooter;
+import frc.team670.robot.subsystems.Conveyor;
+import frc.team670.robot.subsystems.Indexer;
+import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.climber.Climber;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.commands.CancelAllCommands;
 import frc.team670.robot.utils.Logger;
@@ -28,10 +41,36 @@ public class XKeys {
     private NetworkTableInstance instance;
     private NetworkTable table;
 
-    public XKeys() {
+    private Climber climber;
+    private Intake intake;
+    private Shooter shooter;
+    private Conveyor conveyor;
+    private Indexer indexer;
+
+    private class xkeysCommands { // do not use enums as getID has to be called over enum call
+
+        public static final double RUN_INTAKE_IN = 0;
+        public static final double RUN_INTAKE_OUT = 1;
+        public static final double TOGGLE_INTAKE = 2;
+        public static final double INIT_SHOOTER = 4;
+        public static final double SHOOT = 6;
+        public static final double SHOOT_ALL = 7;
+        public static final double INDEXER_INTAKE = 10;
+        public static final double EXTEND_CLIMBER = 12;
+        public static final double RETRACT_CLIMBER = 13;
+        public static final double CANCEL_ALL = 18;
+    }
+
+    public XKeys(Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Climber climber) {
         SmartDashboard.putString("XKEYS", "XKeys constructor");
         instance = NetworkTableInstance.getDefault();
         table = instance.getTable("SmartDashboard");
+
+        this.intake = intake;
+        this.conveyor = conveyor;
+        this.indexer = indexer;
+        this.shooter = shooter;
+        this.climber = climber;
 
         table.addEntryListener((table2, key2, entry, value, flags) -> {
             try {
@@ -44,79 +83,56 @@ public class XKeys {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            if (s == xkeysCommands.run_intake_in)
+            if (s == xkeysCommands.RUN_INTAKE_IN)
                 runIntakeIn();
-            else if (s == xkeysCommands.run_intake_out)
+            else if (s == xkeysCommands.RUN_INTAKE_OUT)
                 runIntakeOut();
-            else if (s == xkeysCommands.bring_intake_in)
-                bringIntakeIn();
-            else if (s == xkeysCommands.bring_intake_out)
-                bringIntakeOut();
+            else if (s == xkeysCommands.TOGGLE_INTAKE)
+                toggleIntake();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-shooter", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            if (s == xkeysCommands.init_shooter)
+            if (s == xkeysCommands.INIT_SHOOTER)
                 initShooter();
-            else if (s == xkeysCommands.shoot_high)
-                shootHigh();
-            else if (s == xkeysCommands.shoot_low)
-                shootLow();
-            else if (s == xkeysCommands.shoot_all)
+            else if (s == xkeysCommands.SHOOT)
+                shoot();
+            else if (s == xkeysCommands.SHOOT_ALL)
                 shootAll();
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-updraw", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            if (s == xkeysCommands.toggle_updraw_up)
+            if (s == xkeysCommands.TOGGLE_UPDRAW_UP)
                 toggleUpdrawUp();
-            else if (s == xkeysCommands.toggle_updraw_down)
+            else if (s == xkeysCommands.TOGGLE_UPDRAW_DOWN)
                 toggleUpdrawDown();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-indexer", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            if (s == xkeysCommands.indexer_intake)
+            if (s == xkeysCommands.INDEXER_INTAKE)
                 indexerAtIntake();
-            else if (s == xkeysCommands.indexer_shoot)
-                indexerAtShoot();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-climber", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            if (s == xkeysCommands.extend_climber)
+            if (s == xkeysCommands.EXTEND_CLIMBER)
                 extendClimber();
-            else if (s == xkeysCommands.retract_climber)
+            else if (s == xkeysCommands.RETRACT_CLIMBER)
                 retractClimber();
-            else if (s == xkeysCommands.retract_climber_left)
-                retractClimberLeft();
-            else if (s == xkeysCommands.retract_climber_right)
-                retractClimberRight();
-            else if (s == xkeysCommands.extend_climber_left)
-                extendClimberLeft();
-            else if (s == xkeysCommands.extend_climber_right)
-                extendClimberRight();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-cancel", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            if (s == xkeysCommands.cancel_all)
+            if (s == xkeysCommands.CANCEL_ALL)
                 cancelAllCommands();
-            else if (s == xkeysCommands.cancel_intake)
-                cancelIntake();
-            else if (s == xkeysCommands.cancel_indexer)
-                cancelIndexer();
-            else if (s == xkeysCommands.cancel_updraw)
-                cancelUpdraw();
-            else if (s == xkeysCommands.cancel_shooter)
-                cancenShooter();
-            else if (s == xkeysCommands.cancel_climber)
-                cancelClimber();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-autopickup", (table2, key2, entry, value, flags) -> {
             autoPickupBall();
@@ -127,140 +143,51 @@ public class XKeys {
 
     }
 
-    private class xkeysCommands { // do not use enums as getID has to be called over enum call
-
-        public static final double run_intake_in = 0;
-        public static final double run_intake_out = 1;
-        public static final double bring_intake_in = 2;
-        public static final double bring_intake_out = 3;
-        public static final double init_shooter = 4;
-        public static final double shoot_high = 5;
-        public static final double shoot_low = 6;
-        public static final double shoot_all = 7;
-        public static final double toggle_updraw_up = 8;
-        public static final double toggle_updraw_down = 9;
-        public static final double indexer_intake = 10;
-        public static final double indexer_shoot = 11;
-        public static final double extend_climber = 12;
-        public static final double retract_climber = 13;
-        public static final double extend_climber_left = 14;
-        public static final double extend_climber_right = 15;
-        public static final double retract_climber_left = 16;
-        public static final double retract_climber_right = 17;
-        public static final double cancel_all = 18;
-        public static final double cancel_intake = 19;
-        public static final double cancel_indexer = 20;
-        public static final double cancel_updraw = 21;
-        public static final double cancel_shooter = 22;
-        public static final double cancel_climber = 23;
-    }
-
     private void extendClimber() {
-        MustangScheduler.getInstance().schedule();
+        MustangScheduler.getInstance().schedule(new ExtendClimber(climber, 198.21));
     }
 
     private void retractClimber() {
-        MustangScheduler.getInstance().schedule();
-    }
-
-    private void retractClimberLeft() {
-        MustangScheduler.getInstance().schedule();
-    }
-
-    private void retractClimberRight() {
-        MustangScheduler.getInstance().schedule();
-    }
-
-    private void extendClimberLeft() {
-        MustangScheduler.getInstance().schedule();
-    }
-
-    private void extendClimberRight() {
-        MustangScheduler.getInstance().schedule();
+        MustangScheduler.getInstance().schedule(new RetractClimber(climber, 0));
     }
 
     private void initShooter() {
-        MustangScheduler.getInstance().schedule();
-    }
-
-    private void shootHigh() {
-        MustangScheduler.getInstance().schedule();
-    }
-
-    private void shootLow() {
-        MustangScheduler.getInstance().schedule();
+        MustangScheduler.getInstance().schedule(new StartShooter(shooter));
     }
 
     private void shoot() {
-        MustangScheduler.getInstance().schedule();
+        MustangScheduler.getInstance().schedule(new RotateIndexerToUptakeThenShoot(indexer, shooter));
     }
 
     private void shootAll() {
         MustangScheduler.getInstance().schedule();
     }
 
-    private void bringIntakeIn() {
-        MustangScheduler.getInstance().schedule();
-    }
-
-    private void bringIntakeOut() {
-        MustangScheduler.getInstance().schedule();
+    private void toggleIntake() {
+        MustangScheduler.getInstance().schedule(new DeployIntake(!intake.isDeployed(), intake));
     }
 
     private void runIntakeIn() {
-        MustangScheduler.getInstance().schedule();
+        MustangScheduler.getInstance().schedule(new RunIntake(true, intake));
     }
 
     private void runIntakeOut() {
-        MustangScheduler.getInstance().schedule();
+        MustangScheduler.getInstance().schedule(new RunIntake(false, intake));
     }
 
     private void autoPickupBall() {
-        MustangScheduler.getInstance().schedule();
+        MustangScheduler.getInstance().schedule(new IntakeBallToIndexer(intake, conveyor, indexer));
     }
 
     private void visionAlign() {
         MustangScheduler.getInstance().schedule();
     }
 
-    private void toggleUpdrawUp() {
-        MustangScheduler.getInstance().schedule();
-    }
-
-    private void toggleUpdrawDown() {
-        MustangScheduler.getInstance().schedule();
-    }
-
     private void indexerAtIntake() {
-        MustangScheduler.getInstance().schedule();
-    }
-
-    private void indexerAtShoot() {
-        MustangScheduler.getInstance().schedule();
+        MustangScheduler.getInstance().schedule(new RotateToIntakePosition(indexer));
     }
 
     private void cancelAllCommands() {
         MustangScheduler.getInstance().schedule(new CancelAllCommands());
     }
-
-    private void cancelIntake() {
-        MustangScheduler.getInstance().schedule();
-    }
-
-    private void cancelIndexer() {
-        MustangScheduler.getInstance().schedule();
-    }
-
-    private void cancelUpdraw() {
-        MustangScheduler.getInstance().schedule();
-    }
-
-    private void cancenShooter() {
-        MustangScheduler.getInstance().schedule();
-    }
-
-    private void cancelClimber() {
-        MustangScheduler.getInstance().schedule();
-    }
-
 }

@@ -200,6 +200,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
     }
 
+    public void rotateByOneChamber(){
+        setTargetAngleInDegrees(getCurrentAngleInDegrees() + INDEXER_DEGREES_PER_CHAMBER);
+    }
+
     /**
      * Prepares the indexer for intaking by starting the ToF sensor and moving the
      * indexer in position to intake
