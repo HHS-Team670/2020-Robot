@@ -8,7 +8,6 @@ import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.utils.Logger;
 
 /**
  *
@@ -26,7 +25,7 @@ public class StopIntake extends InstantCommand implements MustangCommand {
 	}
 	
 	public void initialize() {
-		intake.roll(0);
+		intake.stop();
 	}
 
 

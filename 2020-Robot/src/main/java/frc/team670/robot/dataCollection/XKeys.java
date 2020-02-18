@@ -13,8 +13,8 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableType;
 import frc.team670.robot.commands.MustangScheduler;
-import frc.team670.robot.commands.climber.ExtendClimber;
-import frc.team670.robot.commands.climber.RetractClimber;
+import frc.team670.robot.commands.climb.ExtendClimber;
+import frc.team670.robot.commands.climb.RetractClimber;
 import frc.team670.robot.commands.indexer.RotateToIntakePosition;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.RunIntake;
@@ -47,8 +47,7 @@ public class XKeys {
     private Shooter shooter;
     private Conveyor conveyor;
     private Indexer indexer;
-
-    public class xkeysCommands { // do not use enums as getID has to be called over enum call
+    private class xkeysCommands { // do not use enums as getID has to be called over enum call
 
         public static final double RUN_INTAKE_IN = 0;
         public static final double RUN_INTAKE_OUT = 1;
@@ -164,11 +163,11 @@ public class XKeys {
     }
 
     private void runIntakeIn() {
-        MustangScheduler.getInstance().schedule(new RunIntake(-0.7, intake));
+        MustangScheduler.getInstance().schedule(new RunIntake(false, intake));
     }
 
     private void runIntakeOut() {
-        MustangScheduler.getInstance().schedule(new RunIntake(0.7, intake));
+        MustangScheduler.getInstance().schedule(new RunIntake(true, intake));
     }
 
     private void autoPickupBall() {

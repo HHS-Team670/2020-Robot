@@ -13,6 +13,7 @@ import java.util.List;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.ColorWheelSpinner;
@@ -46,7 +47,6 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private static List<MustangSubsystemBase> allSubsystems = new ArrayList<MustangSubsystemBase>();
 
-
   private static DriveBase driveBase = new DriveBase();
   private static Intake intake = new Intake();
   public static Conveyor conveyor = new Conveyor();
@@ -59,10 +59,8 @@ public class RobotContainer {
 
   private static OI oi = new OI(intake, conveyor, indexer, shooter, climber);
 
-
   private Trajectory trajectory;
   private String pathname;
-
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -90,6 +88,14 @@ public class RobotContainer {
   }
 
   /**
+   * Resets subsystem points of reference.
+   */
+  public static void resetSystemPositions() {
+    indexer.setEncoderPositionFromAbsolute();
+    // TODO: if we have something similar for the turret, that goes here
+  }
+
+  /**
    * Use this method to define your button->command mappings. Buttons can be
    * created by instantiating a {@link GenericHID} or one of its subclasses
    * ({@link edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then
@@ -102,8 +108,8 @@ public class RobotContainer {
     JoystickButton toggleShooter = new JoystickButton(oi.getOperatorController(), 6);
 
     toggleIntake.whenPressed(new DeployIntake(!intake.isDeployed(), intake));
-    runIntakeIn.whenHeld(new RunIntake(-0.5, intake));
-    runIntakeOut.whenHeld(new RunIntake(0.5, intake));
+    runIntakeIn.whenHeld(new IntakeBallToIndexer(intake, conveyor, indexer));
+    runIntakeOut.whenHeld(new RunIntake(false, intake));
     toggleShooter.toggleWhenPressed(new StartShooter(shooter));
   }
 
@@ -122,26 +128,33 @@ public class RobotContainer {
     driveBase.initDefaultCommand();
   }
 
-  public static List<MustangSubsystemBase> getSubsystems(){
+  public static void teleopPeriodic() {
+    intake.test();
+    conveyor.test();
+    shooter.test();
+    indexer.test();
+    coprocessor.testLEDS();
+    SmartDashboard.putNumber("Encoder", indexer.getAbsoluteEncoderRotations());
+  }
+
+  public static List<MustangSubsystemBase> getSubsystems() {
     return allSubsystems;
   }
 
-  public static Joystick getOperatorController(){
+  public static Joystick getOperatorController() {
     return oi.getOperatorController();
   }
 
-  public static void rumbleDriverController(){
+  public static void rumbleDriverController() {
     oi.rumbleDriverController(0.7, 0.2);
   }
 
-  public static MustangController getDriverController(){
+  public static MustangController getDriverController() {
     return oi.getDriverController();
   }
 
-  public static boolean isQuickTurnPressed(){
+  public static boolean isQuickTurnPressed() {
     return oi.isQuickTurnPressed();
   }
-
-
 
 }

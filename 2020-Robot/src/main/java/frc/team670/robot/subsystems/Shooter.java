@@ -9,22 +9,18 @@ package frc.team670.robot.subsystems;
 
 import java.util.List;
 
-import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANEncoder;
-import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.RobotMap;
-import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.functions.MathUtils;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
-import frc.team670.robot.utils.motorcontroller.VictorSPXLite;
+import frc.team670.robot.utils.motorcontroller.VictorSPXFactory;
 import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 
 /**
@@ -43,7 +39,7 @@ public class Shooter extends MustangSubsystemBase {
   private CANPIDController stage2_mainPIDController;
 
   private double STAGE_1_SPEED = 0.3; // Change this later
-  private double STAGE_2_SPEED = 5700; // In RPM; TODO
+  private double STAGE_2_SPEED = 2750; // Will change later if we adjust by distance
 
   private final double STAGE_2_PULLEY_RATIO = 2; // Need to check this
 
@@ -52,37 +48,41 @@ public class Shooter extends MustangSubsystemBase {
   private double stage2_prevCurrent;
   private double stage2_currentChange;
 
-  private static final double SHOOTING_CURRENT_CHANGE_THRESHOLD = 0; //TODO: what is this?
+  private static final double SHOOTING_CURRENT_CHANGE_THRESHOLD = 0; // TODO: what is this?
 
-  // Stage 1 Values (TODO: Tune)
-  private static final double STAGE_1_V_P = 0;
-  private static final double STAGE_1_V_I = 0;
-  private static final double STAGE_1_V_D = 0;
-  private static final double STAGE_1_V_FF = 0;
-
-  private static final int STAGE_1_VELOCITY_SLOT = 0;
-
-  // Practice Values Stage 2
-  private static final double STAGE_2_V_P = 0.24;
+  // Stage 2 values, as of 2/17 testing
+  private static final double STAGE_2_V_P = 0.000100;
   private static final double STAGE_2_V_I = 0.0;
-  private static final double STAGE_2_V_D = 9.670;
-  private static final double STAGE_2_V_FF = 0.033818;
+  private static final double STAGE_2_V_D = 0.0;
+  private static final double STAGE_2_V_FF = 0.000183;
+  private static final double STAGE_2_RAMP_RATE = 1.0;
 
   private static final int STAGE_2_VELOCITY_SLOT = 0;
 
   public Shooter() {
-    stage1 = new VictorSPXLite(RobotMap.SHOOTER_STAGE_1);
 
-    SmartDashboard.putNumber("Stage 1 speed", 0.3);
+    SmartDashboard.putNumber("Stage 1 speed", 0.0);
+    SmartDashboard.putNumber("Stage 2 Velocity Setpoint", 0.0);
+    SmartDashboard.putNumber("Stage 2 FF", 0.0);
+    SmartDashboard.putNumber("Stage 2 P", 0.0);
+    SmartDashboard.putNumber("Stage 2 Ramp Rate", 0.0);
+
+    // Stage 1 Victor should be inverted
+    stage1 = VictorSPXFactory.buildFactoryVictorSPX(RobotMap.SHOOTER_STAGE_1, true);
 
     stage2Controllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SHOOTER_STAGE_2_MAIN,
-        RobotMap.SHOOTER_STAGE_2_FOLLOWER, Motor_Type.NEO);
+        RobotMap.SHOOTER_STAGE_2_FOLLOWER, true, Motor_Type.NEO);
 
     stage2_mainController = stage2Controllers.get(0);
     stage2_followerController = stage2Controllers.get(1);
 
     stage2_mainEncoder = stage2_mainController.getEncoder();
     stage2_mainPIDController = stage2_mainController.getPIDController();
+
+    stage2_mainPIDController.setP(STAGE_2_V_P, STAGE_2_VELOCITY_SLOT);
+    stage2_mainPIDController.setI(STAGE_2_V_I, STAGE_2_VELOCITY_SLOT);
+    stage2_mainPIDController.setD(STAGE_2_V_D, STAGE_2_VELOCITY_SLOT);
+    stage2_mainPIDController.setFF(STAGE_2_V_FF, STAGE_2_VELOCITY_SLOT);
   }
 
   private double getStage2Velocity() {
@@ -94,36 +94,38 @@ public class Shooter extends MustangSubsystemBase {
     stage2_mainPIDController.setReference(STAGE_2_SPEED, ControlType.kVelocity);
   }
 
+  /**
+   * @param setRamp true if we want a ramp rate (use this for getting the shooter
+   *                up to speed), false when we're ready to shoot and don't need
+   *                one
+   */
+  public void setRampRate(boolean setRamp) {
+    if (setRamp) {
+      stage2_mainController.setClosedLoopRampRate(STAGE_2_RAMP_RATE);
+    } else {
+      stage2_mainController.setClosedLoopRampRate(0);
+    }
+  }
+
   public void stop() {
     stage2_mainController.set(0);
     stage1.set(ControlMode.PercentOutput, 0);
   }
 
   public boolean isUpToSpeed() {
-    return MathUtils.doublesEqual(getStage2Velocity(), STAGE_2_SPEED, 0.05); // TODO: margin of error
-  }
-
-  public void setDefaultPID1() {
-    stage1.config_kP(0, STAGE_1_V_P);
-    stage1.config_kI(0, STAGE_1_V_I);
-    stage1.config_kD(0, STAGE_1_V_D);
-    stage1.config_kF(0, STAGE_1_V_FF);
-  }
-
-  public void setDefaultPID2() {
-    stage2_mainController.getPIDController().setP(STAGE_2_V_P, STAGE_2_VELOCITY_SLOT);
-    stage2_mainController.getPIDController().setI(STAGE_2_V_I, STAGE_2_VELOCITY_SLOT);
-    stage2_mainController.getPIDController().setD(STAGE_2_V_D, STAGE_2_VELOCITY_SLOT);
-    stage2_mainController.getPIDController().setFF(STAGE_2_V_FF, STAGE_2_VELOCITY_SLOT);
+    return MathUtils.doublesEqual(getStage2Velocity(), STAGE_2_SPEED, 10); // TODO: margin of error
   }
 
   public void test() {
-    double s1 = SmartDashboard.getNumber("Stage 1 speed", 0.3);
-    if ((s1 != STAGE_1_SPEED)) {
-      stage1.set(ControlMode.PercentOutput, SmartDashboard.getNumber("Stage 1 speed", s1));
-      STAGE_1_SPEED = s1;
-    }
-    stage2_mainController.set(0.5);
+
+    stage1.set(ControlMode.PercentOutput, SmartDashboard.getNumber("Stage 1 speed", 0.0));
+
+    stage2_mainPIDController.setReference(SmartDashboard.getNumber("Stage 2 Velocity Setpoint", 0.0),
+        ControlType.kVelocity);
+    stage2_mainPIDController.setFF(SmartDashboard.getNumber("Stage 2 FF", 0.0));
+    stage2_mainPIDController.setP(SmartDashboard.getNumber("Stage 2 P", 0.0));
+    stage2_mainController.setClosedLoopRampRate(SmartDashboard.getNumber("Stage 2 Ramp Rate", 0.0));
+
     SmartDashboard.putNumber("Stage 2 RPM", stage2_mainController.getEncoder().getVelocity());
   }
 

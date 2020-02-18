@@ -31,10 +31,7 @@ public class RobotConstants {
      */
     public static final int SPARK_TICKS_PER_ROTATION = 1024;
 
-    // VISION Constants
     public static final double WHEEL_BASE = 25.662; // measured 1/26/19
-
-    public static final int VISION_ERROR_CODE = -99999;
 
     /** The number of meters per roatation of a drivebase wheel */
     public static final double DRIVEBASE_METERS_PER_ROTATION = (1 / DRIVEBASE_GEAR_RATIO) * DRIVE_BASE_WHEEL_DIAMETER
@@ -51,6 +48,12 @@ public class RobotConstants {
     public static final double kTrackwidthInches = WHEEL_BASE;
     public static final double kTrackwidthMeters = WHEEL_BASE * 0.0254;
 
+    // VISION Constants
+
+    public static final int VISION_ERROR_CODE = -99999;
+
+    // Autonomous Constants
+
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
             kTrackwidthMeters);
     public static final double kPDriveVel = 2.53;
@@ -62,11 +65,11 @@ public class RobotConstants {
     public static final double kMaxSpeedMetersPerSecond = 0.305;// 1; //0.305;
     public static final double kMaxAccelerationMetersPerSecondSquared = 0.305;// 1; //0.305;
 
-    public static final DifferentialDriveKinematicsConstraint kAutoPathConstraints =
-    new DifferentialDriveKinematicsConstraint(kDriveKinematics,
-                                              kMaxSpeedMetersPerSecond);
+    public static final DifferentialDriveKinematicsConstraint kAutoPathConstraints = new DifferentialDriveKinematicsConstraint(
+            kDriveKinematics, kMaxSpeedMetersPerSecond);
 
-    // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+    // Reasonable baseline values for a RAMSETE follower in units of meters and
+    // seconds
     public static final double kRamseteB = 2;
     public static final double kRamseteZeta = .7;
     public static final boolean kNavXReversed = true;

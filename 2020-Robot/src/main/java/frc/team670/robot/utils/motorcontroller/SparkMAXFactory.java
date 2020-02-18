@@ -85,8 +85,8 @@ public class SparkMAXFactory {
      *         second one as the follower
      */
     public static List<SparkMAXLite> buildFactorySparkMAXPair(int motor1DeviceID, int motor2DeviceID,
-            MotorConfig.Motor_Type motorType) {
-        return buildSparkMAXPair(motor1DeviceID, motor2DeviceID, defaultConfig, defaultConfig, motorType);
+            boolean invertFollower, MotorConfig.Motor_Type motorType) {
+        return buildSparkMAXPair(motor1DeviceID, motor2DeviceID, invertFollower, defaultConfig, defaultConfig, motorType);
     }
 
     /**
@@ -99,9 +99,9 @@ public class SparkMAXFactory {
      * @return motorPair a pair of motors with the first one as its leader and
      *         second one as the follower
      */
-    public static List<SparkMAXLite> buildSparkMAXPair(int motor1DeviceID, int motor2DeviceID, Config config,
+    public static List<SparkMAXLite> buildSparkMAXPair(int motor1DeviceID, int motor2DeviceID, boolean invertFollower, Config config,
             MotorConfig.Motor_Type motorType) {
-        return buildSparkMAXPair(motor1DeviceID, motor2DeviceID, config, config, motorType);
+        return buildSparkMAXPair(motor1DeviceID, motor2DeviceID, invertFollower, config, config, motorType);
     }
 
     /**
@@ -117,7 +117,7 @@ public class SparkMAXFactory {
      * @return motorPair a pair of motors with the first one as its leader and
      *         second one as the follower
      */
-    public static List<SparkMAXLite> buildSparkMAXPair(int motor1DeviceID, int motor2DeviceID, Config leaderConfig,
+    public static List<SparkMAXLite> buildSparkMAXPair(int motor1DeviceID, int motor2DeviceID, boolean invertFollower, Config leaderConfig,
             Config followerConfig,MotorConfig.Motor_Type motorType) {
         SparkMAXLite sparkMaxLeader = buildSparkMAX(motor1DeviceID, leaderConfig, motorType);
         SparkMAXLite sparkMaxFollower = buildSparkMAX(motor2DeviceID, leaderConfig, motorType);
@@ -141,7 +141,7 @@ public class SparkMAXFactory {
             sparkMaxFollower = sparkMaxTemp;
         }
 
-        sparkMaxFollower.follow(sparkMaxLeader);
+        sparkMaxFollower.follow(sparkMaxLeader, invertFollower);
         List<SparkMAXLite> motorPair = Arrays.asList(sparkMaxLeader, sparkMaxFollower);
         Logger.consoleLog("SparkMaxLeaderID %s, SparkMaxFollowerID %s", sparkMaxLeader.getDeviceId(),
                 sparkMaxFollower.getDeviceId());

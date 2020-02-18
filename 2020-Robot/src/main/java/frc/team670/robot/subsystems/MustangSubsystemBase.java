@@ -120,19 +120,21 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
     /**
      * 
      * @param sparkMax The motor which has to be checked for an error
-     * @return true if there is an issue with this SparkMax, false if the SparkMax is connected successfully and without errors. 
+     * @return true if there is an issue with this SparkMax, false if the SparkMax
+     *         is connected successfully and without errors.
      */
     public boolean isSparkMaxErrored(SparkMAXLite sparkMax) {
-        return (sparkMax != null && sparkMax.getLastError() != CANError.kOk);
+        return (sparkMax == null || sparkMax.getLastError() != CANError.kOk);
     }
 
     /**
      * 
      * @param controller The TalonSRX or VictorSPX controller to be checked
-     * @return true if there is an issue with this controller, false if it is connected successfully and without errors
+     * @return true if there is an issue with this controller, false if it is
+     *         connected successfully and without errors
      */
-    public boolean isPhoenixControllerErrored(BaseMotorController controller){
-        return (controller != null && controller.getLastError() != ErrorCode.OK);
+    public boolean isPhoenixControllerErrored(BaseMotorController controller) {
+        return (controller == null || controller.getLastError() != ErrorCode.OK);
     }
 
     public abstract void mustangPeriodic();
