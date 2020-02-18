@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.ParamEnum;
 
 /**
- * Utility class for configuring a SparkMAX to default settings and resetting to
+ * Utility class for configuring a VictorSPX to default settings and resetting to
  * factory defaults.
  * 
  * @author ruchidixit
@@ -34,12 +34,10 @@ public class VictorSPXFactory {
         public VelocityMeasPeriod VELOCITY_MEASUREMENT_PERIOD = VelocityMeasPeriod.Period_100Ms;
         public int VELOCITY_MEASUREMENT_ROLLING_AVERAGE_WINDOW = 64;
 
-        public boolean ENABLE_CURRENT_LIMIT = false;
-        public boolean ENABLE_SOFT_LIMIT = true;
-        public boolean ENABLE_LIMIT_SWITCH = false;
-        public int FORWARD_SOFT_LIMIT = 0;
-        public int REVERSE_SOFT_LIMIT = 0;
+        public boolean ENABLE_CURRENT_LIMIT = true;
 
+        public boolean ENABLE_SOFT_LIMIT = false;
+        public boolean ENABLE_LIMIT_SWITCH = false;
     }
 
     public static final Config defaultConfig = new Config();
@@ -83,11 +81,10 @@ public class VictorSPXFactory {
 
         VictorSPXLite.setNeutralMode(config.NEUTRAL_MODE);
 
-        VictorSPXLite.configForwardSoftLimitThreshold(config.FORWARD_SOFT_LIMIT, TIMEOUT_MS);
         VictorSPXLite.configForwardSoftLimitEnable(config.ENABLE_SOFT_LIMIT, TIMEOUT_MS);
 
-        VictorSPXLite.configReverseSoftLimitThreshold(config.REVERSE_SOFT_LIMIT, TIMEOUT_MS);
         VictorSPXLite.configReverseSoftLimitEnable(config.ENABLE_SOFT_LIMIT, TIMEOUT_MS);
+
         VictorSPXLite.overrideSoftLimitsEnable(config.ENABLE_SOFT_LIMIT);
 
         VictorSPXLite.selectProfileSlot(0, 0);

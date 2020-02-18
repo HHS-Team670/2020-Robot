@@ -36,10 +36,8 @@ public class TalonSRXFactory {
                 public int VELOCITY_MEASUREMENT_ROLLING_AVERAGE_WINDOW = 64;
 
                 public boolean ENABLE_CURRENT_LIMIT = false;
-                public boolean ENABLE_SOFT_LIMIT = true;
+                public boolean ENABLE_SOFT_LIMIT = false;
                 public boolean ENABLE_LIMIT_SWITCH = false;
-                public int FORWARD_SOFT_LIMIT = 0;
-                public int REVERSE_SOFT_LIMIT = 0;
 
         }
 
@@ -110,11 +108,10 @@ public class TalonSRXFactory {
 
                 talonsrx.setNeutralMode(config.NEUTRAL_MODE);
 
-                talonsrx.configForwardSoftLimitThreshold(config.FORWARD_SOFT_LIMIT, TIMEOUT_MS);
                 talonsrx.configForwardSoftLimitEnable(config.ENABLE_SOFT_LIMIT, TIMEOUT_MS);
 
-                talonsrx.configReverseSoftLimitThreshold(config.REVERSE_SOFT_LIMIT, TIMEOUT_MS);
                 talonsrx.configReverseSoftLimitEnable(config.ENABLE_SOFT_LIMIT, TIMEOUT_MS);
+                
                 talonsrx.overrideSoftLimitsEnable(config.ENABLE_SOFT_LIMIT);
 
                 talonsrx.selectProfileSlot(0, 0);
