@@ -1,6 +1,7 @@
 package frc.team670.robot.subsystems;
 
 import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.utils.functions.MathUtils;
 import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
@@ -126,39 +127,99 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
 
     }
 
+    /**
+     * 
+     * @return The count, in motor rotations, from the subsystem's rotator's
+     *         integrated encoder.
+     */
     public double getUnadjustedPosition() {
         return this.rotator_encoder.getPosition();
     }
 
-    protected void setSmartMotionTarget(double setpoint) {
+    /**
+     * Sets the system's overall target position and moves to it.
+     * 
+     * @param setpoint The target position for this subsystem, in motor rotations
+     */
+    protected void setSystemMotionTarget(double setpoint) {
         rotator_controller.setReference(setpoint, ControlType.kSmartMotion);
         this.setpoint = setpoint;
     }
 
-    public void setTargetAngleInDegrees(double angle) {
-        setSmartMotionTarget(getMotorRotationsFromAngle(angle));
+    /**
+     * Sets an intermediate or temporary goal for the subsystem to move to. Use this
+     * when you need to do something in the process of moving to your system's
+     * target, like if you need to unjam something.
+     * 
+     * @param setpoint The temporary setpoint for the system, in motor rotations
+     */
+    protected void setTemporaryMotionTarget(double setpoint) {
+        rotator_controller.setReference(setpoint, ControlType.kSmartMotion);
     }
 
+    /**
+     * Sets the overall target angle this subsystem should move to, in degrees. In
+     * some process, this is where you ultimately want to end up, so this value will
+     * be saved as the system setpoint.
+     * 
+     * @param angle The target angle this subsystem should turn to, in degrees
+     */
+    public void setSystemTargetAngleInDegrees(double angle) {
+        setSystemMotionTarget(getMotorRotationsFromAngle(angle));
+    }
+
+    /**
+     * Sets a temporary angle setpoint for this subsystem to turn to. Use this as an
+     * intermediate step in some process -- this setpoint won't be saved.
+     * 
+     * @param angle The angle this subsystem should turn to, in degrees
+     */
+    public void setTemporaryTargetAngleInDegrees(double angle) {
+        setTemporaryMotionTarget(getMotorRotationsFromAngle(angle));
+    }
+
+    /**
+     * 
+     * @param angle The angle, in degrees, to be converted to motor rotations
+     * @return The number of motor rotations equivalent to the subsystem turning
+     *         through this angle
+     */
     protected double getMotorRotationsFromAngle(double angle) {
         return (angle / 360) * this.ROTATOR_GEAR_RATIO;
     }
 
+    /**
+     * 
+     * @return The current position of the subsystem, in degrees.
+     */
     public abstract double getCurrentAngleInDegrees();
 
-    public void enableCoastMode() {
+    /**
+     * 
+     * @return true if the subsystem is close to its target position, within some
+     *         margin of error.
+     */
+    public boolean hasReachedTargetPosition() {
+        return (MathUtils.doublesEqual(rotator_encoder.getPosition(), setpoint, ALLOWED_ERR));
+    }
+
+    protected void enableCoastMode() {
         rotator.setIdleMode(IdleMode.kCoast);
     }
 
-    public void enableBrakeMode() {
+    protected void enableBrakeMode() {
         rotator.setIdleMode(IdleMode.kBrake);
     }
 
+    /**
+     * Stops the motion of the subsystem and resets its setpoint.
+     */
     public synchronized void stop() {
         clearSetpoint();
         rotator.set(0);
     }
 
-    public void clearSetpoint() {
+    protected void clearSetpoint() {
         setpoint = NO_SETPOINT;
     }
 
