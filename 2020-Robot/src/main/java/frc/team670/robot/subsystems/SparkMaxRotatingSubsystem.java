@@ -189,6 +189,30 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     }
 
     /**
+     * Change the system's max velocity and acceleration for SmartMotion
+     * temporarily. Possibly useful when zeroing, testing, or unjamming.
+     * 
+     * @param factor Multiplier for system's max velocity. For example, if you want
+     *               to reduce the system's speed so that its temporary max velocity
+     *               is half of what it normally is, factor should be 0.5
+     */
+    protected void temporaryScaleSmartMotionMaxVelAndAccel(double factor) {
+        rotator_controller.setSmartMotionMaxVelocity(this.MAX_VEL * factor, this.SMARTMOTION_SLOT);
+        rotator_controller.setSmartMotionMaxAccel(this.MAX_ACC * factor, this.SMARTMOTION_SLOT);
+    }
+
+    /**
+     * Resets the system's SmartMotion acceleration and velocity settings to the
+     * defined system constants. Possibly useful when the system previously
+     * temporarily scaled these values for testing, unjamming, or zeroing, to bring
+     * motion back to normal.
+     */
+    protected void resetSmartMotionSettingsToSystem() {
+        rotator_controller.setSmartMotionMaxVelocity(this.MAX_VEL, this.SMARTMOTION_SLOT);
+        rotator_controller.setSmartMotionMaxAccel(this.MAX_ACC, this.SMARTMOTION_SLOT);
+    }
+
+    /**
      * 
      * @return The current position of the subsystem, in degrees.
      */

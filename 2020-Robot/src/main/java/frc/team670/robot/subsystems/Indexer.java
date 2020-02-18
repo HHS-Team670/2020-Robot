@@ -1,6 +1,5 @@
 package frc.team670.robot.subsystems;
 
-import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -14,7 +13,6 @@ import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.functions.MathUtils;
 import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.motorcontroller.TalonSRXFactory;
-import frc.team670.robot.utils.motorcontroller.TalonSRXLite;
 
 /**
  * Represents the ball indexer subsystem, which tracks and stores up to 5 balls.
@@ -23,7 +21,7 @@ import frc.team670.robot.utils.motorcontroller.TalonSRXLite;
  */
 public class Indexer extends SparkMaxRotatingSubsystem {
 
-    private TalonSRXLite updraw;
+    private TalonSRX updraw;
 
     private TimeOfFlightSensor indexerIntakeSensor;
     private DutyCycleEncoder revolverAbsoluteEncoder;
@@ -146,7 +144,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
 
         public double getRotatorGearRatio() {
-            return 52.5; //gearing 35 * 1.5 belt
+            return 150; //gearing 100 * 1.5 from belt. Changed to this from 35 gearing on 2/18.
         }
         
         public IdleMode setRotatorIdleMode(){
@@ -476,14 +474,18 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 		if (!hasReachedTargetPosition() && isJammed()) {
             unjamMode = true;
             posWhenJammed = getCurrentAngleInDegrees();
+            // When unjamming, might be useful to slow down the indexer a bit. 
+            // Let's see if we need this. 
+            temporaryScaleSmartMotionMaxVelAndAccel(0.75); 
             if (setpoint - posWhenJammed > 0) {
-            // TODO find how much we actually want to move it 
+            // TODO find how much we actually want to move it: is half a chamber too much?
                 setTemporaryMotionTarget(getMotorRotationsFromAngle(posWhenJammed - INDEXER_DEGREES_PER_CHAMBER / 2));
             } else {
                 setTemporaryMotionTarget(getMotorRotationsFromAngle(posWhenJammed + INDEXER_DEGREES_PER_CHAMBER / 2));
             }
         } else if (unjamMode) {
             unjamMode = false;
+            resetSmartMotionSettingsToSystem();
             setSystemMotionTarget(setpoint);
         }
 
