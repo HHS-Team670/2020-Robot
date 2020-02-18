@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
+import frc.team670.robot.subsystems.ColorWheelSpinner;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
@@ -48,12 +49,12 @@ public class RobotContainer {
 
   private static DriveBase driveBase = new DriveBase();
   private static Intake intake = new Intake();
-  private static Conveyor conveyor = new Conveyor();
+  public static Conveyor conveyor = new Conveyor();
   private static Indexer indexer = new Indexer();
   private static Turret turret = new Turret();
   private static Shooter shooter = new Shooter();
   private static Climber climber = new Climber();
-  // private static ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
+  private static ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
   private static MustangCoprocessor coprocessor = new MustangCoprocessor();
 
   private static OI oi = new OI(intake, conveyor, indexer, shooter, climber);
@@ -69,7 +70,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    addSubsystem(driveBase, intake, conveyor, indexer, turret, shooter);
+    addSubsystem(driveBase, intake, conveyor, indexer, shooter, climber);
   }
 
   public static void addSubsystem(MustangSubsystemBase... subsystems) {
@@ -84,7 +85,7 @@ public class RobotContainer {
   public static void checkSubsystemsHealth() {
     for (MustangSubsystemBase s : allSubsystems) {
       s.getHealth(true);
-      s.pushHealthToDashboard();
+      // s.pushHealthToDashboard();
     }
   }
 
@@ -101,7 +102,7 @@ public class RobotContainer {
     JoystickButton toggleShooter = new JoystickButton(oi.getOperatorController(), 6);
 
     toggleIntake.whenPressed(new DeployIntake(!intake.isDeployed(), intake));
-    runIntakeIn.whenHeld(new IntakeBallToIndexer(intake, conveyor, indexer));
+    runIntakeIn.whenHeld(new RunIntake(-0.5, intake));
     runIntakeOut.whenHeld(new RunIntake(0.5, intake));
     toggleShooter.toggleWhenPressed(new StartShooter(shooter));
   }

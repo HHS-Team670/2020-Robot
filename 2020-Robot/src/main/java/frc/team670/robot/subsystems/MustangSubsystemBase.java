@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.MustangNotifications;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
@@ -113,7 +114,7 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
     public void pushHealthToDashboard() {
         NetworkTableEntry subsystem = table.getEntry(this.getName());
         subsystem.forceSetString(getHealth(false).toString());
-        Logger.consoleLog("%s Health %s pushed to dashboard", this.getName(), getHealth(false).toString());
+        Logger.consoleLog(this.getName() + " Health pushed");
     }
 
     /**
