@@ -1,8 +1,11 @@
 package frc.team670.robot.utils.motorcontroller;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.ParamEnum;
+import com.ctre.phoenix.motorcontrol.ControlFrame;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 
 /**
  * Utility class for configuring a TalonSRX to default settings and resetting to
@@ -89,12 +92,7 @@ public class TalonSRXFactory {
                 talonsrx.clearMotionProfileTrajectories();
 
                 talonsrx.clearStickyFaults(TIMEOUT_MS);
-
-                talonsrx.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.Disabled,
-                                TIMEOUT_MS);
-                talonsrx.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.Disabled,
-                                TIMEOUT_MS);
-
+                
                 // Turn off re-zeroing by default.
                 talonsrx.configSetParameter(ParamEnum.eClearPositionOnLimitF, 0, 0, 0, TIMEOUT_MS);
                 talonsrx.configSetParameter(ParamEnum.eClearPositionOnLimitR, 0, 0, 0, TIMEOUT_MS);
@@ -123,9 +121,10 @@ public class TalonSRXFactory {
                 talonsrx.configOpenloopRamp(config.OPEN_LOOP_RAMP_RATE, TIMEOUT_MS);
                 talonsrx.configClosedloopRamp(config.CLOSED_LOOP_RAMP_RATE, TIMEOUT_MS);
 
-                talonsrx.configVoltageCompSaturation(0.0, TIMEOUT_MS);
-                talonsrx.configVoltageMeasurementFilter(32, TIMEOUT_MS);
-                talonsrx.enableVoltageCompensation(false);
+                talonsrx.configVoltageCompSaturation(12); // "full output" will now scale to 12 Volts
+                talonsrx.enableVoltageCompensation(true); 
+
+                // talonsrx.configVoltageMeasurementFilter(32, TIMEOUT_MS);
 
                 talonsrx.enableCurrentLimit(config.ENABLE_CURRENT_LIMIT);
 

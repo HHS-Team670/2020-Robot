@@ -1,6 +1,10 @@
 package frc.team670.robot.utils.motorcontroller;
 
-import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.ControlFrame;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
+
 import com.ctre.phoenix.ParamEnum;
 
 /**
@@ -58,45 +62,48 @@ public class VictorSPXFactory {
     }
 
     public static VictorSPXLite buildVictorSPX(int deviceID, Config config, boolean invert) {
-        VictorSPXLite VictorSPXLite = new VictorSPXLite(deviceID);
-        VictorSPXLite.set(ControlMode.PercentOutput, 0.0);
-        VictorSPXLite.setInverted(invert);
+        VictorSPXLite victorspx = new VictorSPXLite(deviceID);
+        victorspx.set(ControlMode.PercentOutput, 0.0);
+        victorspx.setInverted(invert);
 
-        VictorSPXLite.changeMotionControlFramePeriod(config.MOTION_CONTROL_FRAME_PERIOD_MS);
-        VictorSPXLite.clearMotionProfileHasUnderrun(TIMEOUT_MS);
-        VictorSPXLite.clearMotionProfileTrajectories();
+        victorspx.changeMotionControlFramePeriod(config.MOTION_CONTROL_FRAME_PERIOD_MS);
+        victorspx.clearMotionProfileHasUnderrun(TIMEOUT_MS);
+        victorspx.clearMotionProfileTrajectories();
 
-        VictorSPXLite.clearStickyFaults(TIMEOUT_MS);
+        victorspx.clearStickyFaults(TIMEOUT_MS);
 
         // Turn off re-zeroing by default.
-        VictorSPXLite.configSetParameter(ParamEnum.eClearPositionOnLimitF, 0, 0, 0, TIMEOUT_MS);
-        VictorSPXLite.configSetParameter(ParamEnum.eClearPositionOnLimitR, 0, 0, 0, TIMEOUT_MS);
+        victorspx.configSetParameter(ParamEnum.eClearPositionOnLimitF, 0, 0, 0, TIMEOUT_MS);
+        victorspx.configSetParameter(ParamEnum.eClearPositionOnLimitR, 0, 0, 0, TIMEOUT_MS);
 
-        VictorSPXLite.configNominalOutputForward(0, TIMEOUT_MS);
-        VictorSPXLite.configNominalOutputReverse(0, TIMEOUT_MS);
-        VictorSPXLite.configNeutralDeadband(config.NEUTRAL_DEADBAND, TIMEOUT_MS);
+        victorspx.configNominalOutputForward(0, TIMEOUT_MS);
+        victorspx.configNominalOutputReverse(0, TIMEOUT_MS);
+        victorspx.configNeutralDeadband(config.NEUTRAL_DEADBAND, TIMEOUT_MS);
 
-        VictorSPXLite.configPeakOutputForward(1.0, TIMEOUT_MS);
-        VictorSPXLite.configPeakOutputReverse(-1.0, TIMEOUT_MS);
+        victorspx.configPeakOutputForward(1.0, TIMEOUT_MS);
+        victorspx.configPeakOutputReverse(-1.0, TIMEOUT_MS);
 
-        VictorSPXLite.setNeutralMode(config.NEUTRAL_MODE);
+        victorspx.setNeutralMode(config.NEUTRAL_MODE);
 
-        VictorSPXLite.configForwardSoftLimitEnable(config.ENABLE_SOFT_LIMIT, TIMEOUT_MS);
+        victorspx.configForwardSoftLimitEnable(config.ENABLE_SOFT_LIMIT, TIMEOUT_MS);
 
-        VictorSPXLite.configReverseSoftLimitEnable(config.ENABLE_SOFT_LIMIT, TIMEOUT_MS);
+        victorspx.configReverseSoftLimitEnable(config.ENABLE_SOFT_LIMIT, TIMEOUT_MS);
 
-        VictorSPXLite.overrideSoftLimitsEnable(config.ENABLE_SOFT_LIMIT);
+        victorspx.overrideSoftLimitsEnable(config.ENABLE_SOFT_LIMIT);
 
-        VictorSPXLite.selectProfileSlot(0, 0);
+        victorspx.configVoltageCompSaturation(12); // "full output" will now scale to 12 Volts
+        victorspx.enableVoltageCompensation(true); 
 
-        VictorSPXLite.configVelocityMeasurementPeriod(config.VELOCITY_MEASUREMENT_PERIOD, TIMEOUT_MS);
-        VictorSPXLite.configVelocityMeasurementWindow(config.VELOCITY_MEASUREMENT_ROLLING_AVERAGE_WINDOW, TIMEOUT_MS);
+        victorspx.selectProfileSlot(0, 0);
 
-        VictorSPXLite.configOpenloopRamp(config.OPEN_LOOP_RAMP_RATE, TIMEOUT_MS);
-        VictorSPXLite.configClosedloopRamp(config.CLOSED_LOOP_RAMP_RATE, TIMEOUT_MS);
-        VictorSPXLite.setControlFramePeriod(ControlFrame.Control_3_General, config.CONTROL_FRAME_PERIOD_MS);
+        victorspx.configVelocityMeasurementPeriod(config.VELOCITY_MEASUREMENT_PERIOD, TIMEOUT_MS);
+        victorspx.configVelocityMeasurementWindow(config.VELOCITY_MEASUREMENT_ROLLING_AVERAGE_WINDOW, TIMEOUT_MS);
 
-        return VictorSPXLite;
+        victorspx.configOpenloopRamp(config.OPEN_LOOP_RAMP_RATE, TIMEOUT_MS);
+        victorspx.configClosedloopRamp(config.CLOSED_LOOP_RAMP_RATE, TIMEOUT_MS);
+        victorspx.setControlFramePeriod(ControlFrame.Control_3_General, config.CONTROL_FRAME_PERIOD_MS);
+
+        return victorspx;
     }
 
 }

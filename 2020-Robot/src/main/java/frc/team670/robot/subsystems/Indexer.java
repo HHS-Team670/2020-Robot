@@ -23,7 +23,7 @@ import frc.team670.robot.utils.motorcontroller.TalonSRXLite;
  */
 public class Indexer extends SparkMaxRotatingSubsystem {
 
-    private TalonSRX updraw;
+    private TalonSRXLite updraw;
 
     private TimeOfFlightSensor indexerIntakeSensor;
     private DutyCycleEncoder revolverAbsoluteEncoder;
@@ -161,8 +161,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         super(INDEXER_CONFIG);
 
         // Updraw should be inverted
-        this.updraw = new TalonSRX(RobotMap.UPDRAW_SPINNER);
-        updraw.setInverted(true);
+        // this.updraw = new TalonSRX(RobotMap.UPDRAW_SPINNER);
+        // updraw.setInverted(true);
+        this.updraw = TalonSRXFactory.buildFactoryTalonSRX(RobotMap.UPDRAW_SPINNER, true);
 
         SmartDashboard.putNumber("Indexer Speed", 0.0);
         SmartDashboard.putNumber("Updraw Speed", 0.0);
