@@ -24,8 +24,10 @@ import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.StartShooter;
-import frc.team670.robot.commands.shooter.StopShooter;
+import frc.team670.robot.commands.turret.RotateTurretWithVision;
+import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.constants.RobotConstants;
+import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
@@ -33,21 +35,17 @@ import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Turret;
 
 /**
  * Autonomous routine starting with shooting from the initiation line (facing
- * towards your driver station), going through the trench, and ending near the 
+ * towards your driver station), going through the trench, and ending near the
  * control panel.
  * 
  * @author ctychen, meganchoy
  */
 public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implements MustangCommand {
 
-    private DriveBase driveBase;
-    private Shooter shooter;
-    private Intake intake;
-    private Conveyor conveyor;
-    private Indexer indexer;
     private Trajectory trajectory;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
@@ -61,12 +59,8 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
     }
 
     public ShootFromBaseLineThenToTrench(StartPosition startPosition, DriveBase driveBase, Intake intake,
-            Conveyor conveyor, Shooter shooter, Indexer indexer) {
-        this.driveBase = driveBase;
-        this.shooter = shooter;
-        this.intake = intake;
-        this.conveyor = conveyor;
-        this.indexer = indexer;
+            Conveyor conveyor, Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
+
         if (startPosition == StartPosition.LEFT)
             trajectory = LeftToTrenchPath.generateTrajectory(driveBase);
         if (startPosition == StartPosition.CENTER)
@@ -74,28 +68,32 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
         if (startPosition == StartPosition.RIGHT)
             trajectory = RightToTrenchPath.generateTrajectory(driveBase);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-        healthReqs.put(this.driveBase, HealthState.GREEN);
-        healthReqs.put(this.shooter, HealthState.GREEN);
-        healthReqs.put(this.intake, HealthState.GREEN);
-        healthReqs.put(this.conveyor, HealthState.GREEN);
-        healthReqs.put(this.indexer, HealthState.GREEN);
+        healthReqs.put(driveBase, HealthState.GREEN);
+        healthReqs.put(shooter, HealthState.GREEN);
+        healthReqs.put(intake, HealthState.GREEN);
+        healthReqs.put(conveyor, HealthState.GREEN);
+        healthReqs.put(indexer, HealthState.GREEN);
+        healthReqs.put(turret, HealthState.GREEN);
         addCommands(
-            new StartShooter(shooter),
-            new SendAllBalls(indexer),
-            // Roll intake out as it runs the path
-            new ParallelCommandGroup(
-                new StopShooter(shooter), 
-                new IntakeBallToIndexer(intake, conveyor, indexer)
-            ),
-            new RamseteCommand(trajectory, driveBase::getPose,
-                    new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
-                    new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
-                        RobotConstants.kaVoltSecondsSquaredPerMeter),
+                // Get shooter up to speed and aim
+                new ParallelCommandGroup(
+                    new StartShooter(shooter), 
+                    new RotateTurretWithVision(turret, coprocessor)
+                ),
+                // Roll intake out and shoot
+                new ParallelCommandGroup(
+                    new Shoot(shooter), 
+                    new SendAllBalls(indexer),
+                    new IntakeBallToIndexer(intake, conveyor, indexer)
+                ),
+                new RamseteCommand(trajectory, driveBase::getPose,
+                        new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
+                        new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
+                                RobotConstants.kaVoltSecondsSquaredPerMeter),
                         RobotConstants.kDriveKinematics, driveBase::getWheelSpeeds, leftPIDController,
                         rightPIDController,
                         // RamseteCommand passes volts to the callback
-                    driveBase::tankDriveVoltage, driveBase)
-        );
+                        driveBase::tankDriveVoltage, driveBase));
     }
 
     @Override
