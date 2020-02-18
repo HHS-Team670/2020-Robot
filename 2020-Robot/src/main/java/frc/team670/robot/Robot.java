@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
     RobotContainer.checkSubsystemsHealth();
     timer = new Timer();
     timer.start();
-    
+
     MustangScheduler.getInstance();
   }
 
@@ -85,7 +85,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     Logger.consoleLog("Autonomous Init");
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+    RobotContainer.resetSystemPositions();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       MustangScheduler.getInstance().schedule(m_autonomousCommand);
@@ -119,6 +119,7 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     MustangScheduler.getInstance().run();
+    RobotContainer.teleopPeriodic();
   }
 
   @Override

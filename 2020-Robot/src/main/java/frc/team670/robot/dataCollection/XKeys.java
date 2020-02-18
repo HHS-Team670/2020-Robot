@@ -12,8 +12,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableType;
 import frc.team670.robot.commands.MustangScheduler;
-import frc.team670.robot.commands.climber.ExtendClimber;
-import frc.team670.robot.commands.climber.RetractClimber;
+import frc.team670.robot.commands.climb.ExtendClimber;
+import frc.team670.robot.commands.climb.RetractClimber;
 import frc.team670.robot.commands.indexer.RotateToIntakePosition;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.RunIntake;
@@ -46,6 +46,19 @@ public class XKeys {
     private Shooter shooter;
     private Conveyor conveyor;
     private Indexer indexer;
+    private class xkeysCommands { // do not use enums as getID has to be called over enum call
+
+        public static final double RUN_INTAKE_IN = 0;
+        public static final double RUN_INTAKE_OUT = 1;
+        public static final double TOGGLE_INTAKE = 2;
+        public static final double INIT_SHOOTER = 4;
+        public static final double SHOOT = 6;
+        public static final double SHOOT_ALL = 7;
+        public static final double INDEXER_INTAKE = 10;
+        public static final double EXTEND_CLIMBER = 12;
+        public static final double RETRACT_CLIMBER = 13;
+        public static final double CANCEL_ALL = 18;
+    }
 
     public XKeys(Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Climber climber) {
         SmartDashboard.putString("XKEYS", "XKeys constructor");
@@ -87,15 +100,14 @@ public class XKeys {
             else if (s == xkeysCommands.SHOOT_ALL)
                 shootAll();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-updraw", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
-            double s = value.getDouble();
-            if (s == xkeysCommands.TOGGLE_UPDRAW_UP)
-                toggleUpdrawUp();
-            else if (s == xkeysCommands.TOGGLE_UPDRAW_DOWN)
-                toggleUpdrawDown();
+            // double s = value.getDouble();
+            // if (s == xkeysCommands.TOGGLE_UPDRAW_UP)
+            //     toggleUpdrawUp();
+            // else if (s == xkeysCommands.TOGGLE_UPDRAW_DOWN)
+            //     toggleUpdrawDown();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-indexer", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
@@ -129,20 +141,6 @@ public class XKeys {
 
     }
 
-    private class xkeysCommands { // do not use enums as getID has to be called over enum call
-
-        public static final double RUN_INTAKE_IN = 0;
-        public static final double RUN_INTAKE_OUT = 1;
-        public static final double TOGGLE_INTAKE = 2;
-        public static final double INIT_SHOOTER = 4;
-        public static final double SHOOT = 6;
-        public static final double SHOOT_ALL = 7;
-        public static final double INDEXER_INTAKE = 10;
-        public static final double EXTEND_CLIMBER = 12;
-        public static final double RETRACT_CLIMBER = 13;
-        public static final double CANCEL_ALL = 18;
-    }
-
     private void extendClimber() {
         MustangScheduler.getInstance().schedule(new ExtendClimber(climber, 198.21));
     }
@@ -168,11 +166,11 @@ public class XKeys {
     }
 
     private void runIntakeIn() {
-        MustangScheduler.getInstance().schedule(new RunIntake(-0.7, intake));
+        MustangScheduler.getInstance().schedule(new RunIntake(false, intake));
     }
 
     private void runIntakeOut() {
-        MustangScheduler.getInstance().schedule(new RunIntake(0.7, intake));
+        MustangScheduler.getInstance().schedule(new RunIntake(true, intake));
     }
 
     private void autoPickupBall() {

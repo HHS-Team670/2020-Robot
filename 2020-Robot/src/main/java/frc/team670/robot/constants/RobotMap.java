@@ -2,6 +2,7 @@ package frc.team670.robot.constants;
 
 import edu.wpi.first.wpilibj.SerialPort.Port;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.I2C;
 
 public class RobotMap {
 
@@ -9,9 +10,6 @@ public class RobotMap {
 
   public static final int DRIVER_CONTROLLER_PORT = 0;
   public static final int OPERATOR_CONTROLLER_PORT = 1;
-
-  /** Port on the PCM for the vision LEDs (the extremely bright ones) */
-  public static final int VISION_LED_PCM = 4;
 
   // Drive Base
   public static final int SPARK_LEFT_MOTOR_1 = 20; // These are properly set.
@@ -27,19 +25,14 @@ public class RobotMap {
   public final static int SHOOTER_STAGE_2_FOLLOWER = 12;
   public static final int SHOOTER_STAGE_1 = 13;
 
-  // PC Module
-  public static final int PCMODULE = 2;
-
   // Turret
   public static final int TURRET_ROTATOR = 24;
 
-  // Motors
+  // Color Wheel
   public static final int COLOR_WHEEL_MOTOR_ID = 7;
 
   // Intake
   public static final int INTAKE_ROLLER = 4;
-  public static final int INTAKE_DEPLOYER = 3; // SET THIS
-  public static final int INTAKE_COMPRESSOR = 6; // SET THIS
 
   // Conveyor
   public static final int CONVEYOR_ROLLER = 8;
@@ -48,9 +41,28 @@ public class RobotMap {
   public static final int INDEXER_ROTATOR = 9;
   public static final int UPDRAW_SPINNER = 10;
 
-  public static final int SHOOTER_2_MAIN = 0;
+  // Climber
+  public static final int CLIMBER_LEFT_MOTOR = 14;
+  public static final int CLIMBER_RIGHT_MOTOR = 15;
 
-  //Climber
-  public static final int CLIMBER_MOTOR_ID_1 = 25; //SET THIS
-  public static final int CLIMBER_MOTOR_ID_2 = 26; //SET THIS
+
+  // PNEUMATICS
+  public static final int PCMODULE = 2; // PCM CAN ID
+
+  public static final int VISION_LED_PCM = 0;
+  public static final int CLIMBER_LEFT_SOLENOID = 1;
+  public static final int CLIMBER_RIGHT_SOLENOID = 2;
+  public static final int INTAKE_DEPLOYER = 3; 
+
+
+  // SENSORS
+
+  // Indexer sensors
+  public static final int INDEXER_DIO_ENCODER_PORT = 0;
+  public static final I2C.Port INDEXER_ToF_SENSOR_PORT = I2C.Port.kMXP;
+
+  // LEDs (connected on RoboRIO PWM)
+  public static final int LEFT_SIDE_LEDS_PWM = 0;
+  public static final int RIGHT_SIDE_LEDS_PWM = 1;
+
 }

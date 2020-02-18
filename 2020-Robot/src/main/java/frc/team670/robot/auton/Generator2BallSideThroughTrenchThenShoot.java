@@ -22,7 +22,6 @@ import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.intake.StopIntake;
 import frc.team670.robot.commands.shooter.StartShooter;
-import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
@@ -70,26 +69,19 @@ public class Generator2BallSideThroughTrenchThenShoot extends SequentialCommandG
     healthReqs.put(this.conveyor, HealthState.GREEN);
     healthReqs.put(this.indexer, HealthState.GREEN);
     addCommands(
-        // TODO If you call this when the shooter is already stopped would it break anything
-        new StopShooter(shooter),
         // Intake is already running 
-        // new ParallelCommandGroup(
-        //   new RunIntake(0.5, intake), 
-        //   new RunConveyor(conveyor),
-        //   new RotateToIntakePosition(indexer)
-        // ),
-        new RamseteCommand(trajectory, driveBase::getPose,
-            new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
-              new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
-              RobotConstants.kaVoltSecondsSquaredPerMeter),
-              RobotConstants.kDriveKinematics, driveBase::getWheelSpeeds, leftPIDController, rightPIDController,
-            // RamseteCommand passes volts to the callback
-            driveBase::tankDriveVoltage, driveBase),
         new ParallelCommandGroup(
-          new StopIntake(intake),
-          new StartShooter(shooter)
+          new StartShooter(shooter),
+          new RamseteCommand(trajectory, driveBase::getPose,
+          new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
+            new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
+            RobotConstants.kaVoltSecondsSquaredPerMeter),
+            RobotConstants.kDriveKinematics, driveBase::getWheelSpeeds, leftPIDController, rightPIDController,
+          // RamseteCommand passes volts to the callback
+          driveBase::tankDriveVoltage, driveBase)
         ),
-        new SendAllBalls(indexer)
+        new SendAllBalls(indexer),
+        new StopIntake(intake)
     );
   }
 

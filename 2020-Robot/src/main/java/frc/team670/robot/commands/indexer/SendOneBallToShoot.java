@@ -4,58 +4,43 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 /**
- * Stages 1 ball and spins updraw, then sends it up to shooter when ready
+ * Rotates indexer to shooting position and kicks ball up to shooter.
+ * 
+ * @author ctychen
  */
-public class SendOneBall extends CommandBase implements MustangCommand {
+public class SendOneBallToShoot extends CommandBase implements MustangCommand {
 
     private Indexer indexer;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public SendOneBall(Indexer indexer) {
-        addRequirements(indexer);
+    public SendOneBallToShoot(Indexer indexer) {
         this.indexer = indexer;
+        addRequirements(indexer);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(indexer, HealthState.GREEN);
     }
 
-    /**
-     * Move the indexer to a "staging" position so the updraw can spin up to speed
-     */
     @Override
     public void initialize() {
-        if (!indexer.updrawIsUpToSpeed()) {
-            indexer.rotateToLoadShoot();
-        }
-    }
-
-    /**
-     * Spin the updraw wheels
-     */
-    @Override
-    public void execute() {
-        indexer.uptake(); 
-    }
-
-    /**
-     * After the updraw is ready, rotate so the staged ball can exit the indexer.
-     */
-    @Override
-    public void end(boolean isInterrupted) {
-        if (!isInterrupted) {
+        if (indexer.updrawIsUpToSpeed()) {
             indexer.shoot();
         }
     }
 
+    @Override
+    public void execute() {
+        indexer.updraw();
+    }
+
     /**
-     * @return true when the updraw is up to speed, meaning that we are ready to get
-     *         a ball out of the indexer
+     * @return true when the top chamber of the indexer is empty (ball has been
+     *         updrawed)
      */
     @Override
     public boolean isFinished() {
@@ -64,7 +49,7 @@ public class SendOneBall extends CommandBase implements MustangCommand {
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-        return this.healthReqs;
+        return healthReqs;
     }
 
 }

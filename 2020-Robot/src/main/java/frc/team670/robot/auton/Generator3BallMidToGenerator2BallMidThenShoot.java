@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.Generator3BallMidToGenerator2BallSidePath;
@@ -30,8 +31,9 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
 
 /**
- * Autonomous routine starting in front of the 3 power cells under the generator, then to the
- * 2 power cells on the side of the generator, near the trench, and shooting from there
+ * Autonomous routine starting in front of the 3 power cells under the
+ * generator, then to the 2 power cells on the side of the generator, near the
+ * trench, and shooting from there
  * 
  * @author ctychen, meganchoy
  */
@@ -50,8 +52,8 @@ public class Generator3BallMidToGenerator2BallMidThenShoot extends SequentialCom
   private PIDController rightPIDController = new PIDController(RobotConstants.kPDriveVel, RobotConstants.kIDriveVel,
       RobotConstants.kDDriveVel);
 
-  public Generator3BallMidToGenerator2BallMidThenShoot(DriveBase driveBase, Intake intake,
-      Conveyor conveyor, Shooter shooter, Indexer indexer) {
+  public Generator3BallMidToGenerator2BallMidThenShoot(DriveBase driveBase, Intake intake, Conveyor conveyor,
+      Shooter shooter, Indexer indexer) {
     this.driveBase = driveBase;
     this.shooter = shooter;
     this.intake = intake;
@@ -67,22 +69,19 @@ public class Generator3BallMidToGenerator2BallMidThenShoot extends SequentialCom
     healthReqs.put(this.conveyor, HealthState.GREEN);
     healthReqs.put(this.indexer, HealthState.GREEN);
     addCommands(
-        // Intake is already running (command previously called should be ShootFromBaseLineThenToGenerator3BallMid)
-        // new ParallelCommandGroup(
-        //   new RunIntake(0.5, intake), 
-        //   new RunConveyor(conveyor),
-        //   new RotateToIntakePosition(indexer)
-        // ),
-        new RamseteCommand(trajectory, driveBase::getPose,
+        // Intake is already running (command previously called should be
+        // ShootFromBaseLineThenToGenerator3BallMid)
+        new ParallelCommandGroup(
+          new StartShooter(shooter),
+          new RamseteCommand(trajectory, driveBase::getPose,
             new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
-              new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
-              RobotConstants.kaVoltSecondsSquaredPerMeter),
-              RobotConstants.kDriveKinematics, driveBase::getWheelSpeeds, leftPIDController, rightPIDController,
+            new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
+                RobotConstants.kaVoltSecondsSquaredPerMeter),
+            RobotConstants.kDriveKinematics, driveBase::getWheelSpeeds, leftPIDController, rightPIDController,
             // RamseteCommand passes volts to the callback
-            driveBase::tankDriveVoltage, driveBase),
-        new StartShooter(shooter),
-        new SendAllBalls(indexer)
-    );
+            driveBase::tankDriveVoltage, driveBase)
+        ),
+        new SendAllBalls(indexer));
   }
 
   @Override

@@ -21,10 +21,8 @@ import frc.team670.paths.center.CenterToTrenchPath;
 import frc.team670.paths.left.LeftToTrenchPath;
 import frc.team670.paths.right.RightToTrenchPath;
 import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.commands.indexer.RotateToIntakePosition;
 import frc.team670.robot.commands.indexer.SendAllBalls;
-import frc.team670.robot.commands.intake.RunConveyor;
-import frc.team670.robot.commands.intake.RunIntake;
+import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.constants.RobotConstants;
@@ -87,9 +85,7 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
             // Roll intake out as it runs the path
             new ParallelCommandGroup(
                 new StopShooter(shooter), 
-                new RunIntake(0.5, intake),
-                new RunConveyor(conveyor), 
-                new RotateToIntakePosition(indexer)
+                new IntakeBallToIndexer(intake, conveyor, indexer)
             ),
             new RamseteCommand(trajectory, driveBase::getPose,
                     new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),

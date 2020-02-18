@@ -55,9 +55,9 @@ public class DriveBase extends MustangSubsystemBase {
 
   public DriveBase() {
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
-        MotorConfig.Motor_Type.NEO);
+        false, MotorConfig.Motor_Type.NEO);
     rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
-        RobotMap.SPARK_RIGHT_MOTOR_2, MotorConfig.Motor_Type.NEO);
+        RobotMap.SPARK_RIGHT_MOTOR_2, false, MotorConfig.Motor_Type.NEO);
 
     left1 = leftControllers.get(0);
     left2 = leftControllers.get(1);

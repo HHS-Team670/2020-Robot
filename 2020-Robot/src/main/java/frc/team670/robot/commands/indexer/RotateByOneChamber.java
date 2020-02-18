@@ -1,49 +1,39 @@
-package frc.team670.robot.commands.shooter;
+package frc.team670.robot.commands.indexer;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
 import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.subsystems.Shooter;
 
-/**
- * "So anyway, I started blasting..." 
- * - Frank Reynolds
- */
-public class StartShooter extends CommandBase implements MustangCommand {
+public class RotateByOneChamber extends CommandBase implements MustangCommand {
 
-    private Shooter shooter;
+    private Indexer indexer;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public StartShooter(Shooter shooter){
-        this.shooter = shooter;
-        addRequirements(shooter);
+    public RotateByOneChamber(Indexer indexer) {
+        this.indexer = indexer;
+        addRequirements(indexer);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-        healthReqs.put(shooter, HealthState.GREEN);
+        healthReqs.put(indexer, HealthState.YELLOW); // This can work without ToF
     }
 
     @Override
     public void initialize() {
-        shooter.setRampRate(true);
-    }
-
-    @Override
-    public void execute(){
-        shooter.run();
+        indexer.rotateByOneChamber();
     }
 
     @Override
     public boolean isFinished() {
-        return shooter.isUpToSpeed();
+        return indexer.hasReachedTargetPosition();
     }
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         return healthReqs;
     }
-    
+
 }

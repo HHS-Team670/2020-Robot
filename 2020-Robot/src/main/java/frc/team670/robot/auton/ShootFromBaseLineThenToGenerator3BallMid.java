@@ -14,17 +14,14 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.center.CenterToGenerator3BallMidPath;
 import frc.team670.paths.left.LeftToGenerator3BallMidPath;
 import frc.team670.paths.right.RightToGenerator3BallMidPath;
 import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.commands.indexer.RotateToIntakePosition;
 import frc.team670.robot.commands.indexer.SendAllBalls;
-import frc.team670.robot.commands.intake.RunConveyor;
-import frc.team670.robot.commands.intake.RunIntake;
+import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.constants.RobotConstants;
@@ -82,21 +79,17 @@ public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandG
     healthReqs.put(this.conveyor, HealthState.GREEN);
     healthReqs.put(this.indexer, HealthState.GREEN);
     addCommands(
-        new StartShooter(shooter),
-        new SendAllBalls(indexer),
-        new StopShooter(shooter),
-        new RamseteCommand(trajectory, driveBase::getPose,
+      new StartShooter(shooter), 
+      new SendAllBalls(indexer), new StopShooter(shooter),
+      new RamseteCommand(trajectory, driveBase::getPose,
             new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
-              new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
-              RobotConstants.kaVoltSecondsSquaredPerMeter),
-              RobotConstants.kDriveKinematics, driveBase::getWheelSpeeds, leftPIDController, rightPIDController,
+            new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
+                RobotConstants.kaVoltSecondsSquaredPerMeter),
+            RobotConstants.kDriveKinematics, driveBase::getWheelSpeeds, leftPIDController, rightPIDController,
             // RamseteCommand passes volts to the callback
             driveBase::tankDriveVoltage, driveBase),
-        new ParallelCommandGroup( 
-          new RunIntake(0.5, intake), 
-          new RunConveyor(conveyor),
-          new RotateToIntakePosition(indexer)
-      ));
+      new IntakeBallToIndexer(intake, conveyor, indexer)
+    );
   }
 
   @Override

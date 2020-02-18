@@ -61,9 +61,11 @@ public class TalonSRXFactory {
         /**
          * Create a TalonSRX with factory settings, as well as configuring other
          * settings to a usable default.
+         * @param deviceID CAN ID of this TalonSRX
+         * @param invert true to invert this motor, false otherwise
          */
-        public static TalonSRX buildFactoryTalonSRX(int deviceID) {
-                return buildTalonSRX(deviceID, defaultConfig);
+        public static TalonSRXLite buildFactoryTalonSRX(int deviceID, boolean invert) {
+                return buildTalonSRX(deviceID, defaultConfig, invert);
         }
 
         /**
@@ -73,16 +75,16 @@ public class TalonSRXFactory {
          * @return TalonSRX set to follow the 'master', with appropriate follower
          *         settings as well
          */
-        public static TalonSRX setPermanentFollower(int deviceID, int masterID) {
-                TalonSRX talonsrx = buildTalonSRX(deviceID, defaultFollowerConfig);
+        public static TalonSRXLite setPermanentFollower(int deviceID, int masterID, boolean invertFollower) {
+                TalonSRXLite talonsrx = buildTalonSRX(deviceID, defaultFollowerConfig, invertFollower);
                 talonsrx.set(ControlMode.Follower, masterID);
                 return talonsrx;
         }
 
-        public static TalonSRX buildTalonSRX(int deviceID, Config config) {
-                TalonSRX talonsrx = new TalonSRXLite(deviceID);
+        public static TalonSRXLite buildTalonSRX(int deviceID, Config config, boolean invert) {
+                TalonSRXLite talonsrx = new TalonSRXLite(deviceID);
                 talonsrx.set(ControlMode.PercentOutput, 0.0);
-                talonsrx.setInverted(config.INVERTED);
+                talonsrx.setInverted(invert);
 
                 talonsrx.changeMotionControlFramePeriod(config.MOTION_CONTROL_FRAME_PERIOD_MS);
                 talonsrx.clearMotionProfileHasUnderrun(TIMEOUT_MS);
