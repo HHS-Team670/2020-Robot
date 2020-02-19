@@ -1,6 +1,7 @@
 package frc.team670.robot.subsystems;
 
 import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.functions.MathUtils;
 import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
@@ -23,7 +24,6 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     protected SparkMAXLite rotator;
     protected CANEncoder rotator_encoder;
     protected CANPIDController rotator_controller;
-    protected static final double NO_SETPOINT = Double.NaN;
     protected double setpoint;
     protected double kP, kI, kD, kFF, kIz, MAX_OUTPUT, MIN_OUTPUT;
     protected double MAX_VEL, MIN_VEL, MAX_ACC, ALLOWED_ERR;
@@ -125,6 +125,8 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
             rotator.setSoftLimit(SoftLimitDirection.kReverse, config.setSoftLimits()[1]);
         }
 
+        clearSetpoint();
+
     }
 
     /**
@@ -185,8 +187,10 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
      *         to the subsystem turning through this angle
      */
     protected double getMotorRotationsFromAngle(double angle) {
-        return (angle / 360) * this.ROTATOR_GEAR_RATIO
-                + (int) (getUnadjustedPosition() / this.ROTATOR_GEAR_RATIO) * this.ROTATOR_GEAR_RATIO;
+        double rotations = (angle / 360) * this.ROTATOR_GEAR_RATIO
+        + ((int) (getUnadjustedPosition() / this.ROTATOR_GEAR_RATIO)) * this.ROTATOR_GEAR_RATIO;
+        Logger.consoleLog("Angle %s, Encoder position %s, Rotations found %s", angle, getUnadjustedPosition(), rotations);
+        return rotations;
     }
 
     /**
@@ -238,10 +242,9 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     }
 
     /**
-     * Stops the motion of the subsystem and resets its setpoint.
+     * Stops the motion of the subsystem.
      */
     public synchronized void stop() {
-        clearSetpoint();
         rotator.set(0);
     }
 
@@ -249,7 +252,7 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
      * Clears the setpoint of this subsystem
      */
     public void clearSetpoint() {
-        setpoint = NO_SETPOINT;
+        rotator_controller.setReference(0, ControlType.kDutyCycle);
     }
 
     public SparkMAXLite getRotator() {

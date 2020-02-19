@@ -415,7 +415,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * obtained from the absolute encoder corresponding to that position.
      */
     public void setEncoderPositionFromAbsolute(){
-        rotator_encoder.setPosition((rotator_encoder.getPosition() - ABSOLUTE_ENCODER_POSITION_AT_REVOLVER_ZERO) % 1.0);
+        clearSetpoint();
+        rotator_encoder.setPosition((getAbsoluteEncoderRotations() - ABSOLUTE_ENCODER_POSITION_AT_REVOLVER_ZERO) * this.ROTATOR_GEAR_RATIO);
+        Logger.consoleLog("Encoder position set: %s", rotator_encoder.getPosition());
     }
 
     /**

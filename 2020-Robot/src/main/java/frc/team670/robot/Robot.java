@@ -86,7 +86,6 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     Logger.consoleLog("Autonomous Init");
     RobotContainer.zeroSubsystemPositions();
-    RobotContainer.clearSubsystemSetpoints();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
