@@ -1,6 +1,8 @@
 package frc.team670.robot.subsystems;
 
 import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.utils.Logger;
+import frc.team670.robot.utils.functions.MathUtils;
 import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
@@ -22,7 +24,6 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     protected SparkMAXLite rotator;
     protected CANEncoder rotator_encoder;
     protected CANPIDController rotator_controller;
-    protected static final double NO_SETPOINT = Double.NaN;
     protected double setpoint;
     protected double kP, kI, kD, kFF, kIz, MAX_OUTPUT, MIN_OUTPUT;
     protected double MAX_VEL, MIN_VEL, MAX_ACC, ALLOWED_ERR;
@@ -124,42 +125,134 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
             rotator.setSoftLimit(SoftLimitDirection.kReverse, config.setSoftLimits()[1]);
         }
 
+        clearSetpoint();
+
     }
 
+    /**
+     * 
+     * @return The count, in motor rotations, from the subsystem's rotator's
+     *         integrated encoder.
+     */
     public double getUnadjustedPosition() {
         return this.rotator_encoder.getPosition();
     }
 
-    protected void setSmartMotionTarget(double setpoint) {
+    /**
+     * Sets the system's overall target position and moves to it.
+     * 
+     * @param setpoint The target position for this subsystem, in motor rotations
+     */
+    protected void setSystemMotionTarget(double setpoint) {
         rotator_controller.setReference(setpoint, ControlType.kSmartMotion);
         this.setpoint = setpoint;
     }
 
-    public void setTargetAngleInDegrees(double angle) {
-        setSmartMotionTarget(getMotorRotationsFromAngle(angle));
+    /**
+     * Sets an intermediate or temporary goal for the subsystem to move to. Use this
+     * when you need to do something in the process of moving to your system's
+     * target, like if you need to unjam something.
+     * 
+     * @param setpoint The temporary setpoint for the system, in motor rotations
+     */
+    protected void setTemporaryMotionTarget(double setpoint) {
+        rotator_controller.setReference(setpoint, ControlType.kSmartMotion);
     }
 
+    /**
+     * Sets the overall target angle this subsystem should move to, in degrees. In
+     * some process, this is where you ultimately want to end up, so this value will
+     * be saved as the system setpoint.
+     * 
+     * @param angle The target angle this subsystem should turn to, in degrees
+     */
+    public void setSystemTargetAngleInDegrees(double angle) {
+        setSystemMotionTarget(getMotorRotationsFromAngle(angle));
+    }
+
+    /**
+     * Sets a temporary angle setpoint for this subsystem to turn to. Use this as an
+     * intermediate step in some process -- this setpoint won't be saved.
+     * 
+     * @param angle The angle this subsystem should turn to, in degrees
+     */
+    public void setTemporaryTargetAngleInDegrees(double angle) {
+        setTemporaryMotionTarget(getMotorRotationsFromAngle(angle));
+    }
+
+    /**
+     * 
+     * @param angle The angle, in degrees, to be converted to motor rotations
+     * @return The number of motor rotations, as measured by the encoder, equivalent
+     *         to the subsystem turning through this angle
+     */
     protected double getMotorRotationsFromAngle(double angle) {
-        return (angle / 360) * this.ROTATOR_GEAR_RATIO;
+        double rotations = (angle / 360) * this.ROTATOR_GEAR_RATIO
+        + ((int) (getUnadjustedPosition() / this.ROTATOR_GEAR_RATIO)) * this.ROTATOR_GEAR_RATIO;
+        Logger.consoleLog("Angle %s, Encoder position %s, Rotations found %s", angle, getUnadjustedPosition(), rotations);
+        return rotations;
     }
 
+    /**
+     * Change the system's feedforward and max velocity and acceleration
+     * temporarily. Possibly useful when zeroing, testing, or unjamming.
+     * 
+     * @param factor Multiplier for ff. For example, if you want to halve it, factor
+     *               should be 0.5
+     */
+    protected void temporaryScaleSmartMotionMaxVelAndAccel(double factor) {
+        rotator_controller.setFF(this.kFF * factor);
+        rotator_controller.setSmartMotionMaxVelocity(this.MAX_VEL * factor, this.SMARTMOTION_SLOT);
+        rotator_controller.setSmartMotionMaxAccel(this.MAX_ACC * factor, this.SMARTMOTION_SLOT);
+    }
+
+    /**
+     * Resets feedforward, SmartMotion acceleration and velocity settings to the
+     * defined system constants. Possibly useful when the system previously
+     * temporarily scaled these values for testing, unjamming, or zeroing, to bring
+     * motion back to normal.
+     */
+    protected void resetSmartMotionSettingsToSystem() {
+        rotator_controller.setFF(this.kFF);
+        rotator_controller.setSmartMotionMaxVelocity(this.MAX_VEL, this.SMARTMOTION_SLOT);
+        rotator_controller.setSmartMotionMaxAccel(this.MAX_ACC, this.SMARTMOTION_SLOT);
+    }
+
+    /**
+     * 
+     * @return The current position of the subsystem, in degrees.
+     */
     public abstract double getCurrentAngleInDegrees();
 
-    public void enableCoastMode() {
+    /**
+     * 
+     * @return true if the subsystem is close to its target position, within some
+     *         margin of error.
+     */
+    public boolean hasReachedTargetPosition() {
+        return (MathUtils.doublesEqual(rotator_encoder.getPosition(), setpoint, ALLOWED_ERR));
+    }
+
+    protected void enableCoastMode() {
         rotator.setIdleMode(IdleMode.kCoast);
     }
 
-    public void enableBrakeMode() {
+    protected void enableBrakeMode() {
         rotator.setIdleMode(IdleMode.kBrake);
     }
 
+    /**
+     * Stops the motion of the subsystem.
+     */
     public synchronized void stop() {
-        clearSetpoint();
         rotator.set(0);
     }
 
+    /**
+     * Clears the setpoint of this subsystem
+     */
     public void clearSetpoint() {
-        setpoint = NO_SETPOINT;
+        rotator_controller.setReference(0, ControlType.kDutyCycle);
     }
 
     public SparkMAXLite getRotator() {

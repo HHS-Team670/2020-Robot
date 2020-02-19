@@ -9,12 +9,15 @@ import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
-public class RotateByOneChamber extends CommandBase implements MustangCommand {
+/**
+ * Rotates the indexer by 1 chamber over
+ */
+public class RotateToNextChamber extends CommandBase implements MustangCommand {
 
     private Indexer indexer;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public RotateByOneChamber(Indexer indexer) {
+    public RotateToNextChamber(Indexer indexer) {
         this.indexer = indexer;
         addRequirements(indexer);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -23,7 +26,7 @@ public class RotateByOneChamber extends CommandBase implements MustangCommand {
 
     @Override
     public void initialize() {
-        indexer.rotateByOneChamber();
+        indexer.rotateToNextChamber();
     }
 
     @Override
