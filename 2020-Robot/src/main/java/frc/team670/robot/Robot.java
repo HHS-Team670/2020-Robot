@@ -9,6 +9,7 @@ package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.MustangScheduler;
 
@@ -84,8 +85,9 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     Logger.consoleLog("Autonomous Init");
+    RobotContainer.zeroSubsystemPositions();
+    // RobotContainer.clearSubsystemSetpoints();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    RobotContainer.resetSystemPositions();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       MustangScheduler.getInstance().schedule(m_autonomousCommand);

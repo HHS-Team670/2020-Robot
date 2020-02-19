@@ -18,6 +18,8 @@ import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.functions.MathUtils;
+import frc.team670.robot.utils.math.interpolable.InterpolatingDouble;
+import frc.team670.robot.utils.math.interpolable.InterpolatingTreeMap;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.utils.motorcontroller.VictorSPXFactory;
@@ -38,10 +40,13 @@ public class Shooter extends MustangSubsystemBase {
   private CANEncoder stage2_mainEncoder;
   private CANPIDController stage2_mainPIDController;
 
-  private double STAGE_1_SPEED = 0.3; // Change this later
+  private static double STAGE_1_SPEED = 0.3; // Change this later
   private double STAGE_2_SPEED = 2750; // Will change later if we adjust by distance
+  private static double STAGE_2_DEFAULT_SPEED;
 
-  private final double STAGE_2_PULLEY_RATIO = 2; // Need to check this
+  private static double MAX_SHOT_DISTANCE_METERS = 8.382; // = 27.5 feet, this is a guess
+
+  private static final double STAGE_2_PULLEY_RATIO = 2; // Need to check this
 
   private boolean ballHasBeenShot;
   private double stage2_current;
@@ -56,6 +61,22 @@ public class Shooter extends MustangSubsystemBase {
   private static final double STAGE_2_V_D = 0.0;
   private static final double STAGE_2_V_FF = 0.000183;
   private static final double STAGE_2_RAMP_RATE = 1.0;
+
+  private static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> FLYWHEEL_RPM_MAP = new InterpolatingTreeMap<>();
+
+  // Format: {Distance from target in meters, Stage 2 RPM}
+  // All a guess right now
+  private static final double[][] FLYWHEEL_RPM_AT_DISTANCE = { 
+    { 8.382, 2750 }
+
+  };
+
+  static {
+    for (double[] pair : FLYWHEEL_RPM_AT_DISTANCE) {
+      FLYWHEEL_RPM_MAP.put(new InterpolatingDouble(pair[0]), new InterpolatingDouble(pair[1]));
+    }
+    STAGE_2_DEFAULT_SPEED = FLYWHEEL_RPM_MAP.getInterpolated(new InterpolatingDouble(MAX_SHOT_DISTANCE_METERS)).value;
+  }
 
   private static final int STAGE_2_VELOCITY_SLOT = 0;
 
@@ -107,6 +128,20 @@ public class Shooter extends MustangSubsystemBase {
     }
   }
 
+  public void setVelocityTarget(double targetRPM) {
+    this.STAGE_2_SPEED = targetRPM;
+  }
+
+  public double getTargetRPMForDistance(double distance){
+    return 0;
+    // TODO:
+    // Find which known values in the table are closest to the distance we have
+    // Interpolate: given that we know which values our distance is between, then similarly 
+    // calculate what the target RPM should be. InterpolatingTreeMap should make a linear interpolation,
+    // if time allows maybe make a quadratic model. 
+    // Returns the found RPM
+  }
+
   public void stop() {
     stage2_mainController.set(0);
     stage1.set(ControlMode.PercentOutput, 0);
@@ -122,9 +157,8 @@ public class Shooter extends MustangSubsystemBase {
 
     stage2_mainPIDController.setReference(SmartDashboard.getNumber("Stage 2 Velocity Setpoint", 0.0),
         ControlType.kVelocity);
-    stage2_mainPIDController.setFF(SmartDashboard.getNumber("Stage 2 FF", 0.0));
-    stage2_mainPIDController.setP(SmartDashboard.getNumber("Stage 2 P", 0.0));
-    stage2_mainController.setClosedLoopRampRate(SmartDashboard.getNumber("Stage 2 Ramp Rate", 0.0));
+
+    setRampRate(true);
 
     SmartDashboard.putNumber("Stage 2 RPM", stage2_mainController.getEncoder().getVelocity());
   }

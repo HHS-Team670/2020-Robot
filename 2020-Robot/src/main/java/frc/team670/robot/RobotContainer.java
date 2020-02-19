@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
+import frc.team670.robot.subsystems.ColorWheelSpinner;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
@@ -24,9 +25,15 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.commands.MustangScheduler;
+import frc.team670.robot.commands.indexer.RotateToNextChamber;
+import frc.team670.robot.commands.indexer.SendOneBallToShoot;
+import frc.team670.robot.commands.indexer.StopIntaking;
+import frc.team670.robot.commands.indexer.TestIndexerEncoder;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
+import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.climber.Climber;
@@ -48,13 +55,13 @@ public class RobotContainer {
 
   private static DriveBase driveBase = new DriveBase();
   private static Intake intake = new Intake();
-  private static Conveyor conveyor = new Conveyor();
-  private static Indexer indexer = new Indexer();
+  public static Conveyor conveyor = new Conveyor();
+  public static Indexer indexer = new Indexer();
   private static Turret turret = new Turret();
   private static Shooter shooter = new Shooter();
   private static Climber climber = new Climber();
-  // private static ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
-  private static MustangCoprocessor coprocessor = new MustangCoprocessor();
+  private static ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
+  public static MustangCoprocessor coprocessor = new MustangCoprocessor();
 
   private static OI oi = new OI(intake, conveyor, indexer, shooter, climber);
 
@@ -67,7 +74,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    addSubsystem(driveBase, intake, conveyor, indexer, turret, shooter);
+    addSubsystem(driveBase, intake, conveyor, indexer, shooter, climber);
   }
 
   public static void addSubsystem(MustangSubsystemBase... subsystems) {
@@ -82,16 +89,21 @@ public class RobotContainer {
   public static void checkSubsystemsHealth() {
     for (MustangSubsystemBase s : allSubsystems) {
       s.getHealth(true);
-      s.pushHealthToDashboard();
+      // s.pushHealthToDashboard();
     }
   }
 
   /**
    * Resets subsystem points of reference.
+   * Rotates the indexer to its zero position.
    */
-  public static void resetSystemPositions() {
+  public static void zeroSubsystemPositions() {
     indexer.setEncoderPositionFromAbsolute();
     // TODO: if we have something similar for the turret, that goes here
+  }
+
+  public static void clearSubsystemSetpoints(){
+    indexer.clearSetpoint();
   }
 
   /**
@@ -102,14 +114,17 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     JoystickButton toggleIntake = new JoystickButton(oi.getOperatorController(), 1);
-    JoystickButton runIntakeOut = new JoystickButton(oi.getOperatorController(), 5);
     JoystickButton runIntakeIn = new JoystickButton(oi.getOperatorController(), 3);
+    JoystickButton runIntakeOut = new JoystickButton(oi.getOperatorController(), 5);
     JoystickButton toggleShooter = new JoystickButton(oi.getOperatorController(), 6);
+    JoystickButton sendOneBall = new JoystickButton(oi.getOperatorController(), 2);
 
-    toggleIntake.whenPressed(new DeployIntake(!intake.isDeployed(), intake));
-    runIntakeIn.whenHeld(new IntakeBallToIndexer(intake, conveyor, indexer));
-    runIntakeOut.whenHeld(new RunIntake(false, intake));
+    toggleIntake.toggleWhenPressed(new DeployIntake(!intake.isDeployed(), intake));
+    runIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
+    runIntakeIn.whenReleased(new StopIntaking(intake, conveyor, indexer));
+    runIntakeOut.toggleWhenPressed(new RunIntake(false, intake));
     toggleShooter.toggleWhenPressed(new StartShooter(shooter));
+    sendOneBall.whenHeld(new RotateToNextChamber(indexer));
   }
 
   /**
@@ -118,22 +133,19 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    // Create a voltage constraint to ensure we don't accelerate too fast
-    return null;
+    return new RunIntake(false, intake);
+    // return new TestIndexerEncoder(indexer);
   }
 
   public static void teleopInit() {
+    zeroSubsystemPositions();
     driveBase.setTeleopRampRate();
     driveBase.initDefaultCommand();
+    // turret.initDefaultCommand();
   }
 
   public static void teleopPeriodic() {
-    intake.test();
-    conveyor.test();
-    shooter.test();
-    indexer.test();
-    coprocessor.testLEDS();
-    SmartDashboard.putNumber("Encoder", indexer.getAbsoluteEncoderRotations());
+    MustangScheduler.getInstance().run();
   }
 
   public static List<MustangSubsystemBase> getSubsystems() {

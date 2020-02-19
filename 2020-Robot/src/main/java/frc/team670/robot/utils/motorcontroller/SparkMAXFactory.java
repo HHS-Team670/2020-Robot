@@ -72,6 +72,7 @@ public class SparkMAXFactory {
         sparkMax.set(ControlType.kDutyCycle, 0.0);
         sparkMax.setInverted(config.INVERTED);
         sparkMax.setSmartCurrentLimit(MotorConfig.MOTOR_MAX_CURRENT.get(motorType));
+        sparkMax.enableVoltageCompensation(12);
         return sparkMax;
     }
 
