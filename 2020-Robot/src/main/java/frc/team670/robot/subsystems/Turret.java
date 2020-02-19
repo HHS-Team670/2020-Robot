@@ -21,7 +21,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
             return RobotMap.TURRET_ROTATOR;
         }
 
-        public IdleMode setRotatorIdleMode(){
+        public IdleMode setRotatorIdleMode() {
             return IdleMode.kBrake;
         }
 
@@ -125,18 +125,22 @@ public class Turret extends SparkMaxRotatingSubsystem {
     }
 
     @Override
-    public void setTargetAngleInDegrees(double targetAngle) {
+    public void setSystemTargetAngleInDegrees(double targetAngle) {
         if (targetAngle > SOFT_MAXIMUM_DEGREES || targetAngle < SOFT_MINIMUM_DEGREES) {
             throw new IllegalArgumentException(
                     "Invalid angle: must be within range " + SOFT_MINIMUM_DEGREES + " and " + SOFT_MAXIMUM_DEGREES);
         } else {
-            super.setTargetAngleInDegrees(targetAngle);
+            super.setSystemTargetAngleInDegrees(targetAngle);
         }
     }
 
     @Override
     public double getCurrentAngleInDegrees() {
         return getUnadjustedPosition() * DEGREES_PER_MOTOR_ROTATION;
+    }
+
+    public double relativeAngleToAbsoluteInDegrees(double relAngle) {
+        return getCurrentAngleInDegrees() + relAngle;
     }
 
     /**

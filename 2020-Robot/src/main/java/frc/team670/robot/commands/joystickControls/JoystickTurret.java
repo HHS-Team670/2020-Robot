@@ -42,7 +42,7 @@ public class JoystickTurret extends CommandBase implements MustangCommand {
     double angle = Math
         .atan((RobotContainer.getOperatorController().getY()) / (RobotContainer.getOperatorController().getX()));
     if (RobotContainer.getOperatorController().getPOV(0) == 0) {
-      turret.setTargetAngleInDegrees(angle);
+      turret.setSystemTargetAngleInDegrees(angle);
     }
   }
 
