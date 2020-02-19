@@ -10,12 +10,8 @@ package frc.team670.robot.auton;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.center.CenterToTrenchPath;
 import frc.team670.paths.left.LeftToTrenchPath;
@@ -26,7 +22,6 @@ import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.turret.RotateTurretWithVision;
 import frc.team670.robot.commands.shooter.Shoot;
-import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
@@ -48,11 +43,6 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
 
     private Trajectory trajectory;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-
-    private PIDController leftPIDController = new PIDController(RobotConstants.kPDriveVel, RobotConstants.kIDriveVel,
-            RobotConstants.kDDriveVel);
-    private PIDController rightPIDController = new PIDController(RobotConstants.kPDriveVel, RobotConstants.kIDriveVel,
-            RobotConstants.kDDriveVel);
 
     private enum StartPosition {
         LEFT, CENTER, RIGHT;
@@ -86,14 +76,8 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
                     new SendAllBalls(indexer),
                     new IntakeBallToIndexer(intake, conveyor, indexer)
                 ),
-                new RamseteCommand(trajectory, driveBase::getPose,
-                        new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
-                        new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
-                                RobotConstants.kaVoltSecondsSquaredPerMeter),
-                        RobotConstants.kDriveKinematics, driveBase::getWheelSpeeds, leftPIDController,
-                        rightPIDController,
-                        // RamseteCommand passes volts to the callback
-                        driveBase::tankDriveVoltage, driveBase));
+                getTrajectoryFollowerCommand(trajectory, driveBase)
+        );
     }
 
     @Override
