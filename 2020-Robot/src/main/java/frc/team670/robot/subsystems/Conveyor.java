@@ -36,6 +36,10 @@ public class Conveyor extends MustangSubsystemBase{
         roller.set(CONVEYOR_SPEED);
     }
 
+    public void stop(){
+        roller.set(0);
+    }
+
     @Override
     public HealthState checkHealth() {
         if (roller.getLastError() != null && roller.getLastError() != CANError.kOk)

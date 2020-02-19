@@ -26,8 +26,8 @@ public class RotateIndexerToUptakeThenShoot extends SequentialCommandGroup imple
         // Stage and uptake 1 ball while preparing the shooter
         addCommands(
             new ParallelCommandGroup(
-            new StageOneBallToShoot(indexer),
-            new StartShooter(shooter))
+                new StartShooter(shooter)),
+                new StageOneBallToShoot(indexer)
             );
 
     }

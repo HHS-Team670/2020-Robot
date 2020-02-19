@@ -139,8 +139,8 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         setSmartMotionTarget(getMotorRotationsFromAngle(angle));
     }
 
-    protected double getMotorRotationsFromAngle(double angle) {
-        return (angle / 360) * this.ROTATOR_GEAR_RATIO;
+    protected double getMotorRotationsFromAngle(double angle) { 
+        return (angle / 360) * this.ROTATOR_GEAR_RATIO + (int)(getUnadjustedPosition()/ROTATOR_GEAR_RATIO) * ROTATOR_GEAR_RATIO;
     }
 
     public abstract double getCurrentAngleInDegrees();

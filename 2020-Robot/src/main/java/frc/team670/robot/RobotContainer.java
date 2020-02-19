@@ -25,9 +25,14 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.commands.MustangScheduler;
+import frc.team670.robot.commands.indexer.RotateByOneChamber;
+import frc.team670.robot.commands.indexer.SendOneBallToShoot;
+import frc.team670.robot.commands.indexer.StopIntaking;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
+import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.climber.Climber;
@@ -50,12 +55,12 @@ public class RobotContainer {
   private static DriveBase driveBase = new DriveBase();
   private static Intake intake = new Intake();
   public static Conveyor conveyor = new Conveyor();
-  private static Indexer indexer = new Indexer();
+  public static Indexer indexer = new Indexer();
   private static Turret turret = new Turret();
   private static Shooter shooter = new Shooter();
   private static Climber climber = new Climber();
   private static ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
-  private static MustangCoprocessor coprocessor = new MustangCoprocessor();
+  public static MustangCoprocessor coprocessor = new MustangCoprocessor();
 
   private static OI oi = new OI(intake, conveyor, indexer, shooter, climber);
 
@@ -103,14 +108,17 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     JoystickButton toggleIntake = new JoystickButton(oi.getOperatorController(), 1);
-    JoystickButton runIntakeOut = new JoystickButton(oi.getOperatorController(), 5);
     JoystickButton runIntakeIn = new JoystickButton(oi.getOperatorController(), 3);
+    JoystickButton runIntakeOut = new JoystickButton(oi.getOperatorController(), 5);
     JoystickButton toggleShooter = new JoystickButton(oi.getOperatorController(), 6);
+    JoystickButton sendOneBall = new JoystickButton(oi.getOperatorController(), 2);
 
-    toggleIntake.whenPressed(new DeployIntake(!intake.isDeployed(), intake));
-    runIntakeIn.whenHeld(new IntakeBallToIndexer(intake, conveyor, indexer));
-    runIntakeOut.whenHeld(new RunIntake(false, intake));
+    toggleIntake.toggleWhenPressed(new DeployIntake(!intake.isDeployed(), intake));
+    runIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
+    runIntakeIn.whenReleased(new StopIntaking(intake, conveyor, indexer));
+    runIntakeOut.toggleWhenPressed(new RunIntake(false, intake));
     toggleShooter.toggleWhenPressed(new StartShooter(shooter));
+    sendOneBall.whenHeld(new RotateIndexerToUptakeThenShoot(indexer, shooter));
   }
 
   /**
@@ -120,21 +128,19 @@ public class RobotContainer {
    */
   public MustangCommand getAutonomousCommand() {
     // Create a voltage constraint to ensure we don't accelerate too fast
+    resetSystemPositions();
     return null;
   }
 
   public static void teleopInit() {
     driveBase.setTeleopRampRate();
+    resetSystemPositions();
     driveBase.initDefaultCommand();
+    turret.initDefaultCommand();
   }
 
   public static void teleopPeriodic() {
-    intake.test();
-    conveyor.test();
-    shooter.test();
-    indexer.test();
-    coprocessor.testLEDS();
-    SmartDashboard.putNumber("Encoder", indexer.getAbsoluteEncoderRotations());
+    MustangScheduler.getInstance().run();
   }
 
   public static List<MustangSubsystemBase> getSubsystems() {

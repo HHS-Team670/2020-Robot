@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.sensors.TimeOfFlightSensor;
+import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.functions.MathUtils;
 import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.motorcontroller.TalonSRXFactory;
@@ -44,7 +45,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     private boolean ballIsUpdrawing;
 
-    private static final double ABSOLUTE_ENCODER_POSITION_AT_REVOLVER_ZERO = 0; //TODO: find this
+    private boolean isIntaking = false;
+
+    private static final double ABSOLUTE_ENCODER_POSITION_AT_REVOLVER_ZERO = 0.6799; //TODO: find this
 
     // For testing purposes
     private double UPDRAW_SPEED = 0.3;
@@ -145,7 +148,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
 
         public double getRotatorGearRatio() {
-            return 52.5; //gearing 35 * 1.5 belt
+            return 150; //gearing 100 * 1.5 belt
         }
         
         public IdleMode setRotatorIdleMode(){
@@ -193,15 +196,17 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * Updates the states of the chambers after intaking a ball, and stops the ToF
      * sensor
      */
-    public void intakeBall() {
-        if (ballIn()) {
+    public boolean intakeBall() {
+        if (isIntaking && ballIn()) {
             chamberStates[getBottomChamber()] = true;
             indexerIntakeSensor.stop();
+            return true;
         }
+        return false;
     }
 
     public void rotateByOneChamber(){
-        setTargetAngleInDegrees(getCurrentAngleInDegrees() + INDEXER_DEGREES_PER_CHAMBER);
+        setTargetAngleInDegrees(((getBottomChamber() + 1) % 5) * INDEXER_DEGREES_PER_CHAMBER);
     }
 
     /**
@@ -209,6 +214,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * indexer in position to intake
      */
     public void prepareToIntake() {
+        isIntaking = true;
         setTargetAngleInDegrees(INDEXER_DEGREES_PER_CHAMBER * getIntakeChamber() + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES);
         indexerIntakeSensor.start();
     }
@@ -222,13 +228,13 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     }
 
     public boolean hasReachedTargetPosition() {
+        Logger.consoleLog("Setpoint: %s, CurentPosition: %s", setpoint, rotator_encoder.getPosition());
         return (MathUtils.doublesEqual(rotator_encoder.getPosition(), setpoint, ALLOWED_ERR));
     }
 
     /**
      * Run the uptake, emptying the top chamber of the indexer
      * 
-     * @param percentOutput percent output for the updraw
      */
     public void updraw() {
         updraw.set(ControlMode.PercentOutput, UPDRAW_SPEED);
@@ -266,7 +272,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         double currentAngle = getCurrentAngleInDegrees();
         double diff = Math.abs(angleDegrees - currentAngle);
         if (diff > 180) {
-            setSmartMotionTarget(getMotorRotationsFromAngle(angleDegrees - 360));
+            setSmartMotionTarget(getMotorRotationsFromAngle(angleDegrees + 360));
         } else {
             setSmartMotionTarget(getMotorRotationsFromAngle(angleDegrees));
         }
@@ -439,7 +445,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      */
     @Override
     public double getCurrentAngleInDegrees() {
-        return (getUnadjustedPosition() % this.ROTATOR_GEAR_RATIO) * 360;
+        return (getUnadjustedPosition() % this.ROTATOR_GEAR_RATIO) / this.ROTATOR_GEAR_RATIO * 360;
     }
 
     public boolean isIndexerJammed() {
@@ -475,6 +481,15 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             ballIsUpdrawing = false;
             chamberStates[getTopChamber()] = false;
         }
+
+        if(isIntaking && intakeBall() && totalNumOfBalls() < 5){
+            rotateByOneChamber();
+        }
+    }
+
+    public void stopIntaking(){
+        isIntaking = false;
+        indexerIntakeSensor.stop();
     }
 
     public boolean isShootingChamberEmpty() {

@@ -42,6 +42,8 @@ public class XKeys {
     private static NetworkTableInstance instance;
     private static NetworkTable table;
 
+    private static NetworkTable visionTable;
+
     private Climber climber;
     private Intake intake;
     private Shooter shooter;
@@ -65,6 +67,7 @@ public class XKeys {
         SmartDashboard.putString("XKEYS", "XKeys constructor");
         instance = NetworkTableInstance.getDefault();
         table = instance.getTable("SmartDashboard");
+        visionTable = instance.getTable("Vision");
 
         this.intake = intake;
         this.conveyor = conveyor;
