@@ -181,33 +181,35 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     /**
      * 
      * @param angle The angle, in degrees, to be converted to motor rotations
-     * @return The number of motor rotations equivalent to the subsystem turning
-     *         through this angle
+     * @return The number of motor rotations, as measured by the encoder, equivalent
+     *         to the subsystem turning through this angle
      */
     protected double getMotorRotationsFromAngle(double angle) {
-        return (angle / 360) * this.ROTATOR_GEAR_RATIO;
+        return (angle / 360) * this.ROTATOR_GEAR_RATIO
+                + (int) (getUnadjustedPosition() / this.ROTATOR_GEAR_RATIO) * this.ROTATOR_GEAR_RATIO;
     }
 
     /**
-     * Change the system's max velocity and acceleration for SmartMotion
+     * Change the system's feedforward and max velocity and acceleration
      * temporarily. Possibly useful when zeroing, testing, or unjamming.
      * 
-     * @param factor Multiplier for system's max velocity. For example, if you want
-     *               to reduce the system's speed so that its temporary max velocity
-     *               is half of what it normally is, factor should be 0.5
+     * @param factor Multiplier for ff. For example, if you want to halve it, factor
+     *               should be 0.5
      */
     protected void temporaryScaleSmartMotionMaxVelAndAccel(double factor) {
+        rotator_controller.setFF(this.kFF * factor);
         rotator_controller.setSmartMotionMaxVelocity(this.MAX_VEL * factor, this.SMARTMOTION_SLOT);
         rotator_controller.setSmartMotionMaxAccel(this.MAX_ACC * factor, this.SMARTMOTION_SLOT);
     }
 
     /**
-     * Resets the system's SmartMotion acceleration and velocity settings to the
+     * Resets feedforward, SmartMotion acceleration and velocity settings to the
      * defined system constants. Possibly useful when the system previously
      * temporarily scaled these values for testing, unjamming, or zeroing, to bring
      * motion back to normal.
      */
     protected void resetSmartMotionSettingsToSystem() {
+        rotator_controller.setFF(this.kFF);
         rotator_controller.setSmartMotionMaxVelocity(this.MAX_VEL, this.SMARTMOTION_SLOT);
         rotator_controller.setSmartMotionMaxAccel(this.MAX_ACC, this.SMARTMOTION_SLOT);
     }

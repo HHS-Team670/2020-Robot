@@ -49,6 +49,7 @@ public class RobotMap {
   // PNEUMATICS
   public static final int PCMODULE = 2; // PCM CAN ID
 
+  // Solenoids. Using 24V
   public static final int VISION_LED_PCM = 0;
   public static final int CLIMBER_LEFT_SOLENOID = 1;
   public static final int CLIMBER_RIGHT_SOLENOID = 2;

@@ -206,8 +206,11 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
     }
 
-    public void rotateByOneChamber(){
-        setSystemTargetAngleInDegrees(getCurrentAngleInDegrees() + INDEXER_DEGREES_PER_CHAMBER);
+    /**
+     * Sets the indexer to move to the next chamber. 
+     */
+    public void rotateToNextChamber(){
+        setSystemTargetAngleInDegrees(((getBottomChamber() + 1) % 5) * INDEXER_DEGREES_PER_CHAMBER);
     }
 
     /**
@@ -267,9 +270,14 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     public void setSystemTargetAngleInDegrees(double angleDegrees) {
         double currentAngle = getCurrentAngleInDegrees();
         double diff = Math.abs(angleDegrees - currentAngle);
-        if (diff > 180) {
-            setSystemMotionTarget(getMotorRotationsFromAngle(angleDegrees - 360));
+        // Checks for if it would be more efficient for the indexer to switch direction
+        // If we're more than half a rotation ahead of our target,
+        // it makes sense to change the direction and turn less. 
+        if (diff > 180 ) {
+            // Switch directions
+            setSystemMotionTarget(getMotorRotationsFromAngle(angleDegrees + 360));
         } else {
+            // Continue turning in the same direction
             setSystemMotionTarget(getMotorRotationsFromAngle(angleDegrees));
         }
     }
@@ -394,6 +402,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         return ((revolverAbsoluteEncoder.get() + 1.0) % 1.0);
     }
 
+    /**
+     * Sets the rotator encoder's reference position to the constant 
+     * obtained from the absolute encoder corresponding to that position.
+     */
     public void setEncoderPositionFromAbsolute(){
         rotator_encoder.setPosition((rotator_encoder.getPosition() - ABSOLUTE_ENCODER_POSITION_AT_REVOLVER_ZERO) % 1.0);
     }
@@ -445,7 +457,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      */
     @Override
     public double getCurrentAngleInDegrees() {
-        return (getUnadjustedPosition() % this.ROTATOR_GEAR_RATIO) * 360;
+        // find how many rotations the motor has moved compared to the number needed for 1 full rotation
+        // then finds what angle that is
+        return ((getUnadjustedPosition() % this.ROTATOR_GEAR_RATIO) / this.ROTATOR_GEAR_RATIO) * 360;
     }
 
     public boolean isJammed() {
@@ -474,9 +488,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 		if (!hasReachedTargetPosition() && isJammed()) {
             unjamMode = true;
             posWhenJammed = getCurrentAngleInDegrees();
-            // When unjamming, might be useful to slow down the indexer a bit. 
-            // Let's see if we need this. 
-            temporaryScaleSmartMotionMaxVelAndAccel(0.75); 
             if (setpoint - posWhenJammed > 0) {
             // TODO find how much we actually want to move it: is half a chamber too much?
                 setTemporaryMotionTarget(getMotorRotationsFromAngle(posWhenJammed - INDEXER_DEGREES_PER_CHAMBER / 2));
