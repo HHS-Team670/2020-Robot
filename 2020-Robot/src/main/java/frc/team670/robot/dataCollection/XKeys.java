@@ -9,6 +9,7 @@ package frc.team670.robot.dataCollection;
 
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableType;
 import frc.team670.robot.commands.MustangScheduler;
@@ -38,8 +39,10 @@ import frc.team670.robot.utils.MustangNotifications;
  */
 public class XKeys {
 
-    private NetworkTableInstance instance;
-    private NetworkTable table;
+    private static NetworkTableInstance instance;
+    private static NetworkTable table;
+
+    private static NetworkTable visionTable;
 
     private Climber climber;
     private Intake intake;
@@ -64,6 +67,7 @@ public class XKeys {
         SmartDashboard.putString("XKEYS", "XKeys constructor");
         instance = NetworkTableInstance.getDefault();
         table = instance.getTable("SmartDashboard");
+        visionTable = instance.getTable("Vision");
 
         this.intake = intake;
         this.conveyor = conveyor;
@@ -100,15 +104,6 @@ public class XKeys {
             else if (s == xkeysCommands.SHOOT_ALL)
                 shootAll();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-        table.addEntryListener("xkeys-updraw", (table2, key2, entry, value, flags) -> {
-            if (value.getType() != NetworkTableType.kDouble)
-                return;
-            // double s = value.getDouble();
-            // if (s == xkeysCommands.TOGGLE_UPDRAW_UP)
-            //     toggleUpdrawUp();
-            // else if (s == xkeysCommands.TOGGLE_UPDRAW_DOWN)
-            //     toggleUpdrawDown();
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-indexer", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
@@ -139,6 +134,11 @@ public class XKeys {
             visionAlign();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
+    }
+
+    public static void pushGameDataToDashboard(int x){
+        NetworkTableEntry gameData = table.getEntry("Balls");
+        gameData.forceSetNumber(x);
     }
 
     private void extendClimber() {
