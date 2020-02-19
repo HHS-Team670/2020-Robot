@@ -245,7 +245,10 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         rotator.set(0);
     }
 
-    protected void clearSetpoint() {
+    /**
+     * Clears the setpoint of this subsystem
+     */
+    public void clearSetpoint() {
         setpoint = NO_SETPOINT;
     }
 

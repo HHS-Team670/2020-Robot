@@ -46,7 +46,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private static List<MustangSubsystemBase> allSubsystems = new ArrayList<MustangSubsystemBase>();
 
-  private static DriveBase driveBase = new DriveBase();
+  // private static DriveBase driveBase = new DriveBase();
   private static Intake intake = new Intake();
   private static Conveyor conveyor = new Conveyor();
   private static Indexer indexer = new Indexer();
@@ -67,7 +67,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    addSubsystem(driveBase, intake, conveyor, indexer, turret, shooter);
+    SmartDashboard.putBoolean("Run Intake Reversed?", false);
   }
 
   public static void addSubsystem(MustangSubsystemBase... subsystems) {
@@ -88,10 +88,15 @@ public class RobotContainer {
 
   /**
    * Resets subsystem points of reference.
+   * Rotates the indexer to its zero position.
    */
-  public static void resetSystemPositions() {
+  public static void zeroSubsystemPositions() {
     indexer.setEncoderPositionFromAbsolute();
     // TODO: if we have something similar for the turret, that goes here
+  }
+
+  public static void clearSubsystemSetpoints(){
+    indexer.clearSetpoint();
   }
 
   /**
@@ -101,15 +106,15 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    JoystickButton toggleIntake = new JoystickButton(oi.getOperatorController(), 1);
-    JoystickButton runIntakeOut = new JoystickButton(oi.getOperatorController(), 5);
-    JoystickButton runIntakeIn = new JoystickButton(oi.getOperatorController(), 3);
-    JoystickButton toggleShooter = new JoystickButton(oi.getOperatorController(), 6);
+    // JoystickButton toggleIntake = new JoystickButton(oi.getOperatorController(), 1);
+    // JoystickButton runIntakeOut = new JoystickButton(oi.getOperatorController(), 5);
+    // JoystickButton runIntakeIn = new JoystickButton(oi.getOperatorController(), 3);
+    // JoystickButton toggleShooter = new JoystickButton(oi.getOperatorController(), 6);
 
-    toggleIntake.whenPressed(new DeployIntake(!intake.isDeployed(), intake));
-    runIntakeIn.whenHeld(new IntakeBallToIndexer(intake, conveyor, indexer));
-    runIntakeOut.whenHeld(new RunIntake(false, intake));
-    toggleShooter.toggleWhenPressed(new StartShooter(shooter));
+    // toggleIntake.whenPressed(new DeployIntake(!intake.isDeployed(), intake));
+    // runIntakeIn.whenHeld(new IntakeBallToIndexer(intake, conveyor, indexer));
+    // runIntakeOut.whenHeld(new RunIntake(false, intake));
+    // toggleShooter.toggleWhenPressed(new StartShooter(shooter));
   }
 
   /**
@@ -118,13 +123,13 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    // Create a voltage constraint to ensure we don't accelerate too fast
-    return null;
+    return new RunIntake(false, intake);
   }
 
   public static void teleopInit() {
-    driveBase.setTeleopRampRate();
-    driveBase.initDefaultCommand();
+    // driveBase.setTeleopRampRate();
+    // driveBase.initDefaultCommand();
+    zeroSubsystemPositions();
   }
 
   public static void teleopPeriodic() {

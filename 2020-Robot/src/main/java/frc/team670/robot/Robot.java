@@ -84,8 +84,9 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     Logger.consoleLog("Autonomous Init");
+    RobotContainer.zeroSubsystemPositions();
+    RobotContainer.clearSubsystemSetpoints();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    RobotContainer.resetSystemPositions();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       MustangScheduler.getInstance().schedule(m_autonomousCommand);
