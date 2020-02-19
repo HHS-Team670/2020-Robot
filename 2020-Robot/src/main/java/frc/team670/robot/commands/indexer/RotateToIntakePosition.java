@@ -10,6 +10,9 @@ import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
+/**
+ * Rotates the indexer in preparation to intake and sets the indexer to intaking mode.
+ */
 public class RotateToIntakePosition extends CommandBase implements MustangCommand {
 
     private Indexer indexer;

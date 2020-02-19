@@ -9,6 +9,9 @@ import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
+/**
+ * Rotates the indexer by 1 chamber over
+ */
 public class RotateToNextChamber extends CommandBase implements MustangCommand {
 
     private Indexer indexer;

@@ -3,7 +3,6 @@ package frc.team670.robot.commands.indexer;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.Conveyor;
@@ -13,10 +12,7 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 /**
- * One option for unjamming the indexer is to "wiggle" it back and forth until
- * unjammed, which is implemented here. 
- * TODO: Actually experiment with the
- * indexer, see what unjams it, and change this if needed -- there's probably other ways
+ * Stops the intake and conveyor, and takes the indexer out of intaking mode
  */
 public class StopIntaking extends InstantCommand implements MustangCommand {
 
