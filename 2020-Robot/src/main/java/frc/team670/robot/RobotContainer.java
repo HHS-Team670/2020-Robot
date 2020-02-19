@@ -29,6 +29,7 @@ import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.commands.indexer.RotateToNextChamber;
 import frc.team670.robot.commands.indexer.SendOneBallToShoot;
 import frc.team670.robot.commands.indexer.StopIntaking;
+import frc.team670.robot.commands.indexer.TestIndexerEncoder;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
@@ -123,7 +124,7 @@ public class RobotContainer {
     runIntakeIn.whenReleased(new StopIntaking(intake, conveyor, indexer));
     runIntakeOut.toggleWhenPressed(new RunIntake(false, intake));
     toggleShooter.toggleWhenPressed(new StartShooter(shooter));
-    sendOneBall.whenHeld(new RotateIndexerToUptakeThenShoot(indexer, shooter));
+    sendOneBall.whenHeld(new RotateToNextChamber(indexer));
   }
 
   /**
@@ -133,13 +134,14 @@ public class RobotContainer {
    */
   public MustangCommand getAutonomousCommand() {
     return new RunIntake(false, intake);
+    // return new TestIndexerEncoder(indexer);
   }
 
   public static void teleopInit() {
     zeroSubsystemPositions();
     driveBase.setTeleopRampRate();
     driveBase.initDefaultCommand();
-    turret.initDefaultCommand();
+    // turret.initDefaultCommand();
   }
 
   public static void teleopPeriodic() {
