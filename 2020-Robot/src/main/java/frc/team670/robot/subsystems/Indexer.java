@@ -334,28 +334,24 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     }
 
     /**
-     * Turns to a target angle the most efficient way
+     * Turns to a target angle the most efficient way.
      */
     @Override
     public void setSystemTargetAngleInDegrees(double angleDegrees) {
         deployPusher(false);
         double currentAngle = getCurrentAngleInDegrees();
-        double diff = Math.abs(angleDegrees - currentAngle);
-        // Checks for if it would be more efficient for the indexer to switch direction
-        // If we're more than half a rotation ahead of our target,
-        // it makes sense to change the direction and turn less.
-        Logger.consoleLog("Current angle %s", currentAngle);
-        if ((diff % 360) > 180) {
-            // Switch directions
-            Logger.consoleLog("Switch directions; System target angle is %s", angleDegrees+360);
-            Logger.consoleLog("Setpoint from angle is %s", getMotorRotationsFromAngle(angleDegrees + 360));
-            setSystemMotionTarget(getMotorRotationsFromAngle(angleDegrees + 360));
-        } else {
-            // Continue turning in the same direction
-            Logger.consoleLog("System target angle is %s", angleDegrees);
-            Logger.consoleLog("Setpoint from angle is %s", getMotorRotationsFromAngle(angleDegrees));
-            setSystemMotionTarget(getMotorRotationsFromAngle(angleDegrees));
-        }
+        // We find the difference between where we currently are, and where we want to be
+        double diff = Math.abs(angleDegrees - currentAngle) % 360;
+        // If the difference is above 180 degrees, it's better to turn in the opposite direction.
+        // Otherwise, we continue turning in the same direction.
+        double finDiff = diff > 180 ? 360 - diff : diff;
+        Logger.consoleLog("Wow, Current angle %s", currentAngle);
+        Logger.consoleLog("Wow, the diff is: %s", finDiff);
+        Logger.consoleLog("Wow, System target angle is %s", currentAngle + finDiff);
+        Logger.consoleLog("Wow, Setpoint from angle is %s", getMotorRotationsFromAngle(currentAngle + finDiff));
+        // Setpoints are absolute, so we want to move from where we currently are plus the difference.
+        setSystemMotionTarget(getMotorRotationsFromAngle(currentAngle + finDiff));
+        Logger.consoleLog("Wow, moved to %s", getCurrentAngleInDegrees());
     }
 
     private int getTopChamber() {
@@ -523,7 +519,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         // find how many rotations the motor has moved compared to the number needed for
         // 1 full rotation
         // then finds what angle that is
-        return ((getUnadjustedPosition() % this.ROTATOR_GEAR_RATIO) / this.ROTATOR_GEAR_RATIO) * 360;
+        double degrees = ((getUnadjustedPosition() % this.ROTATOR_GEAR_RATIO) / this.ROTATOR_GEAR_RATIO) * 360;
+        return degrees;
     }
 
     public boolean isJammed() {
