@@ -72,6 +72,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    RobotContainer.disabled();
   }
 
   @Override
@@ -86,6 +87,7 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     Logger.consoleLog("Autonomous Init");
     RobotContainer.zeroSubsystemPositions();
+    RobotContainer.autonomousInit();
     // RobotContainer.clearSubsystemSetpoints();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     // schedule the autonomous command (example)

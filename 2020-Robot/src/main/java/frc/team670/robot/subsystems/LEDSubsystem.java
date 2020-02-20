@@ -30,6 +30,7 @@ public class LEDSubsystem extends SubsystemBase {
     public void periodic() {
         // TODO: set different animations/colors based on conditions
         led.setData(ledBuffer);
+        rainbow();
 
     }
 

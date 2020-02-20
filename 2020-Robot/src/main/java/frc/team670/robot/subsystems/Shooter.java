@@ -40,8 +40,8 @@ public class Shooter extends MustangSubsystemBase {
   private CANEncoder stage2_mainEncoder;
   private CANPIDController stage2_mainPIDController;
 
-  private static double STAGE_1_SPEED = 0.3; // Change this later
-  private double STAGE_2_SPEED = 2750; // Will change later if we adjust by distance
+  private static double STAGE_1_SPEED = 0.65; // Change this later
+  private double STAGE_2_SPEED = 2800; // Will change later if we adjust by distance
   private static double STAGE_2_DEFAULT_SPEED;
 
   private static double MAX_SHOT_DISTANCE_METERS = 8.382; // = 27.5 feet, this is a guess
@@ -87,6 +87,7 @@ public class Shooter extends MustangSubsystemBase {
     SmartDashboard.putNumber("Stage 2 FF", 0.0);
     SmartDashboard.putNumber("Stage 2 P", 0.0);
     SmartDashboard.putNumber("Stage 2 Ramp Rate", 0.0);
+    SmartDashboard.putNumber("Stage 2 speed", 0.0);
 
     // Stage 1 Victor should be inverted
     stage1 = VictorSPXFactory.buildFactoryVictorSPX(RobotMap.SHOOTER_STAGE_1, true);
@@ -112,6 +113,7 @@ public class Shooter extends MustangSubsystemBase {
 
   public void run() {
     stage1.set(ControlMode.PercentOutput, STAGE_1_SPEED);
+    SmartDashboard.putNumber("Stage 2 speed", stage2_mainController.getEncoder().getVelocity());
     stage2_mainPIDController.setReference(STAGE_2_SPEED, ControlType.kVelocity);
   }
 
@@ -154,13 +156,8 @@ public class Shooter extends MustangSubsystemBase {
   public void test() {
 
     stage1.set(ControlMode.PercentOutput, SmartDashboard.getNumber("Stage 1 speed", 0.0));
+    SmartDashboard.putNumber("Stage 2 speed", stage2_mainController.getEncoder().getVelocity());
 
-    stage2_mainPIDController.setReference(SmartDashboard.getNumber("Stage 2 Velocity Setpoint", 0.0),
-        ControlType.kVelocity);
-
-    setRampRate(true);
-
-    SmartDashboard.putNumber("Stage 2 RPM", stage2_mainController.getEncoder().getVelocity());
   }
 
   @Override
