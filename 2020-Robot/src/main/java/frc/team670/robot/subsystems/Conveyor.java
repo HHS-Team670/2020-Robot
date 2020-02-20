@@ -18,7 +18,7 @@ public class Conveyor extends MustangSubsystemBase{
     private final double v_I = 0.0;
     private final double v_D = 0.0;
 
-    private double CONVEYOR_SPEED = 0.65; // % output from testing 2/16.
+    private double CONVEYOR_SPEED = 0.75; // % output from testing 2/16.
 
     public Conveyor(){
         // Conveyor motor should not be inverted

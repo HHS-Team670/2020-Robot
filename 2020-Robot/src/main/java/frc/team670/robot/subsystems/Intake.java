@@ -19,7 +19,7 @@ public class Intake extends MustangSubsystemBase {
     private SparkMAXLite roller;
     private Compressor compressor;
     private Solenoid deployer;
-    private boolean isDeployed = true; //TODO: true for testing, change this
+    private boolean isDeployed = false; //TODO: true for testing, change this
 
     private double INTAKE_ROLLER_SPEED = 0.6; // From testing 2/16
     private double INTAKE_PEAK_CURRENT = 19; // TODO: figure this out

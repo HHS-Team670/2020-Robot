@@ -50,10 +50,15 @@ public class RobotMap {
   public static final int PCMODULE = 2; // PCM CAN ID
 
   // Solenoids. Using 24V
-  public static final int VISION_LED_PCM = 0;
-  public static final int CLIMBER_LEFT_SOLENOID = 1;
-  public static final int CLIMBER_RIGHT_SOLENOID = 2;
-  public static final int INTAKE_DEPLOYER = 3; 
+
+  public static final int INTAKE_DEPLOYER = 0; 
+  public static final int BALL_INTO_INDEXER_PUSHER = 1;
+  public static final int CLIMBER_RATCHET_DEPLOYER = 2;
+  public static final int VISION_LED_PCM = 3;
+  
+  // (for climber pulls. May change based on climber?)
+  public static final int CLIMBER_LEFT_SOLENOID = 4;
+  public static final int CLIMBER_RIGHT_SOLENOID = 5;
 
 
   // SENSORS
