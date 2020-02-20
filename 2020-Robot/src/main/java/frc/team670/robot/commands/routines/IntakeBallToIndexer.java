@@ -33,7 +33,7 @@ public class IntakeBallToIndexer extends SequentialCommandGroup implements Musta
                 new RotateToIntakePosition(indexer),
                 new ParallelCommandGroup(
                     new RunIntake(false, intake), 
-                    new RunConveyor(conveyor)
+                    new RunConveyor(false, conveyor)
                 )
         );
     }

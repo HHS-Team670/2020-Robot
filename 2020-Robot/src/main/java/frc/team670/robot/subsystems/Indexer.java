@@ -441,7 +441,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         // We shouldn't be detecting "intaked" if the chamber is already full before,
         // or if we just saw an arm move by
         if (!chamberStates[getBottomChamber()] && hasReachedTargetPosition()) {
-            conveyor.run();
+            conveyor.run(false);
             if (range >= TOF_BALL_IN_MIN_RANGE) {
                 if (range <= TOF_BALL_IN_MAX_RANGE) {
                     return IntakingState.IN;

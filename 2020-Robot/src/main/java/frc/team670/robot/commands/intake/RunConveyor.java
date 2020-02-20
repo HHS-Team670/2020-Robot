@@ -13,9 +13,11 @@ public class RunConveyor extends CommandBase implements MustangCommand {
 
     private Conveyor conveyor;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
+    private boolean reversed;
 
-    public RunConveyor(Conveyor conveyor) {
+    public RunConveyor(boolean reversed, Conveyor conveyor) {
         this.conveyor = conveyor;
+        this.reversed = reversed;
         addRequirements(conveyor);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(conveyor, HealthState.GREEN);
@@ -23,7 +25,7 @@ public class RunConveyor extends CommandBase implements MustangCommand {
 
     @Override
     public void execute() {
-        conveyor.run();
+			conveyor.run(reversed);
     }
 
     @Override

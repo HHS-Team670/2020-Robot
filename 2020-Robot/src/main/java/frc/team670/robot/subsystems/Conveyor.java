@@ -13,10 +13,10 @@ import frc.team670.robot.constants.RobotMap;
 public class Conveyor extends MustangSubsystemBase{
 
     private SparkMAXLite roller;
-    private CANPIDController roller_controller;
-    private final double v_P = 0.01;
-    private final double v_I = 0.0;
-    private final double v_D = 0.0;
+    // private CANPIDController roller_controller;
+    // private final double v_P = 0.01;
+    // private final double v_I = 0.0;
+    // private final double v_D = 0.0;
 
     private double CONVEYOR_SPEED = 0.75; // % output from testing 2/16.
 
@@ -31,9 +31,16 @@ public class Conveyor extends MustangSubsystemBase{
         // roller_controller.setD(v_D);
     }
 
-    public void run(){
-        // roller_controller.setReference(CONVEYOR_SPEED, ControlType.kVelocity);
-        roller.set(CONVEYOR_SPEED);
+    /**
+     * 
+     * @param reversed True to run the conveyor in reverse
+     */
+    public void run(boolean reversed){
+        if (reversed) {
+            roller.set(CONVEYOR_SPEED * -1);
+        } else {
+            roller.set(CONVEYOR_SPEED);
+        }
     }
 
     public void stop(){
