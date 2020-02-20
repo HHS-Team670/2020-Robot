@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.sensors.TimeOfFlightSensor;
@@ -21,17 +22,23 @@ import frc.team670.robot.utils.motorcontroller.TalonSRXFactory;
  */
 public class Indexer extends SparkMaxRotatingSubsystem {
 
+    private Conveyor conveyor;
+
     private TalonSRX updraw;
 
     private TimeOfFlightSensor indexerIntakeSensor;
     private DutyCycleEncoder revolverAbsoluteEncoder;
+    private Solenoid conveyorToIndexerPusher;
+
+    private boolean pusherDeployed;
 
     /*
      * Ranges (in mm) from the TOF sensor for which we know the ball was fully
      * intaked into the bottom chamber.
      */
     private int TOF_BALL_IN_MIN_RANGE = 20; // from testing 2/16
-    private int TOF_BALL_IN_MAX_RANGE = 40; // from testing 2/16
+    private int TOF_BALL_IN_MAX_RANGE = 50; // from testing 2/16
+    private int TOF_DISTANCE_FOR_PUSH = 110; // from testing 2/19
 
     private boolean[] chamberStates;
     private double updrawCurrent;
@@ -41,12 +48,12 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     private boolean unjamMode = false;
     private boolean indexerIsJammed = false;
 
-    private static final double INDEXER_PEAK_CURRENT = 20; //TODO: find this
+    private static final double INDEXER_PEAK_CURRENT = 20; // TODO: find this
 
     private boolean ballIsUpdrawing;
     private boolean isIntaking = false;
 
-    private static final double ABSOLUTE_ENCODER_POSITION_AT_REVOLVER_ZERO = 0.6799; //From 2/17
+    private static final double ABSOLUTE_ENCODER_POSITION_AT_REVOLVER_ZERO = 0.6799; // From 2/17
 
     // For testing purposes
     private double UPDRAW_SPEED = 0.3;
@@ -64,6 +71,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     // Bottom (intake position) is 0, for chamber 0.
     private static final int CHAMBER_0_AT_TOP_POS_IN_DEGREES = 180; // Shooting position for chamber 0
     private static final int CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES = 0; // Intaking position for chamber 0
+
+    private enum IntakingState {
+        IN, MAYBE_IN, NOT_IN;
+    }
 
     /**
      * PID and SmartMotion constants for the indexer rotator go here.
@@ -94,8 +105,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             return 0;
         }
 
-        public double getFF() {  // Good enough for 2/16
-            return 0.0001;
+        public double getFF() { // Good enough for 2/16
+            return 0.0001 * 3; // Gearing was adjusted)
         }
 
         public double getIz() {
@@ -145,10 +156,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
 
         public double getRotatorGearRatio() {
-            return 150; //gearing 100 * 1.5 from belt. Changed to this from 35 gearing on 2/18.
+            return 150; // gearing 100 * 1.5 from belt. Changed to this from 35 gearing on 2/18.
         }
-        
-        public IdleMode setRotatorIdleMode(){
+
+        public IdleMode setRotatorIdleMode() {
             return IdleMode.kBrake;
         }
 
@@ -156,12 +167,12 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     public static final Config INDEXER_CONFIG = new Config();
 
-    public Indexer() {
+    public Indexer(Conveyor conveyor) {
         super(INDEXER_CONFIG);
 
+        this.conveyor = conveyor;
+
         // Updraw should be inverted
-        // this.updraw = new TalonSRX(RobotMap.UPDRAW_SPINNER);
-        // updraw.setInverted(true);
         this.updraw = TalonSRXFactory.buildFactoryTalonSRX(RobotMap.UPDRAW_SPINNER, true);
 
         SmartDashboard.putNumber("Indexer Speed", 0.0);
@@ -172,6 +183,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         this.indexerIntakeSensor = new TimeOfFlightSensor(RobotMap.INDEXER_ToF_SENSOR_PORT);
         this.revolverAbsoluteEncoder = new DutyCycleEncoder(RobotMap.INDEXER_DIO_ENCODER_PORT);
         this.indexerIntakeSensor.start();
+
+        this.conveyorToIndexerPusher = new Solenoid(RobotMap.PCMODULE, RobotMap.BALL_INTO_INDEXER_PUSHER);
+        this.pusherDeployed = false;
+
         SmartDashboard.putNumber("ToF Sensor", indexerIntakeSensor.getDistance());
 
         chamberStates = new boolean[5];
@@ -183,7 +198,22 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         updraw.enableCurrentLimit(true);
 
         updraw.configVoltageCompSaturation(12); // "full output" will now scale to 12 Volts
-        updraw.enableVoltageCompensation(true); 
+        updraw.enableVoltageCompensation(true);
+
+        reset();
+    }
+
+    public void reset(){
+        this.pusherDeployed = conveyorToIndexerPusher.get();
+        this.isIntaking = false;
+    }
+
+    public void deployPusher(boolean toPush) {
+        this.pusherDeployed = toPush;
+        this.conveyorToIndexerPusher.set(pusherDeployed);
+        if (toPush){
+            conveyor.stop();
+        }
     }
 
     public int totalNumOfBalls() {
@@ -201,19 +231,36 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * sensor
      */
     public boolean intakeBall() {
-        if (isIntaking && ballIn()) {
-            chamberStates[getBottomChamber()] = true;
-            indexerIntakeSensor.stop();
-            return true;
+        if (isIntaking){
+            IntakingState intakingState = ballIn();
+            if (intakingState == IntakingState.MAYBE_IN){
+                deployPusher(true);
+            }
+            else if (intakingState == IntakingState.IN){
+                chamberStates[getBottomChamber()] = true;
+                Logger.consoleLog("Intaking, ToF was %s", indexerIntakeSensor.getDistance());
+                Logger.consoleLog("Intaking bottom chamber was %s", getBottomChamber());
+        Logger.consoleLog("Intaking, chamber 0 state: %s 1 state: %s 2 state: %s 3 state: %s 4 state: %s", 
+        chamberStates[0], chamberStates[1], chamberStates[2], chamberStates[3], chamberStates[4]);
+                return true;
+            }
         }
+        deployPusher(false);
         return false;
     }
 
     /**
-     * Sets the indexer to move to the next chamber. 
+     * Sets the indexer to move to the next chamber.
      */
-    public void rotateToNextChamber(){
+    public void rotateToNextChamber() {
+        Logger.consoleLog("Setpoint: %s", ((getBottomChamber() + 1) % 5) * INDEXER_DEGREES_PER_CHAMBER);
         setSystemTargetAngleInDegrees(((getBottomChamber() + 1) % 5) * INDEXER_DEGREES_PER_CHAMBER);
+    }
+
+    private void rotateToNextEmptyChamber() {
+        double setpoint = INDEXER_DEGREES_PER_CHAMBER * getIntakeChamber() + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES;
+        Logger.consoleLog("Intaking, setpoint was %s", setpoint);
+        setSystemTargetAngleInDegrees(setpoint);
     }
 
     /**
@@ -222,7 +269,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      */
     public void prepareToIntake() {
         isIntaking = true;
-        setSystemTargetAngleInDegrees(INDEXER_DEGREES_PER_CHAMBER * getIntakeChamber() + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES);
+        rotateToNextEmptyChamber();
         indexerIntakeSensor.start();
     }
 
@@ -231,11 +278,11 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * position
      */
     public void shoot() {
-        setSystemTargetAngleInDegrees(getShootChamber() * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_TOP_POS_IN_DEGREES);
-}
+        setSystemTargetAngleInDegrees(
+                getShootChamber() * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_TOP_POS_IN_DEGREES);
+    }
 
     public boolean hasReachedTargetPosition() {
-        Logger.consoleLog("Setpoint: %s, CurentPosition: %s", setpoint, rotator_encoder.getPosition());
         return (MathUtils.doublesEqual(rotator_encoder.getPosition(), setpoint, ALLOWED_ERR));
     }
 
@@ -267,8 +314,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * -- for holding the ball before the updraw is ready.
      */
     public void rotateToLoadShoot() {
-        setSystemTargetAngleInDegrees((getShootChamber() * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_TOP_POS_IN_DEGREES)
-                - INDEXER_DEGREES_PER_CHAMBER / 2);
+        setSystemTargetAngleInDegrees(
+                (getShootChamber() * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_TOP_POS_IN_DEGREES)
+                        - INDEXER_DEGREES_PER_CHAMBER / 2);
     }
 
     /**
@@ -276,16 +324,22 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      */
     @Override
     public void setSystemTargetAngleInDegrees(double angleDegrees) {
+        deployPusher(false);
         double currentAngle = getCurrentAngleInDegrees();
         double diff = Math.abs(angleDegrees - currentAngle);
         // Checks for if it would be more efficient for the indexer to switch direction
         // If we're more than half a rotation ahead of our target,
-        // it makes sense to change the direction and turn less. 
-        if (diff > 180 ) {
+        // it makes sense to change the direction and turn less.
+        Logger.consoleLog("Current angle %s", currentAngle);
+        if ((diff % 360) > 180) {
             // Switch directions
+            Logger.consoleLog("Switch directions; System target angle is %s", angleDegrees+360);
+            Logger.consoleLog("Setpoint from angle is %s", getMotorRotationsFromAngle(angleDegrees + 360));
             setSystemMotionTarget(getMotorRotationsFromAngle(angleDegrees + 360));
         } else {
             // Continue turning in the same direction
+            Logger.consoleLog("System target angle is %s", angleDegrees);
+            Logger.consoleLog("Setpoint from angle is %s", getMotorRotationsFromAngle(angleDegrees));
             setSystemMotionTarget(getMotorRotationsFromAngle(angleDegrees));
         }
     }
@@ -301,25 +355,13 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         // 0.8-1.0: 3
         // 0.0 - 0.2: 2
         return (7 - (int) (pos / 0.2)) % 5;
-        
+
         /*
-        What the expression above does is equivalent to all these if statements below:
-        if (0.2 <= pos && 0.4 > pos){
-            return 1;
-        }
-        if (0.4 <= pos && 0.6 > pos){
-            return 0;
-        }
-        if (0.6 <= pos && 0.8 > pos){
-            return 4;
-        }
-        if (0.8 <= pos && 1.0 > pos){
-            return 3;
-        }
-        if (0.0 <= pos && 0.2 > pos){
-            return 2;
-        }
-        */
+         * What the expression above does is equivalent to all these if statements
+         * below: if (0.2 <= pos && 0.4 > pos){ return 1; } if (0.4 <= pos && 0.6 >
+         * pos){ return 0; } if (0.6 <= pos && 0.8 > pos){ return 4; } if (0.8 <= pos &&
+         * 1.0 > pos){ return 3; } if (0.0 <= pos && 0.2 > pos){ return 2; }
+         */
     }
 
     private int getBottomChamber() {
@@ -334,25 +376,13 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         // 0.5-0.7: 3
         // 0.7-0.9: 4
         return (int) (((pos + 0.1) % 1.0) / 0.2);
-        
+
         /*
-        What the expression above does is equivalent to all these if statements below:
-        if (0.9 <= pos || 0.1 > pos){
-            return 0;
-        }
-        if (0.1 <= pos && 0.3 > pos){
-            return 1;
-        }
-        if (0.3 <= pos && 0.5 > pos){
-            return 2;
-        }
-        if (0.5 <= pos && 0.7 > pos){
-            return 3;
-        }
-        if (0.7 <= pos && 0.9 > pos){
-            return 4;
-        }
-        */
+         * What the expression above does is equivalent to all these if statements
+         * below: if (0.9 <= pos || 0.1 > pos){ return 0; } if (0.1 <= pos && 0.3 >
+         * pos){ return 1; } if (0.3 <= pos && 0.5 > pos){ return 2; } if (0.5 <= pos &&
+         * 0.7 > pos){ return 3; } if (0.7 <= pos && 0.9 > pos){ return 4; }
+         */
     }
 
     // Designed by JOSHIE SANGYALSWEIO
@@ -392,29 +422,40 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * @return whether a ball has been fully intaked (i.e. is all the way in the
      *         bottom chamber)
      */
-    public boolean ballIn() {
+    public IntakingState ballIn() {
         int range = indexerIntakeSensor.getDistance();
-        if (range >= TOF_BALL_IN_MIN_RANGE && range <= TOF_BALL_IN_MAX_RANGE) {
-            return true;
+        // We shouldn't be detecting "intaked" if the chamber is already full before,
+        // or if we just saw an arm move by
+        if (!chamberStates[getBottomChamber()] && hasReachedTargetPosition()) {
+            conveyor.run();
+            if (range >= TOF_BALL_IN_MIN_RANGE) {
+                if (range <= TOF_BALL_IN_MAX_RANGE) {
+                    return IntakingState.IN;
+                }
+                if (range <= TOF_DISTANCE_FOR_PUSH) {
+                    return IntakingState.MAYBE_IN;
+                }
+            }
         }
-        return false;
+        return IntakingState.NOT_IN;
     }
 
     public double getSpeed() {
         return rotator.get();
     }
 
-    public double getAbsoluteEncoderRotations(){
+    public double getAbsoluteEncoderRotations() {
         return ((revolverAbsoluteEncoder.get() + 1.0) % 1.0);
     }
 
     /**
-     * Sets the rotator encoder's reference position to the constant 
-     * obtained from the absolute encoder corresponding to that position.
+     * Sets the rotator encoder's reference position to the constant obtained from
+     * the absolute encoder corresponding to that position.
      */
-    public void setEncoderPositionFromAbsolute(){
+    public void setEncoderPositionFromAbsolute() {
         clearSetpoint();
-        rotator_encoder.setPosition((getAbsoluteEncoderRotations() - ABSOLUTE_ENCODER_POSITION_AT_REVOLVER_ZERO) * this.ROTATOR_GEAR_RATIO);
+        rotator_encoder.setPosition(
+                (getAbsoluteEncoderRotations() - ABSOLUTE_ENCODER_POSITION_AT_REVOLVER_ZERO) * this.ROTATOR_GEAR_RATIO);
         Logger.consoleLog("Encoder position set: %s", rotator_encoder.getPosition());
     }
 
@@ -433,7 +474,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
         SmartDashboard.putNumber("Indexer current", rotator.getOutputCurrent());
 
-        rotator.set(SmartDashboard.getNumber("Indexer Speed", 0.0));
+        // rotator.set(SmartDashboard.getNumber("Indexer Speed", 0.0));
 
         SmartDashboard.putNumber("Rotator velocity", rotator.getEncoder().getVelocity());
 
@@ -465,20 +506,21 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      */
     @Override
     public double getCurrentAngleInDegrees() {
-        // find how many rotations the motor has moved compared to the number needed for 1 full rotation
+        // find how many rotations the motor has moved compared to the number needed for
+        // 1 full rotation
         // then finds what angle that is
         return ((getUnadjustedPosition() % this.ROTATOR_GEAR_RATIO) / this.ROTATOR_GEAR_RATIO) * 360;
     }
 
     public boolean isJammed() {
         double indexerCurrent = rotator.getOutputCurrent();
-        if (indexerCurrent > 0.2){
+        if (indexerCurrent > 0.2) {
             if (indexerCurrent >= INDEXER_PEAK_CURRENT) {
                 exceededCurrentLimitCount++;
             } else {
                 exceededCurrentLimitCount = 0;
             }
-            if (exceededCurrentLimitCount >= 4){ // 4 consecutive readings higher than peak
+            if (exceededCurrentLimitCount >= 4) { // 4 consecutive readings higher than peak
                 return true;
             }
         }
@@ -492,12 +534,13 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         double updraw_currentChange = updrawCurrent - updrawPreviousCurrent;
         double posWhenJammed = 0;
         // If we're trying to move somewhere and it's jammed, we try unjamming it.
-        // Checking both because current readings are really unreliable when not trying to move.
-		if (!hasReachedTargetPosition() && isJammed()) {
+        // Checking both because current readings are really unreliable when not trying
+        // to move.
+        if (!hasReachedTargetPosition() && isJammed()) {
             unjamMode = true;
             posWhenJammed = getCurrentAngleInDegrees();
             if (setpoint - posWhenJammed > 0) {
-            // TODO find how much we actually want to move it: is half a chamber too much?
+                // TODO find how much we actually want to move it: is half a chamber too much?
                 setTemporaryMotionTarget(getMotorRotationsFromAngle(posWhenJammed - INDEXER_DEGREES_PER_CHAMBER / 2));
             } else {
                 setTemporaryMotionTarget(getMotorRotationsFromAngle(posWhenJammed + INDEXER_DEGREES_PER_CHAMBER / 2));
@@ -510,7 +553,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
         // Use current to check if a ball has successfully left the indexer through the
         // updraw. If so, marks the top chamber as empty
-        if (updraw_currentChange > UPDRAW_SHOOT_CURRENT_CHANGE_THRESHOLD){
+        if (updraw_currentChange > UPDRAW_SHOOT_CURRENT_CHANGE_THRESHOLD) {
             ballIsUpdrawing = true;
         }
         if (ballIsUpdrawing && updraw_currentChange < UPDRAW_SHOOT_COMPLETED_CURRENT_CHANGE) {
@@ -518,14 +561,15 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             chamberStates[getTopChamber()] = false;
         }
 
-        if(isIntaking && intakeBall() && totalNumOfBalls() < 5){
+        if (isIntaking && intakeBall() && totalNumOfBalls() < 5) {
             rotateToNextChamber();
         }
     }
 
-    public void stopIntaking(){
+    public void stopIntaking() {
         isIntaking = false;
         indexerIntakeSensor.stop();
+        deployPusher(true);
     }
 
     public boolean isShootingChamberEmpty() {

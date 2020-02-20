@@ -145,6 +145,7 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
      */
     protected void setSystemMotionTarget(double setpoint) {
         rotator_controller.setReference(setpoint, ControlType.kSmartMotion);
+        Logger.consoleLog("System motion target setpoint is %s", setpoint);
         this.setpoint = setpoint;
     }
 
