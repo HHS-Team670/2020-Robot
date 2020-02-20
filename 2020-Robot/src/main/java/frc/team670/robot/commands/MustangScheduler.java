@@ -10,6 +10,7 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.utils.Logger;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -48,14 +49,24 @@ public class MustangScheduler {
         scheduler.run();
     }
 
+    /**
+     * Cancel the given MustangCommands. 
+     */
     public void cancel(MustangCommand... commands) {
-        scheduler.cancel((CommandBase[]) commands);
+        // We can't directly cast an array of MustangCommands to an array of Commands, you
+        // can only do that for subtype to supertype array. 
+        // So each MustangCommand will be cast to a Command and added to an array of Commands.
+        Command[] commandsToCancel = Arrays.copyOf(commands, commands.length, Command[].class);
+        scheduler.cancel((Command[]) commandsToCancel);
     }
 
     public Command getCurrentlyScheduled() {
         return this.currentCommand;
     }
 
+    /**
+     * Cancel all currently scheduled commands.
+     */
     public void cancelAll() {
         scheduler.cancelAll();
     }
