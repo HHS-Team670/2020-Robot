@@ -203,6 +203,20 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         reset();
     }
 
+    /**
+     * At the beginning of autonomous, we preload the indexer with 3 balls, 
+     * in the green-labeled chamber (#0) and the chambers on either side of it (#1 and #4).
+     * This sets the states of those chambers so we know that those are filled.
+     */
+    public void setChamberStatesForMatchInit(){
+        chamberStates[0] = true;
+        chamberStates[1] = true;
+        chamberStates[4] = true;
+    }
+
+    /**
+     * Sets properties to either default or whatever was last recorded, so if we restart/are interrupted we can start back
+     */
     public void reset(){
         this.pusherDeployed = conveyorToIndexerPusher.get();
         this.isIntaking = false;

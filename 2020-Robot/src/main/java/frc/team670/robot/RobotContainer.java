@@ -147,6 +147,8 @@ public class RobotContainer {
 
   public static void autonomousInit(){
     indexer.reset();
+    // 3 balls, in set positions, preloaded for auto
+    indexer.setChamberStatesForMatchInit();
   }
 
   public static void teleopInit() {
