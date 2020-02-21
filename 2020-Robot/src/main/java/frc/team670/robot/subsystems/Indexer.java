@@ -254,8 +254,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
                 chamberStates[getBottomChamber()] = true;
                 Logger.consoleLog("Intaking, ToF was %s", indexerIntakeSensor.getDistance());
                 Logger.consoleLog("Intaking bottom chamber was %s", getBottomChamber());
-        Logger.consoleLog("Intaking, chamber 0 state: %s 1 state: %s 2 state: %s 3 state: %s 4 state: %s", 
-        chamberStates[0], chamberStates[1], chamberStates[2], chamberStates[3], chamberStates[4]);
+                Logger.consoleLog("Intaking, chamber 0 state: %s 1 state: %s 2 state: %s 3 state: %s 4 state: %s", 
+                chamberStates[0], chamberStates[1], chamberStates[2], chamberStates[3], chamberStates[4]);
+                deployPusher(false);        
                 return true;
             }
         }
