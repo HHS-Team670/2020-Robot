@@ -3,9 +3,9 @@ package frc.team670.robot.commands.auton;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.team670.paths.Path;
 import frc.team670.paths.center.CenterToGenerator2BallSidePath;
 import frc.team670.paths.left.LeftToGenerator2BallSidePath;
 import frc.team670.paths.right.RightToGenerator2BallSidePath;
@@ -34,7 +34,7 @@ import frc.team670.robot.subsystems.Turret;
  */
 public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommandGroup implements MustangCommand {
 
-        private Trajectory trajectory;
+        private Path trajectory;
         private Map<MustangSubsystemBase, HealthState> healthReqs;
 
         private enum StartPosition{
@@ -44,11 +44,11 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
         public ShootFromBaseLineThenToGenerator2BallSide(StartPosition startPosition, DriveBase driveBase, Intake intake, 
         Conveyor conveyor, Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
                 if (startPosition == StartPosition.LEFT)
-                        trajectory = LeftToGenerator2BallSidePath.generateTrajectory(driveBase);
+                        trajectory = new LeftToGenerator2BallSidePath(driveBase);
                 if (startPosition == StartPosition.CENTER)
-                        trajectory = CenterToGenerator2BallSidePath.generateTrajectory(driveBase);
+                        trajectory = new CenterToGenerator2BallSidePath(driveBase);
                 if (startPosition == StartPosition.RIGHT)
-                        trajectory = RightToGenerator2BallSidePath.generateTrajectory(driveBase);
+                        trajectory = new RightToGenerator2BallSidePath(driveBase);
                 healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
                 healthReqs.put(driveBase, HealthState.GREEN);
                 healthReqs.put(shooter, HealthState.GREEN);

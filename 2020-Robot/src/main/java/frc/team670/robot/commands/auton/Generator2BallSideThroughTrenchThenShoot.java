@@ -10,10 +10,10 @@ package frc.team670.robot.commands.auton;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.Generator3BallMidToGenerator2BallSidePath;
+import frc.team670.paths.Path;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.shooter.Shoot;
@@ -37,13 +37,13 @@ import frc.team670.robot.subsystems.Turret;
  */
 public class Generator2BallSideThroughTrenchThenShoot extends SequentialCommandGroup implements MustangCommand {
 
-  private Trajectory trajectory;
+  private Path trajectory;
   private Map<MustangSubsystemBase, HealthState> healthReqs;
 
   public Generator2BallSideThroughTrenchThenShoot(DriveBase driveBase, Intake intake, Conveyor conveyor,
       Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
 
-    trajectory = Generator3BallMidToGenerator2BallSidePath.generateTrajectory();
+    trajectory = new Generator3BallMidToGenerator2BallSidePath(driveBase);
 
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(driveBase, HealthState.GREEN);

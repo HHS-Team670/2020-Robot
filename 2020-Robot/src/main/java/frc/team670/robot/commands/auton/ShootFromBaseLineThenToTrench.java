@@ -10,9 +10,9 @@ package frc.team670.robot.commands.auton;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.team670.paths.Path;
 import frc.team670.paths.center.CenterToTrenchPath;
 import frc.team670.paths.left.LeftToTrenchPath;
 import frc.team670.paths.right.RightToTrenchPath;
@@ -41,7 +41,7 @@ import frc.team670.robot.subsystems.Turret;
  */
 public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implements MustangCommand {
 
-    private Trajectory trajectory;
+    private Path trajectory;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     private enum StartPosition {
@@ -52,11 +52,11 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
             Conveyor conveyor, Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
 
         if (startPosition == StartPosition.LEFT)
-            trajectory = LeftToTrenchPath.generateTrajectory(driveBase);
+            trajectory = new LeftToTrenchPath(driveBase);
         if (startPosition == StartPosition.CENTER)
-            trajectory = CenterToTrenchPath.generateTrajectory(driveBase);
+            trajectory = new CenterToTrenchPath(driveBase);
         if (startPosition == StartPosition.RIGHT)
-            trajectory = RightToTrenchPath.generateTrajectory(driveBase);
+            trajectory = new RightToTrenchPath(driveBase);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);

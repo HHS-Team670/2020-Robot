@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
-import frc.team670.robot.subsystems.ColorWheelSpinner;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
@@ -42,7 +41,6 @@ import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.climber.Climber;
 import frc.team670.robot.utils.MustangController;
 import frc.team670.robot.subsystems.Intake;
-import frc.team670.robot.subsystems.LEDSubsystem;
 import frc.team670.robot.subsystems.Indexer;
 
 /**
@@ -64,9 +62,7 @@ public class RobotContainer {
   private static Turret turret = new Turret();
   private static Shooter shooter = new Shooter();
   private static Climber climber = new Climber();
-  private static ColorWheelSpinner wheelSpinner = new ColorWheelSpinner();
   public static MustangCoprocessor coprocessor = new MustangCoprocessor();
-  private static LEDSubsystem leds = new LEDSubsystem(RobotMap.LEFT_SIDE_LEDS_PWM, 150);
 
   private static OI oi = new OI(intake, conveyor, indexer, shooter, climber);
 
@@ -165,7 +161,6 @@ public class RobotContainer {
   public static void teleopPeriodic() {
     indexer.test();
     coprocessor.testLEDS();
-    leds.periodic();
     MustangScheduler.getInstance().run();
   }
 

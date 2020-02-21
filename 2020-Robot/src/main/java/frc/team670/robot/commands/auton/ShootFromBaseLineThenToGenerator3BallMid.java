@@ -10,9 +10,9 @@ package frc.team670.robot.commands.auton;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.team670.paths.Path;
 import frc.team670.paths.center.CenterToGenerator3BallMidPath;
 import frc.team670.paths.left.LeftToGenerator3BallMidPath;
 import frc.team670.paths.right.RightToGenerator3BallMidPath;
@@ -41,7 +41,7 @@ import frc.team670.robot.subsystems.Turret;
  */
 public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandGroup implements MustangCommand {
 
-  private Trajectory trajectory;
+  private Path trajectory;
   private Map<MustangSubsystemBase, HealthState> healthReqs;
 
   private enum StartPosition {
@@ -51,11 +51,11 @@ public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandG
   public ShootFromBaseLineThenToGenerator3BallMid(StartPosition startPosition, DriveBase driveBase, Intake intake,
       Conveyor conveyor, Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
     if (startPosition == StartPosition.LEFT)
-      trajectory = LeftToGenerator3BallMidPath.generateTrajectory(driveBase);
+      trajectory = new LeftToGenerator3BallMidPath(driveBase);
     if (startPosition == StartPosition.CENTER)
-      trajectory = CenterToGenerator3BallMidPath.generateTrajectory(driveBase);
+      trajectory = new CenterToGenerator3BallMidPath(driveBase);
     if (startPosition == StartPosition.RIGHT)
-      trajectory = RightToGenerator3BallMidPath.generateTrajectory(driveBase);
+      trajectory = new RightToGenerator3BallMidPath(driveBase);
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(driveBase, HealthState.GREEN);
     healthReqs.put(shooter, HealthState.GREEN);
