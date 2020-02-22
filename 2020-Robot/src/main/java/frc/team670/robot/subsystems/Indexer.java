@@ -106,7 +106,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
 
         public double getFF() { // Good enough for 2/16
-            return 0.0001 * 3; // Gearing was adjusted)
+            return 0.0001 * 3; // Gearing was adjusted
         }
 
         public double getIz() {
@@ -173,7 +173,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         this.conveyor = conveyor;
 
         // Updraw should be inverted
-        this.updraw = TalonSRXFactory.buildFactoryTalonSRX(RobotMap.UPDRAW_SPINNER, true);
+        this.updraw = TalonSRXFactory.buildFactoryTalonSRX(RobotMap.UPDRAW_SPINNER, false);
 
         SmartDashboard.putNumber("Indexer Speed", 0.0);
         SmartDashboard.putNumber("Updraw Speed", 0.0);
@@ -223,6 +223,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     }
 
     public void deployPusher(boolean toPush) {
+        Logger.consoleLog("Deploy: %s", toPush);
         this.pusherDeployed = toPush;
         this.conveyorToIndexerPusher.set(pusherDeployed);
         if (toPush){
@@ -247,15 +248,13 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     public boolean intakeBall() {
         if (isIntaking){
             IntakingState intakingState = ballIn();
+            Logger.consoleLog("Intaking state %s", intakingState);
             if (intakingState == IntakingState.MAYBE_IN){
                 deployPusher(true);
             }
             else if (intakingState == IntakingState.IN){
                 chamberStates[getBottomChamber()] = true;
-                Logger.consoleLog("Intaking, ToF was %s", indexerIntakeSensor.getDistance());
                 Logger.consoleLog("Intaking bottom chamber was %s", getBottomChamber());
-                Logger.consoleLog("Intaking, chamber 0 state: %s 1 state: %s 2 state: %s 3 state: %s 4 state: %s", 
-                chamberStates[0], chamberStates[1], chamberStates[2], chamberStates[3], chamberStates[4]);
                 deployPusher(false);        
                 return true;
             }
@@ -587,5 +586,4 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     public boolean isShootingChamberEmpty() {
         return !chamberStates[getTopChamber()];
     }
-
 }
