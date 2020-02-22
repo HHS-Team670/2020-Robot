@@ -254,7 +254,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             }
             else if (intakingState == IntakingState.IN){
                 chamberStates[getBottomChamber()] = true;
-                Logger.consoleLog("Intaking bottom chamber was %s", getBottomChamber());
                 deployPusher(false);        
                 return true;
             }
@@ -267,13 +266,11 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * Sets the indexer to move to the next chamber.
      */
     public void rotateToNextChamber() {
-        Logger.consoleLog("Setpoint: %s", ((getBottomChamber() + 1) % 5) * INDEXER_DEGREES_PER_CHAMBER);
         setSystemTargetAngleInDegrees(((getBottomChamber() + 1) % 5) * INDEXER_DEGREES_PER_CHAMBER);
     }
 
     private void rotateToNextEmptyChamber() {
         double setpoint = INDEXER_DEGREES_PER_CHAMBER * getIntakeChamber() + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES;
-        Logger.consoleLog("Intaking, setpoint was %s", setpoint);
         setSystemTargetAngleInDegrees(setpoint);
     }
 
@@ -345,13 +342,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         // If the difference is above 180 degrees, it's better to turn in the opposite direction.
         // Otherwise, we continue turning in the same direction.
         double finDiff = diff > 180 ? 360 - diff : diff;
-        Logger.consoleLog("Wow, Current angle %s", currentAngle);
-        Logger.consoleLog("Wow, the diff is: %s", finDiff);
-        Logger.consoleLog("Wow, System target angle is %s", currentAngle + finDiff);
-        Logger.consoleLog("Wow, Setpoint from angle is %s", getMotorRotationsFromAngle(currentAngle + finDiff));
         // Setpoints are absolute, so we want to move from where we currently are plus the difference.
         setSystemMotionTarget(getMotorRotationsFromAngle(currentAngle + finDiff));
-        Logger.consoleLog("Wow, moved to %s", getCurrentAngleInDegrees());
     }
 
     private int getTopChamber() {
@@ -579,7 +571,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     public void stopIntaking() {
         isIntaking = false;
-        indexerIntakeSensor.stop();
         deployPusher(true);
     }
 

@@ -1,7 +1,6 @@
 package frc.team670.robot.subsystems;
 
 import frc.team670.robot.subsystems.MustangSubsystemBase;
-import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.functions.MathUtils;
 import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
@@ -145,7 +144,6 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
      */
     protected void setSystemMotionTarget(double setpoint) {
         rotator_controller.setReference(setpoint, ControlType.kSmartMotion);
-        Logger.consoleLog("System motion target setpoint is %s", setpoint);
         this.setpoint = setpoint;
     }
 
@@ -189,8 +187,7 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
      */
     protected double getMotorRotationsFromAngle(double angle) {
         double rotations = (angle / 360) * this.ROTATOR_GEAR_RATIO
-        + ((int) (getUnadjustedPosition() / this.ROTATOR_GEAR_RATIO)) * this.ROTATOR_GEAR_RATIO;
-        Logger.consoleLog("Angle %s, Encoder position %s, Rotations found %s", angle, getUnadjustedPosition(), rotations);
+                + ((int) (getUnadjustedPosition() / this.ROTATOR_GEAR_RATIO)) * this.ROTATOR_GEAR_RATIO;
         return rotations;
     }
 

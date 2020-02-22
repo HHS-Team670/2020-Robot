@@ -23,7 +23,6 @@ public class RobotMap {
   // Shooter
   public final static int SHOOTER_STAGE_2_MAIN = 11;
   public final static int SHOOTER_STAGE_2_FOLLOWER = 12;
-  public static final int SHOOTER_STAGE_1 = 13;
 
   // Turret
   public static final int TURRET_ROTATOR = 24;
