@@ -16,10 +16,11 @@ public class StopShooter extends InstantCommand implements MustangCommand {
 
     public StopShooter(Shooter shooter){
         this.shooter = shooter;
+        addRequirements(shooter);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(shooter, HealthState.GREEN);
     }
-
+    
     @Override
     public void initialize() {
         shooter.stop();

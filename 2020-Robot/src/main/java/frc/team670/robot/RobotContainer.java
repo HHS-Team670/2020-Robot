@@ -121,12 +121,11 @@ public class RobotContainer {
     JoystickButton sendOneBall = new JoystickButton(oi.getOperatorController(), 2);
     //JoystickButton togglePiston = new JoystickButton(oi.getOperatorController(), 11);
 
-    toggleIntake.toggleWhenPressed(new DeployIntake(!intake.isDeployed(), intake));
+    toggleIntake.whenPressed(new DeployIntake(!intake.isDeployed(), intake));
     runIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
     runIntakeIn.whenReleased(new StopIntaking(intake, conveyor, indexer));
     runIntakeOut.toggleWhenPressed(new RunIntake(false, intake));
-    toggleShooter.whenPressed(new StartShooter(shooter));
-    toggleShooter.whenPressed(new StopShooter(shooter));
+    toggleShooter.toggleWhenPressed(new StartShooter(shooter));
     sendOneBall.whenHeld(new RotateToNextChamber(indexer));
     //togglePiston.toggleWhenPressed(new DeployConveyorPusher(isDeploy, indexer));
   }
@@ -135,6 +134,7 @@ public class RobotContainer {
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
+   * 
    */
   public MustangCommand getAutonomousCommand() {
     return new RunIntake(false, intake);
@@ -159,7 +159,6 @@ public class RobotContainer {
   }
 
   public static void teleopPeriodic() {
-    indexer.test();
     coprocessor.testLEDS();
     MustangScheduler.getInstance().run();
   }

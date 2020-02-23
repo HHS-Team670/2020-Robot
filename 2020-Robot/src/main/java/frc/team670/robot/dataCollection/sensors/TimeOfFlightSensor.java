@@ -34,6 +34,7 @@ public class TimeOfFlightSensor {
         updater = new java.util.Timer();
         isHealthy = true;
         initSensor();
+        start();
     }
 
     private void initSensor() {
@@ -103,11 +104,11 @@ public class TimeOfFlightSensor {
         return isHealthy;
     }
 
-    public void start() {
+    private void start() {
         start(100);
     }
 
-    public void start(int period) {
+    private void start(int period) {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {

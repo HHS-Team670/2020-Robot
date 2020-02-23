@@ -6,6 +6,7 @@ import java.util.Map;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.commands.indexer.SendOneBallToShoot;
 import frc.team670.robot.commands.indexer.StageOneBallToShoot;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.subsystems.Indexer;
@@ -26,10 +27,11 @@ public class RotateIndexerToUptakeThenShoot extends SequentialCommandGroup imple
         // Stage and uptake 1 ball while preparing the shooter
         addCommands(
             new ParallelCommandGroup(
-                new StartShooter(shooter)),
+                new StartShooter(shooter),
                 new StageOneBallToShoot(indexer)
-            );
-
+            ),
+            new SendOneBallToShoot(indexer)
+        );
     }
 
     @Override

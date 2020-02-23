@@ -42,7 +42,7 @@ public class StageOneBallToShoot extends CommandBase implements MustangCommand {
      */
     @Override
     public void execute() {
-        indexer.updraw();
+
     }
 
     /**

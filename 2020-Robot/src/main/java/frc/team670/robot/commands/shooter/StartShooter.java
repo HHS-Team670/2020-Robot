@@ -29,11 +29,7 @@ public class StartShooter extends CommandBase implements MustangCommand {
     @Override
     public void initialize() {
        shooter.setRampRate(true);
-    }
-
-    @Override
-    public void execute(){
-        shooter.run();
+       shooter.run();
     }
 
     @Override
