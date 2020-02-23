@@ -21,7 +21,7 @@ public class Intake extends MustangSubsystemBase {
     private Solenoid deployer;
     private boolean isDeployed = false; //TODO: true for testing, change this
 
-    private double INTAKE_ROLLER_SPEED = 0.6; // From testing 2/16
+    private double INTAKE_ROLLER_SPEED = 1.0; // From testing 2/16
     private double INTAKE_PEAK_CURRENT = 19; // TODO: figure this out
     private int exceededCurrentLimitCount = 0;
 

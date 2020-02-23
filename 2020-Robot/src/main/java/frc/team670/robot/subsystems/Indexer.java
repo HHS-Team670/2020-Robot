@@ -48,7 +48,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     private boolean unjamMode = false;
     private boolean indexerIsJammed = false;
 
-    private static final double INDEXER_PEAK_CURRENT = 20; // TODO: find this
+    private static final double INDEXER_PEAK_CURRENT = 12; // TODO: find this
 
     private boolean ballIsUpdrawing;
     private boolean isIntaking = false;
@@ -179,6 +179,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         SmartDashboard.putNumber("Updraw Speed", 0.0);
         SmartDashboard.putNumber("Updraw current", 0.0);
         SmartDashboard.putNumber("Indexer current", 0.0);
+        SmartDashboard.putNumber("Indexer setpoint", 0);
 
         this.indexerIntakeSensor = new TimeOfFlightSensor(RobotMap.INDEXER_ToF_SENSOR_PORT);
         this.revolverAbsoluteEncoder = new DutyCycleEncoder(RobotMap.INDEXER_DIO_ENCODER_PORT);
@@ -187,7 +188,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         this.pusherDeployed = false;
 
         SmartDashboard.putNumber("ToF Sensor", indexerIntakeSensor.getDistance());
-        SmartDashboard.putBoolean("Indexer is intaking", isIntaking);
 
         chamberStates = new boolean[5];
 
@@ -245,6 +245,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * sensor
      */
     public boolean intakeBall() {
+        SmartDashboard.putNumber("ToF Sensor", indexerIntakeSensor.getDistance());
         if (isIntaking){
             IntakingState intakingState = ballIn();
             if (intakingState == IntakingState.MAYBE_IN){
@@ -467,21 +468,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         return rotator_encoder.getPosition() / ROTATOR_GEAR_RATIO;
     }
 
-    public void test() {
-
-        updraw.set(ControlMode.PercentOutput, SmartDashboard.getNumber("Updraw Speed", 0.0));
-
-        SmartDashboard.putNumber("Updraw current", updraw.getStatorCurrent());
-
-        SmartDashboard.putNumber("Indexer current", rotator.getOutputCurrent());
-
-        // rotator.set(SmartDashboard.getNumber("Indexer Speed", 0.0));
-
-        SmartDashboard.putNumber("Rotator velocity", rotator.getEncoder().getVelocity());
-
-        SmartDashboard.putNumber("ToF Sensor", indexerIntakeSensor.getDistance());
-    }
-
     @Override
     public HealthState checkHealth() {
         // if either the rotator or updraw breaks, we can't use the indexer anymore.
@@ -516,6 +502,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     public boolean isJammed() {
         double indexerCurrent = rotator.getOutputCurrent();
+        SmartDashboard.putNumber("Indexer current", indexerCurrent);
         if (indexerCurrent > 0.2) {
             if (indexerCurrent >= INDEXER_PEAK_CURRENT) {
                 exceededCurrentLimitCount++;
@@ -541,13 +528,12 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         if (!hasReachedTargetPosition() && isJammed()) {
             unjamMode = true;
             posWhenJammed = getCurrentAngleInDegrees();
-            if (setpoint - posWhenJammed > 0) {
-                // TODO find how much we actually want to move it: is half a chamber too much?
-                setTemporaryMotionTarget(getMotorRotationsFromAngle(posWhenJammed - INDEXER_DEGREES_PER_CHAMBER / 2));
+            if (setpoint - getMotorRotationsFromAngle(posWhenJammed) > 0) {
+                setTemporaryMotionTarget(getMotorRotationsFromAngle(posWhenJammed - (INDEXER_DEGREES_PER_CHAMBER / 2)));
             } else {
-                setTemporaryMotionTarget(getMotorRotationsFromAngle(posWhenJammed + INDEXER_DEGREES_PER_CHAMBER / 2));
+                setTemporaryMotionTarget(getMotorRotationsFromAngle(posWhenJammed + (INDEXER_DEGREES_PER_CHAMBER / 2)));
             }
-        } else if (unjamMode) {
+        } else if (unjamMode && MathUtils.doublesEqual(tempSetpoint, rotator_encoder.getPosition(), ALLOWED_ERR)) {
             unjamMode = false;
             resetSmartMotionSettingsToSystem();
             setSystemMotionTarget(setpoint);
@@ -562,8 +548,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             ballIsUpdrawing = false;
             chamberStates[getTopChamber()] = false;
         }
-
-        SmartDashboard.putBoolean("Indexer is intaking", isIntaking);
         if (isIntaking && intakeBall() && totalNumOfBalls() < 5) {
             rotateToNextChamber();
         }

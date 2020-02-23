@@ -24,6 +24,7 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
     protected CANEncoder rotator_encoder;
     protected CANPIDController rotator_controller;
     protected double setpoint;
+    protected double tempSetpoint;
     protected double kP, kI, kD, kFF, kIz, MAX_OUTPUT, MIN_OUTPUT;
     protected double MAX_VEL, MIN_VEL, MAX_ACC, ALLOWED_ERR;
     protected int SMARTMOTION_SLOT;
@@ -155,6 +156,7 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
      * @param setpoint The temporary setpoint for the system, in motor rotations
      */
     protected void setTemporaryMotionTarget(double setpoint) {
+        tempSetpoint = setpoint;
         rotator_controller.setReference(setpoint, ControlType.kSmartMotion);
     }
 
