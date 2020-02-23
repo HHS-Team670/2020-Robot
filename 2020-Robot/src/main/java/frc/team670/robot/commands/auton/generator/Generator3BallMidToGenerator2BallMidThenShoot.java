@@ -5,23 +5,19 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.team670.robot.commands.auton;
+package frc.team670.robot.commands.auton.generator;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.team670.paths.Generator3BallMidToGenerator2BallSidePath;
 import frc.team670.paths.Path;
-import frc.team670.paths.center.CenterToGenerator3BallMidPath;
-import frc.team670.paths.left.LeftToGenerator3BallMidPath;
-import frc.team670.paths.right.RightToGenerator3BallMidPath;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.SendAllBalls;
-import frc.team670.robot.commands.routines.IntakeBallToIndexer;
-import frc.team670.robot.commands.shooter.StartShooter;
-import frc.team670.robot.commands.turret.RotateTurretWithVision;
 import frc.team670.robot.commands.shooter.Shoot;
+import frc.team670.robot.commands.turret.RotateTurretWithVision;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
@@ -33,29 +29,22 @@ import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 
 /**
- * Autonomous routine starting with shooting from the initiation line (facing
- * towards your driver station), ending at (and hopefully intaking and indexing)
- * 3 Power Cells under the generator.
+ * Autonomous routine starting in front of the 3 power cells under the
+ * generator, then to the 2 power cells on the side of the generator, near the
+ * trench, and shooting from there
  * 
  * @author ctychen, meganchoy
  */
-public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandGroup implements MustangCommand {
+public class Generator3BallMidToGenerator2BallMidThenShoot extends SequentialCommandGroup implements MustangCommand {
 
   private Path trajectory;
   private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-  private enum StartPosition {
-    LEFT, CENTER, RIGHT;
-  }
+  public Generator3BallMidToGenerator2BallMidThenShoot(DriveBase driveBase, Intake intake, Conveyor conveyor,
+      Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
 
-  public ShootFromBaseLineThenToGenerator3BallMid(StartPosition startPosition, DriveBase driveBase, Intake intake,
-      Conveyor conveyor, Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
-    if (startPosition == StartPosition.LEFT)
-      trajectory = new LeftToGenerator3BallMidPath(driveBase);
-    if (startPosition == StartPosition.CENTER)
-      trajectory = new CenterToGenerator3BallMidPath(driveBase);
-    if (startPosition == StartPosition.RIGHT)
-      trajectory = new RightToGenerator3BallMidPath(driveBase);
+    trajectory = new Generator3BallMidToGenerator2BallSidePath(driveBase);
+
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(driveBase, HealthState.GREEN);
     healthReqs.put(shooter, HealthState.GREEN);
@@ -64,21 +53,15 @@ public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandG
     healthReqs.put(indexer, HealthState.GREEN);
     healthReqs.put(turret, HealthState.GREEN);
     addCommands(
-      
-      new ParallelCommandGroup (
-        new StartShooter(shooter),
-        new RotateTurretWithVision(turret, coprocessor)
-      ),
-      
-      new ParallelCommandGroup (
-        new SendAllBalls(indexer), 
-        new Shoot(shooter)        
-      ),
-      
-      new ParallelCommandGroup (
+        // Intake is already running (command previously called should be
+        // ShootFromBaseLineThenToGenerator3BallMid)
+        // Shooter is already running
         getTrajectoryFollowerCommand(trajectory, driveBase),
-        new IntakeBallToIndexer(intake, conveyor, indexer)       
-      )
+        new ParallelCommandGroup(
+          new RotateTurretWithVision(turret, coprocessor),
+          new Shoot(shooter)
+        ),
+        new SendAllBalls(indexer)
     );
   }
 

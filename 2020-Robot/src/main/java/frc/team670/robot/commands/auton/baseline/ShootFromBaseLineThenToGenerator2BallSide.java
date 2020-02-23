@@ -1,4 +1,4 @@
-package frc.team670.robot.commands.auton;
+package frc.team670.robot.commands.auton.baseline;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +24,7 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
+import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 
 /**
  * Autonomous routine starting with shooting from the initiation line (facing
@@ -36,10 +37,6 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
 
         private Path trajectory;
         private Map<MustangSubsystemBase, HealthState> healthReqs;
-
-        private enum StartPosition{
-                LEFT, CENTER, RIGHT;
-        }
 
         public ShootFromBaseLineThenToGenerator2BallSide(StartPosition startPosition, DriveBase driveBase, Intake intake, 
         Conveyor conveyor, Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {

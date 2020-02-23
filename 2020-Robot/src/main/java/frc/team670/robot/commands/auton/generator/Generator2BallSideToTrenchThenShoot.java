@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.team670.robot.commands.auton;
+package frc.team670.robot.commands.auton.generator;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,12 +35,12 @@ import frc.team670.robot.subsystems.Turret;
  * 
  * @author ctychen, meganchoy
  */
-public class Generator2BallSideThroughTrenchThenShoot extends SequentialCommandGroup implements MustangCommand {
+public class Generator2BallSideToTrenchThenShoot extends SequentialCommandGroup implements MustangCommand {
 
   private Path trajectory;
   private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-  public Generator2BallSideThroughTrenchThenShoot(DriveBase driveBase, Intake intake, Conveyor conveyor,
+  public Generator2BallSideToTrenchThenShoot(DriveBase driveBase, Intake intake, Conveyor conveyor,
       Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
 
     trajectory = new Generator3BallMidToGenerator2BallSidePath(driveBase);

@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.team670.robot.commands.auton;
+package frc.team670.robot.commands.auton.baseline;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +17,7 @@ import frc.team670.paths.center.CenterToTrenchPath;
 import frc.team670.paths.left.LeftToTrenchPath;
 import frc.team670.paths.right.RightToTrenchPath;
 import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.StartShooter;
@@ -43,10 +44,6 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
 
     private Path trajectory;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-
-    private enum StartPosition {
-        LEFT, CENTER, RIGHT;
-    }
 
     public ShootFromBaseLineThenToTrench(StartPosition startPosition, DriveBase driveBase, Intake intake,
             Conveyor conveyor, Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
