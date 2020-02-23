@@ -127,7 +127,6 @@ public class DriveBase extends MustangSubsystemBase {
     // finally yellow using else as it has many conditions to check for yellow
     if (!isLeft1Error && !isLeft2Error && !isRight1Error && !isRight2Error && !isNavXError) {
       state = HealthState.GREEN;
-      Logger.consoleLog("Health check done. State is: " + state);
     } else if (isLeft1Error && isLeft2Error || isRight1Error && isRight2Error) {
       state = HealthState.RED;
       MustangNotifications.reportError("RED Errors: l1: %s, l2: %s, r1: %s, r2: %s", left1Error, left2Error,

@@ -56,7 +56,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     private static final double ABSOLUTE_ENCODER_POSITION_AT_REVOLVER_ZERO = 0.6799; // From 2/17
 
     // For testing purposes
-    private double UPDRAW_SPEED = 0.3;
+    private double UPDRAW_SPEED = 0.9;
 
     // TODO: find these values
     private static final double UPDRAW_SHOOT_CURRENT_CHANGE_THRESHOLD = 0;
@@ -182,12 +182,12 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
         this.indexerIntakeSensor = new TimeOfFlightSensor(RobotMap.INDEXER_ToF_SENSOR_PORT);
         this.revolverAbsoluteEncoder = new DutyCycleEncoder(RobotMap.INDEXER_DIO_ENCODER_PORT);
-        this.indexerIntakeSensor.start();
 
         this.conveyorToIndexerPusher = new Solenoid(RobotMap.PCMODULE, RobotMap.BALL_INTO_INDEXER_PUSHER);
         this.pusherDeployed = false;
 
         SmartDashboard.putNumber("ToF Sensor", indexerIntakeSensor.getDistance());
+        SmartDashboard.putBoolean("Indexer is intaking", isIntaking);
 
         chamberStates = new boolean[5];
 
@@ -223,7 +223,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     }
 
     public void deployPusher(boolean toPush) {
-        Logger.consoleLog("Deploy: %s", toPush);
         this.pusherDeployed = toPush;
         this.conveyorToIndexerPusher.set(pusherDeployed);
         if (toPush){
@@ -248,7 +247,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     public boolean intakeBall() {
         if (isIntaking){
             IntakingState intakingState = ballIn();
-            Logger.consoleLog("Intaking state %s", intakingState);
             if (intakingState == IntakingState.MAYBE_IN){
                 deployPusher(true);
             }
@@ -258,7 +256,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
                 return true;
             }
         }
-        deployPusher(false);
+        else {
+            deployPusher(false);
+        }
         return false;
     }
 
@@ -281,7 +281,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     public void prepareToIntake() {
         isIntaking = true;
         rotateToNextEmptyChamber();
-        indexerIntakeSensor.start();
     }
 
     /**
@@ -393,8 +392,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             return -1;
         }
         int currentBottom = getBottomChamber();
-        int[] toCheck = { currentBottom, (currentBottom + 1) % 5, (currentBottom - 1) % 5, (currentBottom + 2) % 5,
-                (currentBottom - 2) % 5 };
+        int[] toCheck = { currentBottom, (currentBottom + 1) % 5, (currentBottom + 4) % 5, (currentBottom + 2) % 5,
+                (currentBottom + 3) % 5 };
         for (int i = 0; i < toCheck.length; i++) {
             int chamberNum = toCheck[i];
             if (!chamberStates[chamberNum]) {
@@ -409,8 +408,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             return getTopChamber();
         }
         int currentTop = getTopChamber();
-        int[] toCheck = { currentTop, (currentTop + 1) % 5, (currentTop - 1) % 5, (currentTop + 2) % 5,
-                (currentTop - 2) % 5 };
+        int[] toCheck = { currentTop, (currentTop + 1) % 5, (currentTop + 4 ) % 5, (currentTop + 2) % 5,
+                (currentTop + 3) % 5 };
         for (int i = 0; i < toCheck.length; i++) {
             int chamberNum = toCheck[i];
             if (chamberStates[chamberNum]) {
@@ -564,6 +563,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             chamberStates[getTopChamber()] = false;
         }
 
+        SmartDashboard.putBoolean("Indexer is intaking", isIntaking);
         if (isIntaking && intakeBall() && totalNumOfBalls() < 5) {
             rotateToNextChamber();
         }

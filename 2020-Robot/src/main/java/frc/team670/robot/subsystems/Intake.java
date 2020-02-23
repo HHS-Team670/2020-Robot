@@ -61,7 +61,6 @@ public class Intake extends MustangSubsystemBase {
 
     public boolean isJammed(){
         double intakeCurrent = roller.getOutputCurrent();
-        Logger.consoleLog("Intake current: %s", intakeCurrent);
         if (intakeCurrent > 0.2){
             if (intakeCurrent >= INTAKE_PEAK_CURRENT) {
                 exceededCurrentLimitCount++;

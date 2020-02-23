@@ -43,11 +43,9 @@ public class RunIntake extends CommandBase implements MustangCommand {
 		}
 		if (countWasJammed > 0) {
 			intake.roll(!reversed);
-			Logger.consoleLog("Intake jammed, running in reverse");
 			countWasJammed--;
 		} else {
 			intake.roll(reversed);
-			Logger.consoleLog("Intake not jammed, running normally");
 		}
 	}
 

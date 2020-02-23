@@ -135,11 +135,11 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public void stop() {
-    stage2_mainController.set(0);
+    stage2_mainPIDController.setReference(0, ControlType.kDutyCycle);
   }
 
   public boolean isUpToSpeed() {
-    return MathUtils.doublesEqual(getStage2Velocity(), STAGE_2_SPEED, 10); // TODO: margin of error
+    return MathUtils.doublesEqual(getStage2Velocity(), STAGE_2_SPEED, 100); // TODO: margin of error
   }
 
   public void test() {

@@ -33,7 +33,6 @@ public class DeployIntake extends InstantCommand implements MustangCommand {
 
     // Called once after isFinished returns true
     public void end() {
-        Logger.consoleLog();
     }
 
     public void interrupted() {

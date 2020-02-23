@@ -30,7 +30,6 @@ public class DeployConveyorPusher extends InstantCommand implements MustangComma
 
     // Called once after isFinished returns true
     public void end() {
-        Logger.consoleLog();
     }
 
     public void interrupted() {

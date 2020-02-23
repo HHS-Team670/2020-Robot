@@ -47,7 +47,6 @@ public class XboxRocketLeagueDrive extends CommandBase implements MustangCommand
     double speed = -1 * (RobotContainer.getDriverController().getLeftTriggerAxis()
         - RobotContainer.getDriverController().getRightTriggerAxis());
     double steer = RobotContainer.getDriverController().getLeftStickX();
-    System.out.println(speed);
 
     // Decides whether or not to smooth the Steering and Trigger. Smoothing helps
     // reduce jerkiness when driving.

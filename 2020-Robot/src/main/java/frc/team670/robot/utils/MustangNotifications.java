@@ -72,7 +72,7 @@ public class MustangNotifications {
      */
     public static void notify(String message, Object... parameters) {
         DriverStation.reportWarning(String.format(message, parameters), false);
-        Logger.consoleLog(message, parameters);
+        // Logger.consoleLog(message, parameters);
         // warning.forceSetString(String.format(message, parameters));
     }
 }
