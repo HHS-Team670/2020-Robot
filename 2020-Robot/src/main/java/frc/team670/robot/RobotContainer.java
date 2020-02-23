@@ -119,7 +119,6 @@ public class RobotContainer {
     JoystickButton runIntakeOut = new JoystickButton(oi.getOperatorController(), 5);
     JoystickButton toggleShooter = new JoystickButton(oi.getOperatorController(), 6);
     JoystickButton sendOneBall = new JoystickButton(oi.getOperatorController(), 2);
-    //JoystickButton togglePiston = new JoystickButton(oi.getOperatorController(), 11);
 
     toggleIntake.whenPressed(new DeployIntake(!intake.isDeployed(), intake));
     runIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
@@ -127,7 +126,6 @@ public class RobotContainer {
     runIntakeOut.toggleWhenPressed(new RunIntake(false, intake));
     toggleShooter.toggleWhenPressed(new StartShooter(shooter));
     sendOneBall.whenHeld(new RotateToNextChamber(indexer));
-    //togglePiston.toggleWhenPressed(new DeployConveyorPusher(isDeploy, indexer));
   }
 
   /**

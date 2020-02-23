@@ -9,63 +9,55 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 
 public class Climber extends MustangSubsystemBase {
 
-    private Pull rightPull;
-    private Pull leftPull;
-    private boolean leftPullHookedOnBar;
-    private boolean rightPullHookedOnBar;
+    private Pull pull;
+    private boolean pullIsHookedOnBar;
     private boolean isExtending; // true: extending, false: retracting
 
     public Climber() {
-        this.leftPull = new Pull(false);
-        this.rightPull = new Pull(true);
-        leftPullHookedOnBar = false;
-        rightPullHookedOnBar = false;
+        this.pull = new Pull();
+        pullIsHookedOnBar = false;
     }
 
     public void set(double speed) {
-        leftPull.setPower(speed);
-        rightPull.setPower(speed);
+        pull.setPower(speed);
     }
 
-    public Pull getRightPull() {
-        return rightPull;
+    public Pull getPull() {
+        return pull;
     }
 
-    public Pull getLeftPull() {
-        return leftPull;
-    }
-
+    /**
+     * 
+     * @param heightCM height to climb to, in centimeters
+     */
     public void climb(double heightCM) {
-        leftPull.climb(heightCM);
-        rightPull.climb(heightCM);
-
+        pull.climb(heightCM);
     }
 
-    public void setIsExtending(boolean isExtending) {
+    /**
+     * 
+     * @param isExtending true to deploy the pull (turn solenoid on)
+     */
+    public void setExtending(boolean isExtending) {
         this.isExtending = isExtending;
         if (isExtending) {
-            leftPull.solenoidOn();
-            rightPull.solenoidOn();
+            pull.solenoidOn();
         } else {
-            leftPull.solenoidOff();
-            rightPull.solenoidOff();
+            pull.solenoidOff();
         }
-
     }
 
     public boolean hookOnBar() {
-        leftPullHookedOnBar = leftPull.isHookedOnBar();
-        rightPullHookedOnBar = rightPull.isHookedOnBar();
-        return rightPullHookedOnBar && leftPullHookedOnBar;
+        return pull.isHookedOnBar();
     }
 
     public boolean isAtTarget() {
-        return leftPull.isAtTarget() && rightPull.isAtTarget();
+        return pull.isAtTarget();
     }
 
     @Override
     public HealthState checkHealth() {
-        if (leftPull.getHealth(false) == HealthState.RED || rightPull.getHealth(false) == HealthState.RED) {
+        if (pull.getHealth(false) == HealthState.RED) {
             return HealthState.RED;
         }
         return HealthState.GREEN;

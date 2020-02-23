@@ -41,9 +41,7 @@ public class RobotMap {
   public static final int UPDRAW_SPINNER = 10;
 
   // Climber
-  public static final int CLIMBER_LEFT_MOTOR = 14;
-  public static final int CLIMBER_RIGHT_MOTOR = 15;
-
+  public static final int CLIMBER_MOTOR = 14;
 
   // PNEUMATICS
   public static final int PCMODULE = 2; // PCM CAN ID
@@ -52,13 +50,8 @@ public class RobotMap {
 
   public static final int INTAKE_DEPLOYER = 0; 
   public static final int BALL_INTO_INDEXER_PUSHER = 1;
-  public static final int CLIMBER_RATCHET_DEPLOYER = 2;
+  public static final int CLIMBER_DEPLOY = 2;
   public static final int VISION_LED_PCM = 3;
-  
-  // (for climber pulls. May change based on climber?)
-  public static final int CLIMBER_LEFT_SOLENOID = 4;
-  public static final int CLIMBER_RIGHT_SOLENOID = 5;
-
 
   // SENSORS
 

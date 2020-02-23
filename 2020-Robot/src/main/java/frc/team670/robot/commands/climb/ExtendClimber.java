@@ -41,7 +41,7 @@ public class ExtendClimber extends CommandBase implements MustangCommand {
   @Override
   public void execute() {
     climber.climb(heightCM);
-    climber.setIsExtending(true);
+    climber.setExtending(true);
   }
 
   // Called once the command ends or is interrupted.

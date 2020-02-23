@@ -29,22 +29,12 @@ public class Pull extends MustangSubsystemBase {
     private CANEncoder encoder;
     private SparkMAXLite motor;
     private boolean hookedOnBar;
-    private int inversionFactor;
     private double target;
     private Solenoid solenoid;
 
-    public Pull(boolean inverted) {
-        if (inverted) {
-            motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_RIGHT_MOTOR, Motor_Type.NEO);
-            inversionFactor = -1;
-            solenoid = new Solenoid(RobotMap.PCMODULE, RobotMap.CLIMBER_RIGHT_SOLENOID);
-
-        } else {
-            motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_LEFT_MOTOR, Motor_Type.NEO);
-            inversionFactor = 1;
-            solenoid = new Solenoid(RobotMap.PCMODULE, RobotMap.CLIMBER_LEFT_SOLENOID);
-
-        }
+    public Pull() {
+        motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR, Motor_Type.NEO);
+        solenoid = new Solenoid(RobotMap.PCMODULE, RobotMap.CLIMBER_DEPLOY);
         controller = motor.getPIDController();
         encoder = motor.getEncoder();
         setDefaultPID();
@@ -82,7 +72,7 @@ public class Pull extends MustangSubsystemBase {
     }
 
     public void climb(double heightCM) {
-        double rotations = heightCM / ROTATIONS_PER_CM * inversionFactor;
+        double rotations = heightCM / ROTATIONS_PER_CM;
         target = rotations;
         controller.setReference(rotations, ControlType.kPosition);
     }

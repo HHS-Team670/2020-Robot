@@ -48,7 +48,7 @@ public class RetractClimber extends CommandBase implements MustangCommand {
       climber.climb(heightCM);
       climbing = true;
     }
-    climber.setIsExtending(false);
+    climber.setExtending(false);
     // if bar is tilted, the first pull that hooks on to the bar must stop moving
     // once the second pull hooks on as well, both pulls move down
   }
