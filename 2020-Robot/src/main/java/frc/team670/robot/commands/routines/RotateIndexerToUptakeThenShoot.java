@@ -17,21 +17,35 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 public class RotateIndexerToUptakeThenShoot extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
+    private Indexer indexer;
+    private Shooter shooter;
 
     public RotateIndexerToUptakeThenShoot(Indexer indexer, Shooter shooter) {
+        this.indexer = indexer;
+        this.shooter = shooter;
         addRequirements(indexer, shooter);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
-        
+
         // Stage and uptake 1 ball while preparing the shooter
         addCommands(
             new ParallelCommandGroup(
-                new StartShooter(shooter),
+                new StartShooter(shooter), 
                 new StageOneBallToShoot(indexer)
             ),
-            new SendOneBallToShoot(indexer)
-        );
+            new SendOneBallToShoot(indexer));
+    }
+
+    /**
+     * This sequence will only end if we tell it to, otherwise, we keep blasting
+     */
+    @Override
+    public void end(boolean interrupted) {
+        if (interrupted) {
+            shooter.stop();
+            indexer.stopUpdraw();
+        }
     }
 
     @Override

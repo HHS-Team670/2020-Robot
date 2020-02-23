@@ -120,11 +120,11 @@ public class RobotContainer {
     JoystickButton toggleShooter = new JoystickButton(oi.getOperatorController(), 6);
     JoystickButton sendOneBall = new JoystickButton(oi.getOperatorController(), 2);
 
-    toggleIntake.whenPressed(new DeployIntake(!intake.isDeployed(), intake));
+    toggleIntake.toggleWhenPressed(new DeployIntake(!intake.isDeployed(), intake));
     runIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
     runIntakeIn.whenReleased(new StopIntaking(intake, conveyor, indexer));
     runIntakeOut.toggleWhenPressed(new RunIntake(false, intake));
-    toggleShooter.toggleWhenPressed(new StartShooter(shooter));
+    toggleShooter.toggleWhenPressed(new RotateIndexerToUptakeThenShoot(indexer, shooter));
     sendOneBall.whenHeld(new RotateToNextChamber(indexer));
   }
 
@@ -132,7 +132,6 @@ public class RobotContainer {
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
-   * 
    */
   public MustangCommand getAutonomousCommand() {
     return new RunIntake(false, intake);

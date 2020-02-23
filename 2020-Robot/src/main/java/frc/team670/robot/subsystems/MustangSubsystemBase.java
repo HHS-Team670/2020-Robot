@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.MustangNotifications;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 

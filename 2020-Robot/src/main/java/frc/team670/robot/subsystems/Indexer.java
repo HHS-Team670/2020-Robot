@@ -304,7 +304,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         updraw.set(ControlMode.PercentOutput, UPDRAW_SPEED);
     }
 
-    public void stopUptake() {
+    public void stopUpdraw() {
         updraw.set(ControlMode.PercentOutput, 0);
     }
 
