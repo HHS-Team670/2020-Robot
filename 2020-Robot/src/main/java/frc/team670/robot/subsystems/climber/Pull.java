@@ -22,8 +22,8 @@ public class Pull extends MustangSubsystemBase {
     private static final double PULL_D = 0;
     private static final double PULL_FF = 0;
     private static final double NORMAL_OUTPUT = 0;
-    private static final double ROTATIONS_PER_CM = 0;
-    private static final double HALF_CM = 0.5 / ROTATIONS_PER_CM;
+    private static final double ROTATIONS_PER_CM = 50 / 9; // gearing is 50:1
+    private static final double HALF_CM = 0.5 * ROTATIONS_PER_CM;
 
     private CANPIDController controller;
     private CANEncoder encoder;

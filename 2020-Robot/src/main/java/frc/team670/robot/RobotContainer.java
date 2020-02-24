@@ -37,6 +37,7 @@ import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
+import frc.team670.robot.commands.turret.RotateTurretWithVision;
 import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.climber.Climber;
 import frc.team670.robot.utils.MustangController;
@@ -57,12 +58,12 @@ public class RobotContainer {
 
   private static DriveBase driveBase = new DriveBase();
   private static Intake intake = new Intake();
-  public static Conveyor conveyor = new Conveyor();
-  public static Indexer indexer = new Indexer(conveyor);
+  private static Conveyor conveyor = new Conveyor();
+  private static Indexer indexer = new Indexer(conveyor);
   private static Turret turret = new Turret();
   private static Shooter shooter = new Shooter();
   private static Climber climber = new Climber();
-  public static MustangCoprocessor coprocessor = new MustangCoprocessor();
+  private static MustangCoprocessor coprocessor = new MustangCoprocessor();
 
   private static OI oi = new OI(intake, conveyor, indexer, shooter, climber);
 

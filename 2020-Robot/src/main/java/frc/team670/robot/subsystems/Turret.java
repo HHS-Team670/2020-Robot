@@ -11,8 +11,8 @@ import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 public class Turret extends SparkMaxRotatingSubsystem {
 
     // TODO: Set these values. Keeping it small right now for testing.
-    public static final int SOFT_MINIMUM_DEGREES = -270;
-    public static final int SOFT_MAXIMUM_DEGREES = 270;
+    public static final int SOFT_MINIMUM_DEGREES = -50;
+    public static final int SOFT_MAXIMUM_DEGREES = 50;
 
     /**
      * Constants for the turret, including PIDF and SmartMotion values.
