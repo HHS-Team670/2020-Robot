@@ -1,13 +1,14 @@
 package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANSparkMax.IdleMode;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.sensors.TimeOfFlightSensor;
 import frc.team670.robot.utils.Logger;
@@ -175,19 +176,11 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         // Updraw should be inverted
         this.updraw = TalonSRXFactory.buildFactoryTalonSRX(RobotMap.UPDRAW_SPINNER, false);
 
-        SmartDashboard.putNumber("Indexer Speed", 0.0);
-        SmartDashboard.putNumber("Updraw Speed", 0.0);
-        SmartDashboard.putNumber("Updraw current", 0.0);
-        SmartDashboard.putNumber("Indexer current", 0.0);
-        SmartDashboard.putNumber("Indexer setpoint", 0);
-
         this.indexerIntakeSensor = new TimeOfFlightSensor(RobotMap.INDEXER_ToF_SENSOR_PORT);
         this.revolverAbsoluteEncoder = new DutyCycleEncoder(RobotMap.INDEXER_DIO_ENCODER_PORT);
 
         this.conveyorToIndexerPusher = new Solenoid(RobotMap.PCMODULE, RobotMap.BALL_INTO_INDEXER_PUSHER);
         this.pusherDeployed = false;
-
-        SmartDashboard.putNumber("ToF Sensor", indexerIntakeSensor.getDistance());
 
         chamberStates = new boolean[5];
 
@@ -245,7 +238,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * sensor
      */
     public boolean intakeBall() {
-        SmartDashboard.putNumber("ToF Sensor", indexerIntakeSensor.getDistance());
         if (isIntaking){
             IntakingState intakingState = ballIn();
             if (intakingState == IntakingState.MAYBE_IN){
@@ -351,18 +343,33 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         if (pos < 0) {
             pos++;
         }
+
         // 0.2 - 0.4: 1
         // 0.4 - 0.6: 0
         // 0.6 - 0.8: 4
         // 0.8-1.0: 3
         // 0.0 - 0.2: 2
+
         return (7 - (int) (pos / 0.2)) % 5;
 
         /*
          * What the expression above does is equivalent to all these if statements
-         * below: if (0.2 <= pos && 0.4 > pos){ return 1; } if (0.4 <= pos && 0.6 >
-         * pos){ return 0; } if (0.6 <= pos && 0.8 > pos){ return 4; } if (0.8 <= pos &&
-         * 1.0 > pos){ return 3; } if (0.0 <= pos && 0.2 > pos){ return 2; }
+         * below: 
+         * if (0.2 <= pos && 0.4 > pos) {
+         *  return 1; 
+         * } 
+         * if (0.4 <= pos && 0.6 > pos) { 
+         * return 0; 
+         * } 
+         * if (0.6 <= pos && 0.8 > pos) { 
+         * return 4; 
+         * } 
+         * if (0.8 <= pos && 1.0 > pos) { 
+         * return 3; 
+         * } 
+         * if (0.0 <= pos && 0.2 > pos) { 
+         * return 2; 
+         * }
          */
     }
 
@@ -372,18 +379,33 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         if (pos < 0) {
             pos++;
         }
+
         // 0.9 - 0.1: 0
         // 0.1-0.3: 1
         // 0.3-0.5: 2
         // 0.5-0.7: 3
         // 0.7-0.9: 4
+
         return (int) (((pos + 0.1) % 1.0) / 0.2);
 
         /*
          * What the expression above does is equivalent to all these if statements
-         * below: if (0.9 <= pos || 0.1 > pos){ return 0; } if (0.1 <= pos && 0.3 >
-         * pos){ return 1; } if (0.3 <= pos && 0.5 > pos){ return 2; } if (0.5 <= pos &&
-         * 0.7 > pos){ return 3; } if (0.7 <= pos && 0.9 > pos){ return 4; }
+         * below: 
+         * if (0.9 <= pos || 0.1 > pos) { 
+         * return 0; 
+         * } 
+         * if (0.1 <= pos && 0.3 > pos) { 
+         * return 1; 
+         * } 
+         * if (0.3 <= pos && 0.5 > pos) { 
+         * return 2; 
+         * } 
+         * if (0.5 <= pos && 0.7 > pos) { 
+         * return 3; 
+         * } 
+         * if (0.7 <= pos && 0.9 > pos) { 
+         * return 4; 
+         * }
          */
     }
 
@@ -500,9 +522,12 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         return degrees;
     }
 
+    /**
+     * 
+     * @return whether the rotator current has been 
+     */
     public boolean isJammed() {
         double indexerCurrent = rotator.getOutputCurrent();
-        SmartDashboard.putNumber("Indexer current", indexerCurrent);
         if (indexerCurrent > 0.2) {
             if (indexerCurrent >= INDEXER_PEAK_CURRENT) {
                 exceededCurrentLimitCount++;

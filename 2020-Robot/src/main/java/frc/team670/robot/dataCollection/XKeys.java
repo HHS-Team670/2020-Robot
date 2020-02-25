@@ -21,10 +21,12 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
 import frc.team670.robot.commands.shooter.StartShooter;
+import frc.team670.robot.commands.turret.RotateTurretWithVision;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.climber.Climber;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.commands.CancelAllCommands;
@@ -49,6 +51,8 @@ public class XKeys {
     private Shooter shooter;
     private Conveyor conveyor;
     private Indexer indexer;
+    private Turret turret;
+    private MustangCoprocessor coprocessor;
     private class xkeysCommands { // do not use enums as getID has to be called over enum call
 
         public static final double RUN_INTAKE_IN = 0;
@@ -63,7 +67,7 @@ public class XKeys {
         public static final double CANCEL_ALL = 18;
     }
 
-    public XKeys(Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Climber climber) {
+    public XKeys(Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Climber climber, Turret turret, MustangCoprocessor pi) {
         SmartDashboard.putString("XKEYS", "XKeys constructor");
         instance = NetworkTableInstance.getDefault();
         table = instance.getTable("SmartDashboard");
@@ -74,6 +78,8 @@ public class XKeys {
         this.indexer = indexer;
         this.shooter = shooter;
         this.climber = climber;
+        this.turret = turret;
+        this.coprocessor = pi;
 
         table.addEntryListener((table2, key2, entry, value, flags) -> {
             try {
@@ -178,7 +184,7 @@ public class XKeys {
     }
 
     private void visionAlign() {
-        MustangScheduler.getInstance().schedule();
+        MustangScheduler.getInstance().schedule(new RotateTurretWithVision(turret, coprocessor));
     }
 
     private void indexerAtIntake() {

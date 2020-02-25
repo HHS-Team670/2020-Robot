@@ -13,9 +13,7 @@ import java.util.List;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.OI;
-import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
@@ -26,17 +24,12 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.MustangScheduler;
-import frc.team670.robot.commands.indexer.DeployConveyorPusher;
 import frc.team670.robot.commands.indexer.RotateToNextChamber;
-import frc.team670.robot.commands.indexer.SendOneBallToShoot;
 import frc.team670.robot.commands.indexer.StopIntaking;
-import frc.team670.robot.commands.indexer.TestIndexerEncoder;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
-import frc.team670.robot.commands.shooter.StartShooter;
-import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.commands.turret.RotateTurretWithVision;
 import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.climber.Climber;
@@ -65,7 +58,7 @@ public class RobotContainer {
   private static Climber climber = new Climber();
   private static MustangCoprocessor coprocessor = new MustangCoprocessor();
 
-  private static OI oi = new OI(intake, conveyor, indexer, shooter, climber);
+  private static OI oi = new OI(intake, conveyor, indexer, shooter, climber, turret, coprocessor);
 
   private Trajectory trajectory;
   private String pathname;

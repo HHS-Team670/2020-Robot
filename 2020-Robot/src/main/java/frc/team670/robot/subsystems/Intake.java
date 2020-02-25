@@ -4,11 +4,8 @@ import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
-import frc.team670.robot.utils.Logger;
-
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 
 /*
@@ -32,7 +29,6 @@ public class Intake extends MustangSubsystemBase {
         roller.setOpenLoopRampRate(1.0);
         compressor = new Compressor(RobotMap.PCMODULE);
         compressor.setClosedLoopControl(true);
-        SmartDashboard.putNumber("Intake Speed", 0.0);
         deployer = new Solenoid(RobotMap.PCMODULE, RobotMap.INTAKE_DEPLOYER);
     }
 
@@ -103,10 +99,6 @@ public class Intake extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() {
 
-    }
-
-    public void test() {
-        roller.set(SmartDashboard.getNumber("Intake Speed", 0.0));
     }
 
 }
