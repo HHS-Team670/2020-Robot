@@ -1,6 +1,8 @@
 package frc.team670.robot.subsystems;
 
+import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANError;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import frc.team670.robot.commands.MustangScheduler;
@@ -11,8 +13,18 @@ import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 public class Turret extends SparkMaxRotatingSubsystem {
 
     // TODO: Set these values. Keeping it small right now for testing.
-    public static final int SOFT_MINIMUM_DEGREES = -50;
-    public static final int SOFT_MAXIMUM_DEGREES = 50;
+
+    private static final int TURRET_MIN_DEGREES = -50;
+    private static final int TURRET_MAX_DEGREES = 50;
+
+    private static final int SOFT_MINIMUM_DEGREES = TURRET_MIN_DEGREES + 5;
+    private static final int SOFT_MAXIMUM_DEGREES = TURRET_MAX_DEGREES - 5;
+
+    private CANDigitalInput forwardLimit;
+    private CANDigitalInput reverseLimit;
+
+    public String kEnable;
+    public String kDisable;
 
     /**
      * Constants for the turret, including PIDF and SmartMotion values.
@@ -109,7 +121,10 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     public Turret() {
         super(turretConfig);
-        rotator_encoder.setPosition(0);
+        forwardLimit = rotator.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+        reverseLimit = rotator.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
+        forwardLimit.enableLimitSwitch(true);
+        reverseLimit.enableLimitSwitch(true);
     }
 
     @Override
@@ -146,6 +161,42 @@ public class Turret extends SparkMaxRotatingSubsystem {
     }
 
     /**
+     * 
+     * @return true if the reverse limit was hit, and false if not. Note that
+     *         magnetic limit switches are active-low sensors, so when they are
+     *         tripped we get 0V on signal, but specifying this polarity when
+     *         creating them should deal with that
+     */
+    public boolean isReverseLimitSwitchTripped() {
+        return reverseLimit.get();
+    }
+
+    /**
+     * 
+     * @return true if the forward limit was hit, and false if not. Note that
+     *         magnetic limit switches are active-low sensors, so when they are
+     *         tripped we get 0V on signal, but specifying this polarity when
+     *         creating them should deal with that
+     */
+    public boolean isForwardLimitSwitchTripped() {
+        return forwardLimit.get();
+    }
+
+    /**
+     * Sets zero'd position for built in encoder to one of the limits based on which
+     * one we move to for zeroing
+     */
+    public void resetRotatorEncoderFromLimitSwitch() {
+        if (isForwardLimitSwitchTripped()) {
+            rotator_encoder.setPosition(getMotorRotationsFromAngle(TURRET_MAX_DEGREES));
+        }
+
+        if (isReverseLimitSwitchTripped()) {
+            rotator_encoder.setPosition(getMotorRotationsFromAngle(TURRET_MIN_DEGREES));
+        }
+    }
+
+    /**
      * @param speed to set turret to, [1, 1]
      */
     @Override
@@ -153,7 +204,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         this.rotator.set(output);
     }
 
-    public void initDefaultCommand(){
+    public void initDefaultCommand() {
         MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret(this));
     }
 
