@@ -20,6 +20,7 @@ import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
+import frc.team670.robot.commands.routines.ShootAllBalls;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.turret.RotateTurretWithVision;
 import frc.team670.robot.subsystems.Conveyor;
@@ -164,7 +165,7 @@ public class XKeys {
     }
 
     private void shootAll() {
-        MustangScheduler.getInstance().schedule();
+        MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer, shooter));
     }
 
     private void toggleIntake() {

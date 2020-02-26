@@ -50,8 +50,8 @@ public class RobotMap {
 
   public static final int INTAKE_DEPLOYER = 0; 
   public static final int BALL_INTO_INDEXER_PUSHER = 1;
-  public static final int CLIMBER_DEPLOY = 2;
-  public static final int VISION_LED_PCM = 3;
+  public static final int CLIMBER_DEPLOY = 1; // Both anti-jam pusher and climber use this
+  public static final int VISION_LED_PCM = 2;
 
   // SENSORS
 

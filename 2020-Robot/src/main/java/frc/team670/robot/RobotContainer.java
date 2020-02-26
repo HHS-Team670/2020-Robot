@@ -13,17 +13,20 @@ import java.util.List;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.team670.robot.constants.OI;
-import frc.team670.robot.dataCollection.MustangCoprocessor;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
+import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.Indexer;
+import frc.team670.robot.subsystems.Turret;
+import frc.team670.robot.subsystems.climber.Climber;
 
-import edu.wpi.first.wpilibj.trajectory.Trajectory;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.MustangScheduler;
+import frc.team670.robot.commands.auton.AutoSelector;
 import frc.team670.robot.commands.indexer.RotateToNextChamber;
 import frc.team670.robot.commands.indexer.StopIntaking;
 import frc.team670.robot.commands.intake.DeployIntake;
@@ -31,11 +34,10 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
 import frc.team670.robot.commands.turret.RotateTurretWithVision;
-import frc.team670.robot.subsystems.Turret;
-import frc.team670.robot.subsystems.climber.Climber;
+
 import frc.team670.robot.utils.MustangController;
-import frc.team670.robot.subsystems.Intake;
-import frc.team670.robot.subsystems.Indexer;
+import frc.team670.robot.dataCollection.MustangCoprocessor;
+import frc.team670.robot.constants.OI;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -60,8 +62,7 @@ public class RobotContainer {
 
   private static OI oi = new OI(intake, conveyor, indexer, shooter, climber, turret, coprocessor);
 
-  private Trajectory trajectory;
-  private String pathname;
+  private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret, coprocessor);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -69,7 +70,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
-    addSubsystem(driveBase, intake, conveyor, indexer, shooter, climber);
+    addSubsystem(driveBase, intake, conveyor, indexer, shooter, climber, turret);
   }
 
   public static void addSubsystem(MustangSubsystemBase... subsystems) {
@@ -128,8 +129,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    return new RunIntake(false, intake);
-    // return new TestIndexerEncoder(indexer);
+    return autoSelector.getSelectedRoutine();
+    // return new RunIntake(false, intake);
   }
 
   public static void autonomousInit(){

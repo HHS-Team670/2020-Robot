@@ -3,9 +3,9 @@ package frc.team670.robot.commands.auton;
 import java.util.Map;
 import static java.util.Map.entry;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToGenerator2BallSide;
 import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToGenerator3BallMid;
 import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToTrench;
@@ -97,10 +97,10 @@ public class AutoSelector {
      * 
      * @return the command corresponding to the autonomous routine selected by the driver
      */
-    public Command getSelectedRoutine(){
+    public MustangCommand getSelectedRoutine(){
         // TODO: based on what value we get from the driver dashboard, returns the command for the appropriate auto routine
         return 
-            new SelectCommand(          
+            (MustangCommand)(new SelectCommand(          
                 Map.ofEntries(
                     entry(AutoRoutine.LEFT_TO_GENERATOR_2_BALL_SIDE, new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
                     entry(AutoRoutine.LEFT_TO_GENERATOR_3_BALL_SIDE, new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
@@ -139,7 +139,7 @@ public class AutoSelector {
                     ))                    
         ),
         this::select
-        );
+        ));
     }
 
 }
