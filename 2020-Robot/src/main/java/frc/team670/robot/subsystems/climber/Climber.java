@@ -2,6 +2,7 @@ package frc.team670.robot.subsystems.climber;
 
 import frc.team670.robot.subsystems.climber.Pull;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 
 /**
@@ -17,6 +18,7 @@ public class Climber extends MustangSubsystemBase {
     public Climber(Solenoid deployer) {
         this.pull = new Pull(deployer);
         pullIsHookedOnBar = false;
+        SmartDashboard.putNumber("Climber power", 0.0);
     }
 
     public void set(double speed) {
@@ -68,6 +70,10 @@ public class Climber extends MustangSubsystemBase {
     public void mustangPeriodic() {
         // TODO Auto-generated method stub
 
+    }
+
+    public void test(){
+        set(SmartDashboard.getNumber("Climber power", 0.0));
     }
 
 }

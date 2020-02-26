@@ -26,7 +26,7 @@ public class RotateToHome extends CommandBase implements MustangCommand {
 
     @Override
     public void execute(){
-        turret.moveByPercentOutput(0.1); // move very slowly until we hit the limit
+        turret.moveByPercentOutput(-0.01); // move very slowly until we hit the reverse limit
     }
 
     @Override

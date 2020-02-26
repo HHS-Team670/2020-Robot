@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.team670.robot.subsystems.MustangSubsystemBase;
@@ -34,6 +36,7 @@ import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
+import frc.team670.robot.commands.turret.RotateToHome;
 import frc.team670.robot.commands.turret.RotateTurretWithVision;
 
 import frc.team670.robot.utils.MustangController;
@@ -133,7 +136,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    return autoSelector.getSelectedRoutine();
+    return (MustangCommand)(new SequentialCommandGroup(
+      new RotateToHome(turret),
+      (Command)(autoSelector.getSelectedRoutine())
+    ));
+    //return autoSelector.getSelectedRoutine();
     // return new RunIntake(false, intake);
   }
 
