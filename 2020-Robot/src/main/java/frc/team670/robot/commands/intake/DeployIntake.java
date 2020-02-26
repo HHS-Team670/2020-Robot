@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.team670.robot.utils.Logger;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
@@ -29,14 +28,6 @@ public class DeployIntake extends InstantCommand implements MustangCommand {
 
     public void initialize() {
         intake.deploy(isDeploy);
-    }
-
-    // Called once after isFinished returns true
-    public void end() {
-    }
-
-    public void interrupted() {
-        end();
     }
 
     @Override

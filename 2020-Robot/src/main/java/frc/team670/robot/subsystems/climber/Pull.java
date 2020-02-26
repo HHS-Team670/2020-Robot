@@ -30,11 +30,11 @@ public class Pull extends MustangSubsystemBase {
     private SparkMAXLite motor;
     private boolean hookedOnBar;
     private double target;
-    private Solenoid solenoid;
+    private Solenoid deployer;
 
-    public Pull() {
+    public Pull(Solenoid deployer) {
         motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR, Motor_Type.NEO);
-        solenoid = new Solenoid(RobotMap.PCMODULE, RobotMap.CLIMBER_DEPLOY);
+        this.deployer = deployer;
         controller = motor.getPIDController();
         encoder = motor.getEncoder();
         setDefaultPID();
@@ -48,11 +48,11 @@ public class Pull extends MustangSubsystemBase {
     }
 
     public void solenoidOff() {
-        solenoid.set(false);
+        deployer.set(false);
     }
 
     public void solenoidOn() {
-        solenoid.set(true);
+        deployer.set(true);
     }
 
     public boolean isHookedOnBar() {
@@ -79,7 +79,7 @@ public class Pull extends MustangSubsystemBase {
 
     @Override
     public HealthState checkHealth() {
-        if (isSparkMaxErrored(motor) || solenoid == null) {
+        if (isSparkMaxErrored(motor) || deployer == null) {
             return HealthState.RED;
         }
         return HealthState.GREEN;

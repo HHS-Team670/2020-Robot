@@ -168,7 +168,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     public static final Config INDEXER_CONFIG = new Config();
 
-    public Indexer(Conveyor conveyor) {
+    public Indexer(Conveyor conveyor, Solenoid pusher) {
         super(INDEXER_CONFIG);
 
         this.conveyor = conveyor;
@@ -179,7 +179,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         this.indexerIntakeSensor = new TimeOfFlightSensor(RobotMap.INDEXER_ToF_SENSOR_PORT);
         this.revolverAbsoluteEncoder = new DutyCycleEncoder(RobotMap.INDEXER_DIO_ENCODER_PORT);
 
-        this.conveyorToIndexerPusher = new Solenoid(RobotMap.PCMODULE, RobotMap.BALL_INTO_INDEXER_PUSHER);
+        this.conveyorToIndexerPusher = pusher;
         this.pusherDeployed = false;
 
         chamberStates = new boolean[5];
@@ -554,9 +554,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             unjamMode = true;
             posWhenJammed = getCurrentAngleInDegrees();
             if (setpoint - getMotorRotationsFromAngle(posWhenJammed) > 0) {
-                setTemporaryMotionTarget(getMotorRotationsFromAngle(posWhenJammed - (INDEXER_DEGREES_PER_CHAMBER / 2)));
+                setTemporaryMotionTarget(getMotorRotationsFromAngle(posWhenJammed - (INDEXER_DEGREES_PER_CHAMBER)));
             } else {
-                setTemporaryMotionTarget(getMotorRotationsFromAngle(posWhenJammed + (INDEXER_DEGREES_PER_CHAMBER / 2)));
+                setTemporaryMotionTarget(getMotorRotationsFromAngle(posWhenJammed + (INDEXER_DEGREES_PER_CHAMBER)));
             }
         } else if (unjamMode && MathUtils.doublesEqual(tempSetpoint, rotator_encoder.getPosition(), ALLOWED_ERR)) {
             unjamMode = false;

@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.revrobotics.CANError;
+import com.revrobotics.CANSparkMax.ExternalFollower;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import frc.team670.robot.utils.Logger;
@@ -142,7 +143,9 @@ public class SparkMAXFactory {
             sparkMaxLeader = sparkMaxFollower;
             sparkMaxFollower = sparkMaxTemp;
         }
-
+        // Tells the leader controller explicitly to not be following any other, to avoid potential issues.
+        // Refer to: https://www.chiefdelphi.com/t/spark-max-follower-with-lower-can-id-than-leader-causes-4-stutters-sec-until-power-cycled/378716/12
+        sparkMaxLeader.follow(ExternalFollower.kFollowerDisabled, 0);
         sparkMaxFollower.follow(sparkMaxLeader, invertFollower);
         List<SparkMAXLite> motorPair = Arrays.asList(sparkMaxLeader, sparkMaxFollower);
         Logger.consoleLog("SparkMaxLeaderID %s, SparkMaxFollowerID %s", sparkMaxLeader.getDeviceId(),

@@ -1,6 +1,7 @@
 package frc.team670.robot.subsystems.climber;
 
 import frc.team670.robot.subsystems.climber.Pull;
+import edu.wpi.first.wpilibj.Solenoid;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 
 /**
@@ -13,8 +14,8 @@ public class Climber extends MustangSubsystemBase {
     private boolean pullIsHookedOnBar;
     private boolean isExtending; // true: extending, false: retracting
 
-    public Climber() {
-        this.pull = new Pull();
+    public Climber(Solenoid deployer) {
+        this.pull = new Pull(deployer);
         pullIsHookedOnBar = false;
     }
 

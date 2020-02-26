@@ -49,8 +49,7 @@ public class RobotMap {
   // Solenoids. Using 24V
 
   public static final int INTAKE_DEPLOYER = 0; 
-  public static final int BALL_INTO_INDEXER_PUSHER = 1;
-  public static final int CLIMBER_DEPLOY = 1; // Both anti-jam pusher and climber use this
+  public static final int INDEXER_PUSHER_CLIMBER_DEPLOY = 1;
   public static final int VISION_LED_PCM = 2;
 
   // SENSORS
