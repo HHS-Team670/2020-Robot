@@ -3,6 +3,11 @@ package frc.team670.robot.commands.auton;
 import java.util.Map;
 import static java.util.Map.entry;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.EntryListenerFlags;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableType;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.robot.commands.MustangCommand;
@@ -19,7 +24,13 @@ import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 
+/**
+ * Selects an autonomous routine to run based on choice from driver
+ */
 public class AutoSelector {
+
+    private static NetworkTableInstance instance;
+    private static NetworkTable table;
 
     private DriveBase driveBase;
     private Intake intake;
@@ -28,8 +39,14 @@ public class AutoSelector {
     private Shooter shooter;
     private Turret turret;
     private MustangCoprocessor coprocessor;
+    
+    AutoRoutine selectedRoutine = AutoRoutine.UNKNOWN;
 
     public AutoSelector(DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Turret turret, MustangCoprocessor coprocessor){
+        
+        instance = NetworkTableInstance.getDefault();
+        table = instance.getTable("SmartDashboard");
+        
         this.driveBase = driveBase;
         this.intake = intake;
         this.conveyor = conveyor;
@@ -86,11 +103,18 @@ public class AutoSelector {
     }
 
     /**
-     * Gets the value of the enum for auto routines based on an int input from the driver dashboard.
+     * 
+     * @return the value of the enum for auto routines based on an int input from the
+     * driver dashboard.
      */
-    public AutoRoutine select(){
-        // TODO: This should be getting the value from driver dashboard
-        return AutoRoutine.LEFT_TO_GENERATOR_2_BALL_SIDE;
+    public AutoRoutine select() {
+        table.addEntryListener("auton-chooser", (table2, key2, entry, value, flags) -> {
+            if (value.getType() != NetworkTableType.kDouble)
+                return;
+            double autoID = value.getDouble();
+            this.selectedRoutine = AutoRoutine.getById((int)(autoID));
+        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        return this.selectedRoutine;
     }
 
     /**
@@ -98,7 +122,6 @@ public class AutoSelector {
      * @return the command corresponding to the autonomous routine selected by the driver
      */
     public MustangCommand getSelectedRoutine(){
-        // TODO: based on what value we get from the driver dashboard, returns the command for the appropriate auto routine
         return 
             (MustangCommand)(new SelectCommand(          
                 Map.ofEntries(
