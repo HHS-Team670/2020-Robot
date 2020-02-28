@@ -16,24 +16,23 @@ public class GetVisionData extends CommandBase implements MustangCommand {
 
     private MustangCoprocessor coprocessor;
 
-    private double[] visionData;
     private long startTime;
 
     private static final double MAX_TIME_TO_RUN = 2500; // Max time to run this in ms
 
-    public GetVisionData(double[] visionData, MustangCoprocessor coprocessor) {
-        this.visionData = visionData;
+    public GetVisionData(MustangCoprocessor coprocessor) {
         this.coprocessor = coprocessor;
     }
 
     @Override
     public void initialize() {
         coprocessor.turnOnLEDs();
-        SmartDashboard.putNumberArray("reflect_tape_vision_data", new double[] { RobotConstants.VISION_ERROR_CODE,
+        SmartDashboard.putNumberArray(coprocessor.VISION_RETURN_NETWORK_KEY, new double[] { RobotConstants.VISION_ERROR_CODE,
                 RobotConstants.VISION_ERROR_CODE, RobotConstants.VISION_ERROR_CODE }); // Clears vision data so we don't
                                                                                        // use old data accidentally
         coprocessor.enableVision(true);
         NetworkTableInstance.getDefault().flush();
+        coprocessor.getLatestVisionData();
         startTime = System.currentTimeMillis();
     }
 
@@ -53,7 +52,7 @@ public class GetVisionData extends CommandBase implements MustangCommand {
     @Override
     public void end(boolean interrupted) {
         coprocessor.turnOffLEDs();
-        SmartDashboard.putString("vision-enabled", "disabled");
+        coprocessor.enableVision(false);
     }
 
     @Override

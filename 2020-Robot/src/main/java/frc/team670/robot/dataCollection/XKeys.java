@@ -22,7 +22,7 @@ import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
 import frc.team670.robot.commands.routines.ShootAllBalls;
 import frc.team670.robot.commands.shooter.StartShooter;
-import frc.team670.robot.commands.turret.RotateTurret;
+import frc.team670.robot.commands.turret.GetLatestDataAndAlignTurret;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
@@ -44,9 +44,7 @@ import frc.team670.robot.utils.MustangNotifications;
 public class XKeys {
 
     private static NetworkTableInstance instance;
-    private static NetworkTable table;
-
-    private static NetworkTable visionTable;
+    private static NetworkTable table, visionTable;
 
     private DriveBase drivebase;
     private Climber climber;
@@ -140,7 +138,7 @@ public class XKeys {
         table.addEntryListener("xkeys-autopickup", (table2, key2, entry, value, flags) -> {
             autoPickupBall();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-        table.addEntryListener("xkeys-vision", (table2, key2, entry, value, flags) -> {
+        visionTable.addEntryListener("vision-data", (table2, key2, entry, value, flags) -> {
             visionAlign();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
 
@@ -188,7 +186,7 @@ public class XKeys {
     }
 
     private void visionAlign() {
-        MustangScheduler.getInstance().schedule(new RotateTurret(turret, drivebase, coprocessor));
+        MustangScheduler.getInstance().schedule(new GetLatestDataAndAlignTurret(turret, drivebase, coprocessor));
     }
 
     private void indexerAtIntake() {

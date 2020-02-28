@@ -14,6 +14,7 @@ import frc.team670.robot.utils.functions.MathUtils;
 /**
  * Stores values off of NetworkTables for easy retrieval and gives them
  * Listeners to update the stored values as they are changed.
+ * @author ctychen, lakshbhambhani
  */
 public class MustangCoprocessor {
 
@@ -22,24 +23,33 @@ public class MustangCoprocessor {
     private Solenoid cameraLEDs;
 
     // The name of the subtable set on the Pi
-    private static final String TABLE_NAME = "SmartDashboard";
-    private static final String NETWORK_KEY = "reflect_tape_vision_data";
+    public static final String VISION_TABLE_NAME = "Vision";
+    public static final String VISION_RETURN_NETWORK_KEY = "vision_values";
+    private static final String VISION_TRIGGER_NETWORK_KEY = "vision-data";
+
+    // These are for sending vision health to dashboard
+    private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
+    private static NetworkTable healthTable = instance.getTable("/SmartDashboard");
+    
+    // table for vision
+    NetworkTable visionTable = instance.getTable(VISION_TABLE_NAME);
 
     // Vision Constants
     public static final double OUTER_TARGET_CENTER = 249; // centimeters
 
-    private double cameraHorizontalOffset; // centimeters
-    private double verticalCameraOffsetAngle; // degrees
-    private double cameraHeight; // centimeters
-
     public MustangCoprocessor() {
-        this(NETWORK_KEY);
+        this(VISION_RETURN_NETWORK_KEY);
     }
 
     private MustangCoprocessor(String key) {
         keyData = new NetworkTableObject(key);
         cameraLEDs = new Solenoid(RobotMap.PCMODULE, RobotMap.VISION_LED_PCM);
         SmartDashboard.putBoolean("LEDs on", false);
+    }
+
+    public void getLatestVisionData(){
+        NetworkTableEntry visionTrigger = visionTable.getEntry(VISION_TRIGGER_NETWORK_KEY);
+        visionTrigger.forceSetString("vision");
     }
 
     /**
@@ -75,10 +85,8 @@ public class MustangCoprocessor {
          * The key of the NetworkTableEntry that this Object will be attached to.
          */
         public NetworkTableObject(String key) {
-            NetworkTableInstance instance = NetworkTableInstance.getDefault();
-            NetworkTable table = instance.getTable(TABLE_NAME);
             entry = instance.getEntry(key);
-            table.addEntryListener(key, (table2, key2, entry, value, flags) -> {
+            visionTable.addEntryListener(key, (table2, key2, entry, value, flags) -> {
                 this.entry = entry;
             }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
             this.key = key;
@@ -125,10 +133,12 @@ public class MustangCoprocessor {
      * @param enabled true for vision, false for no vision
      */
     public void enableVision(boolean enabled) {
+        NetworkTableEntry visionHealth = healthTable.getEntry("vision");
         if (enabled) {
-            SmartDashboard.putString("vision-enabled", "enabled");
+            visionHealth.forceSetString("green");
+
         } else {
-            SmartDashboard.putString("vision-enabled", "disabled");
+            visionHealth.forceSetString("red");
         }
     }
 
