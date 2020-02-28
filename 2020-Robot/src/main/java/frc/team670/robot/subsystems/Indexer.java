@@ -6,9 +6,11 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Solenoid;
-
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.sensors.TimeOfFlightSensor;
 import frc.team670.robot.utils.Logger;
@@ -194,6 +196,13 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         updraw.enableVoltageCompensation(true);
 
         reset();
+    }
+
+    private void pushGameDataToDashboard(){
+        NetworkTableInstance instance = NetworkTableInstance.getDefault();
+        NetworkTable table = instance.getTable("/SmartDashboard");
+        NetworkTableEntry gameData = table.getEntry("Balls");
+        gameData.forceSetNumber(totalNumOfBalls());
     }
 
     /**
@@ -577,6 +586,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         if (isIntaking && intakeBall() && totalNumOfBalls() < 5) {
             rotateToNextChamber();
         }
+
+        pushGameDataToDashboard();
     }
 
     public void stopIntaking() {

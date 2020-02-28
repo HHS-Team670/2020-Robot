@@ -144,11 +144,6 @@ public class XKeys {
 
     }
 
-    public static void pushGameDataToDashboard(int x){
-        NetworkTableEntry gameData = table.getEntry("Balls");
-        gameData.forceSetNumber(x);
-    }
-
     private void extendClimber() {
         MustangScheduler.getInstance().schedule(new ExtendClimber(climber));
     }
