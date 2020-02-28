@@ -14,7 +14,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableType;
 import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.commands.climb.ExtendClimber;
-import frc.team670.robot.commands.climb.RetractClimber;
+import frc.team670.robot.commands.climb.Climb;
 import frc.team670.robot.commands.indexer.RotateToIntakePosition;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.RunIntake;
@@ -22,8 +22,9 @@ import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
 import frc.team670.robot.commands.routines.ShootAllBalls;
 import frc.team670.robot.commands.shooter.StartShooter;
-import frc.team670.robot.commands.turret.RotateTurretWithVision;
+import frc.team670.robot.commands.turret.RotateTurret;
 import frc.team670.robot.subsystems.Conveyor;
+import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
@@ -47,6 +48,7 @@ public class XKeys {
 
     private static NetworkTable visionTable;
 
+    private DriveBase drivebase;
     private Climber climber;
     private Intake intake;
     private Shooter shooter;
@@ -68,12 +70,13 @@ public class XKeys {
         public static final double CANCEL_ALL = 18;
     }
 
-    public XKeys(Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Climber climber, Turret turret, MustangCoprocessor pi) {
+    public XKeys(DriveBase drivebase, Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Climber climber, Turret turret, MustangCoprocessor pi) {
         SmartDashboard.putString("XKEYS", "XKeys constructor");
         instance = NetworkTableInstance.getDefault();
         table = instance.getTable("SmartDashboard");
         visionTable = instance.getTable("Vision");
 
+        this.drivebase = drivebase;
         this.intake = intake;
         this.conveyor = conveyor;
         this.indexer = indexer;
@@ -149,11 +152,11 @@ public class XKeys {
     }
 
     private void extendClimber() {
-        MustangScheduler.getInstance().schedule(new ExtendClimber(climber, 198.21));
+        MustangScheduler.getInstance().schedule(new ExtendClimber(climber));
     }
 
     private void retractClimber() {
-        MustangScheduler.getInstance().schedule(new RetractClimber(climber, 0));
+        MustangScheduler.getInstance().schedule(new Climb(climber));
     }
 
     private void initShooter() {
@@ -185,7 +188,7 @@ public class XKeys {
     }
 
     private void visionAlign() {
-        MustangScheduler.getInstance().schedule(new RotateTurretWithVision(turret, coprocessor));
+        MustangScheduler.getInstance().schedule(new RotateTurret(turret, drivebase, coprocessor));
     }
 
     private void indexerAtIntake() {

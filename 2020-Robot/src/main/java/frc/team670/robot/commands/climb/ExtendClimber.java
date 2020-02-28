@@ -17,15 +17,18 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+/**
+ * Raise the climber mechanism to its maximum allowed height so it can reach the
+ * generator bar.
+ */
 public class ExtendClimber extends CommandBase implements MustangCommand {
 
   private Climber climber;
-  private double heightCM;
+  private static final double MAX_EXTENDING_HEIGHT_CM = 66.24;
   private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-  public ExtendClimber(Climber climber, double heightCM) {
+  public ExtendClimber(Climber climber) {
     this.climber = climber;
-    this.heightCM = heightCM;
     addRequirements(climber);
     healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
     healthReqs.put(climber, HealthState.GREEN);
@@ -34,20 +37,21 @@ public class ExtendClimber extends CommandBase implements MustangCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climber.set(0);
+    climber.setPower(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.climb(heightCM);
     climber.setExtending(true);
+    climber.climb(MAX_EXTENDING_HEIGHT_CM);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    climber.set(0); // TODO: check to make sure this is right
+    climber.setPower(0);
+    climber.setExtending(false);
   }
 
   // Returns true when the command should end.
