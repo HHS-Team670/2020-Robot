@@ -25,7 +25,7 @@ import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Turret;
-import frc.team670.robot.subsystems.climber.Climber;
+import frc.team670.robot.subsystems.Climber;
 
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.MustangScheduler;

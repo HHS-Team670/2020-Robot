@@ -1,4 +1,4 @@
-package frc.team670.robot.subsystems.climber;
+package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;

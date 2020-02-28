@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.subsystems.climber.Climber;
+import frc.team670.robot.subsystems.Climber;
 
 /**
  * Moves the climber slowly down until it hooks on the generator bar. 
