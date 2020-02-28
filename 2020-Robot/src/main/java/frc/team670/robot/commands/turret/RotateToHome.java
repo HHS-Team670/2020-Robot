@@ -7,10 +7,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.utils.Logger;
 import frc.team670.robot.subsystems.Turret;
 
 /**
- * Rotate the turret to the reverse limit in order to zero the encoder. 
+ * Rotate the turret to the forward limit in order to zero the encoder. 
  */
 public class RotateToHome extends CommandBase implements MustangCommand {
 
@@ -26,19 +27,22 @@ public class RotateToHome extends CommandBase implements MustangCommand {
 
     @Override
     public void execute(){
-        turret.moveByPercentOutput(-0.01); // move very slowly until we hit the limit
+        Logger.consoleLog("Turret moving to zero");
+        turret.moveByPercentOutput(0.05); // move very slowly until we hit the limit
     }
 
     @Override
     public boolean isFinished() {
-        return turret.isReverseLimitSwitchTripped();
+        return turret.isForwardLimitSwitchTripped();
     }
 
     @Override
     public void end(boolean interrupted){
+        Logger.consoleLog("Turret reached limit");
         turret.stop();
         if (!interrupted){
             turret.resetRotatorEncoderFromLimitSwitch();
+            Logger.consoleLog("Turret encoder position is %s", turret.getRotatorEncoder().getPosition());
         }
     }
 

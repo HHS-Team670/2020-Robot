@@ -23,7 +23,6 @@ import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
-
 /**
  * Selects an autonomous routine to run based on choice from driver
  */
@@ -103,9 +102,10 @@ public class AutoSelector {
     }
 
     /**
-     * 
-     * @return the value of the enum for auto routines based on an int input from the
+     * Gets the value of the enum for auto routines based on an int input from the
      * driver dashboard.
+     * 
+     * @return
      */
     public AutoRoutine select() {
         table.addEntryListener("auton-chooser", (table2, key2, entry, value, flags) -> {

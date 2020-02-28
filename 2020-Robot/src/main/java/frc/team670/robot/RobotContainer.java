@@ -30,6 +30,9 @@ import frc.team670.robot.subsystems.climber.Climber;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.commands.auton.AutoSelector;
+import frc.team670.robot.commands.climb.ExtendClimber;
+import frc.team670.robot.commands.climb.HookOnBar;
+import frc.team670.robot.commands.climb.Climb;
 import frc.team670.robot.commands.indexer.RotateToNextChamber;
 import frc.team670.robot.commands.indexer.StopIntaking;
 import frc.team670.robot.commands.intake.DeployIntake;
@@ -37,7 +40,7 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
 import frc.team670.robot.commands.turret.RotateToHome;
-import frc.team670.robot.commands.turret.RotateTurretWithVision;
+import frc.team670.robot.commands.turret.RotateTurret;
 
 import frc.team670.robot.utils.MustangController;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
@@ -68,7 +71,7 @@ public class RobotContainer {
 
   private static MustangCoprocessor coprocessor = new MustangCoprocessor();
 
-  private static OI oi = new OI(intake, conveyor, indexer, shooter, climber, turret, coprocessor);
+  private static OI oi = new OI(driveBase, intake, conveyor, indexer, shooter, climber, turret, coprocessor);
 
   private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret, coprocessor);
 
@@ -77,6 +80,9 @@ public class RobotContainer {
   private static JoystickButton runIntakeOut = new JoystickButton(oi.getOperatorController(), 5);
   private static JoystickButton toggleShooter = new JoystickButton(oi.getOperatorController(), 6);
   private static JoystickButton sendOneBall = new JoystickButton(oi.getOperatorController(), 2);
+  private static JoystickButton extendClimb = new JoystickButton(oi.getOperatorController(), 11);
+  private static JoystickButton retractClimb = new JoystickButton(oi.getOperatorController(), 12);
+  private static JoystickButton hook = new JoystickButton(oi.getOperatorController(), 10);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -128,6 +134,9 @@ public class RobotContainer {
     runIntakeOut.toggleWhenPressed(new RunIntake(false, intake));
     toggleShooter.toggleWhenPressed(new RotateIndexerToUptakeThenShoot(indexer, shooter));
     sendOneBall.whenHeld(new RotateToNextChamber(indexer));
+    extendClimb.whenHeld(new ExtendClimber(climber));
+    retractClimb.whenPressed(new Climb(climber));
+    hook.whenPressed(new HookOnBar(climber));
   }
 
   /**
@@ -136,7 +145,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    return (MustangCommand)(new SequentialCommandGroup(
+    return (MustangCommand)(
+      new SequentialCommandGroup(
       new RotateToHome(turret),
       (Command)(autoSelector.getSelectedRoutine())
     ));
@@ -160,6 +170,7 @@ public class RobotContainer {
   }
 
   public static void teleopPeriodic() {
+    // climber.test();
     toggleIntake.whenPressed(new DeployIntake(!intake.isDeployed(), intake));
     MustangScheduler.getInstance().run();
   }

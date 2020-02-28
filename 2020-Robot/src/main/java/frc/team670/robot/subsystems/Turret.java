@@ -121,6 +121,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     public Turret() {
         super(turretConfig);
+        rotator.setInverted(true);
         forwardLimit = rotator.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
         reverseLimit = rotator.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
         forwardLimit.enableLimitSwitch(true);
