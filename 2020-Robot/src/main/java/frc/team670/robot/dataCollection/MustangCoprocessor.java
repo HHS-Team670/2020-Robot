@@ -119,6 +119,19 @@ public class MustangCoprocessor {
 
     }
 
+    /**
+     * Sets whether to use vision
+     * 
+     * @param enabled true for vision, false for no vision
+     */
+    public void enableVision(boolean enabled) {
+        if (enabled) {
+            SmartDashboard.putString("vision-enabled", "enabled");
+        } else {
+            SmartDashboard.putString("vision-enabled", "disabled");
+        }
+    }
+
     public void turnOnLEDs() {
         cameraLEDs.set(true);
     }

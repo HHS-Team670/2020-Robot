@@ -17,7 +17,7 @@ import frc.team670.paths.Path;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.shooter.Shoot;
-import frc.team670.robot.commands.turret.RotateTurretWithVision;
+import frc.team670.robot.commands.turret.RotateTurret;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
@@ -58,7 +58,7 @@ public class Generator3BallMidToGenerator2BallMidThenShoot extends SequentialCom
         // Shooter is already running
         getTrajectoryFollowerCommand(trajectory, driveBase),
         new ParallelCommandGroup(
-          new RotateTurretWithVision(turret, coprocessor),
+          new RotateTurret(turret, driveBase, coprocessor),
           new Shoot(shooter)
         ),
         new SendAllBalls(indexer)

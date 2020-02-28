@@ -17,7 +17,7 @@ import frc.team670.paths.Path;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.shooter.Shoot;
-import frc.team670.robot.commands.turret.RotateTurretWithVision;
+import frc.team670.robot.commands.turret.RotateTurret;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
@@ -58,7 +58,7 @@ public class Generator2BallSideToTrenchThenShoot extends SequentialCommandGroup 
 
         new ParallelCommandGroup(
           new Shoot(shooter), 
-          new RotateTurretWithVision(turret, coprocessor)
+          new RotateTurret(turret, driveBase, coprocessor)
           ),
         new SendAllBalls(indexer));
   }
