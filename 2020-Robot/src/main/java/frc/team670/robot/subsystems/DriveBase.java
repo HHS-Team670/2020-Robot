@@ -30,6 +30,7 @@ import frc.team670.robot.dataCollection.sensors.NavX;
 import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.MustangNotifications;
+import frc.team670.robot.utils.functions.MathUtils;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
@@ -52,6 +53,9 @@ public class DriveBase extends MustangSubsystemBase {
   private DifferentialDriveOdometry m_odometry;
 
   private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
+  
+  private static final double CURRENT_WHEN_AGAINST_BAR = 5; //TODO: Find this
+  private int againstBarCount = 0;
 
   public DriveBase() {
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
@@ -564,6 +568,22 @@ public class DriveBase extends MustangSubsystemBase {
 
   public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
     tankDrive(leftVoltage / RobotController.getBatteryVoltage(), rightVoltage / RobotController.getBatteryVoltage());
+  }
+
+  public boolean isAlignedOnFloorBars(){
+    double backLeftCurrent = left2.getOutputCurrent();
+    double backRightCurrent = right2.getOutputCurrent();
+    if (backLeftCurrent > 0.2 && backRightCurrent > 0.2){
+      if (backLeftCurrent >= CURRENT_WHEN_AGAINST_BAR && backRightCurrent >= CURRENT_WHEN_AGAINST_BAR) {
+          againstBarCount++;
+      } else {
+          againstBarCount = 0;
+      }
+      if (againstBarCount>= 4){ // 4 consecutive readings higher than peak
+          return true;
+      }
+  }
+    return false;
   }
 
 }
