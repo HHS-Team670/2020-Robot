@@ -563,13 +563,16 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         if (!hasReachedTargetPosition() && isJammed()) {
             unjamMode = true;
             posWhenJammed = getCurrentAngleInDegrees();
+            // Move to the previous chamber since most common jam case seems to be on bottom
             if (setpoint - getMotorRotationsFromAngle(posWhenJammed) > 0) {
-                setTemporaryMotionTarget(getMotorRotationsFromAngle(posWhenJammed - (INDEXER_DEGREES_PER_CHAMBER)));
+                setTemporaryMotionTarget(setpoint - getMotorRotationsFromAngle(INDEXER_DEGREES_PER_CHAMBER));
             } else {
-                setTemporaryMotionTarget(getMotorRotationsFromAngle(posWhenJammed + (INDEXER_DEGREES_PER_CHAMBER)));
+                setTemporaryMotionTarget(setpoint + getMotorRotationsFromAngle(INDEXER_DEGREES_PER_CHAMBER));
             }
         } else if (unjamMode && MathUtils.doublesEqual(tempSetpoint, rotator_encoder.getPosition(), ALLOWED_ERR)) {
             unjamMode = false;
+            deployPusher(true);
+            deployPusher(false);
             resetSmartMotionSettingsToSystem();
             setSystemMotionTarget(setpoint);
         }

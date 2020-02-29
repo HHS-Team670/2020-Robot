@@ -62,7 +62,8 @@ public class Shooter extends MustangSubsystemBase {
   // Format: {Distance from target in meters, Stage 2 RPM}
   // All a guess right now
   private static final double[][] FLYWHEEL_RPM_AT_DISTANCE = { 
-    { 8.382, 2750 }
+    { 8.382, 2750 }, // this needs to be refound
+    { 3.05, 2800 } // baseline
 
   };
 
