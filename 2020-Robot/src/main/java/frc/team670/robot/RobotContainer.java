@@ -36,6 +36,7 @@ import frc.team670.robot.commands.climb.Climb;
 import frc.team670.robot.commands.indexer.RotateToNextChamber;
 import frc.team670.robot.commands.indexer.StopIntaking;
 import frc.team670.robot.commands.intake.DeployIntake;
+import frc.team670.robot.commands.intake.ReverseIntakeConveyor;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
@@ -132,7 +133,7 @@ public class RobotContainer {
     toggleIntake.whenPressed(new DeployIntake(!intake.isDeployed(), intake));
     runIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
     runIntakeIn.whenReleased(new StopIntaking(intake, conveyor, indexer));
-    runIntakeOut.toggleWhenPressed(new RunIntake(false, intake));
+    runIntakeOut.toggleWhenPressed(new ReverseIntakeConveyor(intake, conveyor));
     toggleShooter.toggleWhenPressed(new RotateIndexerToUptakeThenShoot(indexer, shooter));
     sendOneBall.whenHeld(new RotateToNextChamber(indexer));
     extendClimb.whenHeld(new ExtendClimber(climber));
