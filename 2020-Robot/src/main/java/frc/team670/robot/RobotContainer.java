@@ -84,6 +84,7 @@ public class RobotContainer {
   private static JoystickButton retractClimb = new JoystickButton(oi.getOperatorController(), 12);
   private static JoystickButton hook = new JoystickButton(oi.getOperatorController(), 10);
 
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -163,6 +164,7 @@ public class RobotContainer {
     zeroSubsystemPositions();
     driveBase.setTeleopRampRate();
     driveBase.initDefaultCommand();
+    MustangScheduler.getInstance().schedule(new RotateToHome(turret));
     // turret.initDefaultCommand();
   }
 
