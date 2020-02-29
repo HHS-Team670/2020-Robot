@@ -573,7 +573,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         } else if (unjamMode && MathUtils.doublesEqual(tempSetpoint, rotator_encoder.getPosition(), ALLOWED_ERR)) {
             deployPusher(true);
             countToPush++;
-            if (countToPush == 3){
+            if (countToPush == 6){
                 deployPusher(false);
                 countToPush = 0;
                 unjamMode = false;

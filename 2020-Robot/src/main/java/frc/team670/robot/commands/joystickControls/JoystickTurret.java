@@ -45,6 +45,10 @@ public class JoystickTurret extends CommandBase implements MustangCommand {
     }
   }
 
+  public void end(){
+    turret.moveByPercentOutput(0);
+  }
+
   @Override
   public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
     return healthReqs;
