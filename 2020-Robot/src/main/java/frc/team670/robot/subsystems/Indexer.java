@@ -588,6 +588,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             } else {
                 setTemporaryMotionTarget(setpoint + getMotorRotationsFromAngle(INDEXER_DEGREES_PER_CHAMBER));
             }
+            isIntaking = true;
         } else if (unjamMode && MathUtils.doublesEqual(tempSetpoint, rotator_encoder.getPosition(), ALLOWED_ERR)) {
             // deployPusher(true);
             // countToPush++;
@@ -595,7 +596,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             //     deployPusher(false);
             //     countToPush = 0;
             //     unjamMode = false;
-            isIntaking = true;
             resetSmartMotionSettingsToSystem();
             setSystemMotionTarget(setpoint);
         }
