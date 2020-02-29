@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.vision.GetVisionData;
@@ -36,12 +36,8 @@ public class UpdatePoseFromVision extends SequentialCommandGroup implements Must
         double angleFromTargetForwardDegrees = coprocessor.getAngleToTargetPerpendicular();
         double xToTargetForward = distanceFromTargetMeters * Math.sin(Math.toRadians(angleFromTargetForwardDegrees));
         double yToTargetForward = distanceFromTargetMeters * Math.cos(Math.toRadians(angleFromTargetForwardDegrees));
-        // Todo need to check direction?
         double currentX = FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS + xToTargetForward;
-        Translation2d updatedLoc = new Translation2d(currentX, yToTargetForward);
-
-        // driveBase.resetOdometry(pose);
-
+        driveBase.resetOdometry(new Pose2d(currentX, yToTargetForward, Rotation2d.fromDegrees(driveBase.getHeading())));
     }
 
     // This should basically be an instant command

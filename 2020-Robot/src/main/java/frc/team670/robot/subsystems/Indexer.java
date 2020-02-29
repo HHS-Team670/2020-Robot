@@ -48,6 +48,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     private double updrawPreviousCurrent;
 
     private int exceededCurrentLimitCount = 0;
+    private int countToPush = 0;
     private boolean unjamMode = false;
     private boolean indexerIsJammed = false;
 
@@ -570,11 +571,15 @@ public class Indexer extends SparkMaxRotatingSubsystem {
                 setTemporaryMotionTarget(setpoint + getMotorRotationsFromAngle(INDEXER_DEGREES_PER_CHAMBER));
             }
         } else if (unjamMode && MathUtils.doublesEqual(tempSetpoint, rotator_encoder.getPosition(), ALLOWED_ERR)) {
-            unjamMode = false;
             deployPusher(true);
-            deployPusher(false);
-            resetSmartMotionSettingsToSystem();
-            setSystemMotionTarget(setpoint);
+            countToPush++;
+            if (countToPush == 3){
+                deployPusher(false);
+                countToPush = 0;
+                unjamMode = false;
+                resetSmartMotionSettingsToSystem();
+                setSystemMotionTarget(setpoint);
+            }
         }
 
         // Use current to check if a ball has successfully left the indexer through the
