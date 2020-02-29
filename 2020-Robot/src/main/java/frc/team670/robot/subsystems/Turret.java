@@ -14,8 +14,8 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     // TODO: Set these values. Keeping it small right now for testing.
 
-    private static final int TURRET_MIN_DEGREES = -50;
-    private static final int TURRET_MAX_DEGREES = 50;
+    private static final int TURRET_MIN_DEGREES = -120;
+    private static final int TURRET_MAX_DEGREES = 120;
 
     private static final int SOFT_MINIMUM_DEGREES = TURRET_MIN_DEGREES + 5;
     private static final int SOFT_MAXIMUM_DEGREES = TURRET_MAX_DEGREES - 5;

@@ -7,6 +7,7 @@ import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.utils.Logger;
 import frc.team670.robot.subsystems.Turret;
 
 import java.util.HashMap;
@@ -53,15 +54,18 @@ public class RotateTurret extends CommandBase implements MustangCommand {
     @Override
     public void initialize() {
         double relativeAngleToTarget = coprocessor.getAngleToTarget();
+        Logger.consoleLog("TurretAngle: %s", relativeAngleToTarget);
         // When vision can't detect the target, rotates the turret based on odometry
         if (relativeAngleToTarget == RobotConstants.VISION_ERROR_CODE) {
-            double currentX = driveBase.getPose().getTranslation().getX();
-            double currentY = driveBase.getPose().getTranslation().getY();
-            // Angle from known position on field to center of outer goal/vision target
-            double drivebasePosToGoalAngle = Math.toDegrees(
-                    Math.atan((currentX - FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS) / currentY));
-            // TODO: Need to figure out this, need to account for heading
-            relativeAngleToTarget = drivebasePosToGoalAngle;
+            cancel();
+            return;
+            // double currentX = driveBase.getPose().getTranslation().getX();
+            // double currentY = driveBase.getPose().getTranslation().getY();
+            // // Angle from known position on field to center of outer goal/vision target
+            // double drivebasePosToGoalAngle = Math.toDegrees(
+            //         Math.atan((currentX - FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS) / currentY));
+            // // TODO: Need to figure out this, need to account for heading
+            // relativeAngleToTarget = drivebasePosToGoalAngle;
         }
         targetAngle = turret.relativeAngleToAbsoluteInDegrees(relativeAngleToTarget);
         turret.setSystemTargetAngleInDegrees(targetAngle);

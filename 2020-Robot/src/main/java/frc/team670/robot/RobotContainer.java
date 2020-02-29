@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -36,6 +37,7 @@ import frc.team670.robot.commands.climb.Climb;
 import frc.team670.robot.commands.indexer.RotateToNextChamber;
 import frc.team670.robot.commands.indexer.StopIntaking;
 import frc.team670.robot.commands.intake.DeployIntake;
+import frc.team670.robot.commands.intake.RunConveyor;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
@@ -132,7 +134,7 @@ public class RobotContainer {
     toggleIntake.whenPressed(new DeployIntake(!intake.isDeployed(), intake));
     runIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
     runIntakeIn.whenReleased(new StopIntaking(intake, conveyor, indexer));
-    runIntakeOut.toggleWhenPressed(new RunIntake(false, intake));
+    runIntakeOut.toggleWhenPressed((new RunIntake(true, intake)));
     toggleShooter.toggleWhenPressed(new RotateIndexerToUptakeThenShoot(indexer, shooter));
     sendOneBall.whenHeld(new RotateToNextChamber(indexer));
     extendClimb.whenHeld(new ExtendClimber(climber));
@@ -165,7 +167,7 @@ public class RobotContainer {
     driveBase.setTeleopRampRate();
     driveBase.initDefaultCommand();
     MustangScheduler.getInstance().schedule(new RotateToHome(turret));
-    // turret.initDefaultCommand();
+    turret.initDefaultCommand();
   }
 
   public static void disabled(){

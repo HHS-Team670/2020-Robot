@@ -50,7 +50,7 @@ public class RobotMap {
 
   public static final int INTAKE_DEPLOYER = 0; 
   public static final int INDEXER_PUSHER_CLIMBER_DEPLOY = 1;
-  public static final int VISION_LED_PCM = 2;
+  public static final int VISION_LED_PCM = 4;
 
   // SENSORS
 
