@@ -36,7 +36,7 @@ public class Shooter extends MustangSubsystemBase {
   private CANEncoder stage2_mainEncoder;
   private CANPIDController stage2_mainPIDController;
 
-  private double STAGE_2_SPEED = 2800; // Will change later if we adjust by distance
+  private double STAGE_2_SPEED = 2600; // Will change later if we adjust by distance
   private static double STAGE_2_DEFAULT_SPEED;
 
   private static double MAX_SHOT_DISTANCE_METERS = 8.382; // = 27.5 feet, this is a guess
