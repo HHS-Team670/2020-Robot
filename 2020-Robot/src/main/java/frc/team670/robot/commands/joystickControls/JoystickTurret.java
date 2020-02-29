@@ -39,10 +39,20 @@ public class JoystickTurret extends CommandBase implements MustangCommand {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double power = RobotContainer.getOperatorController().getZ()/10;
-    if (RobotContainer.getOperatorController().getPOV(0) == 0) {
-      turret.moveByPercentOutput(power);
+    if (RobotContainer.getOperatorController().getRawButton(4)) {
+      double power = RobotContainer.getOperatorController().getZ()/20;
+      if(Math.abs(power) > 0.025){
+        turret.moveByPercentOutput(power);
+      }
+      else{
+        turret.moveByPercentOutput(0);
+      }
     }
+  }
+
+  @Override
+  public boolean isFinished(){
+    return false;
   }
 
   public void end(){
