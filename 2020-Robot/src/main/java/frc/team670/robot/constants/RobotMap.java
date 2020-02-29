@@ -21,8 +21,8 @@ public class RobotMap {
   public final static Port NAVX_PORT = SerialPort.Port.kUSB;
 
   // Shooter
-  public final static int SHOOTER_STAGE_2_MAIN = 11;
-  public final static int SHOOTER_STAGE_2_FOLLOWER = 12;
+  public final static int SHOOTER_MAIN = 11;
+  public final static int SHOOTER_FOLLOWER = 12;
 
   // Turret
   public static final int TURRET_ROTATOR = 24;

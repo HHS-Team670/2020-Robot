@@ -165,7 +165,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
 
         public IdleMode setRotatorIdleMode() {
-            return IdleMode.kBrake;
+            return IdleMode.kCoast;
         }
 
     }
@@ -588,7 +588,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             } else {
                 setTemporaryMotionTarget(setpoint + getMotorRotationsFromAngle(INDEXER_DEGREES_PER_CHAMBER));
             }
-            isIntaking = true;
         } else if (unjamMode && MathUtils.doublesEqual(tempSetpoint, rotator_encoder.getPosition(), ALLOWED_ERR)) {
             // deployPusher(true);
             // countToPush++;
@@ -596,8 +595,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             //     deployPusher(false);
             //     countToPush = 0;
             //     unjamMode = false;
-            resetSmartMotionSettingsToSystem();
-            setSystemMotionTarget(setpoint);
+            isIntaking = true;
         }
 
         // Use current to check if a ball has successfully left the indexer through the
@@ -609,7 +607,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             updrawingMode = false;
             chamberStates[getTopChamber()] = false;
         }
-        if (isIntaking && intakeBall() && totalNumOfBalls() < 5) {
+        if (isIntaking && intakeBall()) {
+            unjamMode = false;
             rotateToNextChamber();
         }
 
@@ -623,5 +622,16 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     public boolean isShootingChamberEmpty() {
         return !chamberStates[getTopChamber()];
+    }
+
+    /**
+     * @param true to set indexer to coast mode, false to set it to brake mode
+     */
+    public void setRotatorMode(boolean coast){
+        if (coast){
+            rotator.setIdleMode(IdleMode.kCoast);
+        } else {
+            rotator.setIdleMode(IdleMode.kBrake);
+        }
     }
 }

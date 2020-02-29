@@ -510,6 +510,9 @@ public class DriveBase extends MustangSubsystemBase {
   public void mustangPeriodic() {
     // Update the odometry in the periodic block
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
+  
+    Logger.consoleLog("Left encoder position on Pose update %s", left1Encoder.getPosition());
+    Logger.consoleLog("Right encoder position on Pose update %s", right1Encoder.getPosition());
   }
 
   /**
@@ -528,6 +531,10 @@ public class DriveBase extends MustangSubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+    left1Encoder.setPosition(0);
+    right1Encoder.setPosition(0);
+    Logger.consoleLog("Drivebase pose reset %s", pose);
+    Logger.consoleLog("Drivebase get position after reset %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
   }
 
   public void resetOdometry() {
@@ -543,6 +550,11 @@ public class DriveBase extends MustangSubsystemBase {
    */
   public void zeroHeading() {
     navXMicro.reset();
+  }
+
+  public void setHeading(double angleDegrees){
+    // TODO
+    // navXMicro.
   }
 
   /**

@@ -30,6 +30,7 @@ import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.commands.auton.AutoSelector;
+import frc.team670.robot.commands.auton.baseline.ShootThenBack;
 import frc.team670.robot.commands.climb.ExtendClimber;
 import frc.team670.robot.commands.climb.HookOnBar;
 import frc.team670.robot.commands.climb.Climb;
@@ -147,21 +148,23 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    return (MustangCommand)(
-      new SequentialCommandGroup(
-      new RotateToHome(turret),
-      (Command)(autoSelector.getSelectedRoutine())
-    ));
+    return
+      // (Command)(autoSelector.getSelectedRoutine())
+      new ShootThenBack(driveBase, intake, conveyor,
+      shooter, indexer, turret, coprocessor);
   }
 
   public static void autonomousInit(){
     indexer.reset();
     // 3 balls, in set positions, preloaded for auto
     indexer.setChamberStatesForMatchInit();
+    indexer.setRotatorMode(false); // indexer to brake mode
+    MustangScheduler.getInstance().schedule(new RotateToHome(turret));
   }
 
   public static void teleopInit() {
     indexer.reset();
+    indexer.setRotatorMode(false); // indexer to brake mode
     zeroSubsystemPositions();
     driveBase.setTeleopRampRate();
     driveBase.initDefaultCommand();
@@ -170,10 +173,13 @@ public class RobotContainer {
   }
 
   public static void disabled(){
+    indexer.setRotatorMode(true); // indexer to coast mode
   }
 
   public static void teleopPeriodic() {
     // climber.test();
+    indexer.updraw(false);
+    shooter.test();
     toggleIntake.whenPressed(new DeployIntake(!intake.isDeployed(), intake));
     MustangScheduler.getInstance().run();
   }

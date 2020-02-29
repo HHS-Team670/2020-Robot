@@ -11,7 +11,7 @@ import frc.team670.robot.utils.Logger;
 import frc.team670.robot.subsystems.Turret;
 
 /**
- * Rotate the turret to the forward limit in order to zero the encoder. 
+ * Rotate the turret to the reverse limit in order to zero the encoder. 
  */
 public class RotateToHome extends CommandBase implements MustangCommand {
 
@@ -28,12 +28,12 @@ public class RotateToHome extends CommandBase implements MustangCommand {
     @Override
     public void execute(){
         Logger.consoleLog("Turret moving to zero");
-        turret.moveByPercentOutput(0.05); // move very slowly until we hit the limit
+        turret.moveByPercentOutput(-0.05); // move very slowly until we hit the limit
     }
 
     @Override
     public boolean isFinished() {
-        return turret.isForwardLimitSwitchTripped();
+        return turret.isReverseLimitSwitchTripped();
     }
 
     @Override
