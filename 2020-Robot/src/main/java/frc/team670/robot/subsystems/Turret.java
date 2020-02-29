@@ -1,7 +1,6 @@
 package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANDigitalInput;
-import com.revrobotics.CANError;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMax.IdleMode;
 
@@ -14,8 +13,9 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     // TODO: Set these values. Keeping it small right now for testing.
 
-    private static final int TURRET_MIN_DEGREES = -120;
-    private static final int TURRET_MAX_DEGREES = 120;
+    // Turret pointing straight forward is 180 degrees
+    private static final int TURRET_MIN_DEGREES = 0; // all the way back
+    private static final int TURRET_MAX_DEGREES = 225; // from front, past straight forward
 
     private static final int SOFT_MINIMUM_DEGREES = TURRET_MIN_DEGREES + 5;
     private static final int SOFT_MAXIMUM_DEGREES = TURRET_MAX_DEGREES - 5;
@@ -121,7 +121,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     public Turret() {
         super(turretConfig);
-        rotator.setInverted(true);
+        rotator.setInverted(false);
         forwardLimit = rotator.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
         reverseLimit = rotator.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
         forwardLimit.enableLimitSwitch(true);

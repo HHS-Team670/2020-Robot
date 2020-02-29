@@ -31,8 +31,6 @@ public class RobotConstants {
      */
     public static final int SPARK_TICKS_PER_ROTATION = 1024;
 
-    public static final double WHEEL_BASE = 25.662; // measured 1/26/19
-
     /** The number of meters per roatation of a drivebase wheel */
     public static final double DRIVEBASE_METERS_PER_ROTATION = (1 / DRIVEBASE_GEAR_RATIO) * DRIVE_BASE_WHEEL_DIAMETER
             * Math.PI * 0.0254;
@@ -40,13 +38,12 @@ public class RobotConstants {
     // Talon PID Constants
     public static final int kTimeoutMs = 0;
 
-    public static final double ksVolts = 0.11; // 0.224;
-    public static final double kvVoltSecondsPerMeter = 2.27; // 2.22;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.765; // 0.715;
+    public static final double ksVolts = 0.204;
+    public static final double kvVoltSecondsPerMeter = 2.17;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.533;
 
     // "WHEEL_BASE" is really track width
-    public static final double kTrackwidthInches = WHEEL_BASE;
-    public static final double kTrackwidthMeters = WHEEL_BASE * 0.0254;
+    public static final double kTrackwidthMeters = 0.691;
 
     // VISION Constants
 

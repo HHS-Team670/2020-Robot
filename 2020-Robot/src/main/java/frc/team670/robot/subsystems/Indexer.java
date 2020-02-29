@@ -54,20 +54,21 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     private static final double INDEXER_PEAK_CURRENT = 12; // TODO: find this
 
-    private boolean ballIsUpdrawing;
+    private boolean updrawingMode;
     private boolean isIntaking = false;
 
     private static final double ABSOLUTE_ENCODER_POSITION_AT_REVOLVER_ZERO = 0.6799; // From 2/17
 
-    // For testing purposes
     private double UPDRAW_SPEED = 0.9;
+
+    private int isUpdrawingCount = 0;
 
     // TODO: find these values
     private static final double UPDRAW_SHOOT_CURRENT_CHANGE_THRESHOLD = 0;
     private static final double UPDRAW_SHOOT_COMPLETED_CURRENT_CHANGE = 0;
 
-    // TODO: Set these
-    private static final int UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT = 5;
+    // Updraw normally at around/below 9A when it's just spinning, peaks when ball touches
+    private static final int UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT = 9; 
     private static final int UPDRAW_PEAK_CURRENT_LIMIT = 15;
 
     private static final double INDEXER_DEGREES_PER_CHAMBER = 72;
@@ -164,7 +165,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
 
         public IdleMode setRotatorIdleMode() {
-            return IdleMode.kBrake;
+            return IdleMode.kCoast;
         }
 
     }
@@ -245,8 +246,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     }
 
     /**
-     * Updates the states of the chambers after intaking a ball, and stops the ToF
-     * sensor
+     * Updates the states of the chambers after intaking a ball
      */
     public boolean intakeBall() {
         if (isIntaking){
@@ -303,9 +303,15 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     /**
      * Run the uptake, emptying the top chamber of the indexer
      * 
+     * @param reversed true to run updraw backwards, false to run normally
      */
-    public void updraw() {
-        updraw.set(ControlMode.PercentOutput, UPDRAW_SPEED);
+    public void updraw(boolean reversed) {
+        if (reversed){
+            updraw.set(ControlMode.PercentOutput, -0.8 * UPDRAW_SPEED);
+        }
+        else {
+            updraw.set(ControlMode.PercentOutput, UPDRAW_SPEED);
+        }
     }
 
     public void stopUpdraw() {
@@ -552,11 +558,23 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         return false;
     }
 
+    public boolean isUpdrawing(){
+        double updrawCurrent = updraw.getSupplyCurrent();
+        if (updrawCurrent > 0.2) {
+            if (updrawCurrent >= UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT) {
+                isUpdrawingCount++;
+            } else {
+                isUpdrawingCount = 0;
+            }
+            if (isUpdrawingCount >= 3) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void mustangPeriodic() {
-        updrawPreviousCurrent = updrawCurrent;
-        updrawCurrent = updraw.getSupplyCurrent();
-        double updraw_currentChange = updrawCurrent - updrawPreviousCurrent;
         double posWhenJammed = 0;
         // If we're trying to move somewhere and it's jammed, we try unjamming it.
         // Checking both because current readings are really unreliable when not trying
@@ -571,27 +589,26 @@ public class Indexer extends SparkMaxRotatingSubsystem {
                 setTemporaryMotionTarget(setpoint + getMotorRotationsFromAngle(INDEXER_DEGREES_PER_CHAMBER));
             }
         } else if (unjamMode && MathUtils.doublesEqual(tempSetpoint, rotator_encoder.getPosition(), ALLOWED_ERR)) {
-            deployPusher(true);
-            countToPush++;
-            if (countToPush == 6){
-                deployPusher(false);
-                countToPush = 0;
-                unjamMode = false;
-                resetSmartMotionSettingsToSystem();
-                setSystemMotionTarget(setpoint);
-            }
+            // deployPusher(true);
+            // countToPush++;
+            // if (countToPush == 6){
+            //     deployPusher(false);
+            //     countToPush = 0;
+            //     unjamMode = false;
+            isIntaking = true;
         }
 
         // Use current to check if a ball has successfully left the indexer through the
         // updraw. If so, marks the top chamber as empty
-        if (updraw_currentChange > UPDRAW_SHOOT_CURRENT_CHANGE_THRESHOLD) {
-            ballIsUpdrawing = true;
+        if (isUpdrawing()) {
+            updrawingMode = true;
         }
-        if (ballIsUpdrawing && updraw_currentChange < UPDRAW_SHOOT_COMPLETED_CURRENT_CHANGE) {
-            ballIsUpdrawing = false;
+        if (updrawingMode && !isUpdrawing()) { // We were updrawing but no current spike is detected anymore
+            updrawingMode = false;
             chamberStates[getTopChamber()] = false;
         }
-        if (isIntaking && intakeBall() && totalNumOfBalls() < 5) {
+        if (isIntaking && intakeBall()) {
+            unjamMode = false;
             rotateToNextChamber();
         }
 
@@ -605,5 +622,16 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     public boolean isShootingChamberEmpty() {
         return !chamberStates[getTopChamber()];
+    }
+
+    /**
+     * @param true to set indexer to coast mode, false to set it to brake mode
+     */
+    public void setRotatorMode(boolean coast){
+        if (coast){
+            rotator.setIdleMode(IdleMode.kCoast);
+        } else {
+            rotator.setIdleMode(IdleMode.kBrake);
+        }
     }
 }

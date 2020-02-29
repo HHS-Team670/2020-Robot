@@ -25,7 +25,7 @@ public class RightToGenerator2BallSidePath extends Path {
         public RightToGenerator2BallSidePath(DriveBase driveBase) {
                 super(
                         List.of(
-                                new Pose2d(3.201, 7.451, Rotation2d.fromDegrees(0)),
+                                new Pose2d(3.201, 4.5, Rotation2d.fromDegrees(0)),
                                 new Pose2d(4.995, 6.673, Rotation2d.fromDegrees(15)),
                                 new Pose2d(5.8, 5.445, Rotation2d.fromDegrees(-65))
                 ), 
