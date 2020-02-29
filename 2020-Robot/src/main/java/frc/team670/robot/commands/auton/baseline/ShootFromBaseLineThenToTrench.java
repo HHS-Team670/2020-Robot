@@ -17,11 +17,13 @@ import frc.team670.paths.center.CenterToTrenchPath;
 import frc.team670.paths.left.LeftToTrenchPath;
 import frc.team670.paths.right.RightToTrenchPath;
 import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.commands.auton.UpdatePoseFromVision;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.turret.RotateTurret;
+import frc.team670.robot.commands.vision.GetVisionData;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.Conveyor;
@@ -44,10 +46,14 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
 
     private Path trajectory;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
+    private DriveBase driveBase;
+    private MustangCoprocessor coprocessor;
 
     public ShootFromBaseLineThenToTrench(StartPosition startPosition, DriveBase driveBase, Intake intake,
             Conveyor conveyor, Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
 
+        this.driveBase = driveBase;
+        this.coprocessor = coprocessor;
         if (startPosition == StartPosition.LEFT)
             trajectory = new LeftToTrenchPath(driveBase);
         if (startPosition == StartPosition.CENTER)
@@ -61,6 +67,10 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(turret, HealthState.GREEN);
+
+        // Sets current position to the starting point of the path which is where we should be at init
+        driveBase.resetOdometry(trajectory.getStartingPose());
+
         addCommands(
                 // Get shooter up to speed and aim
                 new ParallelCommandGroup(
@@ -75,6 +85,16 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
                 ),
                 getTrajectoryFollowerCommand(trajectory, driveBase)
         );
+    }
+
+    @Override 
+    public void end(boolean interrupted){
+        if (!interrupted){
+            addCommands(
+                new GetVisionData(coprocessor),
+                new UpdatePoseFromVision(driveBase, coprocessor)
+            );
+        }
     }
 
     @Override

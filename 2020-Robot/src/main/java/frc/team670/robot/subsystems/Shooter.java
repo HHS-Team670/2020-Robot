@@ -44,11 +44,9 @@ public class Shooter extends MustangSubsystemBase {
   private static final double STAGE_2_PULLEY_RATIO = 2; // Need to check this
 
   private boolean ballHasBeenShot;
-  private double stage2_current;
-  private double stage2_prevCurrent;
-  private double stage2_currentChange;
+  private int shootingCurrentCount = 0;
 
-  private static final double SHOOTING_CURRENT_CHANGE_THRESHOLD = 0; // TODO: what is this?
+  private static final double NORMAL_CURRENT = 0; // TODO: unknown
 
   // Stage 2 values, as of 2/17 testing
   private static final double STAGE_2_V_P = 0.000100;
@@ -159,15 +157,27 @@ public class Shooter extends MustangSubsystemBase {
 
   @Override
   public void mustangPeriodic() {
-    stage2_prevCurrent = stage2_current;
-    stage2_current = stage2_mainController.getOutputCurrent();
-    stage2_currentChange = stage2_current - stage2_prevCurrent;
-    if (stage2_currentChange > SHOOTING_CURRENT_CHANGE_THRESHOLD) {
-      ballHasBeenShot = true;
-    } else {
+    if (isShooting()){
       ballHasBeenShot = false;
+    } else if (!ballHasBeenShot && !isShooting()) {
+      ballHasBeenShot = true;
     }
   }
+
+  public boolean isShooting() {
+    double current = stage2_mainController.getOutputCurrent();
+    if (current > 0.2) {
+      if (current >= NORMAL_CURRENT) {
+        shootingCurrentCount++;
+      } else {
+        shootingCurrentCount = 0;
+      }
+      if (shootingCurrentCount >= 4) {
+        return true;
+      }
+    }
+    return false;
+}
 
   public boolean hasBallBeenShot() {
     return this.ballHasBeenShot;

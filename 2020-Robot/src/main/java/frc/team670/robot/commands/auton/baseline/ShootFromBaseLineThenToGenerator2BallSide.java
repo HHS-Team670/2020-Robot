@@ -15,6 +15,7 @@ import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.turret.RotateTurret;
+import frc.team670.robot.commands.vision.GetVisionData;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
@@ -24,6 +25,7 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
+import frc.team670.robot.commands.auton.UpdatePoseFromVision;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 
 /**
@@ -37,9 +39,13 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
 
         private Path trajectory;
         private Map<MustangSubsystemBase, HealthState> healthReqs;
+        private DriveBase driveBase;
+        private MustangCoprocessor coprocessor;
 
         public ShootFromBaseLineThenToGenerator2BallSide(StartPosition startPosition, DriveBase driveBase, Intake intake, 
         Conveyor conveyor, Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
+                this.driveBase = driveBase;
+                this.coprocessor = coprocessor;
                 if (startPosition == StartPosition.LEFT)
                         trajectory = new LeftToGenerator2BallSidePath(driveBase);
                 if (startPosition == StartPosition.CENTER)
@@ -53,6 +59,10 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
                 healthReqs.put(conveyor, HealthState.GREEN);
                 healthReqs.put(indexer, HealthState.GREEN);
                 healthReqs.put(turret, HealthState.GREEN);
+
+                // Sets current position to the starting point of the path which is where we should be at init
+                driveBase.resetOdometry(trajectory.getStartingPose());
+
                 addCommands(
                         new ParallelCommandGroup(
                                 new StartShooter(shooter),
@@ -70,6 +80,17 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
                         )
                 );
 
+        }
+
+        @Override 
+        public void end(boolean interrupted){
+            if (!interrupted){
+                addCommands(
+                    new GetVisionData(coprocessor),
+                    // should check here that vision didn't return an error code before updating
+                    new UpdatePoseFromVision(driveBase, coprocessor)
+                );
+            }
         }
 
         @Override

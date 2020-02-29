@@ -30,7 +30,7 @@ public class SendAllBalls extends SequentialCommandGroup implements MustangComma
     @Override
     public void end(boolean interrupted) {
         super.end(interrupted);
-        indexer.updraw();
+        indexer.updraw(false);
     }
 
     @Override

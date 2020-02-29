@@ -29,14 +29,24 @@ public class Path {
     private static final TrajectoryConfig CONFIG = getConfig();
     private Trajectory trajectory;
     private DriveBase driveBase;
+    private List<Pose2d> waypointsList;
 
     public Path(List<Pose2d> waypoints, DriveBase driveBase) {
         this.driveBase = driveBase;
+        this.waypointsList = waypoints;
         trajectoryFromWaypoints(waypoints);
     }
 
     private void trajectoryFromWaypoints(List<Pose2d> waypoints){
         this.trajectory = TrajectoryGenerator.generateTrajectory(waypoints, CONFIG);
+    }
+
+    public Pose2d getStartingPose(){
+        return this.waypointsList.get(0);
+    }
+
+    public Pose2d getEndingPose(){
+        return this.waypointsList.get(waypointsList.size() - 1);
     }
 
     /**
