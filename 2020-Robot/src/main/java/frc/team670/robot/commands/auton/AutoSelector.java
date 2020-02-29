@@ -23,8 +23,9 @@ import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
-import frc.team670.robot.utils.MustangNotifications;
-
+/**
+ * Selects an autonomous routine to run based on choice from driver
+ */
 public class AutoSelector {
 
     private static NetworkTableInstance instance;
@@ -121,7 +122,6 @@ public class AutoSelector {
      * @return the command corresponding to the autonomous routine selected by the driver
      */
     public MustangCommand getSelectedRoutine(){
-        // TODO: based on what value we get from the driver dashboard, returns the command for the appropriate auto routine
         return 
             (MustangCommand)(new SelectCommand(          
                 Map.ofEntries(

@@ -12,15 +12,12 @@ import edu.wpi.first.wpilibj.Timer;
 public class Conveyor extends MustangSubsystemBase {
 
     private SparkMAXLite roller;
-    private Timer timer;
 
     private double CONVEYOR_SPEED = 0.75; // % output from testing 2/16.
 
     public Conveyor() {
         // Conveyor motor should not be inverted
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CONVEYOR_ROLLER, Motor_Type.NEO_550);
-        timer = new Timer();
-        timer.start();
     }
 
     /**
@@ -36,9 +33,12 @@ public class Conveyor extends MustangSubsystemBase {
     }
 
     public void setRunTimed(double speed, double timeSecs) {
-        if (timer.hasPeriodPassed(timeSecs)) {
+        Timer timer = new Timer();
+        timer.start();
+        if (timer.hasElapsed(timeSecs)) {
             roller.set(speed);
         }
+        timer.stop();
         stop();
     }
 

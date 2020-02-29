@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.team670.robot.subsystems.MustangSubsystemBase;
@@ -25,7 +25,7 @@ import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Turret;
-import frc.team670.robot.subsystems.climber.Climber;
+import frc.team670.robot.subsystems.Climber;
 
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.MustangScheduler;
@@ -146,11 +146,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    // return (MustangCommand)(new ParallelCommandGroup(
-    //   new RotateToHome(turret),
-    //   (Command)(autoSelector.getSelectedRoutine())
-    // ));
-    return new RotateToHome(turret);
+    return (MustangCommand)(
+      new SequentialCommandGroup(
+      new RotateToHome(turret),
+      (Command)(autoSelector.getSelectedRoutine())
+    ));
   }
 
   public static void autonomousInit(){

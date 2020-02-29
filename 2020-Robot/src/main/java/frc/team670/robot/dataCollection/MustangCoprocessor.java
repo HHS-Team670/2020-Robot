@@ -14,6 +14,7 @@ import frc.team670.robot.utils.functions.MathUtils;
 /**
  * Stores values off of NetworkTables for easy retrieval and gives them
  * Listeners to update the stored values as they are changed.
+ * 
  * @author ctychen, lakshbhambhani
  */
 public class MustangCoprocessor {
@@ -30,7 +31,7 @@ public class MustangCoprocessor {
     // These are for sending vision health to dashboard
     private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
     private static NetworkTable healthTable = instance.getTable("/SmartDashboard");
-    
+
     // table for vision
     NetworkTable visionTable = instance.getTable(VISION_TABLE_NAME);
 
@@ -47,17 +48,26 @@ public class MustangCoprocessor {
         SmartDashboard.putBoolean("LEDs on", false);
     }
 
-    public void getLatestVisionData(){
+    public void getLatestVisionData() {
         NetworkTableEntry visionTrigger = visionTable.getEntry(VISION_TRIGGER_NETWORK_KEY);
         visionTrigger.forceSetString("vision");
     }
 
     /**
      * 
-     * @return angle from camera to the target, in degrees
+     * @return the horizontal angle between the camera-forward to the robot-target line
      */
     public double getAngleToTarget() {
         return keyData.getEntry(0);
+    }
+
+    /**
+     * 
+     * @return the horizontal angle between the target-forward and the
+     *         robot-target line
+     */
+    public double getAngleToTargetPerpendicular() {
+        return keyData.getEntry(1);
     }
 
     /**
