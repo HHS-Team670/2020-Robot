@@ -291,12 +291,23 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         setSystemTargetAngleInDegrees(((getBottomChamber() -1) % 5) * INDEXER_DEGREES_PER_CHAMBER);
     }
 
+    /**
+     * Rotates such that the next empty chamber is at the bottom 
+     */
     private void rotateToNextEmptyChamber() {
         double setpoint = INDEXER_DEGREES_PER_CHAMBER * getIntakeChamber() + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES;
         setSystemTargetAngleInDegrees(setpoint);
     }
 
-    public void spinRevolver(){
+    /**
+     * Rotates such that the chamber at the top of the indexer is empty
+     */
+    public void rotateToEmptyAtTop()   {
+        double setpoint = INDEXER_DEGREES_PER_CHAMBER * getIntakeChamber() + CHAMBER_0_AT_TOP_POS_IN_DEGREES;
+        setSystemTargetAngleInDegrees(setpoint);
+    }
+
+    public void spinRevolver()  {
         setSystemMotionTarget(getMotorRotationsFromAngle(getCurrentAngleInDegrees() + 360));
     }
 
