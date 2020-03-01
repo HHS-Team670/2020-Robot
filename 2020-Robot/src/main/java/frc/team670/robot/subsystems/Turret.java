@@ -14,11 +14,11 @@ public class Turret extends SparkMaxRotatingSubsystem {
     // TODO: Set these values. Keeping it small right now for testing.
 
     // Turret pointing straight forward is 180 degrees
-    private static final int TURRET_MIN_DEGREES = 0; // all the way back
-    private static final int TURRET_MAX_DEGREES = 225; // from front, past straight forward
+    private static final int TURRET_MIN_DEGREES = -230; // all the way back
+    private static final int TURRET_MAX_DEGREES = 12; // from front, past straight forward
 
-    private static final int SOFT_MINIMUM_DEGREES = TURRET_MIN_DEGREES + 5;
-    private static final int SOFT_MAXIMUM_DEGREES = TURRET_MAX_DEGREES - 5;
+    private static final int SOFT_MINIMUM_DEGREES = TURRET_MIN_DEGREES + 3;
+    private static final int SOFT_MAXIMUM_DEGREES = TURRET_MAX_DEGREES - 3;
 
     private CANDigitalInput forwardLimit;
     private CANDigitalInput reverseLimit;
@@ -121,7 +121,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     public Turret() {
         super(turretConfig);
-        rotator.setInverted(false);
+        rotator.setInverted(true);
         forwardLimit = rotator.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
         reverseLimit = rotator.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
         forwardLimit.enableLimitSwitch(true);
@@ -208,5 +208,6 @@ public class Turret extends SparkMaxRotatingSubsystem {
     public void initDefaultCommand() {
         MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret(this));
     }
+
 
 }

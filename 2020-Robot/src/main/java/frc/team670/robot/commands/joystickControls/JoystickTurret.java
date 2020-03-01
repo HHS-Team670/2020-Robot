@@ -31,11 +31,6 @@ public class JoystickTurret extends CommandBase implements MustangCommand {
     healthReqs.put(this.turret, HealthState.YELLOW);
   }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-  }
-
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
@@ -48,14 +43,6 @@ public class JoystickTurret extends CommandBase implements MustangCommand {
         turret.moveByPercentOutput(0);
       }
     }
-  }
-
-  @Override
-  public boolean isFinished(){
-    return false;
-  }
-
-  public void end(){
     turret.moveByPercentOutput(0);
   }
 

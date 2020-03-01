@@ -13,14 +13,16 @@ import frc.team670.robot.subsystems.Turret;
 /**
  * Rotate the turret to the reverse limit in order to zero the encoder. 
  */
-public class RotateToHome extends CommandBase implements MustangCommand {
+public class RotateToAngle extends CommandBase implements MustangCommand {
 
     private Turret turret;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-    boolean hasReachedLimit = false;
 
-    public RotateToHome(Turret turret) {
+    private double angle;
+
+    public RotateToAngle(Turret turret, double angle) {
         this.turret = turret;
+        this.angle = angle;
         addRequirements(turret);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(turret, HealthState.GREEN);
@@ -28,28 +30,18 @@ public class RotateToHome extends CommandBase implements MustangCommand {
 
     @Override
     public void execute(){
-        Logger.consoleLog("Turret moving to zero");
-        turret.moveByPercentOutput(0.15); // move very slowly until we hit the limit
-        if(turret.isForwardLimitSwitchTripped()){
-            turret.stop();
-            turret.resetRotatorEncoderFromLimitSwitch();
-            hasReachedLimit = true;
-        }
-        // if(hasReachedLimit){
-        //     // turret.moveByPercentOutput(-0.05);
-        //     turret.setSystemTargetAngleInDegrees(-20);
-        // }
+        turret.setSystemTargetAngleInDegrees(angle);
     }
 
     @Override
     public boolean isFinished() {
-        // Logger.consoleLog("turretAngle %s %s", turret.hasReachedTargetPosition(), hasReachedLimit);
-        return hasReachedLimit;
+        Logger.consoleLog("turretCurrentPosition %s", turret.getUnadjustedPosition());
+        Logger.consoleLog("turretAngle %s", turret.getCurrentAngleInDegrees());
+        return turret.hasReachedTargetPosition();
     }
 
     @Override
     public void end(boolean interrupted){
-        Logger.consoleLog("Turret reached limit");
         turret.stop();
     }
 

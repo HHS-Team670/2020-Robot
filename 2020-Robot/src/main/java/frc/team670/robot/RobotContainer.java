@@ -36,14 +36,18 @@ import frc.team670.robot.commands.climb.HookOnBar;
 import frc.team670.robot.commands.climb.Climb;
 import frc.team670.robot.commands.indexer.RotateToNextChamber;
 import frc.team670.robot.commands.indexer.StopIntaking;
+import frc.team670.robot.commands.indexer.TogglePusher;
 import frc.team670.robot.commands.intake.DeployIntake;
+import frc.team670.robot.commands.intake.ReverseIntakeConveyor;
 import frc.team670.robot.commands.intake.RunConveyor;
 import frc.team670.robot.commands.intake.RunIntake;
+import frc.team670.robot.commands.intake.ToggleIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
+import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.RotateToHome;
 import frc.team670.robot.commands.turret.RotateTurret;
-
+import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.utils.MustangController;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.constants.OI;
@@ -82,9 +86,12 @@ public class RobotContainer {
   private static JoystickButton runIntakeOut = new JoystickButton(oi.getOperatorController(), 5);
   private static JoystickButton toggleShooter = new JoystickButton(oi.getOperatorController(), 6);
   private static JoystickButton sendOneBall = new JoystickButton(oi.getOperatorController(), 2);
+  private static JoystickButton rotateIndexerBackwards = new JoystickButton(oi.getOperatorController(), 9);
+  private static JoystickButton togglePusher = new JoystickButton(oi.getOperatorController(), 7);
   private static JoystickButton extendClimb = new JoystickButton(oi.getOperatorController(), 11);
   private static JoystickButton retractClimb = new JoystickButton(oi.getOperatorController(), 12);
   private static JoystickButton hook = new JoystickButton(oi.getOperatorController(), 10);
+  private static JoystickButton zeroTurret = new JoystickButton(oi.getOperatorController(), 8);
 
 
   /**
@@ -108,7 +115,7 @@ public class RobotContainer {
   public static void checkSubsystemsHealth() {
     for (MustangSubsystemBase s : allSubsystems) {
       s.getHealth(true);
-      // s.pushHealthToDashboard();
+      s.pushHealthToDashboard();
     }
   }
 
@@ -131,19 +138,22 @@ public class RobotContainer {
    * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    toggleIntake.whileHeld(new DeployIntake(!intake.isDeployed(), intake));
+    toggleIntake.whenPressed(new ToggleIntake(intake));
     runIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
     runIntakeIn.whenReleased(new StopIntaking(intake, conveyor, indexer));
-    runIntakeOut.toggleWhenPressed((new RunIntake(true, intake)));
+    runIntakeOut.toggleWhenPressed((new ReverseIntakeConveyor(intake, conveyor)));
     toggleShooter.toggleWhenPressed(new RotateIndexerToUptakeThenShoot(indexer, shooter));
-    sendOneBall.whenHeld(new RotateToNextChamber(indexer));
-    extendClimb.whenHeld(new ExtendClimber(climber));
+    sendOneBall.whenHeld(new RotateToNextChamber(indexer, true));
+    rotateIndexerBackwards.whenHeld(new RotateToNextChamber(indexer, false));
+    togglePusher.whenHeld(new TogglePusher(indexer));
+    extendClimb.whenPressed(new ExtendClimber(climber));
     retractClimb.whenPressed(new Climb(climber));
     hook.whenPressed(new HookOnBar(climber));
+    zeroTurret.whenPressed(new RotateToAngle(turret, 0));
   }
 
   /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
+   * Use this to pass the autonomsous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
@@ -168,20 +178,12 @@ public class RobotContainer {
     zeroSubsystemPositions();
     driveBase.setTeleopRampRate();
     driveBase.initDefaultCommand();
-    MustangScheduler.getInstance().schedule(new RotateToHome(turret));
+    MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
     turret.initDefaultCommand();
   }
 
   public static void disabled(){
     indexer.setRotatorMode(true); // indexer to coast mode
-  }
-
-  public static void teleopPeriodic() {
-    // climber.test();
-    indexer.updraw(false);
-    shooter.test();
-    toggleIntake.whenPressed(new DeployIntake(!intake.isDeployed(), intake));
-    MustangScheduler.getInstance().run();
   }
 
   public static List<MustangSubsystemBase> getSubsystems() {
