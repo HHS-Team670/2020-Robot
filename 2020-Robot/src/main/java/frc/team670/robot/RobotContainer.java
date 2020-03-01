@@ -45,11 +45,13 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.intake.ToggleIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
+import frc.team670.robot.commands.turret.GetLatestDataAndAlignTurret;
 import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.RotateToHome;
 import frc.team670.robot.commands.turret.RotateTurret;
 import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.utils.MustangController;
+import frc.team670.robot.utils.MustangController.XboxButtons;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotMap;
@@ -93,6 +95,8 @@ public class RobotContainer {
   private static JoystickButton retractClimb = new JoystickButton(oi.getOperatorController(), 12);
   private static JoystickButton hook = new JoystickButton(oi.getOperatorController(), 10);
   private static JoystickButton zeroTurret = new JoystickButton(oi.getOperatorController(), 8);
+  
+  private static JoystickButton alignTurretToTarget = new JoystickButton(oi.getDriverController(), 1);
 
 
   /**
@@ -151,6 +155,8 @@ public class RobotContainer {
     retractClimb.whenPressed(new Climb(climber));
     hook.whenPressed(new HookOnBar(climber));
     zeroTurret.whenPressed(new RotateToAngle(turret, 0));
+
+    alignTurretToTarget.whenPressed(new GetLatestDataAndAlignTurret(turret, driveBase, coprocessor));
   }
 
   /**
@@ -197,7 +203,16 @@ public class RobotContainer {
   }
 
   public static void rumbleDriverController() {
-    oi.rumbleDriverController(0.7, 0.2);
+    // oi.rumbleDriverController(0.7, 0.2);
+    notifyDriverController(1.0, 0.3);
+  }
+
+  public static void rumbleDriverController(double power, double time){
+    oi.rumbleDriverController(power, time);
+  }
+
+  public static void notifyDriverController(double power, double time){
+    oi.notifyDriverController(power, time);
   }
 
   public static MustangController getDriverController() {

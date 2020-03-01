@@ -26,7 +26,7 @@ public class MustangCoprocessor {
     // The name of the subtable set on the Pi
     public static final String VISION_TABLE_NAME = "Vision";
     public static final String VISION_RETURN_NETWORK_KEY = "vision_values";
-    private static final String VISION_TRIGGER_NETWORK_KEY = "vision-call";
+    private static final String VISION_TRIGGER_NETWORK_KEY = "vision-data";
 
     // These are for sending vision health to dashboard
     private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
@@ -51,6 +51,11 @@ public class MustangCoprocessor {
     public void getLatestVisionData() {
         NetworkTableEntry visionTrigger = visionTable.getEntry(VISION_TRIGGER_NETWORK_KEY);
         visionTrigger.forceSetString("vision");
+    }
+
+    public void clearLastValues(){
+        NetworkTableEntry visionTrigger = visionTable.getEntry(VISION_RETURN_NETWORK_KEY);
+        visionTrigger.forceSetDoubleArray(new double[] { RobotConstants.VISION_ERROR_CODE, RobotConstants.VISION_ERROR_CODE, RobotConstants.VISION_ERROR_CODE });
     }
 
     /**

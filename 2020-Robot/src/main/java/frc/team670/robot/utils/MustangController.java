@@ -131,8 +131,8 @@ public class MustangController extends XboxController {
      * @param time  The time to rumble for in seconds
      */
     private void setRumblePower(double power) {
-        setRumble(RumbleType.kLeftRumble, 0.7);
-        setRumble(RumbleType.kRightRumble, 0.7);
+        setRumble(RumbleType.kLeftRumble, power);
+        setRumble(RumbleType.kRightRumble, power);
     }
 
     private void checkRumble() {

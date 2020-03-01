@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.robot.commands.cameras.FlipDriverCameraMode;
 import frc.team670.robot.commands.drive.teleop.FlipDriveAndCamera;
+import frc.team670.robot.commands.drive.teleop.FlipDriveDirection;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.dataCollection.XKeys;
 import frc.team670.robot.subsystems.Conveyor;
@@ -21,16 +22,14 @@ public class OI {
   private MustangController driverController;
   private Joystick operatorController;
 
-  private JoystickButton toggleReverseDrive, toggleDriverCameraMode;
+  private JoystickButton toggleReverseDrive;
 
   private XKeys xkeys;
 
   public OI(DriveBase drivebase, Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Climber climber, Turret turret, MustangCoprocessor pi) {
     driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
     toggleReverseDrive = new JoystickButton(driverController, XboxButtons.LEFT_BUMPER);
-    toggleReverseDrive.whenPressed(new FlipDriveAndCamera());
-    toggleDriverCameraMode = new JoystickButton(driverController, XboxButtons.B);
-    toggleDriverCameraMode.whenPressed(new FlipDriverCameraMode());
+    toggleReverseDrive.whenPressed(new FlipDriveDirection());
     operatorController = new Joystick(RobotMap.OPERATOR_CONTROLLER_PORT);
     xkeys = new XKeys(drivebase, intake, conveyor, indexer, shooter, climber, turret, pi);
   }
@@ -47,6 +46,16 @@ public class OI {
    */
   public void rumbleDriverController(double power, double time) {
     rumbleController(driverController, power, time);
+  }
+
+    /**
+   * Notifies the driver controller by rumbling it
+   * 
+   */
+  public void notifyDriverController(double power, double time) {
+    rumbleDriverController(power, time);
+    rumbleDriverController(0, 1);
+    rumbleDriverController(power, time);
   }
 
   private void rumbleController(MustangController controller, double power, double time) {
