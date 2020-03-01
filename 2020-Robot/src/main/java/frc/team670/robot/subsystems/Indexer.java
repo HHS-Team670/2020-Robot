@@ -296,6 +296,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         setSystemTargetAngleInDegrees(setpoint);
     }
 
+    public void spinRevolver(){
+        setSystemMotionTarget(getMotorRotationsFromAngle(getCurrentAngleInDegrees() + 360));
+    }
+
     /**
      * Prepares the indexer for intaking by starting the ToF sensor and moving the
      * indexer in position to intake

@@ -21,7 +21,6 @@ public class EmptyRevolver extends CommandBase implements MustangCommand {
 
     private Indexer indexer;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-    private int shots = 0;
 
     public EmptyRevolver(Indexer indexer) {
         this.indexer = indexer;
@@ -36,7 +35,6 @@ public class EmptyRevolver extends CommandBase implements MustangCommand {
     @Override
     public void initialize() {
         indexer.updraw(false);
-        shots = 0;
     }
 
     /**
@@ -45,10 +43,8 @@ public class EmptyRevolver extends CommandBase implements MustangCommand {
     @Override
     public void execute() {
         indexer.updraw(false);
-        if (indexer.updrawIsUpToSpeed() && (shots ==0 || indexer.hasReachedTargetPosition()) && shots < 7) {
-            indexer.rotateToNextChamber();            
-            shots++;
-            Logger.consoleLog("Shots %s", shots);
+        if (indexer.updrawIsUpToSpeed()) {
+            indexer.spinRevolver();            
         }
     }
 
@@ -58,7 +54,7 @@ public class EmptyRevolver extends CommandBase implements MustangCommand {
      */
     @Override
     public boolean isFinished() {
-        return shots>=6;
+        return indexer.hasReachedTargetPosition();
 
     }
 
