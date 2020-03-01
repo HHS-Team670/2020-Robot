@@ -14,11 +14,11 @@ public class Turret extends SparkMaxRotatingSubsystem {
     // TODO: Set these values. Keeping it small right now for testing.
 
     // Turret pointing straight forward is 180 degrees
-    private static final int TURRET_MIN_DEGREES = -230; // all the way back
+    private static final int TURRET_MIN_DEGREES = -200; // all the way back
     private static final int TURRET_MAX_DEGREES = 12; // from front, past straight forward
 
     private static final int SOFT_MINIMUM_DEGREES = TURRET_MIN_DEGREES + 3;
-    private static final int SOFT_MAXIMUM_DEGREES = TURRET_MAX_DEGREES - 3;
+    private static final int SOFT_MAXIMUM_DEGREES = 0;
 
     private CANDigitalInput forwardLimit;
     private CANDigitalInput reverseLimit;
@@ -86,7 +86,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
         public double getAllowedError() {
             // equivalent of 2 degrees, in rotations
-            return (2 / 360) * this.getRotatorGearRatio();
+            return (2.0 / 360) * this.getRotatorGearRatio();
         }
 
         public boolean enableSoftLimits() {
