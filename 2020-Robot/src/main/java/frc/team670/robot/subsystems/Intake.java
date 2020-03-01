@@ -46,13 +46,13 @@ public class Intake extends MustangSubsystemBase {
     }
 
     public void roll(boolean reversed) {
-        if (isDeployed) {
+        // if (isDeployed) {
             if (reversed) {
                 roller.set(INTAKE_ROLLER_SPEED * -1);
             } else {
                 roller.set(INTAKE_ROLLER_SPEED);
             }
-        }
+        // }
     }
 
     public boolean isJammed(){

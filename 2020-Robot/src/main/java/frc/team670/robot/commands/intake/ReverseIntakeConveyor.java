@@ -19,10 +19,6 @@ public class ReverseIntakeConveyor extends ParallelCommandGroup implements Musta
     public ReverseIntakeConveyor(Intake intake, Conveyor conveyor){
         this.intake = intake;
         this.conveyor = conveyor;
-        addRequirements(intake, conveyor);
-        healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-        healthReqs.put(intake, HealthState.GREEN);
-        healthReqs.put(conveyor, HealthState.GREEN);
         addCommands(
             new RunIntake(true, intake),
             new RunConveyor(true, conveyor)
