@@ -30,6 +30,7 @@ import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.commands.auton.AutoSelector;
+import frc.team670.robot.commands.auton.AutoShootThenTimeDrive;
 import frc.team670.robot.commands.auton.baseline.ShootThenBack;
 import frc.team670.robot.commands.climb.ExtendClimber;
 import frc.team670.robot.commands.climb.HookOnBar;
@@ -160,8 +161,9 @@ public class RobotContainer {
   public MustangCommand getAutonomousCommand() {
     return
       // (Command)(autoSelector.getSelectedRoutine())
-      new ShootThenBack(driveBase, intake, conveyor,
-      shooter, indexer, turret, coprocessor);
+      // new ShootThenBack(driveBase, intake, conveyor,
+      // shooter, indexer, turret, coprocessor);
+      new AutoShootThenTimeDrive(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
   }
 
   public static void autonomousInit(){
@@ -169,7 +171,7 @@ public class RobotContainer {
     // 3 balls, in set positions, preloaded for auto
     indexer.setChamberStatesForMatchInit();
     indexer.setRotatorMode(false); // indexer to brake mode
-    MustangScheduler.getInstance().schedule(new RotateToHome(turret));
+    MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
   }
 
   public static void teleopInit() {

@@ -32,7 +32,7 @@ public class TimedDrive extends WaitCommand implements MustangCommand {
   @Override
   public void execute() {
     Logger.consoleLog("TimedDrive executed");
-    driveBase.tankDrive(0.5, 0.5);
+    driveBase.tankDrive(0.3, 0.3);
   }
 
   // Called once after isFinished returns true

@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.utils.Logger;
 import frc.team670.robot.subsystems.Shooter;
 
 /**
@@ -30,11 +31,17 @@ public class StartShooter extends CommandBase implements MustangCommand {
     public void initialize() {
        shooter.setRampRate(true);
        shooter.run();
+       Logger.consoleLog("StartShooter Initialized");
     }
 
     @Override
     public boolean isFinished() {
         return shooter.isUpToSpeed();
+    }
+
+    @Override
+    public void end(boolean interrupted){
+        Logger.consoleLog("StartShooter Ended");
     }
 
     @Override

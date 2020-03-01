@@ -9,6 +9,7 @@ import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.utils.Logger;
 
 /**
  * Sends all balls to the shooter. Use when the indexer is full and you want to
@@ -30,6 +31,7 @@ public class SendAllBalls extends SequentialCommandGroup implements MustangComma
     @Override
     public void end(boolean interrupted) {
         indexer.updraw(false);
+        Logger.consoleLog("SendAllBalls Ended");
     }
 
     @Override
