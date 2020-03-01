@@ -588,9 +588,11 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             if (indexerCurrent >= INDEXER_PEAK_CURRENT) {
                 exceededCurrentLimitCount++;
             } else {
+                Logger.consoleLog("Jammed false. current was lower than peak current");
                 exceededCurrentLimitCount = 0;
             }
             if (exceededCurrentLimitCount >= 4) { // 4 consecutive readings higher than peak
+                Logger.consoleLog("Jammed true");
                 return true;
             }
         }
@@ -618,26 +620,28 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         // If we're trying to move somewhere and it's jammed, we try unjamming it.
         // Checking both because current readings are really unreliable when not trying
         // to move.
-        // if (!hasReachedTargetPosition() && isJammed()) {
-        //     unjamMode = true ;
-        //     // posWhenJammed = getCurrentAngleInDegrees();
-        //     // // Move to the previous chamber since most common jam case seems to be on bottom
-        //     // if (setpoint - getMotorRotationsFromAngle(posWhenJammed) > 0) {
-        //     //     setTemporaryMotionTarget(setpoint - getMotorRotationsFromAngle(INDEXER_DEGREES_PER_CHAMBER));
-        //     // } else {
-        //     //     setTemporaryMotionTarget(setpoint + getMotorRotationsFromAngle(INDEXER_DEGREES_PER_CHAMBER));
-        //     // }
-        //     timer.reset();
-        //     clearSetpoint();
-        //     setRotatorMode(true);
+        if (!hasReachedTargetPosition() && isJammed()) {
+            unjamMode = true ;
+            // posWhenJammed = getCurrentAngleInDegrees();
+            // // Move to the previous chamber since most common jam case seems to be on bottom
+            // if (setpoint - getMotorRotationsFromAngle(posWhenJammed) > 0) {
+            //     setTemporaryMotionTarget(setpoint - getMotorRotationsFromAngle(INDEXER_DEGREES_PER_CHAMBER));
+            // } else {
+            //     setTemporaryMotionTarget(setpoint + getMotorRotationsFromAngle(INDEXER_DEGREES_PER_CHAMBER));
+            // }
+            timer.reset();
+            clearSetpoint();
+            setRotatorMode(true);
 
-        // }
-        // else if(unjamMode){
-        //     if(timer.hasElapsed(2.0)){
-        //         setRotatorMode(false);
-        //         unjamMode = false;
-        //     }
-        // }
+        }
+        
+        if(unjamMode){
+            if(timer.hasElapsed(2.0)){
+                setRotatorMode(false);
+                Logger.consoleLog("Unjam Timer ended. CurrentMode %s", rotator.getIdleMode());
+                unjamMode = false;
+            }
+        }
         // } else if (unjamMode && MathUtils.doublesEqual(tempSetpoint, rotator_encoder.getPosition(), ALLOWED_ERR)) {
         //     // deployPusher(true);
         //     // countToPush++;
