@@ -27,18 +27,11 @@ import frc.team670.robot.subsystems.Turret;
 
 public class AutoShootThenTimeDrive extends SequentialCommandGroup implements MustangCommand {
 
-    private Path trajectory;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-    private DriveBase driveBase;
-    private MustangCoprocessor coprocessor;
-    private Shooter shooter;
 
     public AutoShootThenTimeDrive(DriveBase driveBase, Intake intake, Conveyor conveyor,
-            Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
+            Shooter shooter, Indexer indexer, Turret turret) {
 
-        this.driveBase = driveBase;
-        this.coprocessor = coprocessor;
-        trajectory = new CenterThenBack(driveBase);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);

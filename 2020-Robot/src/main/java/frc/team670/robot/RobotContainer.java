@@ -163,7 +163,7 @@ public class RobotContainer {
       // (Command)(autoSelector.getSelectedRoutine())
       // new ShootThenBack(driveBase, intake, conveyor,
       // shooter, indexer, turret, coprocessor);
-      new AutoShootThenTimeDrive(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+      new AutoShootThenTimeDrive(driveBase, intake, conveyor, shooter, indexer, turret);
   }
 
   public static void autonomousInit(){
