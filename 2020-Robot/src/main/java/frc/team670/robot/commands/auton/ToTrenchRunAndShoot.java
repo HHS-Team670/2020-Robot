@@ -10,6 +10,7 @@ import frc.team670.robot.commands.drive.straight.TimedDrive;
 import frc.team670.robot.commands.indexer.EmptyRevolver;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
+import frc.team670.robot.commands.shooter.SetRPMTarget;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
@@ -58,6 +59,7 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
                 // Going to trench to pick up balls, shooter can still be running
                 new DeployIntake(true, intake),
                 new TimedDrive(1, 0.3, driveBase),
+                new SetRPMTarget(2600, shooter),
                 new ParallelCommandGroup(
                     new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(6.2),
                     new TimedDrive(5.2, 0.12, driveBase),
