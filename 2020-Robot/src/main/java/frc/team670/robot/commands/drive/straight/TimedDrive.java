@@ -23,7 +23,7 @@ public class TimedDrive extends WaitCommand implements MustangCommand {
   private DriveBase driveBase;
   private double leftPower, rightPower;
 
-  public TimedDrive(int seconds, double leftPower, double rightPower, DriveBase driveBase) {
+  public TimedDrive(double seconds, double leftPower, double rightPower, DriveBase driveBase) {
     super(seconds);
     this.leftPower = leftPower;
     this.rightPower = rightPower;
