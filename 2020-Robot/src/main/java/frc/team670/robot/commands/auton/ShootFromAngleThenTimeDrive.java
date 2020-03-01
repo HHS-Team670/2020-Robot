@@ -5,6 +5,7 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team670.paths.Path;
 import frc.team670.paths.center.CenterThenBack;
 import frc.team670.robot.commands.MustangCommand;
@@ -32,7 +33,13 @@ public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implemen
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public ShootFromAngleThenTimeDrive(double turretAng, double speed, DriveBase driveBase, Intake intake, Conveyor conveyor,
+    /**
+     * 
+     * @param turretAng Angle the turret should turn to at the beginning for shooting
+     * @param waitTime The delay (s) between shooting and driving, if no delay use 0
+     * @param speed Drivebase percent output. Negative reverse, positive forward
+     */
+    public ShootFromAngleThenTimeDrive(double turretAng, double waitTime, double speed, DriveBase driveBase, Intake intake, Conveyor conveyor,
             Shooter shooter, Indexer indexer, Turret turret) {
 
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -53,8 +60,11 @@ public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implemen
                 new Shoot(shooter), 
                     // new StageOneBallToShoot(indexer),
                 new EmptyRevolver(indexer),
+
+                new WaitCommand(waitTime), // Delay moving after shot if needed
+
                 new ParallelCommandGroup(
-                    new TimedDrive(1, speed, speed, driveBase),
+                    new TimedDrive(1, speed, driveBase),
                     new StopShooter(shooter)
                 )
             );

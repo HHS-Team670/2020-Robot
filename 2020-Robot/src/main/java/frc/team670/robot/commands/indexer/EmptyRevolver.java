@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
-import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.utils.Logger;
 
@@ -35,6 +34,7 @@ public class EmptyRevolver extends CommandBase implements MustangCommand {
      */
     @Override
     public void initialize() {
+        Logger.consoleLog("Preparing to empty revolver system");
         indexer.clearSetpoint(); // Keep piston from deploying at beginning
         indexer.updraw(false);
     }
@@ -63,6 +63,7 @@ public class EmptyRevolver extends CommandBase implements MustangCommand {
 
     @Override
     public void end(boolean interrupted){
+        Logger.consoleLog("Revolver system emptied");
         indexer.stopUpdraw();
     }
 

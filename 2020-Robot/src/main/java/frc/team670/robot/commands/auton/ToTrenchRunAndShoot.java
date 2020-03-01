@@ -24,10 +24,19 @@ import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
+/**
+ * Shoot from baseline then drive to trench run, hopefully intake and shoot 3 balls.
+ * So far you will only do this if you start on line to the right of the target.
+ */
 public class ToTrenchRunAndShoot extends SequentialCommandGroup implements MustangCommand {
+
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public ToTrenchRunAndShoot(double initAng, DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Turret turret, Shooter shooter) {
+    /**
+     * @param initAng angle (degrees) the turret should turn to for shooting from baseline at beginning
+     * @param trenchAng angle (degrees) the turret should be turned to when ready to shoot from the trench
+     */
+    public ToTrenchRunAndShoot(double initAng, double trenchAng, DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Turret turret, Shooter shooter) {
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
@@ -38,23 +47,24 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
 
         addCommands(
              new RotateToHome(turret),
-            //     new ParallelCommandGroup(
-            //         new StartShooter(shooter), 
-            //         new RotateToAngle(turret, initAng)
-            //     ),
-            //     new Shoot(shooter), 
-            //         // new StageOneBallToShoot(indexer),
-            //     new EmptyRevolver(indexer),
-            //     new TimedDrive(1, speed, speed, driveBase),
-                new DeployIntake(true, intake),
-                new TimedDrive(1.5, 0.3, 0.3, driveBase),
+                // Shoots balls from baseline
                 new ParallelCommandGroup(
-                    new TimedDrive(3, 0.12, 0.12, driveBase),
-                    new RotateToAngle(turret, initAng),
-                    new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(3.7)
+                    new StartShooter(shooter), 
+                    new RotateToAngle(turret, initAng) // turret angle for shooting when starting on baseline to right
                 ),
-                new StartShooter(shooter),
-                new Shoot(shooter),
+                new Shoot(shooter), 
+                new EmptyRevolver(indexer),
+
+                // Going to trench to pick up balls, shooter can still be running
+                new DeployIntake(true, intake),
+                new TimedDrive(1, 0.3, driveBase),
+                new ParallelCommandGroup(
+                    new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(6.2),
+                    new TimedDrive(5.2, 0.12, driveBase),
+                    new RotateToAngle(turret, trenchAng)
+                ),
+                // new StartShooter(shooter),
+                // new Shoot(shooter),
                 new EmptyRevolver(indexer),
                 new StopShooter(shooter)
         );
@@ -63,8 +73,7 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-        // TODO Auto-generated method stub
-        return null;
+        return healthReqs;
     }
 
 }
