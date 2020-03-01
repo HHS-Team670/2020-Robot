@@ -125,7 +125,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     MustangScheduler.getInstance().run();
-    RobotContainer.teleopPeriodic();
   }
 
   @Override

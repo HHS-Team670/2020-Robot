@@ -53,7 +53,7 @@ public class RobotConstants {
 
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
             kTrackwidthMeters);
-    public static final double kPDriveVel = 2.53;
+    public static final double kPDriveVel = 4;
     public static final double kIDriveVel = 0.00;
     public static final double kDDriveVel = 0.0;
     public static final double kMaxSpeedInchesPerSecond = 12;

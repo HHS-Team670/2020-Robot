@@ -511,8 +511,8 @@ public class DriveBase extends MustangSubsystemBase {
     // Update the odometry in the periodic block
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
   
-    Logger.consoleLog("Left encoder position on Pose update %s", left1Encoder.getPosition());
-    Logger.consoleLog("Right encoder position on Pose update %s", right1Encoder.getPosition());
+    // Logger.consoleLog("Left encoder position on Pose update %s", left1Encoder.getPosition());
+    // Logger.consoleLog("Right encoder position on Pose update %s", right1Encoder.getPosition());
   }
 
   /**
@@ -530,9 +530,20 @@ public class DriveBase extends MustangSubsystemBase {
    * @param pose The pose to which to set the odometry.
    */
   public void resetOdometry(Pose2d pose) {
+    zeroHeading();
     m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
-    left1Encoder.setPosition(0);
-    right1Encoder.setPosition(0);
+    CANError lE = left1Encoder.setPosition(0);
+    CANError rE = right1Encoder.setPosition(0);
+    Logger.consoleLog("Encoder return value %s %s", lE, rE);
+    Logger.consoleLog("Encoder positions %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
+    int counter = 0;
+    while((left1Encoder.getPosition() != 0 || right1Encoder.getPosition() != 0) && counter <30){
+      lE = left1Encoder.setPosition(0);
+      rE = right1Encoder.setPosition(0);
+      counter++;
+    }
+    Logger.consoleLog("Encoder return value %s %s", lE, rE);
+    Logger.consoleLog("Encoder positions %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
     Logger.consoleLog("Drivebase pose reset %s", pose);
     Logger.consoleLog("Drivebase get position after reset %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
   }
