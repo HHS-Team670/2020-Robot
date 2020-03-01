@@ -52,7 +52,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     private boolean unjamMode = false;
     private boolean indexerIsJammed = false;
 
-    private static final double INDEXER_PEAK_CURRENT = 12; // TODO: find this
+    private static final double INDEXER_PEAK_CURRENT = 10; // TODO: find this
 
     private boolean updrawingMode;
     private boolean isIntaking = false;
@@ -235,6 +235,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
     }
 
+    public boolean isPusherDeployed(){
+        return pusherDeployed;
+    }
+
     public int totalNumOfBalls() {
         int totalNumBalls = 0;
         for (boolean c : chamberStates) {
@@ -273,6 +277,13 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         setSystemTargetAngleInDegrees(((getBottomChamber() + 1) % 5) * INDEXER_DEGREES_PER_CHAMBER);
     }
 
+    /**
+     * Sets the indexer to move to the previous chamber.
+     */
+    public void rotateToPreviousChamber() {
+        setSystemTargetAngleInDegrees(((getBottomChamber() -1) % 5) * INDEXER_DEGREES_PER_CHAMBER);
+    }
+
     private void rotateToNextEmptyChamber() {
         double setpoint = INDEXER_DEGREES_PER_CHAMBER * getIntakeChamber() + CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES;
         setSystemTargetAngleInDegrees(setpoint);
@@ -297,7 +308,11 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     }
 
     public boolean hasReachedTargetPosition() {
-        return (MathUtils.doublesEqual(rotator_encoder.getPosition(), setpoint, ALLOWED_ERR));
+        boolean hasReachedTarget = (MathUtils.doublesEqual(rotator_encoder.getPosition(), setpoint, ALLOWED_ERR));
+        if(hasReachedTarget && !isIntaking){
+            deployPusher(true);
+        }
+        return hasReachedTarget;
     }
 
     /**
@@ -347,6 +362,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         deployPusher(false);
         double currentAngle = getCurrentAngleInDegrees();
         // We find the difference between where we currently are, and where we want to be
+        int sign = (angleDegrees -currentAngle >= 0 && angleDegrees - currentAngle <= 180) || (angleDegrees-currentAngle <=-180 && angleDegrees-currentAngle>=-360) ? 1 : -1;
         double diff = Math.abs(angleDegrees - currentAngle) % 360;
         // If the difference is above 180 degrees, it's better to turn in the opposite direction.
         // Otherwise, we continue turning in the same direction.
@@ -535,7 +551,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         // find how many rotations the motor has moved compared to the number needed for
         // 1 full rotation
         // then finds what angle that is
-        double degrees = ((getUnadjustedPosition() % this.ROTATOR_GEAR_RATIO) / this.ROTATOR_GEAR_RATIO) * 360;
+        double degrees = (((getUnadjustedPosition() % this.ROTATOR_GEAR_RATIO) / this.ROTATOR_GEAR_RATIO) * 360);
         return degrees;
     }
 
@@ -597,6 +613,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             //     unjamMode = false;
             isIntaking = true;
         }
+
 
         // Use current to check if a ball has successfully left the indexer through the
         // updraw. If so, marks the top chamber as empty

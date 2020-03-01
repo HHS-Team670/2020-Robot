@@ -17,7 +17,10 @@ public class RotateToNextChamber extends CommandBase implements MustangCommand {
     private Indexer indexer;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public RotateToNextChamber(Indexer indexer) {
+    private boolean isForward;
+
+    public RotateToNextChamber(Indexer indexer, boolean isForward) {
+        this.isForward = isForward;
         this.indexer = indexer;
         addRequirements(indexer);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -26,7 +29,12 @@ public class RotateToNextChamber extends CommandBase implements MustangCommand {
 
     @Override
     public void initialize() {
-        indexer.rotateToNextChamber();
+        if(isForward){
+            indexer.rotateToNextChamber();
+        }
+        else{
+            indexer.rotateToPreviousChamber();
+        }
     }
 
     @Override

@@ -1,10 +1,13 @@
 package frc.team670.robot.subsystems;
 
 import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.functions.MathUtils;
 import frc.team670.robot.utils.motorcontroller.MotorConfig;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
+
+import java.lang.System.LoggerFinder;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.ControlType;
@@ -144,7 +147,9 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
      * @param setpoint The target position for this subsystem, in motor rotations
      */
     protected void setSystemMotionTarget(double setpoint) {
+        Logger.consoleLog("turretCurrentPosition %s", getUnadjustedPosition());
         rotator_controller.setReference(setpoint, ControlType.kSmartMotion);
+        Logger.consoleLog("turretSetpoint %s", setpoint);
         this.setpoint = setpoint;
     }
 
