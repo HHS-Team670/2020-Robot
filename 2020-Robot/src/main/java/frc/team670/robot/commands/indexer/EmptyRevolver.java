@@ -13,13 +13,14 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.utils.Logger;
 
 /**
- * Stages 1 ball in preparation to shoot, and spins updraw
+ * Empties the revolver by doing 1 full spin (360 degrees as opposed to 5 chambers 1 at a time)
  * 
  * @author ctychen
  */
 public class EmptyRevolver extends CommandBase implements MustangCommand {
 
     private Indexer indexer;
+    private boolean indexerSpun = false;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     public EmptyRevolver(Indexer indexer) {
@@ -34,6 +35,7 @@ public class EmptyRevolver extends CommandBase implements MustangCommand {
      */
     @Override
     public void initialize() {
+        indexer.clearSetpoint(); // Keep piston from deploying at beginning
         indexer.updraw(false);
     }
 
@@ -43,8 +45,9 @@ public class EmptyRevolver extends CommandBase implements MustangCommand {
     @Override
     public void execute() {
         indexer.updraw(false);
-        if (indexer.updrawIsUpToSpeed()) {
-            indexer.spinRevolver();            
+        if (indexer.updrawIsUpToSpeed() && !indexerSpun) {
+            indexer.spinRevolver();   
+            indexerSpun = true;         
         }
     }
 

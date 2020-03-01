@@ -53,6 +53,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     private int countToPush = 0;
     private boolean unjamMode = false;
     private boolean indexerIsJammed = false;
+    private Long updrawStartTime;
 
     private static final double INDEXER_PEAK_CURRENT = 8; // TODO: find this
 
@@ -236,6 +237,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     public void deployPusher(boolean toPush) {
         this.pusherDeployed = toPush;
         this.conveyorToIndexerPusher.set(pusherDeployed);
+        Logger.consoleLog("Indexer system setpoint at deploy push %s", setpoint);
+        Logger.consoleLog("Indexer current system position at push %s", rotator_encoder.getPosition());
+        Logger.consoleLog("Indexer system will push %s", pusherDeployed);
         // if (toPush){
         //    // conveyor.stop();
         //    conveyor.setRunTimed(-0.05, 0.5);
@@ -308,7 +312,12 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     }
 
     public void spinRevolver()  {
+        Logger.consoleLog("Indexer system current angle degrees %s", getCurrentAngleInDegrees());
+        Logger.consoleLog("Indexer system current position %s", rotator_encoder.getPosition());
+        deployPusher(false);
         setSystemMotionTarget(getMotorRotationsFromAngle(getCurrentAngleInDegrees() + 360));
+        Logger.consoleLog("Indexer system set to angle %s", getCurrentAngleInDegrees() + 360);
+        Logger.consoleLog("Indexer system rotations set to %s", setpoint);
     }
 
     /**
@@ -343,6 +352,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
      * @param reversed true to run updraw backwards, false to run normally
      */
     public void updraw(boolean reversed) {
+        if (updrawStartTime == null) {
+            updrawStartTime = System.currentTimeMillis();
+        }
         if (reversed){
             updraw.set(ControlMode.PercentOutput, -0.8 * UPDRAW_SPEED);
         }
@@ -353,6 +365,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     public void stopUpdraw() {
         updraw.set(ControlMode.PercentOutput, 0);
+        updrawStartTime = null;
     }
 
     /**
@@ -363,7 +376,11 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     public boolean updrawIsUpToSpeed() {
         double c = updraw.getMotorOutputPercent(); // We can't tell if it's actually up to speed, but we're going off of
                                                    // "is it running"
-        return MathUtils.doublesEqual(c, UPDRAW_SPEED, 0.05);
+        if (System.currentTimeMillis() >= updrawStartTime + 500) {
+            return true;
+        }
+        return false;
+
     }
 
     /**
@@ -620,8 +637,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         // If we're trying to move somewhere and it's jammed, we try unjamming it.
         // Checking both because current readings are really unreliable when not trying
         // to move.
-        if (!hasReachedTargetPosition() && isJammed()) {
-            unjamMode = true ;
+        // if (!hasReachedTargetPosition() && isJammed()) {
+        //     unjamMode = true ;
             // posWhenJammed = getCurrentAngleInDegrees();
             // // Move to the previous chamber since most common jam case seems to be on bottom
             // if (setpoint - getMotorRotationsFromAngle(posWhenJammed) > 0) {
@@ -629,19 +646,19 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             // } else {
             //     setTemporaryMotionTarget(setpoint + getMotorRotationsFromAngle(INDEXER_DEGREES_PER_CHAMBER));
             // }
-            timer.reset();
-            clearSetpoint();
-            setRotatorMode(true);
+        //     timer.reset();
+        //     clearSetpoint();
+        //     setRotatorMode(true);
 
-        }
+        // }
         
-        if(unjamMode){
-            if(timer.hasElapsed(2.0)){
-                setRotatorMode(false);
-                Logger.consoleLog("Unjam Timer ended. CurrentMode %s", rotator.getIdleMode());
-                unjamMode = false;
-            }
-        }
+        // if(unjamMode){
+        //     if(timer.hasElapsed(2.0)){
+        //         setRotatorMode(false);
+        //         Logger.consoleLog("Unjam Timer ended. CurrentMode %s", rotator.getIdleMode());
+        //         unjamMode = false;
+        //     }
+        // }
         // } else if (unjamMode && MathUtils.doublesEqual(tempSetpoint, rotator_encoder.getPosition(), ALLOWED_ERR)) {
         //     // deployPusher(true);
         //     // countToPush++;

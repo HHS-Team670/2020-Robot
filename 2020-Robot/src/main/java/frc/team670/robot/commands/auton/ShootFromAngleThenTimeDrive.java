@@ -14,6 +14,9 @@ import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.indexer.StageOneBallToShoot;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
+import frc.team670.robot.commands.turret.RotateToAngle;
+import frc.team670.robot.commands.turret.RotateToHome;
+import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.Conveyor;
@@ -25,11 +28,11 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 
-public class AutoShootThenTimeDrive extends SequentialCommandGroup implements MustangCommand {
+public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public AutoShootThenTimeDrive(DriveBase driveBase, Intake intake, Conveyor conveyor,
+    public ShootFromAngleThenTimeDrive(double turretAng, double speed, DriveBase driveBase, Intake intake, Conveyor conveyor,
             Shooter shooter, Indexer indexer, Turret turret) {
 
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -42,12 +45,16 @@ public class AutoShootThenTimeDrive extends SequentialCommandGroup implements Mu
 
         addCommands(
                 // Get shooter up to speed and aim
-                new StartShooter(shooter), 
+                new RotateToHome(turret),
+                new ParallelCommandGroup(
+                    new StartShooter(shooter), 
+                    new RotateToAngle(turret, turretAng)
+                ),
                 new Shoot(shooter), 
                     // new StageOneBallToShoot(indexer),
                 new EmptyRevolver(indexer),
                 new ParallelCommandGroup(
-                    new TimedDrive(1, 0.3, 0.3, driveBase),
+                    new TimedDrive(1, speed, speed, driveBase),
                     new StopShooter(shooter)
                 )
             );

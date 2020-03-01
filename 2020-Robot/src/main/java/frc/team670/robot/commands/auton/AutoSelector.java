@@ -57,23 +57,28 @@ public class AutoSelector {
 
     public static enum AutoRoutine {
 
-        LEFT_TO_GENERATOR_2_BALL_SIDE(0), 
-        LEFT_TO_GENERATOR_3_BALL_SIDE(1), 
-        LEFT_TO_TRENCH(2),
-        LEFT_TO_GENERATOR_2_TO_TRENCH(3), 
-        LEFT_TO_GENERATOR_3_TO_2_BALL_SIDE(4),
+        // LEFT_TO_GENERATOR_2_BALL_SIDE(0), 
+        // LEFT_TO_GENERATOR_3_BALL_SIDE(1), 
+        // LEFT_TO_TRENCH(2),
+        // LEFT_TO_GENERATOR_2_TO_TRENCH(3), 
+        // LEFT_TO_GENERATOR_3_TO_2_BALL_SIDE(4),
 
-        CENTER_TO_GENERATOR_2_BALL_SIDE(5), 
-        CENTER_TO_GENERATOR_3_BALL_SIDE(6), 
-        CENTER_TO_TRENCH(7),
-        CENTER_TO_GENERATOR_2_TO_TRENCH(8), 
-        CENTER_TO_GENERATOR_3_TO_2_BALL_SIDE(9),
+        // CENTER_TO_GENERATOR_2_BALL_SIDE(5), 
+        // CENTER_TO_GENERATOR_3_BALL_SIDE(6), 
+        // CENTER_TO_TRENCH(7),
+        // CENTER_TO_GENERATOR_2_TO_TRENCH(8), 
+        // CENTER_TO_GENERATOR_3_TO_2_BALL_SIDE(9),
 
-        RIGHT_TO_GENERATOR_2_BALL_SIDE(10), 
-        RIGHT_TO_GENERATOR_3_BALL_SIDE(11), 
-        RIGHT_TO_TRENCH(12),
-        RIGHT_TO_GENERATOR_2_TO_TRENCH(13), 
-        RIGHT_TO_GENERATOR_3_TO_2_BALL_SIDE(14),
+        // RIGHT_TO_GENERATOR_2_BALL_SIDE(10), 
+        // RIGHT_TO_GENERATOR_3_BALL_SIDE(11), 
+        // RIGHT_TO_TRENCH(12),
+        // RIGHT_TO_GENERATOR_2_TO_TRENCH(13), 
+        // RIGHT_TO_GENERATOR_3_TO_2_BALL_SIDE(14),
+        LEFT_EMPTY_THEN_BACK(0),
+        
+        CENTER_EMPTY_THEN_BACK(3),
+
+        RIGHT_EMPTY_THEN_BACK(6),
 
         UNKNOWN(-1);
 
@@ -125,41 +130,45 @@ public class AutoSelector {
         return 
             (MustangCommand)(new SelectCommand(          
                 Map.ofEntries(
-                    entry(AutoRoutine.LEFT_TO_GENERATOR_2_BALL_SIDE, new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
-                    entry(AutoRoutine.LEFT_TO_GENERATOR_3_BALL_SIDE, new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
-                    entry(AutoRoutine.LEFT_TO_TRENCH, new ShootFromBaseLineThenToTrench(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
-                    entry(AutoRoutine.LEFT_TO_GENERATOR_2_TO_TRENCH, new SequentialCommandGroup(
-                        new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor),
-                        new Generator2BallSideToTrenchThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)
-                    )),
-                    entry(AutoRoutine.LEFT_TO_GENERATOR_3_TO_2_BALL_SIDE, new SequentialCommandGroup(
-                        new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor),
-                        new Generator3BallMidToGenerator2BallMidThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)
-                    )),
+                    entry(AutoRoutine.LEFT_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(-166, -0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
+                    entry(AutoRoutine.CENTER_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(0, 0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
+                    entry(AutoRoutine.RIGHT_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(-27, 0.3, driveBase, intake, conveyor, shooter, indexer, turret))
+                    
+                    // entry(AutoRoutine.LEFT_TO_GENERATOR_2_BALL_SIDE, new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
+                    // entry(AutoRoutine.LEFT_TO_GENERATOR_3_BALL_SIDE, new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
+                    // entry(AutoRoutine.LEFT_TO_TRENCH, new ShootFromBaseLineThenToTrench(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
+                    // entry(AutoRoutine.LEFT_TO_GENERATOR_2_TO_TRENCH, new SequentialCommandGroup(
+                    //     new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor),
+                    //     new Generator2BallSideToTrenchThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)
+                    // )),
+                    // entry(AutoRoutine.LEFT_TO_GENERATOR_3_TO_2_BALL_SIDE, new SequentialCommandGroup(
+                    //     new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor),
+                    //     new Generator3BallMidToGenerator2BallMidThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)
+                    // )),
 
-                    entry(AutoRoutine.CENTER_TO_GENERATOR_2_BALL_SIDE, new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
-                    entry(AutoRoutine.CENTER_TO_GENERATOR_3_BALL_SIDE, new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
-                    entry(AutoRoutine.CENTER_TO_TRENCH, new ShootFromBaseLineThenToTrench(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
-                    entry(AutoRoutine.CENTER_TO_GENERATOR_2_TO_TRENCH, new SequentialCommandGroup(
-                        new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor),
-                        new Generator2BallSideToTrenchThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)
-                    )),
-                    entry(AutoRoutine.CENTER_TO_GENERATOR_3_TO_2_BALL_SIDE, new SequentialCommandGroup(
-                        new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor),
-                        new Generator3BallMidToGenerator2BallMidThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)
-                    )),
+                    // entry(AutoRoutine.CENTER_TO_GENERATOR_2_BALL_SIDE, new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
+                    // entry(AutoRoutine.CENTER_TO_GENERATOR_3_BALL_SIDE, new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
+                    // entry(AutoRoutine.CENTER_TO_TRENCH, new ShootFromBaseLineThenToTrench(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
+                    // entry(AutoRoutine.CENTER_TO_GENERATOR_2_TO_TRENCH, new SequentialCommandGroup(
+                    //     new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor),
+                    //     new Generator2BallSideToTrenchThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)
+                    // )),
+                    // entry(AutoRoutine.CENTER_TO_GENERATOR_3_TO_2_BALL_SIDE, new SequentialCommandGroup(
+                    //     new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor),
+                    //     new Generator3BallMidToGenerator2BallMidThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)
+                    // )),
 
-                    entry(AutoRoutine.RIGHT_TO_GENERATOR_2_BALL_SIDE, new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
-                    entry(AutoRoutine.RIGHT_TO_GENERATOR_3_BALL_SIDE, new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
-                    entry(AutoRoutine.RIGHT_TO_TRENCH, new ShootFromBaseLineThenToTrench(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
-                    entry(AutoRoutine.RIGHT_TO_GENERATOR_2_TO_TRENCH, new SequentialCommandGroup(
-                        new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor),
-                        new Generator2BallSideToTrenchThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)
-                    )),
-                    entry(AutoRoutine.RIGHT_TO_GENERATOR_3_TO_2_BALL_SIDE, new SequentialCommandGroup(
-                        new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor),
-                        new Generator3BallMidToGenerator2BallMidThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)
-                    ))                    
+                    // entry(AutoRoutine.RIGHT_TO_GENERATOR_2_BALL_SIDE, new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
+                    // entry(AutoRoutine.RIGHT_TO_GENERATOR_3_BALL_SIDE, new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
+                    // entry(AutoRoutine.RIGHT_TO_TRENCH, new ShootFromBaseLineThenToTrench(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
+                    // entry(AutoRoutine.RIGHT_TO_GENERATOR_2_TO_TRENCH, new SequentialCommandGroup(
+                    //     new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor),
+                    //     new Generator2BallSideToTrenchThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)
+                    // )),
+                    // entry(AutoRoutine.RIGHT_TO_GENERATOR_3_TO_2_BALL_SIDE, new SequentialCommandGroup(
+                    //     new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor),
+                    //     new Generator3BallMidToGenerator2BallMidThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)
+                    // ))                    
         ),
         this::select
         ));

@@ -21,9 +21,12 @@ import frc.team670.robot.utils.Logger;
 public class TimedDrive extends WaitCommand implements MustangCommand {
 
   private DriveBase driveBase;
+  private double leftPower, rightPower;
 
-  public TimedDrive(int seconds, DriveBase driveBase) {
+  public TimedDrive(int seconds, double leftPower, double rightPower, DriveBase driveBase) {
     super(seconds);
+    this.leftPower = leftPower;
+    this.rightPower = rightPower;
     addRequirements(driveBase);
     this.driveBase = driveBase;
   }
@@ -32,7 +35,7 @@ public class TimedDrive extends WaitCommand implements MustangCommand {
   @Override
   public void execute() {
     Logger.consoleLog("TimedDrive executed");
-    driveBase.tankDrive(0.3, 0.3);
+    driveBase.tankDrive(leftPower, rightPower);
   }
 
   // Called once after isFinished returns true
