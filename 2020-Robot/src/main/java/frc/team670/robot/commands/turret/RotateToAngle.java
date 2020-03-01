@@ -35,8 +35,6 @@ public class RotateToAngle extends CommandBase implements MustangCommand {
 
     @Override
     public boolean isFinished() {
-        Logger.consoleLog("turretCurrentPosition %s", turret.getUnadjustedPosition());
-        Logger.consoleLog("turretAngle %s", turret.getCurrentAngleInDegrees());
         return turret.hasReachedTargetPosition();
     }
 

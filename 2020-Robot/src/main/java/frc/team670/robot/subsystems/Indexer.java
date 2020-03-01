@@ -11,6 +11,8 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.dataCollection.sensors.TimeOfFlightSensor;
 import frc.team670.robot.utils.Logger;
@@ -52,7 +54,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     private boolean unjamMode = false;
     private boolean indexerIsJammed = false;
 
-    private static final double INDEXER_PEAK_CURRENT = 10; // TODO: find this
+    private static final double INDEXER_PEAK_CURRENT = 8; // TODO: find this
 
     private boolean updrawingMode;
     private boolean isIntaking = false;
@@ -76,6 +78,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     // Bottom (intake position) is 0, for chamber 0.
     private static final int CHAMBER_0_AT_TOP_POS_IN_DEGREES = 180; // Shooting position for chamber 0
     private static final int CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES = 0; // Intaking position for chamber 0
+
+    private static Timer timer;
 
     private enum IntakingState {
         IN, MAYBE_IN, NOT_IN;
@@ -198,6 +202,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         updraw.enableVoltageCompensation(true);
 
         reset();
+
+        timer = new Timer();
+        timer.start();
     }
 
     private void pushGameDataToDashboard(){
@@ -229,10 +236,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     public void deployPusher(boolean toPush) {
         this.pusherDeployed = toPush;
         this.conveyorToIndexerPusher.set(pusherDeployed);
-        if (toPush){
-           // conveyor.stop();
-           conveyor.setRunTimed(-0.05, 0.5);
-        }
+        // if (toPush){
+        //    // conveyor.stop();
+        //    conveyor.setRunTimed(-0.05, 0.5);
+        // }
     }
 
     public boolean isPusherDeployed(){
@@ -363,6 +370,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         double currentAngle = getCurrentAngleInDegrees();
         // We find the difference between where we currently are, and where we want to be
         int sign = (angleDegrees -currentAngle >= 0 && angleDegrees - currentAngle <= 180) || (angleDegrees-currentAngle <=-180 && angleDegrees-currentAngle>=-360) ? 1 : -1;
+        Logger.consoleLog("Angle %s, Sign %s, CurrentAngle %s", angleDegrees, sign, currentAngle);
         double diff = Math.abs(angleDegrees - currentAngle) % 360;
         // If the difference is above 180 degrees, it's better to turn in the opposite direction.
         // Otherwise, we continue turning in the same direction.
@@ -595,24 +603,35 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         // If we're trying to move somewhere and it's jammed, we try unjamming it.
         // Checking both because current readings are really unreliable when not trying
         // to move.
-        if (!hasReachedTargetPosition() && isJammed()) {
-            unjamMode = true;
-            posWhenJammed = getCurrentAngleInDegrees();
-            // Move to the previous chamber since most common jam case seems to be on bottom
-            if (setpoint - getMotorRotationsFromAngle(posWhenJammed) > 0) {
-                setTemporaryMotionTarget(setpoint - getMotorRotationsFromAngle(INDEXER_DEGREES_PER_CHAMBER));
-            } else {
-                setTemporaryMotionTarget(setpoint + getMotorRotationsFromAngle(INDEXER_DEGREES_PER_CHAMBER));
-            }
-        } else if (unjamMode && MathUtils.doublesEqual(tempSetpoint, rotator_encoder.getPosition(), ALLOWED_ERR)) {
-            // deployPusher(true);
-            // countToPush++;
-            // if (countToPush == 6){
-            //     deployPusher(false);
-            //     countToPush = 0;
-            //     unjamMode = false;
-            isIntaking = true;
-        }
+        // if (!hasReachedTargetPosition() && isJammed()) {
+        //     unjamMode = true ;
+        //     // posWhenJammed = getCurrentAngleInDegrees();
+        //     // // Move to the previous chamber since most common jam case seems to be on bottom
+        //     // if (setpoint - getMotorRotationsFromAngle(posWhenJammed) > 0) {
+        //     //     setTemporaryMotionTarget(setpoint - getMotorRotationsFromAngle(INDEXER_DEGREES_PER_CHAMBER));
+        //     // } else {
+        //     //     setTemporaryMotionTarget(setpoint + getMotorRotationsFromAngle(INDEXER_DEGREES_PER_CHAMBER));
+        //     // }
+        //     timer.reset();
+        //     clearSetpoint();
+        //     setRotatorMode(true);
+
+        // }
+        // else if(unjamMode){
+        //     if(timer.hasElapsed(2.0)){
+        //         setRotatorMode(false);
+        //         unjamMode = false;
+        //     }
+        // }
+        // } else if (unjamMode && MathUtils.doublesEqual(tempSetpoint, rotator_encoder.getPosition(), ALLOWED_ERR)) {
+        //     // deployPusher(true);
+        //     // countToPush++;
+        //     // if (countToPush == 6){
+        //     //     deployPusher(false);
+        //     //     countToPush = 0;
+        //     //     unjamMode = false;
+        //     isIntaking = true;
+        // }
 
 
         // Use current to check if a ball has successfully left the indexer through the
@@ -629,12 +648,16 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             rotateToNextChamber();
         }
 
+        SmartDashboard.putNumber("IndexerCurrent", rotator.getOutputCurrent());
+
         pushGameDataToDashboard();
     }
 
     public void stopIntaking() {
         isIntaking = false;
-        deployPusher(true);
+        if(hasReachedTargetPosition()){
+            deployPusher(true);
+        }
     }
 
     public boolean isShootingChamberEmpty() {

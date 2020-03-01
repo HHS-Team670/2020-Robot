@@ -147,9 +147,7 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
      * @param setpoint The target position for this subsystem, in motor rotations
      */
     protected void setSystemMotionTarget(double setpoint) {
-        Logger.consoleLog("turretCurrentPosition %s", getUnadjustedPosition());
         rotator_controller.setReference(setpoint, ControlType.kSmartMotion);
-        Logger.consoleLog("turretSetpoint %s", setpoint);
         this.setpoint = setpoint;
     }
 
