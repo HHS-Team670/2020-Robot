@@ -645,7 +645,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
         if (isIntaking && intakeBall()) {
             unjamMode = false;
-            rotateToNextChamber();
+            rotateToNextEmptyChamber();
         }
 
         SmartDashboard.putNumber("IndexerCurrent", rotator.getOutputCurrent());
