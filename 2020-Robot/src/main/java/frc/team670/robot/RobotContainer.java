@@ -46,6 +46,7 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.intake.ToggleIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
+import frc.team670.robot.commands.shooter.SetRPMTarget;
 import frc.team670.robot.commands.turret.GetLatestDataAndAlignTurret;
 import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.RotateToHome;
@@ -96,7 +97,7 @@ public class RobotContainer {
   private static JoystickButton retractClimb = new JoystickButton(oi.getOperatorController(), 12);
   private static JoystickButton hook = new JoystickButton(oi.getOperatorController(), 10);
   private static JoystickButton zeroTurret = new JoystickButton(oi.getOperatorController(), 8);
-  
+  private static JoystickButton adjustShooterSpeed = new JoystickButton(oi.getOperatorController(), oi.getOperatorController().getThrottleChannel());
   private static JoystickButton alignTurretToTarget = new JoystickButton(oi.getDriverController(), 1);
 
 
@@ -156,12 +157,12 @@ public class RobotContainer {
     retractClimb.whenPressed(new Climb(climber));
     hook.whenPressed(new HookOnBar(climber));
     zeroTurret.whenPressed(new RotateToAngle(turret, 0));
-
+    adjustShooterSpeed.whenActive(new SetRPMTarget(shooter.getDefaultRPM() + (oi.getOperatorController().getThrottle() * shooter.getRPMMultiplier()), shooter));
     alignTurretToTarget.whenPressed(new GetLatestDataAndAlignTurret(turret, driveBase, coprocessor));
   }
 
   /**
-   * Use this to pass the autonomsous command to the main {@link Robot} class.
+   * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
