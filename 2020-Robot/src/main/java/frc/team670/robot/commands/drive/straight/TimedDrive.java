@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.team670.robot.RobotContainer;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
@@ -21,9 +20,11 @@ import frc.team670.robot.utils.Logger;
 public class TimedDrive extends WaitCommand implements MustangCommand {
 
   private DriveBase driveBase;
+  private double power;
 
-  public TimedDrive(int seconds, DriveBase driveBase) {
+  public TimedDrive(double seconds, double power, DriveBase driveBase) {
     super(seconds);
+    this.power = power;
     addRequirements(driveBase);
     this.driveBase = driveBase;
   }
@@ -32,7 +33,7 @@ public class TimedDrive extends WaitCommand implements MustangCommand {
   @Override
   public void execute() {
     Logger.consoleLog("TimedDrive executed");
-    driveBase.tankDrive(0.3, 0.3);
+    driveBase.tankDrive(power, power);
   }
 
   // Called once after isFinished returns true

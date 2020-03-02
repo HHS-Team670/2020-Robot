@@ -250,28 +250,46 @@ function getAutonFromMap() {
 
   // UNKNOWN(-1);
 
+  // LEFT_EMPTY_THEN_BACK(0),
+  // LEFT_EMPTY_THEN_FRONT(1),
+  
+  // CENTER_EMPTY_THEN_BACK(2),
+  // CENTER_EMPTY_THEN_FRONT(3),
+
+  // RIGHT_EMPTY_THEN_BACK(4),
+  // RIGHT_EMPTY_THEN_FRONT(5),
+
+  // RIGHT_TO_TRENCH_SHOT(6),
+
   if (document.getElementById('start-position-left').checked) {
-    if (document.getElementById('next-path-gen2').checked) return 0;
-    if (document.getElementById("next-path-gen3").checked) return 1;
-    if (document.getElementById("next-path-trench").checked) return 2;
-    if (document.getElementById("next-path2-trench").checked) return 3;
-    if (document.getElementById('next-path2-gen2').checked) return 4;
+    // if (document.getElementById('next-path-gen2').checked) return 0;
+    // if (document.getElementById("next-path-gen3").checked) return 1;
+    // if (document.getElementById("next-path-trench").checked) return 2;
+    // if (document.getElementById("next-path2-trench").checked) return 3;
+    // if (document.getElementById('next-path2-gen2').checked) return 4;
+    if (document.getElementById('shoot-then-back').checked) return 0;
+    if (document.getElementById('shoot-then-front').checked) return 1;
   }
 
   if (document.getElementById('start-position-center').checked) {
-    if (document.getElementById('next-path-gen2').checked) return 5;
-    if (document.getElementById("next-path-gen3").checked) return 6;
-    if (document.getElementById("next-path-trench").checked) return 7;
-    if (document.getElementById("next-path2-trench").checked) return 8;
-    if (document.getElementById('next-path2-gen2').checked) return 9;
+    // if (document.getElementById('next-path-gen2').checked) return 5;
+    // if (document.getElementById("next-path-gen3").checked) return 6;
+    // if (document.getElementById("next-path-trench").checked) return 7;
+    // if (document.getElementById("next-path2-trench").checked) return 8;
+    // if (document.getElementById('next-path2-gen2').checked) return 9;
+    if (document.getElementById('shoot-then-back').checked) return 2;
+    if (document.getElementById('shoot-then-front').checked) return 3;
   }
 
   if (document.getElementById('start-position-right').checked) {
-    if (document.getElementById('next-path-gen2').checked) return 10;
-    if (document.getElementById("next-path-gen3").checked) return 11;
-    if (document.getElementById("next-path-trench").checked) return 12;
-    if (document.getElementById("next-path2-trench").checked) return 13;
-    if (document.getElementById('next-path2-gen2').checked) return 14;
+    // if (document.getElementById('next-path-gen2').checked) return 10;
+    // if (document.getElementById("next-path-gen3").checked) return 11;
+    // if (document.getElementById("next-path-trench").checked) return 12;
+    // if (document.getElementById("next-path2-trench").checked) return 13;
+    // if (document.getElementById('next-path2-gen2').checked) return 14;
+    if (document.getElementById('shoot-then-back').checked) return 4;
+    if (document.getElementById('shoot-then-front').checked) return 5;
+    if (document.getElementById('shoot-then-trench').checked) return 6;
   }
 }
 
