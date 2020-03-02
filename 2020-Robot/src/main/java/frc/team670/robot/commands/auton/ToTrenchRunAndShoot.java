@@ -58,11 +58,13 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
 
                 // Going to trench to pick up balls, shooter can still be running
                 new DeployIntake(true, intake),
-                new TimedDrive(1, 0.3, driveBase),
-                new SetRPMTarget(2600, shooter),
+                new ParallelCommandGroup(     
+                    new TimedDrive(1, 0.3, driveBase),
+                    new SetRPMTarget(2850, shooter)
+                ),
                 new ParallelCommandGroup(
-                    new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(6.2),
-                    new TimedDrive(5.2, 0.12, driveBase),
+                    new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(7.2),
+                    new TimedDrive(6.2, 0.12, driveBase),
                     new RotateToAngle(turret, trenchAng)
                 ),
                 // new StartShooter(shooter),
