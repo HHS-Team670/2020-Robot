@@ -97,7 +97,7 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public double getStage2Velocity() {
-    return stage2_mainEncoder.getVelocity() * PULLEY_RATIO;
+    return stage2_mainEncoder.getVelocity();
   }
 
   public void run() {

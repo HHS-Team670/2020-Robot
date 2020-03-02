@@ -172,7 +172,7 @@ public class RobotContainer {
       // shooter, indexer, turret, coprocessor);
       // new AutoShootThenTimeDrive(driveBase, intake, conveyor, shooter, indexer, turret);
       //new ShootFromAngleThenTimeDrive(-166, -0.3, driveBase, intake, conveyor, shooter, indexer, turret);
-      new ToTrenchRunAndShoot(-27, -10, driveBase, intake, conveyor, indexer, turret, shooter);
+      new ToTrenchRunAndShoot(-25, -7, driveBase, intake, conveyor, indexer, turret, shooter);
 }
 
   public static void autonomousInit(){

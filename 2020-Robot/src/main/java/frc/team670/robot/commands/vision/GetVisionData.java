@@ -41,7 +41,7 @@ public class GetVisionData extends CommandBase implements MustangCommand {
 
     @Override
     public void execute() {
-        if(!runVisionOnce && System.currentTimeMillis()-startTime > 800){
+        if(!runVisionOnce && System.currentTimeMillis()-startTime > 3000){
             coprocessor.getLatestVisionData();
             runVisionOnce = true;
         }

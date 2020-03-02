@@ -67,8 +67,8 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
                     new TimedDrive(6.2, 0.12, driveBase),
                     new RotateToAngle(turret, trenchAng)
                 ),
-                // new StartShooter(shooter),
-                // new Shoot(shooter),
+                new StartShooter(shooter),
+                new Shoot(shooter),
                 new EmptyRevolver(indexer),
                 new StopShooter(shooter)
         );
