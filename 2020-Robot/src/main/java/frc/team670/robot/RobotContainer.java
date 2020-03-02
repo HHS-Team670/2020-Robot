@@ -30,8 +30,8 @@ import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.commands.auton.AutoSelector;
-import frc.team670.robot.commands.auton.AutoShootThenTimeDrive;
 import frc.team670.robot.commands.auton.ShootFromAngleThenTimeDrive;
+import frc.team670.robot.commands.auton.ToTrenchRunAndShoot;
 import frc.team670.robot.commands.auton.baseline.ShootThenBack;
 import frc.team670.robot.commands.climb.ExtendClimber;
 import frc.team670.robot.commands.climb.HookOnBar;
@@ -165,8 +165,9 @@ public class RobotContainer {
       // new ShootThenBack(driveBase, intake, conveyor,
       // shooter, indexer, turret, coprocessor);
       // new AutoShootThenTimeDrive(driveBase, intake, conveyor, shooter, indexer, turret);
-      new ShootFromAngleThenTimeDrive(-166, -0.3, driveBase, intake, conveyor, shooter, indexer, turret);
-  }
+      //new ShootFromAngleThenTimeDrive(-166, -0.3, driveBase, intake, conveyor, shooter, indexer, turret);
+      new ToTrenchRunAndShoot(-27, -10, driveBase, intake, conveyor, indexer, turret, shooter);
+}
 
   public static void autonomousInit(){
     indexer.reset();

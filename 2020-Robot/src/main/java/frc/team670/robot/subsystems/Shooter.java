@@ -96,7 +96,7 @@ public class Shooter extends MustangSubsystemBase {
     stage2_mainPIDController.setFF(V_FF, VELOCITY_SLOT);
   }
 
-  private double getStage2Velocity() {
+  public double getStage2Velocity() {
     return stage2_mainEncoder.getVelocity() * PULLEY_RATIO;
   }
 
@@ -160,6 +160,7 @@ public class Shooter extends MustangSubsystemBase {
     // } else if (!ballHasBeenShot && !isShooting()) {
     //   ballHasBeenShot = true;
     // }
+    SmartDashboard.putNumber("Stage 2 speed", mainController.getEncoder().getVelocity());
   }
 
   public boolean isShooting() {

@@ -376,6 +376,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     public boolean updrawIsUpToSpeed() {
         double c = updraw.getMotorOutputPercent(); // We can't tell if it's actually up to speed, but we're going off of
                                                    // "is it running"
+        if (updrawStartTime == null) {
+            return MathUtils.doublesEqual(c, UPDRAW_SPEED, 0.05);
+        }
         if (System.currentTimeMillis() >= updrawStartTime + 500) {
             return true;
         }
