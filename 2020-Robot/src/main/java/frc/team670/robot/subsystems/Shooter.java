@@ -38,7 +38,7 @@ public class Shooter extends MustangSubsystemBase {
 
   private double SPEED = 2500; // Will change later if we adjust by distance
   private static double DEFAULT_SPEED = 2500;
-  private static double MAX_RPM_MULTIPLIER = 1000; // TODO: find, I've tried shooting at 3500 like once
+  private static double SPEED_ADJUST_AMOUNT = 50; // TODO: we'll need to see what value works for this
 
   private static double MAX_SHOT_DISTANCE_METERS = 8.382; // = 27.5 feet, this is a guess
 
@@ -62,7 +62,9 @@ public class Shooter extends MustangSubsystemBase {
   // Distance currently from bumper
   private static final double[][] FLYWHEEL_RPM_AT_DISTANCE = { 
     { 3.048, 2500 }, // baseline - 10 ft
-    { 8.382, 2750 }, // longest shot we'll make - 27.5 ft
+                     // midrange shot - ? ft
+    { 8.382, 2750 }, // 27.5 ft
+                     // 28.5 ft = ?
   };
 
   static {
@@ -127,9 +129,10 @@ public class Shooter extends MustangSubsystemBase {
     return this.DEFAULT_SPEED;
   }
 
-  public double getRPMMultiplier(){
-    return this.MAX_RPM_MULTIPLIER;
+  public double getRPMAdjust(){
+    return this.SPEED_ADJUST_AMOUNT;
   }
+
 
   public double getTargetRPMForDistance(double distance){
     return 0;
