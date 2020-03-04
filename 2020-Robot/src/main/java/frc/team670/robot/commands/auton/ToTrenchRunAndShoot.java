@@ -32,12 +32,13 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 public class ToTrenchRunAndShoot extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
+    private static final double FROM_TRENCH_TURRET_ANGLE = -12.001;
 
     /**
      * @param initAng angle (degrees) the turret should turn to for shooting from baseline at beginning
      * @param trenchAng angle (degrees) the turret should be turned to when ready to shoot from the trench
      */
-    public ToTrenchRunAndShoot(double initAng, double trenchAng, DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Turret turret, Shooter shooter) {
+    public ToTrenchRunAndShoot(double initAng, DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Turret turret, Shooter shooter) {
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
@@ -65,7 +66,7 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
                 new ParallelCommandGroup(
                     new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(7.2),
                     new TimedDrive(6.2, 0.12, driveBase),
-                    new RotateToAngle(turret, trenchAng)
+                    new RotateToAngle(turret, FROM_TRENCH_TURRET_ANGLE)
                 ),
                 new StartShooter(shooter),
                 new Shoot(shooter),

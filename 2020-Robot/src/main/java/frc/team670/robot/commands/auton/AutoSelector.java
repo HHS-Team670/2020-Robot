@@ -152,7 +152,7 @@ public class AutoSelector {
                     
                     entry(AutoRoutine.RIGHT_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(-27, getWaitTime(), 0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
                     entry(AutoRoutine.RIGHT_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(-27, getWaitTime(), -0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
-                    entry(AutoRoutine.RIGHT_TO_TRENCH_SHOT, new ToTrenchRunAndShoot(-27, -12, driveBase, intake, conveyor, indexer, turret, shooter))
+                    entry(AutoRoutine.RIGHT_TO_TRENCH_SHOT, new ToTrenchRunAndShoot(-27, driveBase, intake, conveyor, indexer, turret, shooter))
                     // entry(AutoRoutine.LEFT_TO_GENERATOR_2_BALL_SIDE, new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
                     // entry(AutoRoutine.LEFT_TO_GENERATOR_3_BALL_SIDE, new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
                     // entry(AutoRoutine.LEFT_TO_TRENCH, new ShootFromBaseLineThenToTrench(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),

@@ -85,8 +85,9 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getAllowedError() {
-            // equivalent of 2 degrees, in rotations
-            return (2.0 / 360) * this.getRotatorGearRatio();
+            // equivalent of 0.25 degrees, in rotations
+            //TODO: test and see if this works
+            return (0.25 / 360) * this.getRotatorGearRatio();
         }
 
         public boolean enableSoftLimits() {
