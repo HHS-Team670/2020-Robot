@@ -23,6 +23,7 @@ import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.LEDSubsystem;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.Climber;
@@ -78,6 +79,7 @@ public class RobotContainer {
   private static Turret turret = new Turret();
   private static Shooter shooter = new Shooter();
   private static Climber climber = new Climber(indexerPusherClimberDeploy);
+  private static LEDSubsystem fancyLights = new LEDSubsystem(RobotMap.LEFT_SIDE_LEDS_PWM, 150);
 
   private static MustangCoprocessor coprocessor = new MustangCoprocessor();
 
@@ -224,6 +226,10 @@ public class RobotContainer {
 
   public static boolean isQuickTurnPressed() {
     return oi.isQuickTurnPressed();
+  }
+
+  public static void robotPeriodic() {
+    fancyLights.periodic();
   }
 
 }
