@@ -3,6 +3,8 @@ package frc.team670.robot.commands.auton;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.robot.commands.MustangCommand;
@@ -16,6 +18,7 @@ import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.RotateToHome;
+import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
@@ -32,6 +35,7 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 public class ToTrenchRunAndShoot extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
+    private DriveBase driveBase;
     private static final double FROM_TRENCH_TURRET_ANGLE = -12.001;
 
     /**
@@ -39,6 +43,9 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
      * @param trenchAng angle (degrees) the turret should be turned to when ready to shoot from the trench
      */
     public ToTrenchRunAndShoot(double initAng, DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Turret turret, Shooter shooter) {
+        
+        this.driveBase = driveBase;
+
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
@@ -74,6 +81,12 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
                 new StopShooter(shooter)
         );
 
+    }
+
+    @Override
+    public void initialize() {
+        // Front faces away from wall, heading is 180
+        driveBase.resetOdometry(new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
     }
 
     @Override

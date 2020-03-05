@@ -8,6 +8,8 @@ import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableType;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.robot.commands.MustangCommand;
@@ -16,6 +18,7 @@ import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToGenerato
 import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToTrench;
 import frc.team670.robot.commands.auton.generator.Generator2BallSideToTrenchThenShoot;
 import frc.team670.robot.commands.auton.generator.Generator3BallMidToGenerator2BallMidThenShoot;
+import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
@@ -108,8 +111,20 @@ public class AutoSelector {
     }
 
     public static enum StartPosition{
-        LEFT, CENTER, RIGHT;
+        LEFT, 
+        CENTER, 
+        RIGHT;
     }
+
+    private Pose2d leftStart = new Pose2d(
+        FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS + 
+        (FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS - FieldConstants.EDGE_OF_BASELINE), 
+        FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(0));
+    private Pose2d centerStart = new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS, 
+                   FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180));
+    private Pose2d rightStart = new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, 
+                   FieldConstants.EDGE_OF_BASELINE,
+                   Rotation2d.fromDegrees(180));
 
     /**
      * Gets the value of the enum for auto routines based on an int input from the
@@ -144,14 +159,14 @@ public class AutoSelector {
         return 
             (MustangCommand)(new SelectCommand(          
                 Map.ofEntries(
-                    entry(AutoRoutine.LEFT_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(-166, getWaitTime(), -0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
-                    entry(AutoRoutine.LEFT_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(-166, getWaitTime(), 0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
+                    entry(AutoRoutine.LEFT_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(leftStart, -166, getWaitTime(), -0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
+                    entry(AutoRoutine.LEFT_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(leftStart, -166, getWaitTime(), 0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
                     
-                    entry(AutoRoutine.CENTER_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(0, getWaitTime(), 0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
-                    entry(AutoRoutine.CENTER_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(0, getWaitTime(), -0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
+                    entry(AutoRoutine.CENTER_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(centerStart, 0, getWaitTime(), 0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
+                    entry(AutoRoutine.CENTER_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(centerStart, 0, getWaitTime(), -0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
                     
-                    entry(AutoRoutine.RIGHT_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(-27, getWaitTime(), 0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
-                    entry(AutoRoutine.RIGHT_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(-27, getWaitTime(), -0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
+                    entry(AutoRoutine.RIGHT_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(rightStart, -27, getWaitTime(), 0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
+                    entry(AutoRoutine.RIGHT_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(rightStart, -27, getWaitTime(), -0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
                     entry(AutoRoutine.RIGHT_TO_TRENCH_SHOT, new ToTrenchRunAndShoot(-27, driveBase, intake, conveyor, indexer, turret, shooter))
                     // entry(AutoRoutine.LEFT_TO_GENERATOR_2_BALL_SIDE, new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
                     // entry(AutoRoutine.LEFT_TO_GENERATOR_3_BALL_SIDE, new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),

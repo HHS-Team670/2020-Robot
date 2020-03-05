@@ -32,7 +32,6 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
-import frc.team670.robot.commands.auton.UpdatePoseFromVision;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 
 /**
@@ -90,12 +89,12 @@ public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandG
 
         @Override 
         public void end(boolean interrupted){
-            if (!interrupted){
-                addCommands(
-                    new GetVisionData(coprocessor),
-                    new UpdatePoseFromVision(driveBase, coprocessor)
-                );
-            }
+            // if (!interrupted){
+            //     addCommands(
+            //         new GetVisionData(coprocessor),
+            //         new UpdatePoseFromVision(driveBase, coprocessor)
+            //     );
+            // }
         }
 
         @Override

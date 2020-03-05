@@ -63,7 +63,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    MustangScheduler.getInstance().run();
+    // MustangScheduler.getInstance().run();
+    RobotContainer.periodic();
     if (timer.hasPeriodPassed(SYSTEM_CHECK_PERIOD)) {
       RobotContainer.checkSubsystemsHealth();
     }

@@ -8,6 +8,7 @@ import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.commands.joystickControls.JoystickTurret;
 import frc.team670.robot.commands.turret.AutoRotate;
 import frc.team670.robot.constants.RobotMap;
+import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 
 public class Turret extends SparkMaxRotatingSubsystem {
@@ -23,6 +24,8 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     private CANDigitalInput forwardLimit;
     private CANDigitalInput reverseLimit;
+
+    private boolean zeroedAlready = false;
 
     public String kEnable;
     public String kDisable;
@@ -138,6 +141,17 @@ public class Turret extends SparkMaxRotatingSubsystem {
         return HealthState.GREEN;
     }
 
+    public boolean hasZeroed() {
+        return this.zeroedAlready;
+    }
+
+    /**
+     * @param zeroedAlready the zeroedAlready to set
+     */
+    public void setZeroedAlready(boolean zeroedAlready) {
+        this.zeroedAlready = zeroedAlready;
+    }
+
     @Override
     public void mustangPeriodic() {
         // TODO Auto-generated method stub
@@ -147,8 +161,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     @Override
     public void setSystemTargetAngleInDegrees(double targetAngle) {
         if (targetAngle > SOFT_MAXIMUM_DEGREES || targetAngle < SOFT_MINIMUM_DEGREES) {
-            throw new IllegalArgumentException(
-                    "Invalid angle: must be within range " + SOFT_MINIMUM_DEGREES + " and " + SOFT_MAXIMUM_DEGREES);
+            Logger.consoleLog("Turret angle is out of range, angle is %s", targetAngle);
         } else {
             super.setSystemTargetAngleInDegrees(targetAngle);
         }

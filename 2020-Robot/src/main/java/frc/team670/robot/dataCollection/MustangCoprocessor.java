@@ -28,7 +28,7 @@ public class MustangCoprocessor {
     // The name of the subtable set on the Pi
     public static final String VISION_TABLE_NAME = "Vision";
     public static final String VISION_RETURN_NETWORK_KEY = "vision_values";
-    private static final String VISION_TRIGGER_NETWORK_KEY = "vision-data";
+    public static final String VISION_TRIGGER_NETWORK_KEY = "vision-data";
 
     // These are for sending vision health to dashboard
     private static NetworkTableInstance instance = NetworkTableInstance.getDefault();

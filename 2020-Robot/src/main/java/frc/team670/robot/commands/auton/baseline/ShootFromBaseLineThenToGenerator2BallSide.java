@@ -25,7 +25,6 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
-import frc.team670.robot.commands.auton.UpdatePoseFromVision;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 
 /**
@@ -84,13 +83,13 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
 
         @Override 
         public void end(boolean interrupted){
-            if (!interrupted){
-                addCommands(
-                    new GetVisionData(coprocessor),
-                    // should check here that vision didn't return an error code before updating
-                    new UpdatePoseFromVision(driveBase, coprocessor)
-                );
-            }
+        //     if (!interrupted){
+        //         addCommands(
+        //             new GetVisionData(coprocessor),
+        //             // should check here that vision didn't return an error code before updating
+        //             new UpdatePoseFromVision(driveBase, coprocessor)
+        //         );
+        //     }
         }
 
         @Override

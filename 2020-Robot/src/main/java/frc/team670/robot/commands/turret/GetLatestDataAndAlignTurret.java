@@ -27,7 +27,7 @@ public class GetLatestDataAndAlignTurret extends SequentialCommandGroup implemen
         healthReqs.put(turret, HealthState.GREEN);
 
         addCommands(
-                new GetVisionData(pi),
+                new GetVisionData(pi, driveBase),
                 new RotateTurret(turret, driveBase, pi)
         );
     }

@@ -35,7 +35,7 @@ public class AutoRotate extends CommandBase implements MustangCommand {
         this.turret = turret;
         this.driveBase = driveBase;
         this.coprocessor = pi;
-        addRequirements(turret, driveBase);
+        addRequirements(turret);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(turret, HealthState.GREEN);
         healthReqs.put(driveBase, HealthState.GREEN);
@@ -44,28 +44,24 @@ public class AutoRotate extends CommandBase implements MustangCommand {
     @Override
     public void initialize() {
         // Set current pose?
+        Logger.consoleLog("Turret auto rotate init");
     }
 
     @Override
     public void execute() {
         double relativeAngleToTarget = turret.getCurrentAngleInDegrees();
         // Attempt to use vision if it's enabled
-        if (coprocessor.isVisionEnabled()) {
-            double angDiff = coprocessor.getAngleToTarget();
-            if (angDiff != RobotConstants.VISION_ERROR_CODE) {
-                relativeAngleToTarget = angDiff;
-            }
-        } else {
-            double currentX = driveBase.getPose().getTranslation().getX();
-            double currentY = driveBase.getPose().getTranslation().getY();
-            // // Angle from known position on field to center of outer goal/vision target
-            double drivebasePosToGoalAngle = Math.toDegrees(
-                    Math.atan((currentX - FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS) / currentY));
-            double heading = driveBase.getHeading();
-            // zero degrees = pointing straight forwards
-            // this may not be how to use heading
-            relativeAngleToTarget = drivebasePosToGoalAngle + (-1 * heading);
-        }
+        double currentX = driveBase.getPose().getTranslation().getX();
+        double currentY = driveBase.getPose().getTranslation().getY();
+        // // Angle from known position on field to center of outer goal/vision target
+        double drivebasePosToGoalAngle = Math.toDegrees(
+                Math.atan((currentX - FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS) / currentY));
+        Logger.consoleLog("Drivebase pos to goal angle: %s", drivebasePosToGoalAngle);
+        double heading = driveBase.getHeading();
+        Logger.consoleLog("Drivebase heading: %s", heading);
+        // zero degrees = pointing straight forwards, +180 clockwise, -180 counterclockwise
+        // this may not be how to use heading
+        relativeAngleToTarget = drivebasePosToGoalAngle - heading;
         Logger.consoleLog("Turret target relative angle is %s", relativeAngleToTarget);
         double targetAngle = turret.relativeAngleToAbsoluteInDegrees(relativeAngleToTarget);
         Logger.consoleLog("Turret target absolute angle is %s", targetAngle);
