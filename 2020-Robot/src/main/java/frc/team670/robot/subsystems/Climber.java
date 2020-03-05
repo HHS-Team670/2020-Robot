@@ -52,7 +52,7 @@ public class Climber extends MustangSubsystemBase {
     private static final float MOTOR_ROTATIONS_AT_RETRACTED = 0;
     private static final float MOTOR_ROTATIONS_AT_MAX_EXTENSION = 368;
 
-    private static final float SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + 10;
+    private static final float SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
     private static final float SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
 
     public Climber(Solenoid deployer) {

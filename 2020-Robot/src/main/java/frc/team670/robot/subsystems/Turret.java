@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.commands.joystickControls.JoystickTurret;
 import frc.team670.robot.constants.RobotMap;
+import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 
 public class Turret extends SparkMaxRotatingSubsystem {
@@ -14,11 +15,11 @@ public class Turret extends SparkMaxRotatingSubsystem {
     // TODO: Set these values. Keeping it small right now for testing.
 
     // Turret pointing straight forward is 180 degrees
-    private static final int TURRET_MIN_DEGREES = -200; // all the way back
-    private static final int TURRET_MAX_DEGREES = 12; // from front, past straight forward
+    private static final double TURRET_MIN_DEGREES = -200; // all the way back
+    private static final double TURRET_MAX_DEGREES = 14.7; // from front, past straight forward
 
-    private static final int SOFT_MINIMUM_DEGREES = TURRET_MIN_DEGREES + 3;
-    private static final int SOFT_MAXIMUM_DEGREES = 0;
+    private static final double SOFT_MINIMUM_DEGREES = TURRET_MIN_DEGREES + 3;
+    private static final double SOFT_MAXIMUM_DEGREES = 0;
 
     private CANDigitalInput forwardLimit;
     private CANDigitalInput reverseLimit;
@@ -86,7 +87,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
         public double getAllowedError() {
             // equivalent of 2 degrees, in rotations
-            return (2.0 / 360) * this.getRotatorGearRatio();
+            return (0.25 / 360) * this.getRotatorGearRatio();
         }
 
         public boolean enableSoftLimits() {
@@ -145,8 +146,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     @Override
     public void setSystemTargetAngleInDegrees(double targetAngle) {
         if (targetAngle > SOFT_MAXIMUM_DEGREES || targetAngle < SOFT_MINIMUM_DEGREES) {
-            throw new IllegalArgumentException(
-                    "Invalid angle: must be within range " + SOFT_MINIMUM_DEGREES + " and " + SOFT_MAXIMUM_DEGREES);
+            Logger.consoleLog("Turret angle was out of range (in degrees): %s", targetAngle);
         } else {
             super.setSystemTargetAngleInDegrees(targetAngle);
         }

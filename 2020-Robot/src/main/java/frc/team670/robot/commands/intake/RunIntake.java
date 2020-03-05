@@ -3,6 +3,7 @@ package frc.team670.robot.commands.intake;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.subsystems.Intake;
@@ -38,8 +39,9 @@ public class RunIntake extends CommandBase implements MustangCommand {
 	}
 
 	public void execute() {
+		SmartDashboard.putNumber("count jammed", countWasJammed);
 		if (intake.isJammed()) {
-			countWasJammed = 25;
+			countWasJammed = 150;
 		}
 		if (countWasJammed > 0) {
 			intake.roll(!reversed);

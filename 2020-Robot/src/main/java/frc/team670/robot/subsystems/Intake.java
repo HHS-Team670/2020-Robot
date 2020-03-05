@@ -6,6 +6,7 @@ import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 
 /*
@@ -19,7 +20,7 @@ public class Intake extends MustangSubsystemBase {
     private boolean isDeployed = false; //TODO: true for testing, change this
 
     private double INTAKE_ROLLER_SPEED = 1.0; // From testing 2/16
-    private double INTAKE_PEAK_CURRENT = 19; // TODO: figure this out
+    private double INTAKE_PEAK_CURRENT = 35; // Testing
     private int exceededCurrentLimitCount = 0;
 
     public Intake() {
@@ -57,16 +58,19 @@ public class Intake extends MustangSubsystemBase {
 
     public boolean isJammed(){
         double intakeCurrent = roller.getOutputCurrent();
+        SmartDashboard.putNumber("intake current",  intakeCurrent);
         if (intakeCurrent > 0.2){
             if (intakeCurrent >= INTAKE_PEAK_CURRENT) {
                 exceededCurrentLimitCount++;
             } else {
                 exceededCurrentLimitCount = 0;
             }
-            if (exceededCurrentLimitCount >= 4){ // 4 consecutive readings higher than peak
+            if (exceededCurrentLimitCount >= 1){ // 4 consecutive readings higher than peak
+                SmartDashboard.putBoolean("past peak", true);
                 return true;
             }
         }
+
         return false;
 
     }
@@ -98,7 +102,6 @@ public class Intake extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-
     }
 
 }
