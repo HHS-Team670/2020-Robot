@@ -10,12 +10,19 @@ import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.utils.Logger;
 
+/**
+ * Sets the shooter's target RPM
+ * @author ctychen
+ */
 public class SetRPMTarget extends InstantCommand implements MustangCommand {
 
     private Shooter shooter;
     private double target;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+    /**
+     * @param rpm The shooter target speed, note that this should be absolute
+     */
     public SetRPMTarget(double rpm, Shooter shooter) {
         this.target = rpm;
         this.shooter = shooter;

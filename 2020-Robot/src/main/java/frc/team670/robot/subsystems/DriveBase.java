@@ -571,7 +571,7 @@ public class DriveBase extends MustangSubsystemBase {
   /**
    * Returns the heading of the robot.
    *
-   * @return the robot's heading in degrees, from 180 to 180
+   * @return the robot's heading in degrees, in range [-180, 180]
    */
   public double getHeading() {
     return Math.IEEEremainder(navXMicro.getAngle(), 360) * (RobotConstants.kNavXReversed ? -1. : 1.);

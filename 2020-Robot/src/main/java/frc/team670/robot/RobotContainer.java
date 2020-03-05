@@ -46,6 +46,7 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.intake.ToggleIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
+import frc.team670.robot.commands.turret.AutoRotate;
 import frc.team670.robot.commands.turret.GetLatestDataAndAlignTurret;
 import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.RotateToHome;
@@ -156,6 +157,11 @@ public class RobotContainer {
     hook.whenPressed(new HookOnBar(climber));
     zeroTurret.whenPressed(new RotateToAngle(turret, 0));
     alignTurretToTarget.whenPressed(new GetLatestDataAndAlignTurret(turret, driveBase, coprocessor));
+  }
+
+  public void robotInit() {
+    // Turret should rotate automatically by default the whole time
+    MustangScheduler.getInstance().setDefaultCommand(turret, new AutoRotate(turret, coprocessor, driveBase));
   }
 
   /**

@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.commands.joystickControls.JoystickTurret;
+import frc.team670.robot.commands.turret.AutoRotate;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 
@@ -207,8 +208,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     }
 
     public void initDefaultCommand() {
-        MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret(this));
+        // MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret(this));
     }
-
 
 }
