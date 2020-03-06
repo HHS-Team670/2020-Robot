@@ -26,24 +26,20 @@ public class RotateToHome extends CommandBase implements MustangCommand {
         healthReqs.put(turret, HealthState.GREEN);
     }
 
+
     @Override
     public void execute(){
         Logger.consoleLog("Turret moving to zero");
-        turret.moveByPercentOutput(0.1); // move very slowly until we hit the limit
+        turret.moveByPercentOutput(0.06); // move very slowly until we hit the limit
         if(turret.isForwardLimitSwitchTripped()){
             turret.stop();
             turret.resetRotatorEncoderFromLimitSwitch();
             hasReachedLimit = true;
         }
-        // if(hasReachedLimit){
-        //     // turret.moveByPercentOutput(-0.05);
-        //     turret.setSystemTargetAngleInDegrees(-20);
-        // }
     }
 
     @Override
     public boolean isFinished() {
-        // Logger.consoleLog("turretAngle %s %s", turret.hasReachedTargetPosition(), hasReachedLimit);
         return hasReachedLimit;
     }
 

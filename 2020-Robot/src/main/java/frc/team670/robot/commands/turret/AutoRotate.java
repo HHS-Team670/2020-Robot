@@ -43,13 +43,12 @@ public class AutoRotate extends CommandBase implements MustangCommand {
 
     @Override
     public void initialize() {
-        // Set current pose?
         Logger.consoleLog("Turret auto rotate init");
     }
 
     @Override
     public void execute() {
-        double relativeAngleToTarget = turret.getCurrentAngleInDegrees();
+        double angleToTarget = turret.getCurrentAngleInDegrees();
         // Attempt to use vision if it's enabled
         double currentX = driveBase.getPose().getTranslation().getX();
         double currentY = driveBase.getPose().getTranslation().getY();
@@ -59,13 +58,15 @@ public class AutoRotate extends CommandBase implements MustangCommand {
         Logger.consoleLog("Drivebase pos to goal angle: %s", drivebasePosToGoalAngle);
         double heading = driveBase.getHeading();
         Logger.consoleLog("Drivebase heading: %s", heading);
-        // zero degrees = pointing straight forwards, +180 clockwise, -180 counterclockwise
-        // this may not be how to use heading
-        relativeAngleToTarget = drivebasePosToGoalAngle - heading;
-        Logger.consoleLog("Turret target relative angle is %s", relativeAngleToTarget);
-        double targetAngle = turret.relativeAngleToAbsoluteInDegrees(relativeAngleToTarget);
-        Logger.consoleLog("Turret target absolute angle is %s", targetAngle);
-        turret.setSystemTargetAngleInDegrees(targetAngle);
+        // Deal with coordinate system, drivebase and turret
+        if (heading > 0) {
+            heading = -360.0 + heading;
+        }
+        Logger.consoleLog("Drivebase heading adjusted: %s", heading);
+        // zero degrees = pointing straight forwards, then +180 clockwise, -180 counterclockwise
+        angleToTarget = (-1.0 * drivebasePosToGoalAngle) - heading;
+        Logger.consoleLog("Drivebase, angle to target found is %s", angleToTarget);
+        turret.setSystemTargetAngleInDegrees(-angleToTarget);
     }
 
     /**

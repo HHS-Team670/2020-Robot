@@ -194,23 +194,36 @@ document.addEventListener("keyup", function (event) {
   }
 });
 
-// naming convention: UPPER_CASE for preset states, lower_case for other commands
-function getFromMap(key) { // mapping is more aligned with arm position on robot
+function getFromMap(key) { 
 
   // public static final double RUN_INTAKE_IN = 0;
   // public static final double RUN_INTAKE_OUT = 1;
   // public static final double TOGGLE_INTAKE = 2;
+  
   // public static final double INIT_SHOOTER = 4;
-  // public static final double SHOOT = 5;
+  // public static final double SHOOT = 6;
   // public static final double SHOOT_ALL = 7;
+
+  // public static final double INCREASE_SHOOTER_RPM = 8;
+  // public static final double DECREASE_SHOOTER_RPM = 9;
+
   // public static final double INDEXER_INTAKE = 10;
+
   // public static final double EXTEND_CLIMBER = 12;
   // public static final double RETRACT_CLIMBER = 13;
+
+  // public static final double SHOOT_NEAR = 14;
+  // public static final double SHOOT_MID = 15;
+  // public static final double SHOOT_LONG = 16;
+
   // public static final double CANCEL_ALL = 18;
 
   if (key === "3") return "4";
-  if (key === "5") return "5";
+  if (key === "5") return "6";
   if (key === "2") return "7";
+
+  // TODO add mapping for +/- shooter RPM, should be returning 8,9 
+  // TODO add mapping for shooting positions, should be returning 14/15/16   
 
   if (key === "k") return "2";
   if (key === "e") return "0";

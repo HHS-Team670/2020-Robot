@@ -5,8 +5,12 @@ import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsCo
 
 public class RobotConstants {
 
-    // Robot Dimensions
+    // Robot Dimensions in Inches
     public static final double ROBOT_LENGTH = 29.5, ROBOT_WIDTH = 30.3, DRIVEBASE_TO_GROUND = 2.03;
+
+    public static final double ROBOT_FULL_LENGTH_WITH_BUMPER = 36;
+
+    public static final double TURRET_CENTER_TO_FRONT = 20;
 
     // Drive Base Gearing
     public static final double DRIVEBASE_GEAR_RATIO = 8.45; // 8.45 if low gear, 10.71 if high gear. TODO check which

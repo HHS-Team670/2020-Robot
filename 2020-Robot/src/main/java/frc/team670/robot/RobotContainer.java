@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -48,6 +49,7 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.intake.ToggleIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
+import frc.team670.robot.commands.turret.AutoRotate;
 import frc.team670.robot.commands.turret.GetLatestDataAndAlignTurret;
 import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.RotateToHome;
@@ -56,8 +58,10 @@ import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.utils.MustangController;
 import frc.team670.robot.utils.MustangController.XboxButtons;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
+import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotMap;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -99,7 +103,6 @@ public class RobotContainer {
   private static JoystickButton retractClimb = new JoystickButton(oi.getOperatorController(), 12);
   private static JoystickButton hook = new JoystickButton(oi.getOperatorController(), 10);
   private static JoystickButton zeroTurret = new JoystickButton(oi.getOperatorController(), 8);
-  
   private static JoystickButton alignTurretToTarget = new JoystickButton(oi.getDriverController(), 1);
 
 
@@ -159,23 +162,23 @@ public class RobotContainer {
     retractClimb.whenPressed(new Climb(climber));
     hook.whenPressed(new HookOnBar(climber));
     zeroTurret.whenPressed(new RotateToAngle(turret, 0));
-
     alignTurretToTarget.whenPressed(new GetLatestDataAndAlignTurret(turret, driveBase, coprocessor));
   }
 
+  public void robotInit() {
+    // Turret should rotate automatically by default the whole time
+    MustangScheduler.getInstance().setDefaultCommand(turret, new AutoRotate(turret, coprocessor, driveBase));
+  }
+
   /**
-   * Use this to pass the autonomsous command to the main {@link Robot} class.
+   * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
     return
-      // (Command)(autoSelector.getSelectedRoutine())
-      // new ShootThenBack(driveBase, intake, conveyor,
-      // shooter, indexer, turret, coprocessor);
-      // new AutoShootThenTimeDrive(driveBase, intake, conveyor, shooter, indexer, turret);
-      //new ShootFromAngleThenTimeDrive(-166, -0.3, driveBase, intake, conveyor, shooter, indexer, turret);
-      new ToTrenchRunAndShoot(-25, -7, driveBase, intake, conveyor, indexer, turret, shooter);
+      (MustangCommand)(autoSelector.getSelectedRoutine());
+      //new ToTrenchRunAndShoot(-25, driveBase, intake, conveyor, indexer, turret, shooter);
 }
 
   public static void autonomousInit(){
@@ -183,17 +186,22 @@ public class RobotContainer {
     // 3 balls, in set positions, preloaded for auto
     indexer.setChamberStatesForMatchInit();
     indexer.setRotatorMode(false); // indexer to brake mode
-    coprocessor.turnOnLEDs();
-    MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
+    if (!turret.hasZeroed()) { // only zero indexer if needed
+      MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
+    }
   }
 
   public static void teleopInit() {
     indexer.reset();
     indexer.setRotatorMode(false); // indexer to brake mode
+    driveBase.resetOdometry(new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS, 
+    FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
     zeroSubsystemPositions();
     driveBase.setTeleopRampRate();
     driveBase.initDefaultCommand();
-    MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
+    if (!turret.hasZeroed()) {
+      MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
+    }
     turret.initDefaultCommand();
     coprocessor.turnOnLEDs();
 
@@ -233,7 +241,11 @@ public class RobotContainer {
     return oi.isQuickTurnPressed();
   }
 
-  public static void robotPeriodic() {
+  public static void initDefaultCommands(){
+    MustangScheduler.getInstance().setDefaultCommand(turret, new AutoRotate(turret, coprocessor, driveBase));
+  }
+
+  public static void periodic() {
     fancyLights.periodic();
   }
 

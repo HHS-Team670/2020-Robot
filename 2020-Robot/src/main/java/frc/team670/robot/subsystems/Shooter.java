@@ -38,6 +38,7 @@ public class Shooter extends MustangSubsystemBase {
 
   private double SPEED = 2125; // Will change later if we adjust by distance
   private static double DEFAULT_SPEED = 2500;
+  private static double SPEED_ADJUST_AMOUNT = 50; // TODO: we'll need to see what value works for this
 
   private static double MAX_SHOT_DISTANCE_METERS = 8.382; // = 27.5 feet, this is a guess
 
@@ -127,6 +128,15 @@ public class Shooter extends MustangSubsystemBase {
   public void setVelocityTarget(double targetRPM) {
     this.SPEED = targetRPM;
   }
+
+  public double getDefaultRPM(){
+    return this.DEFAULT_SPEED;
+  }
+
+  public double getRPMAdjust(){
+    return this.SPEED_ADJUST_AMOUNT;
+  }
+
 
   public double getTargetRPMForDistance(double distance){
     return 0;

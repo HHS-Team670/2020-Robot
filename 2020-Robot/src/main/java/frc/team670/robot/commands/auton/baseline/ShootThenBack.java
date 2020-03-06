@@ -11,7 +11,6 @@ import frc.team670.paths.center.CenterThenBack;
 import frc.team670.paths.left.LeftToTrenchPath;
 import frc.team670.paths.right.RightToTrenchPath;
 import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.commands.auton.UpdatePoseFromVision;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;

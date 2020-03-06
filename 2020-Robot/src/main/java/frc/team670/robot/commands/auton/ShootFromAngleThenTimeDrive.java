@@ -3,12 +3,14 @@ package frc.team670.robot.commands.auton;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team670.paths.Path;
 import frc.team670.paths.center.CenterThenBack;
 import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.drive.straight.TimedDrive;
 import frc.team670.robot.commands.indexer.EmptyRevolver;
 import frc.team670.robot.commands.indexer.SendAllBalls;
@@ -32,6 +34,8 @@ import frc.team670.robot.subsystems.Turret;
 public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
+    private DriveBase driveBase;
+    private Pose2d startPose;
 
     /**
      * 
@@ -39,9 +43,10 @@ public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implemen
      * @param waitTime The delay (s) between shooting and driving, if no delay use 0
      * @param speed Drivebase percent output. Negative reverse, positive forward
      */
-    public ShootFromAngleThenTimeDrive(double turretAng, double waitTime, double speed, DriveBase driveBase, Intake intake, Conveyor conveyor,
+    public ShootFromAngleThenTimeDrive(Pose2d startPose, double turretAng, double waitTime, double speed, DriveBase driveBase, Intake intake, Conveyor conveyor,
             Shooter shooter, Indexer indexer, Turret turret) {
-
+        this.driveBase = driveBase;
+        this.startPose = startPose;
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
@@ -68,6 +73,11 @@ public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implemen
                     new StopShooter(shooter)
                 )
             );
+    }
+
+    @Override
+    public void initialize() {
+        driveBase.resetOdometry(this.startPose);
     }
 
     @Override

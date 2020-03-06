@@ -21,6 +21,7 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
 import frc.team670.robot.commands.routines.ShootAllBalls;
+import frc.team670.robot.commands.shooter.SetRPMTarget;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.turret.GetLatestDataAndAlignTurret;
 import frc.team670.robot.subsystems.Conveyor;
@@ -59,12 +60,23 @@ public class XKeys {
         public static final double RUN_INTAKE_IN = 0;
         public static final double RUN_INTAKE_OUT = 1;
         public static final double TOGGLE_INTAKE = 2;
+        
         public static final double INIT_SHOOTER = 4;
         public static final double SHOOT = 6;
         public static final double SHOOT_ALL = 7;
+
+        public static final double INCREASE_SHOOTER_RPM = 8;
+        public static final double DECREASE_SHOOTER_RPM = 9;
+
         public static final double INDEXER_INTAKE = 10;
+
         public static final double EXTEND_CLIMBER = 12;
         public static final double RETRACT_CLIMBER = 13;
+
+        public static final double SHOOT_NEAR = 14;
+        public static final double SHOOT_MID = 15;
+        public static final double SHOOT_LONG = 16;
+
         public static final double CANCEL_ALL = 18;
     }
 
@@ -111,6 +123,16 @@ public class XKeys {
                 shoot();
             else if (s == xkeysCommands.SHOOT_ALL)
                 shootAll();
+            else if (s == xkeysCommands.INCREASE_SHOOTER_RPM)
+                increaseShooterSpeed();
+            else if (s == xkeysCommands.DECREASE_SHOOTER_RPM)
+                decreaseShooterSpeed();
+            else if (s == xkeysCommands.SHOOT_NEAR)
+                setCloseShotSpeed();
+            else if (s == xkeysCommands.SHOOT_MID) 
+                setMidShotSpeed();
+            else if (s == xkeysCommands.SHOOT_LONG)
+                setLongShotSpeed();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-indexer", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
@@ -158,6 +180,29 @@ public class XKeys {
 
     private void shoot() {
         MustangScheduler.getInstance().schedule(new RotateIndexerToUptakeThenShoot(indexer, shooter));
+    }
+
+    private void increaseShooterSpeed() {
+        MustangScheduler.getInstance().schedule(new SetRPMTarget(shooter.getStage2Velocity() + shooter.getRPMAdjust(), shooter));
+    }
+
+    private void decreaseShooterSpeed() {
+        MustangScheduler.getInstance().schedule(new SetRPMTarget(shooter.getStage2Velocity() - shooter.getRPMAdjust(), shooter));
+    }
+
+    private void setCloseShotSpeed() {
+        // TODO: Ideally we aren't just inputting magic numbers, these values need to be found
+        MustangScheduler.getInstance().schedule(new SetRPMTarget(2500, shooter));
+    }
+
+    private void setMidShotSpeed() {
+        // TODO: Ideally we aren't just inputting magic numbers, these values need to be found
+        MustangScheduler.getInstance().schedule(new SetRPMTarget(2700, shooter));
+    }
+
+    private void setLongShotSpeed() {
+        // TODO: Ideally we aren't just inputting magic numbers, these values need to be found
+        MustangScheduler.getInstance().schedule(new SetRPMTarget(2900, shooter));
     }
 
     private void shootAll() {

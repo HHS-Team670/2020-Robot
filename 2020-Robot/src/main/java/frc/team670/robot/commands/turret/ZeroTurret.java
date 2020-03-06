@@ -17,16 +17,24 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 public class ZeroTurret extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
+    private Turret turret;
 
     public ZeroTurret(Turret turret){
+        this.turret = turret;
         addRequirements(turret);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(turret, HealthState.GREEN);
-
         addCommands(
                 new RotateToHome(turret),
                 new RotateToAngle(turret, 0)
         );
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        if (!interrupted) {
+            turret.setZeroedAlready(true);
+        }
     }
 
     @Override

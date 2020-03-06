@@ -23,10 +23,12 @@ public class MustangCoprocessor {
 
     private Solenoid cameraLEDs;
 
+    private boolean currentlyUsingVision;
+
     // The name of the subtable set on the Pi
     public static final String VISION_TABLE_NAME = "SmartDashboard";
     public static final String VISION_RETURN_NETWORK_KEY = "vision_values";
-    private static final String VISION_TRIGGER_NETWORK_KEY = "vision-data";
+    public static final String VISION_TRIGGER_NETWORK_KEY = "vision-data";
 
     // These are for sending vision health to dashboard
     private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
@@ -44,6 +46,7 @@ public class MustangCoprocessor {
 
     private MustangCoprocessor(String key) {
         keyData = new NetworkTableObject(key);
+        this.currentlyUsingVision = false;
         cameraLEDs = new Solenoid(RobotMap.PCMODULE, RobotMap.VISION_LED_PCM);
         SmartDashboard.putBoolean("LEDs on", false);
     }
@@ -151,11 +154,19 @@ public class MustangCoprocessor {
     public void enableVision(boolean enabled) {
         NetworkTableEntry visionHealth = healthTable.getEntry("vision");
         if (enabled) {
+            this.currentlyUsingVision = true;
             visionHealth.forceSetString("green");
-
         } else {
+            this.currentlyUsingVision = false;
             visionHealth.forceSetString("red");
         }
+    }
+
+    /**
+     * @return whether or not vision is currently running/in use
+     */
+    public boolean isVisionEnabled(){
+        return this.currentlyUsingVision;
     }
 
     public void turnOnLEDs() {

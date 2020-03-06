@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.commands.joystickControls.JoystickTurret;
+import frc.team670.robot.commands.turret.AutoRotate;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -23,6 +24,8 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     private CANDigitalInput forwardLimit;
     private CANDigitalInput reverseLimit;
+
+    private boolean zeroedAlready = false;
 
     public String kEnable;
     public String kDisable;
@@ -86,7 +89,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getAllowedError() {
-            // equivalent of 2 degrees, in rotations
+            // equivalent of 0.25 degrees, in rotations
             return (0.25 / 360) * this.getRotatorGearRatio();
         }
 
@@ -137,6 +140,17 @@ public class Turret extends SparkMaxRotatingSubsystem {
         return HealthState.GREEN;
     }
 
+    public boolean hasZeroed() {
+        return this.zeroedAlready;
+    }
+
+    /**
+     * @param zeroedAlready the zeroedAlready to set
+     */
+    public void setZeroedAlready(boolean zeroedAlready) {
+        this.zeroedAlready = zeroedAlready;
+    }
+
     @Override
     public void mustangPeriodic() {
         // TODO Auto-generated method stub
@@ -146,7 +160,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     @Override
     public void setSystemTargetAngleInDegrees(double targetAngle) {
         if (targetAngle > SOFT_MAXIMUM_DEGREES || targetAngle < SOFT_MINIMUM_DEGREES) {
-            Logger.consoleLog("Turret angle was out of range (in degrees): %s", targetAngle);
+            Logger.consoleLog("Turret angle is out of range, angle is %s", targetAngle);
         } else {
             super.setSystemTargetAngleInDegrees(targetAngle);
         }
@@ -206,8 +220,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     }
 
     public void initDefaultCommand() {
-        MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret(this));
+        // MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret(this));
     }
-
 
 }
