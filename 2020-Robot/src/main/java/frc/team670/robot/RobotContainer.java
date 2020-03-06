@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -43,6 +44,7 @@ import frc.team670.robot.commands.indexer.RotateToNextChamber;
 import frc.team670.robot.commands.indexer.SendOneBallToShoot;
 import frc.team670.robot.commands.indexer.StopIntaking;
 import frc.team670.robot.commands.indexer.TogglePusher;
+import frc.team670.robot.commands.indexer.ToggleUpdraw;
 import frc.team670.robot.commands.indexer.UnjamIndexer;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.ReverseIntakeConveyor;
@@ -51,7 +53,10 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.intake.ToggleIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
+import frc.team670.robot.commands.shooter.StopUpdraw;
+import frc.team670.robot.commands.shooter.ToggleShooter;
 import frc.team670.robot.commands.turret.AutoRotate;
+import frc.team670.robot.commands.turret.GetLatestDataAndAlignTurret;
 import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.RotateToHome;
 import frc.team670.robot.commands.turret.RotateTurret;
@@ -98,12 +103,12 @@ public class RobotContainer {
   private static JoystickButton runIntakeIn = new JoystickButton(oi.getOperatorController(), 3);
   private static JoystickButton runIntakeOut = new JoystickButton(oi.getOperatorController(), 5);
   private static JoystickButton toggleShooter = new JoystickButton(oi.getOperatorController(), 6);
-  private static JoystickButton sendOneBall = new JoystickButton(oi.getOperatorController(), 2);
+  private static JoystickButton toggleUpdraw = new JoystickButton(oi.getOperatorController(), 2);
   private static JoystickButton rotateIndexerBackwards = new JoystickButton(oi.getOperatorController(), 9);
   private static JoystickButton togglePusher = new JoystickButton(oi.getOperatorController(), 7);
   private static JoystickButton extendClimb = new JoystickButton(oi.getOperatorController(), 11);
   private static JoystickButton retractClimb = new JoystickButton(oi.getOperatorController(), 12);
-  private static JoystickButton hook = new JoystickButton(oi.getOperatorController(), 10);
+  private static JoystickButton turnToNextIndexer = new JoystickButton(oi.getOperatorController(), 10);
   private static JoystickButton zeroTurret = new JoystickButton(oi.getOperatorController(), 8);
   
   //xboxButtons
@@ -163,19 +168,19 @@ public class RobotContainer {
     runIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
     runIntakeIn.whenReleased(new StopIntaking(intake, conveyor, indexer));
     runIntakeOut.toggleWhenPressed((new ReverseIntakeConveyor(intake, conveyor)));
-    toggleShooter.toggleWhenPressed(new RotateIndexerToUptakeThenShoot(indexer, shooter, driveBase));
-    sendOneBall.whenHeld(new SendOneBallToShoot(indexer));
+    toggleShooter.toggleWhenPressed(new ToggleShooter(shooter, driveBase));
+    toggleUpdraw.toggleWhenPressed(new ToggleUpdraw(indexer));
     rotateIndexerBackwards.whenHeld(new UnjamIndexer(indexer));
     togglePusher.whenHeld(new TogglePusher(indexer));
     extendClimb.whenPressed(new ExtendClimber(climber));
     retractClimb.whenPressed(new Climb(climber));
-    hook.whenPressed(new HookOnBar(climber));
+    turnToNextIndexer.whenPressed(new RotateToNextChamber(indexer, true));
     zeroTurret.whenPressed(new RotateToAngle(turret, 0));
 
-    xboxVision.whenPressed(new GetVisionData(coprocessor, driveBase));
+    xboxVision.whenPressed(new GetLatestDataAndAlignTurret(turret, driveBase, coprocessor));
     xboxRotateBy1.whenPressed(new RotateToNextChamber(indexer, true));
-    xboxRunIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
-    xboxRunIntakeIn.whenReleased(new StopIntaking(intake, conveyor, indexer));
+    // xboxRunIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
+    xboxRunIntakeIn.whenPressed(new StopUpdraw(indexer)); //StopIntaking(intake, conveyor, indexer)
     xboxToggleShooter.toggleWhenPressed(new RotateIndexerToUptakeThenShoot(indexer, shooter, driveBase));
     xboxLowerClimber.whenPressed(new Climb(climber));
     xboxRaiseClimber.whenPressed(new ExtendClimber(climber));
@@ -184,6 +189,8 @@ public class RobotContainer {
   public void robotInit() {
     // Turret should rotate automatically by default the whole time
     // MustangScheduler.getInstance().setDefaultCommand(turret, new AutoRotate(turret, coprocessor, driveBase));
+    //REMOVE THE LINE BELOW---------TESTINGONLY
+    // driveBase.resetOdometry(new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, 8.6868, Rotation2d.fromDegrees(180)));
   }
 
   /**
@@ -205,14 +212,15 @@ public class RobotContainer {
       //autoSelector.getSelectedRoutine();
 
       // CENTER: SHOOT THEN DRIVE BACK (AWAY FROM WALL)
-      // new ShootFromAngleThenTimeDrive(centerStart, -166, 0, -0.3, driveBase, intake, conveyor, shooter, indexer, turret);
+      new ShootFromAngleThenTimeDrive(centerStart, 0, 0, 0.3, driveBase, intake, conveyor, shooter, indexer, turret);
 
       // CENTER: SHOOT THEN DRIVE TOWARDS STATION WALL
       // new ShootFromAngleThenTimeDrive(centerStart, 0, 0, -0.5, driveBase, intake, conveyor, shooter, indexer, turret);
 
       // SHOOT THEN GO DOWN TRENCH
-      new ToTrenchRunAndShoot(-25, driveBase, intake, conveyor, indexer, turret, shooter);
+      // new ToTrenchRunAndShoot(-25, driveBase, intake, conveyor, indexer, turret, shooter);
 }
+
 
   public static void autonomousInit(){
     indexer.reset();
@@ -235,10 +243,12 @@ public class RobotContainer {
     if (!turret.hasZeroed()) {
       MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
     }
-    MustangScheduler.getInstance().setDefaultCommand(turret, new AutoRotate(turret, coprocessor, driveBase));
-    // turret.initDefaultCommand();
+    turret.initDefaultCommand();
     coprocessor.turnOnLEDs();
 
+    //REMOVE THE LINE BELOW ---- TESTINGOJYL
+    // driveBase.resetOdometry(new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, 8.6868, Rotation2d.fromDegrees(180)));
+    // MustangScheduler.getInstance().schedule(new RotateToAngle(turret, -180));
   }
 
   public static void disabled(){
@@ -273,10 +283,6 @@ public class RobotContainer {
 
   public static boolean isQuickTurnPressed() {
     return oi.isQuickTurnPressed();
-  }
-
-  public static void initDefaultCommands(){
-    MustangScheduler.getInstance().setDefaultCommand(turret, new AutoRotate(turret, coprocessor, driveBase));
   }
 
   public static void periodic() {

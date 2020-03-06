@@ -119,7 +119,6 @@ public class Robot extends TimedRobot {
     }
     Logger.consoleLog("Teleop Init");
     RobotContainer.teleopInit();
-    RobotContainer.initDefaultCommands();
   }
 
   /**

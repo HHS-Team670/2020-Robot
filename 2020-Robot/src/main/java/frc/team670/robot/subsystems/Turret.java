@@ -7,7 +7,6 @@ import com.revrobotics.CANSparkMax;
 
 import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.commands.joystickControls.JoystickTurret;
-import frc.team670.robot.commands.turret.AutoRotate;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -18,7 +17,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     // Turret pointing straight forward is 180 degrees
     private static final double TURRET_MIN_DEGREES = -240; // all the way back
-    private static final double TURRET_MAX_DEGREES = 14.7; // from front, past straight forward
+    private static final double TURRET_MAX_DEGREES = 12; // from front, past straight forward
 
     private static final double SOFT_MINIMUM_DEGREES = TURRET_MIN_DEGREES + 3;
     private static final double SOFT_MAXIMUM_DEGREES = 0;
@@ -223,7 +222,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     }
 
     public void initDefaultCommand() {
-        // MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret(this));
+        MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret(this));
     }
 
 }

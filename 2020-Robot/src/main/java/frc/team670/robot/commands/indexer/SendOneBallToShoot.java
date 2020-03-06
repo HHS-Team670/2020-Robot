@@ -21,7 +21,6 @@ public class SendOneBallToShoot extends CommandBase implements MustangCommand {
 
     public SendOneBallToShoot(Indexer indexer) {
         this.indexer = indexer;
-        addRequirements(indexer);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(indexer, HealthState.GREEN);
     }

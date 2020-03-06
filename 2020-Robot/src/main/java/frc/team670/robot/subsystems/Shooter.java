@@ -39,6 +39,10 @@ public class Shooter extends MustangSubsystemBase {
 
   private double targetRPM = 2125; // Will change later if we adjust by distance
   private static double DEFAULT_SPEED = 2500;
+
+  private static double MIN_RPM = 2125;
+  private static double MAX_RPM = 2725;
+
   private double speedAdjust = 0; // By default, we don't adjust, but this may get set later
 
   private static double MAX_SHOT_DISTANCE_METERS = 8.6868; // = 28-29ish feet
@@ -169,7 +173,7 @@ public class Shooter extends MustangSubsystemBase {
    * calculated from the linear regression
    */
   public double getTargetRPMForDistance(double distance){
-    return Math.min(speedAtDistance.predict(distance), 2725);
+    return Math.max(Math.min(speedAtDistance.predict(distance), MAX_RPM), MIN_RPM);
   }
 
   public void stop() {

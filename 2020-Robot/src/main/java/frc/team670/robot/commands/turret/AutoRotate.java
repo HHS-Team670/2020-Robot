@@ -58,6 +58,7 @@ public class AutoRotate extends CommandBase implements MustangCommand {
         // Deal with coordinate system, drivebase and turret
         if (heading > 0) {
             heading = -360.0 + heading;
+            
         }
         // zero degrees = pointing straight forwards, then +180 clockwise, -180 counterclockwise
         angleToTarget = (-1.0 * drivebasePosToGoalAngle) - heading;

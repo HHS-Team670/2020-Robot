@@ -334,6 +334,15 @@ public class Indexer extends SparkMaxRotatingSubsystem {
                 getShootChamber() * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_TOP_POS_IN_DEGREES);
     }
 
+    public void toggleUpdraw() {
+        double c = updraw.getMotorOutputPercent();
+        if (MathUtils.doublesEqual(c, 0.0, 0.1)) {
+            updraw(false);
+        } else {
+            stopUpdraw();
+        }
+    }
+
     public boolean hasReachedTargetPosition() {
         boolean hasReachedTarget = (MathUtils.doublesEqual(rotator_encoder.getPosition(), setpoint, ALLOWED_ERR));
         if(hasReachedTarget && !isIntaking){
