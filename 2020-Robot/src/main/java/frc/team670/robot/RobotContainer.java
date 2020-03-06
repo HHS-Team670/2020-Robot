@@ -53,6 +53,8 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.intake.ToggleIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
+import frc.team670.robot.commands.shooter.SetRPMAdjuster;
+import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopUpdraw;
 import frc.team670.robot.commands.shooter.ToggleShooter;
 import frc.team670.robot.commands.turret.AutoRotate;
@@ -113,8 +115,8 @@ public class RobotContainer {
   
   //xboxButtons
   private static JoystickButton xboxVision = new JoystickButton(oi.getDriverController(), XboxButtons.A);
-  private static JoystickButton xboxRunIntakeIn = new JoystickButton(oi.getDriverController(), XboxButtons.B);
-  private static JoystickButton xboxRotateBy1 = new JoystickButton(oi.getDriverController(), XboxButtons.X);
+  private static JoystickButton xboxIncreaseSpeed = new JoystickButton(oi.getDriverController(), XboxButtons.B);
+  private static JoystickButton xboxDecreaseSpeed = new JoystickButton(oi.getDriverController(), XboxButtons.X);
   private static JoystickButton xboxToggleShooter = new JoystickButton(oi.getDriverController(), XboxButtons.Y);
   private static JoystickButton xboxRaiseClimber = new JoystickButton(oi.getDriverController(), XboxButtons.LEFT_JOYSTICK_BUTTON);
   private static JoystickButton xboxLowerClimber = new JoystickButton(oi.getDriverController(), XboxButtons.RIGHT_JOYSTICK_BUTTON);
@@ -178,9 +180,9 @@ public class RobotContainer {
     zeroTurret.whenPressed(new RotateToAngle(turret, 0));
 
     xboxVision.whenPressed(new GetLatestDataAndAlignTurret(turret, driveBase, coprocessor));
-    xboxRotateBy1.whenPressed(new RotateToNextChamber(indexer, true));
+    xboxIncreaseSpeed.whenPressed(new SetRPMAdjuster(100, shooter));
     // xboxRunIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
-    xboxRunIntakeIn.whenPressed(new StopUpdraw(indexer)); //StopIntaking(intake, conveyor, indexer)
+    xboxDecreaseSpeed.whenPressed(new SetRPMAdjuster(-100, shooter)); //StopIntaking(intake, conveyor, indexer)
     xboxToggleShooter.toggleWhenPressed(new RotateIndexerToUptakeThenShoot(indexer, shooter, driveBase));
     xboxLowerClimber.whenPressed(new Climb(climber));
     xboxRaiseClimber.whenPressed(new ExtendClimber(climber));
@@ -212,13 +214,13 @@ public class RobotContainer {
       //autoSelector.getSelectedRoutine();
 
       // CENTER: SHOOT THEN DRIVE BACK (AWAY FROM WALL)
-      new ShootFromAngleThenTimeDrive(centerStart, 0, 0, 0.3, driveBase, intake, conveyor, shooter, indexer, turret);
+      // new ShootFromAngleThenTimeDrive(centerStart, 0, 0, 0.3, driveBase, intake, conveyor, shooter, indexer, turret);
 
       // CENTER: SHOOT THEN DRIVE TOWARDS STATION WALL
       // new ShootFromAngleThenTimeDrive(centerStart, 0, 0, -0.5, driveBase, intake, conveyor, shooter, indexer, turret);
 
       // SHOOT THEN GO DOWN TRENCH
-      // new ToTrenchRunAndShoot(-25, driveBase, intake, conveyor, indexer, turret, shooter);
+      new ToTrenchRunAndShoot(-25, driveBase, intake, conveyor, indexer, turret, shooter);
 }
 
 

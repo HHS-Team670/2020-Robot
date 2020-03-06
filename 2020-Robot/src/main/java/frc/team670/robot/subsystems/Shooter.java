@@ -37,7 +37,7 @@ public class Shooter extends MustangSubsystemBase {
   private CANEncoder stage2_mainEncoder;
   private CANPIDController stage2_mainPIDController;
 
-  private double targetRPM = 2125; // Will change later if we adjust by distance
+  private double targetRPM = 2500; // Will change later if we adjust by distance
   private static double DEFAULT_SPEED = 2500;
 
   private static double MIN_RPM = 2125;
@@ -163,7 +163,13 @@ public class Shooter extends MustangSubsystemBase {
    * @param diff The amount to change the current RPM adjust by, positive for increasing and negative to decrease
    */
   public void adjustRPMAdjuster(double diff) {
-    this.speedAdjust += diff;
+    if(((diff > 0 && speedAdjust < 400) || (diff < 0 && speedAdjust > -400))){
+      this.speedAdjust += diff;
+      if(stage2_mainEncoder.getVelocity() > 300){
+        run();
+      }
+
+    }
   }
 
   /**
