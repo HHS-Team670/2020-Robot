@@ -103,7 +103,14 @@ public class RobotContainer {
   private static JoystickButton retractClimb = new JoystickButton(oi.getOperatorController(), 12);
   private static JoystickButton hook = new JoystickButton(oi.getOperatorController(), 10);
   private static JoystickButton zeroTurret = new JoystickButton(oi.getOperatorController(), 8);
-  private static JoystickButton alignTurretToTarget = new JoystickButton(oi.getDriverController(), 1);
+  
+  //xboxButtons
+  private static JoystickButton xboxVision = new JoystickButton(oi.getDriverController(), XboxButtons.A);
+  private static JoystickButton xboxRunIntakeIn = new JoystickButton(oi.getDriverController(), XboxButtons.B);
+  private static JoystickButton xboxRotateBy1 = new JoystickButton(oi.getDriverController(), XboxButtons.X);
+  private static JoystickButton xboxToggleShooter = new JoystickButton(oi.getDriverController(), XboxButtons.Y);
+  private static JoystickButton xboxRaiseClimber = new JoystickButton(oi.getDriverController(), XboxButtons.LEFT_JOYSTICK_BUTTON);
+  private static JoystickButton xboxLowerClimber = new JoystickButton(oi.getDriverController(), XboxButtons.RIGHT_JOYSTICK_BUTTON);
 
 
   /**
@@ -162,7 +169,14 @@ public class RobotContainer {
     retractClimb.whenPressed(new Climb(climber));
     hook.whenPressed(new HookOnBar(climber));
     zeroTurret.whenPressed(new RotateToAngle(turret, 0));
-    alignTurretToTarget.whenPressed(new GetVisionData(coprocessor, driveBase));
+
+    xboxVision.whenPressed(new GetVisionData(coprocessor, driveBase));
+    xboxRotateBy1.whenPressed(new RotateToNextChamber(indexer, true));
+    xboxRunIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
+    xboxRunIntakeIn.whenReleased(new StopIntaking(intake, conveyor, indexer));
+    xboxToggleShooter.toggleWhenPressed(new RotateIndexerToUptakeThenShoot(indexer, shooter, driveBase));
+    xboxLowerClimber.whenPressed(new Climb(climber));
+    xboxRaiseClimber.whenPressed(new ExtendClimber(climber));
   }
 
   public void robotInit() {
