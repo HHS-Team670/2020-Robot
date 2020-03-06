@@ -160,13 +160,13 @@ public class AutoSelector {
             (MustangCommand)(new SelectCommand(          
                 Map.ofEntries(
                     entry(AutoRoutine.LEFT_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(leftStart, -166, getWaitTime(), -0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
-                    entry(AutoRoutine.LEFT_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(leftStart, -166, getWaitTime(), 0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
+                    entry(AutoRoutine.LEFT_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(leftStart, -166, getWaitTime(), 0.5, driveBase, intake, conveyor, shooter, indexer, turret)),
                     
                     entry(AutoRoutine.CENTER_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(centerStart, 0, getWaitTime(), 0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
-                    entry(AutoRoutine.CENTER_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(centerStart, 0, getWaitTime(), -0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
+                    entry(AutoRoutine.CENTER_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(centerStart, 0, getWaitTime(), -0.5, driveBase, intake, conveyor, shooter, indexer, turret)),
                     
                     entry(AutoRoutine.RIGHT_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(rightStart, -27, getWaitTime(), 0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
-                    entry(AutoRoutine.RIGHT_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(rightStart, -27, getWaitTime(), -0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
+                    entry(AutoRoutine.RIGHT_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(rightStart, -27, getWaitTime(), -0.5, driveBase, intake, conveyor, shooter, indexer, turret)),
                     entry(AutoRoutine.RIGHT_TO_TRENCH_SHOT, new ToTrenchRunAndShoot(-27, driveBase, intake, conveyor, indexer, turret, shooter))
                     // entry(AutoRoutine.LEFT_TO_GENERATOR_2_BALL_SIDE, new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
                     // entry(AutoRoutine.LEFT_TO_GENERATOR_3_BALL_SIDE, new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),

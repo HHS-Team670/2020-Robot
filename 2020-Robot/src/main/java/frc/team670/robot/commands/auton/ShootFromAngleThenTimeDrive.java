@@ -68,7 +68,7 @@ public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implemen
                 new WaitCommand(waitTime), // Delay moving after shot if needed
 
                 new ParallelCommandGroup(
-                    new TimedDrive(1, speed, driveBase),
+                    new TimedDrive( (Math.abs(speed) - 0.3) <= 0.1 ? 1 : 2, speed, driveBase),
                     new StopShooter(shooter)
                 )
             );
