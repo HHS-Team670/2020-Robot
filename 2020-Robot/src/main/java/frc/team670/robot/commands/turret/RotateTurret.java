@@ -30,6 +30,8 @@ public class RotateTurret extends CommandBase implements MustangCommand {
     private double heading;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+    private boolean validData = false;
+
     public RotateTurret(Turret turret, DriveBase driveBase, MustangCoprocessor pi) {
         this.turret = turret;
         this.driveBase = driveBase;
@@ -53,11 +55,12 @@ public class RotateTurret extends CommandBase implements MustangCommand {
      */
     @Override
     public void initialize() {
+        validData = true;
         double relativeAngleToTarget = coprocessor.getAngleToTarget();
         Logger.consoleLog("TurretAngle: %s", relativeAngleToTarget);
         // When vision can't detect the target, rotates the turret based on odometry
         if (relativeAngleToTarget == RobotConstants.VISION_ERROR_CODE) {
-            cancel();
+            validData = false;
             return;
             // double currentX = driveBase.getPose().getTranslation().getX();
             // double currentY = driveBase.getPose().getTranslation().getY();
@@ -73,12 +76,13 @@ public class RotateTurret extends CommandBase implements MustangCommand {
 
     @Override
     public boolean isFinished() {
-        return turret.hasReachedTargetPosition();
+        return (turret.hasReachedTargetPosition() || !validData);
     }
 
     @Override
     public void end(boolean interrupted) {
         turret.moveByPercentOutput(0);
+        turret.initDefaultCommand();
     }
 
     public double getDrivebaseAngle() {

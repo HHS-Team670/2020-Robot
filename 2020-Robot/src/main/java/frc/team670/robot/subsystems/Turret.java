@@ -223,6 +223,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     public void initDefaultCommand() {
         MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret(this));
+        Logger.consoleLog("Turret defaulted to joystick");
     }
 
 }
