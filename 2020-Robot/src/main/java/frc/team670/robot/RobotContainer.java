@@ -243,7 +243,6 @@ public class RobotContainer {
 
   public static void periodic() {
     fancyLights.periodic();
-    MustangScheduler.getInstance().schedule(new AutoRotate(turret, coprocessor, driveBase));
   }
 
 }

@@ -97,6 +97,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       MustangScheduler.getInstance().schedule(m_autonomousCommand);
     }
+    RobotContainer.initDefaultCommands();
   }
 
   /**
@@ -118,6 +119,7 @@ public class Robot extends TimedRobot {
     }
     Logger.consoleLog("Teleop Init");
     RobotContainer.teleopInit();
+    RobotContainer.initDefaultCommands();
   }
 
   /**
