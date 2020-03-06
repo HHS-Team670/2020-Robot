@@ -9,6 +9,8 @@ import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.SendOneBallToShoot;
 import frc.team670.robot.commands.indexer.StageOneBallToShoot;
 import frc.team670.robot.commands.shooter.StartShooter;
+import frc.team670.robot.commands.shooter.StartShooterByDistance;
+import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
@@ -20,7 +22,7 @@ public class RotateIndexerToUptakeThenShoot extends SequentialCommandGroup imple
     private Indexer indexer;
     private Shooter shooter;
 
-    public RotateIndexerToUptakeThenShoot(Indexer indexer, Shooter shooter) {
+    public RotateIndexerToUptakeThenShoot(Indexer indexer, Shooter shooter, DriveBase driveBase) {
         this.indexer = indexer;
         this.shooter = shooter;
         addRequirements(indexer, shooter);
@@ -31,7 +33,7 @@ public class RotateIndexerToUptakeThenShoot extends SequentialCommandGroup imple
         // Stage and uptake 1 ball while preparing the shooter
         addCommands(
             new ParallelCommandGroup(
-                new StartShooter(shooter), 
+                new StartShooterByDistance(shooter, driveBase), 
                 new StageOneBallToShoot(indexer)
             ),
             new SendOneBallToShoot(indexer));

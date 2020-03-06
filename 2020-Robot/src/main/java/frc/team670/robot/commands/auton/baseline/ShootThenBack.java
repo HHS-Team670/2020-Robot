@@ -55,7 +55,7 @@ public class ShootThenBack extends SequentialCommandGroup implements MustangComm
         addCommands(
                 //     new RotateToHome(turret),
                 // // Get shooter up to speed and aim
-                //     new StartShooter(shooter), 
+                //     new StartShooterByDistance(shooter, driveBase), 
                 //     new Shoot(shooter), 
                 //     new SendAllBalls(indexer),
                 //     new ParallelCommandGroup(  

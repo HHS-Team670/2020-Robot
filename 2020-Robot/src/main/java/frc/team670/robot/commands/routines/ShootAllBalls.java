@@ -10,6 +10,8 @@ import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.indexer.StageOneBallToShoot;
 import frc.team670.robot.commands.shooter.StartShooter;
+import frc.team670.robot.commands.shooter.StartShooterByDistance;
+import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
@@ -21,7 +23,7 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
     private Shooter shooter;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public ShootAllBalls(Indexer indexer, Shooter shooter){
+    public ShootAllBalls(Indexer indexer, Shooter shooter, DriveBase driveBase){
         this.indexer = indexer;
         this.shooter = shooter;
         addRequirements(indexer, shooter);
@@ -31,7 +33,7 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
 
         addCommands(
             new ParallelCommandGroup(
-                new StartShooter(shooter),
+                new StartShooterByDistance(shooter, driveBase),
                 new StageOneBallToShoot(indexer)
             ),
             new SendAllBalls(indexer)

@@ -14,6 +14,7 @@ import frc.team670.robot.commands.indexer.EmptyRevolver;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.indexer.StageOneBallToShoot;
 import frc.team670.robot.commands.shooter.StartShooter;
+import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.RotateToHome;
@@ -55,8 +56,9 @@ public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implemen
 
         addCommands(
                 // Get shooter up to speed and aim
+                new RotateToHome(turret),
                 new ParallelCommandGroup(
-                    new StartShooter(shooter), 
+                    new StartShooterByDistance(shooter, driveBase), 
                     new RotateToAngle(turret, turretAng)
                 ),
                 new Shoot(shooter), 

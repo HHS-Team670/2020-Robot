@@ -15,6 +15,7 @@ import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.SetRPMTarget;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooter;
+import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.RotateToHome;
@@ -56,8 +57,9 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
 
         addCommands(
                 // Shoots balls from baseline
+                new RotateToHome(turret),
                 new ParallelCommandGroup(
-                    new StartShooter(shooter), 
+                    new StartShooterByDistance(shooter, driveBase), 
                     new RotateToAngle(turret, initAng) // turret angle for shooting when starting on baseline to right
                 ),
                 new Shoot(shooter), 
@@ -70,11 +72,11 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
                     new SetRPMTarget(2850, shooter)
                 ),
                 new ParallelCommandGroup(
-                    new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(7.2),
-                    new TimedDrive(6.2, 0.12, driveBase),
+                    new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(5.2),
+                    new TimedDrive(4.2, 0.12, driveBase),
                     new RotateToAngle(turret, FROM_TRENCH_TURRET_ANGLE)
                 ),
-                new StartShooter(shooter),
+                new StartShooterByDistance(shooter, driveBase),
                 new Shoot(shooter),
                 new EmptyRevolver(indexer),
                 new StopShooter(shooter)

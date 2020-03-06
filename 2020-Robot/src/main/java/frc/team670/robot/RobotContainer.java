@@ -154,7 +154,7 @@ public class RobotContainer {
     runIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
     runIntakeIn.whenReleased(new StopIntaking(intake, conveyor, indexer));
     runIntakeOut.toggleWhenPressed((new ReverseIntakeConveyor(intake, conveyor)));
-    toggleShooter.toggleWhenPressed(new RotateIndexerToUptakeThenShoot(indexer, shooter));
+    toggleShooter.toggleWhenPressed(new RotateIndexerToUptakeThenShoot(indexer, shooter, driveBase));
     sendOneBall.whenHeld(new RotateToNextChamber(indexer, true));
     rotateIndexerBackwards.whenHeld(new UnjamIndexer(indexer));
     togglePusher.whenHeld(new TogglePusher(indexer));

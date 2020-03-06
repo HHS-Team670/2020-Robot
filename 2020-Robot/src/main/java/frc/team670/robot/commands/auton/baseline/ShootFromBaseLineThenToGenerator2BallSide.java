@@ -14,6 +14,7 @@ import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooter;
+import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.turret.RotateTurret;
 import frc.team670.robot.commands.vision.GetVisionData;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
@@ -64,7 +65,7 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
 
                 addCommands(
                         new ParallelCommandGroup(
-                                new StartShooter(shooter),
+                                new StartShooterByDistance(shooter, driveBase),
                                 new RotateTurret(turret, driveBase, coprocessor)
                         ),
                          

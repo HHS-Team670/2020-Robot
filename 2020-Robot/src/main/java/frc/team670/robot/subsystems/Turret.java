@@ -3,6 +3,7 @@ package frc.team670.robot.subsystems;
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMax;
 
 import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.commands.joystickControls.JoystickTurret;
@@ -16,7 +17,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     // TODO: Set these values. Keeping it small right now for testing.
 
     // Turret pointing straight forward is 180 degrees
-    private static final double TURRET_MIN_DEGREES = -200; // all the way back
+    private static final double TURRET_MIN_DEGREES = -270; // all the way back
     private static final double TURRET_MAX_DEGREES = 14.7; // from front, past straight forward
 
     private static final double SOFT_MINIMUM_DEGREES = TURRET_MIN_DEGREES + 3;
@@ -204,10 +205,12 @@ public class Turret extends SparkMaxRotatingSubsystem {
     public void resetRotatorEncoderFromLimitSwitch() {
         if (isForwardLimitSwitchTripped()) {
             rotator_encoder.setPosition(getMotorRotationsFromAngle(TURRET_MAX_DEGREES));
+            this.rotator.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float)(getMotorRotationsFromAngle(TURRET_MAX_DEGREES)));
         }
 
         if (isReverseLimitSwitchTripped()) {
             rotator_encoder.setPosition(getMotorRotationsFromAngle(TURRET_MIN_DEGREES));
+            this.rotator.setSoftLimit(CANSparkMax.SoftLimitDirection.kReverse, (float)(getMotorRotationsFromAngle(TURRET_MIN_DEGREES)));
         }
     }
 

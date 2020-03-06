@@ -21,6 +21,7 @@ import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.StartShooter;
+import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.turret.RotateTurret;
 import frc.team670.robot.commands.vision.GetVisionData;
 import frc.team670.robot.commands.shooter.Shoot;
@@ -73,7 +74,7 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
         addCommands(
                 // Get shooter up to speed and aim
                 new ParallelCommandGroup(
-                    new StartShooter(shooter), 
+                    new StartShooterByDistance(shooter, driveBase), 
                     new RotateTurret(turret, driveBase, coprocessor)
                 ),
                 // Roll intake out and shoot

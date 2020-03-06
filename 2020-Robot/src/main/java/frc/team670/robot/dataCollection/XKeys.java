@@ -21,9 +21,8 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
 import frc.team670.robot.commands.routines.ShootAllBalls;
-import frc.team670.robot.commands.shooter.SetRPMAdjuster;
-import frc.team670.robot.commands.shooter.SetRPMTarget;
 import frc.team670.robot.commands.shooter.StartShooter;
+import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.vision.GetVisionData;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
@@ -176,35 +175,35 @@ public class XKeys {
     }
 
     private void initShooter() {
-        MustangScheduler.getInstance().schedule(new StartShooter(shooter));
+        MustangScheduler.getInstance().schedule(new StartShooterByDistance(shooter, drivebase));
     }
 
     private void shoot() {
-        MustangScheduler.getInstance().schedule(new RotateIndexerToUptakeThenShoot(indexer, shooter));
+        MustangScheduler.getInstance().schedule(new RotateIndexerToUptakeThenShoot(indexer, shooter, drivebase));
     }
 
     private void increaseShooterSpeed() {
-        MustangScheduler.getInstance().schedule(new SetRPMAdjuster(50.0, shooter));
+        shooter.adjustRPMAdjuster(50.0);
     }
 
     private void decreaseShooterSpeed() {
-        MustangScheduler.getInstance().schedule(new SetRPMAdjuster(-50.0, shooter));
+        shooter.adjustRPMAdjuster(-50.0);
     }
 
     private void setCloseShotSpeed() {
-        MustangScheduler.getInstance().schedule(new SetRPMTarget(2125, shooter));
+        shooter.setVelocityTarget(2125);
     }
 
     private void setMidShotSpeed() {
-        MustangScheduler.getInstance().schedule(new SetRPMTarget(2275, shooter));
+        shooter.setVelocityTarget(2275);
     }
 
     private void setLongShotSpeed() {
-        MustangScheduler.getInstance().schedule(new SetRPMTarget(2725, shooter));
+        shooter.setVelocityTarget(2725);
     }
 
     private void shootAll() {
-        MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer, shooter));
+        MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer, shooter, drivebase));
     }
 
     private void toggleIntake() {
