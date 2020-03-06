@@ -182,6 +182,7 @@ public class RobotContainer {
     // 3 balls, in set positions, preloaded for auto
     indexer.setChamberStatesForMatchInit();
     indexer.setRotatorMode(false); // indexer to brake mode
+    coprocessor.turnOnLEDs();
     MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
   }
 
@@ -193,10 +194,13 @@ public class RobotContainer {
     driveBase.initDefaultCommand();
     MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
     turret.initDefaultCommand();
+    coprocessor.turnOnLEDs();
+
   }
 
   public static void disabled(){
     indexer.setRotatorMode(true); // indexer to coast mode
+    coprocessor.turnOffLEDs();
   }
 
   public static List<MustangSubsystemBase> getSubsystems() {

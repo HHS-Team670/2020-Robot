@@ -24,7 +24,7 @@ public class MustangCoprocessor {
     private Solenoid cameraLEDs;
 
     // The name of the subtable set on the Pi
-    public static final String VISION_TABLE_NAME = "Vision";
+    public static final String VISION_TABLE_NAME = "SmartDashboard";
     public static final String VISION_RETURN_NETWORK_KEY = "vision_values";
     private static final String VISION_TRIGGER_NETWORK_KEY = "vision-data";
 
@@ -49,8 +49,9 @@ public class MustangCoprocessor {
     }
 
     public void getLatestVisionData() {
-        NetworkTableEntry visionTrigger = visionTable.getEntry(VISION_TRIGGER_NETWORK_KEY);
-        visionTrigger.forceSetString("vision");
+        SmartDashboard.putString(VISION_TRIGGER_NETWORK_KEY, "vision");
+        // NetworkTableEntry visionTrigger = visionTable.getEntry(VISION_TRIGGER_NETWORK_KEY);
+        // visionTrigger.forceSetString("vision");
     }
 
     public void clearLastValues(){

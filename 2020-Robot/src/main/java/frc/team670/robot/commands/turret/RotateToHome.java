@@ -29,7 +29,7 @@ public class RotateToHome extends CommandBase implements MustangCommand {
     @Override
     public void execute(){
         Logger.consoleLog("Turret moving to zero");
-        turret.moveByPercentOutput(0.15); // move very slowly until we hit the limit
+        turret.moveByPercentOutput(0.1); // move very slowly until we hit the limit
         if(turret.isForwardLimitSwitchTripped()){
             turret.stop();
             turret.resetRotatorEncoderFromLimitSwitch();

@@ -36,7 +36,7 @@ public class Shooter extends MustangSubsystemBase {
   private CANEncoder stage2_mainEncoder;
   private CANPIDController stage2_mainPIDController;
 
-  private double SPEED = 2500; // Will change later if we adjust by distance
+  private double SPEED = 2125; // Will change later if we adjust by distance
   private static double DEFAULT_SPEED = 2500;
 
   private static double MAX_SHOT_DISTANCE_METERS = 8.382; // = 27.5 feet, this is a guess
@@ -61,7 +61,13 @@ public class Shooter extends MustangSubsystemBase {
   // Distance currently from bumper
   private static final double[][] FLYWHEEL_RPM_AT_DISTANCE = { 
     { 3.048, 2500 }, // baseline - 10 ft
-    { 8.382, 2750 }, // longest shot we'll make - 27.5 ft
+    { 8.382, 2750 }, // longest shot we'll make - 28.5 ft 2725 rpm // TODO MAKE THESE CHANGES
+                      // longest shot we'll make - 24 ft 2575 rpm // TODO MAKE THESE CHANGES
+                      // longest shot we'll make - 15 ft  2275 rpm // TODO MAKE THESE CHANGES
+                      // longest shot we'll make - 10.9 ft  2125 rpm // TODO MAKE THESE CHANGES
+
+
+
   };
 
   static {
@@ -160,7 +166,7 @@ public class Shooter extends MustangSubsystemBase {
     // } else if (!ballHasBeenShot && !isShooting()) {
     //   ballHasBeenShot = true;
     // }
-    SmartDashboard.putNumber("Stage 2 speed", mainController.getEncoder().getVelocity());
+    // SmartDashboard.putNumber("Stage 2 speed", mainController.getEncoder().getVelocity());
   }
 
   public boolean isShooting() {
