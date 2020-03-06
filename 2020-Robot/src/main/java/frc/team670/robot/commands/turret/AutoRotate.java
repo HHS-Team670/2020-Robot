@@ -49,7 +49,6 @@ public class AutoRotate extends CommandBase implements MustangCommand {
     @Override
     public void execute() {
         double angleToTarget = turret.getCurrentAngleInDegrees();
-        // Attempt to use vision if it's enabled
         double currentX = driveBase.getPose().getTranslation().getX();
         double currentY = driveBase.getPose().getTranslation().getY();
         // // Angle from known position on field to center of outer goal/vision target

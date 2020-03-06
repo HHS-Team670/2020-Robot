@@ -11,20 +11,20 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.utils.Logger;
 
 /**
- * Sets the shooter's target RPM
- * @author ctychen
+ * Use this to set the "adjuster" for the shooter speed, for example when trying
+ * to shoot a little bit faster or slower when needed in middle of a match
  */
-public class SetRPMTarget extends InstantCommand implements MustangCommand {
+public class SetRPMAdjuster extends InstantCommand implements MustangCommand {
 
     private Shooter shooter;
-    private double target;
+    private double diff;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     /**
-     * @param rpm The shooter target speed, note that this should be absolute
+     * @param diff The amount (RPM) to change the shooter RPM-adjuster by
      */
-    public SetRPMTarget(double rpm, Shooter shooter) {
-        this.target = rpm;
+    public SetRPMAdjuster(double diff, Shooter shooter) {
+        this.diff = diff;
         this.shooter = shooter;
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(shooter, HealthState.GREEN);
@@ -32,8 +32,8 @@ public class SetRPMTarget extends InstantCommand implements MustangCommand {
 
     @Override
     public void initialize() {
-        Logger.consoleLog("Setting shooter RPM to %s", target);
-        shooter.setVelocityTarget(target);
+        Logger.consoleLog("Changing the Shooter RPM adjuster by %s", diff);
+        shooter.adjustRPMAdjuster(diff);
     }
 
     @Override

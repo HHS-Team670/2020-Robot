@@ -222,8 +222,9 @@ function getFromMap(key) {
   if (key === "5") return "6";
   if (key === "2") return "7";
 
-  // TODO add mapping for +/- shooter RPM, should be returning 8,9 
-  // TODO add mapping for shooting positions, should be returning 14/15/16   
+  if (key === "c") return "14";
+  if (key === "j") return "15";
+  if (key === "d") return "16";
 
   if (key === "k") return "2";
   if (key === "e") return "0";

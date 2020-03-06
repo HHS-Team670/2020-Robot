@@ -18,6 +18,7 @@ import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.functions.MathUtils;
 import frc.team670.robot.utils.math.interpolable.InterpolatingDouble;
 import frc.team670.robot.utils.math.interpolable.InterpolatingTreeMap;
+import frc.team670.robot.utils.math.interpolable.LinearRegression;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -36,11 +37,11 @@ public class Shooter extends MustangSubsystemBase {
   private CANEncoder stage2_mainEncoder;
   private CANPIDController stage2_mainPIDController;
 
-  private double SPEED = 2125; // Will change later if we adjust by distance
+  private double targetRPM = 2125; // Will change later if we adjust by distance
   private static double DEFAULT_SPEED = 2500;
-  private static double SPEED_ADJUST_AMOUNT = 50; // TODO: we'll need to see what value works for this
+  private double speedAdjust = 0; // By default, we don't adjust, but this may get set later
 
-  private static double MAX_SHOT_DISTANCE_METERS = 8.382; // = 27.5 feet, this is a guess
+  private static double MAX_SHOT_DISTANCE_METERS = 8.6868; // = 28-29ish feet
 
   private static final double PULLEY_RATIO = 2; // Need to check this
 
@@ -58,16 +59,17 @@ public class Shooter extends MustangSubsystemBase {
 
   private static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> FLYWHEEL_RPM_MAP = new InterpolatingTreeMap<>();
 
+  // The following is for using fancy interpolation based on 254's 2017 code, where we sample 
+  // a ton and build a polynomial regression.
+
   // Format: {Distance from target in meters, RPM}
   // Distance currently from bumper
   private static final double[][] FLYWHEEL_RPM_AT_DISTANCE = { 
-    { 3.048, 2500 }, // baseline - 10 ft
-    { 8.382, 2750 }, // longest shot we'll make - 28.5 ft 2725 rpm // TODO MAKE THESE CHANGES
-                      // longest shot we'll make - 24 ft 2575 rpm // TODO MAKE THESE CHANGES
-                      // longest shot we'll make - 15 ft  2275 rpm // TODO MAKE THESE CHANGES
-                      // longest shot we'll make - 10.9 ft  2125 rpm // TODO MAKE THESE CHANGES
 
-
+    { 3.32232, 2125},  // 10.9 ft  2125 rpm 
+    { 4.572,  2275 }, // 15 ft  2275 rpm 
+    { 7.3152, 2575 }, // 24 ft 2575 rpm 
+    { 8.6868, 2725 } // 28.5 ft 2725 rpm 
 
   };
 
@@ -77,6 +79,25 @@ public class Shooter extends MustangSubsystemBase {
     }
     DEFAULT_SPEED = FLYWHEEL_RPM_MAP.getInterpolated(new InterpolatingDouble(MAX_SHOT_DISTANCE_METERS)).value;
   }
+
+  // For now this should be enough: a linear regression for the relationship between distance
+  // and RPM from this data should have a correlation coefficient of 0.9999 so it should be fine
+
+  private static final double[] measuredDistancesMeters = {
+    3.32232, // baseline
+    4.572, // 15 ft
+    7.3152, // 24 ft
+    8.6868 // trench (28-29ft)
+  };
+
+  private static final double[] measuredRPMs = {
+    2125,
+    2275,
+    2575,
+    2725
+  };
+
+  private static final LinearRegression speedAtDistance = new LinearRegression(measuredDistancesMeters, measuredRPMs);
 
   private static final int VELOCITY_SLOT = 0;
 
@@ -109,7 +130,7 @@ public class Shooter extends MustangSubsystemBase {
 
   public void run() {
     SmartDashboard.putNumber("Stage 2 speed", mainController.getEncoder().getVelocity());
-    stage2_mainPIDController.setReference(SPEED, ControlType.kVelocity);
+    stage2_mainPIDController.setReference(targetRPM, ControlType.kVelocity);
   }
 
   /**
@@ -126,26 +147,29 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public void setVelocityTarget(double targetRPM) {
-    this.SPEED = targetRPM;
+    this.targetRPM = targetRPM + this.speedAdjust;
   }
 
   public double getDefaultRPM(){
     return this.DEFAULT_SPEED;
   }
 
-  public double getRPMAdjust(){
-    return this.SPEED_ADJUST_AMOUNT;
+  /**
+   * 
+   * @param diff The amount to change the current RPM adjust by, positive for increasing and negative to decrease
+   */
+  public void adjustRPMAdjuster(double diff) {
+    this.speedAdjust += diff;
   }
 
-
+  /**
+   * 
+   * @param distance In meters, the distance we are shooting at
+   * @return The predicted "best fit" RPM for the motors to spin at based on the distance,
+   * calculated from the linear regression
+   */
   public double getTargetRPMForDistance(double distance){
-    return 0;
-    // TODO:
-    // Find which known values in the table are closest to the distance we have
-    // Interpolate: given that we know which values our distance is between, then similarly 
-    // calculate what the target RPM should be. InterpolatingTreeMap should make a linear interpolation,
-    // if time allows maybe make a quadratic model. 
-    // Returns the found RPM
+    return speedAtDistance.predict(distance);
   }
 
   public void stop() {
@@ -153,7 +177,7 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public boolean isUpToSpeed() {
-    return MathUtils.doublesEqual(getStage2Velocity(), SPEED, 200); // TODO: margin of error
+    return MathUtils.doublesEqual(getStage2Velocity(), targetRPM, 200); // TODO: margin of error
   }
 
   public void test() {

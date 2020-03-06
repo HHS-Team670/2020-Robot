@@ -55,7 +55,6 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
         healthReqs.put(turret, HealthState.GREEN);
 
         addCommands(
-             new RotateToHome(turret),
                 // Shoots balls from baseline
                 new ParallelCommandGroup(
                     new StartShooter(shooter), 

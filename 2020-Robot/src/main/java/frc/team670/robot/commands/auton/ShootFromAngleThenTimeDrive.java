@@ -7,8 +7,6 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.team670.paths.Path;
-import frc.team670.paths.center.CenterThenBack;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.drive.straight.TimedDrive;
@@ -57,7 +55,6 @@ public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implemen
 
         addCommands(
                 // Get shooter up to speed and aim
-                new RotateToHome(turret),
                 new ParallelCommandGroup(
                     new StartShooter(shooter), 
                     new RotateToAngle(turret, turretAng)

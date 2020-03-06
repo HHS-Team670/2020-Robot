@@ -50,11 +50,11 @@ import frc.team670.robot.commands.intake.ToggleIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
 import frc.team670.robot.commands.turret.AutoRotate;
-import frc.team670.robot.commands.turret.GetLatestDataAndAlignTurret;
 import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.RotateToHome;
 import frc.team670.robot.commands.turret.RotateTurret;
 import frc.team670.robot.commands.turret.ZeroTurret;
+import frc.team670.robot.commands.vision.GetVisionData;
 import frc.team670.robot.utils.MustangController;
 import frc.team670.robot.utils.MustangController.XboxButtons;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
@@ -162,7 +162,7 @@ public class RobotContainer {
     retractClimb.whenPressed(new Climb(climber));
     hook.whenPressed(new HookOnBar(climber));
     zeroTurret.whenPressed(new RotateToAngle(turret, 0));
-    alignTurretToTarget.whenPressed(new GetLatestDataAndAlignTurret(turret, driveBase, coprocessor));
+    alignTurretToTarget.whenPressed(new GetVisionData(coprocessor, driveBase));
   }
 
   public void robotInit() {

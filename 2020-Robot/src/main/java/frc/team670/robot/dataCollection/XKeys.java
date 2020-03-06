@@ -21,9 +21,10 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
 import frc.team670.robot.commands.routines.ShootAllBalls;
+import frc.team670.robot.commands.shooter.SetRPMAdjuster;
 import frc.team670.robot.commands.shooter.SetRPMTarget;
 import frc.team670.robot.commands.shooter.StartShooter;
-import frc.team670.robot.commands.turret.GetLatestDataAndAlignTurret;
+import frc.team670.robot.commands.vision.GetVisionData;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
@@ -183,26 +184,23 @@ public class XKeys {
     }
 
     private void increaseShooterSpeed() {
-        MustangScheduler.getInstance().schedule(new SetRPMTarget(shooter.getStage2Velocity() + shooter.getRPMAdjust(), shooter));
+        MustangScheduler.getInstance().schedule(new SetRPMAdjuster(50.0, shooter));
     }
 
     private void decreaseShooterSpeed() {
-        MustangScheduler.getInstance().schedule(new SetRPMTarget(shooter.getStage2Velocity() - shooter.getRPMAdjust(), shooter));
+        MustangScheduler.getInstance().schedule(new SetRPMAdjuster(-50.0, shooter));
     }
 
     private void setCloseShotSpeed() {
-        // TODO: Ideally we aren't just inputting magic numbers, these values need to be found
-        MustangScheduler.getInstance().schedule(new SetRPMTarget(2500, shooter));
+        MustangScheduler.getInstance().schedule(new SetRPMTarget(2125, shooter));
     }
 
     private void setMidShotSpeed() {
-        // TODO: Ideally we aren't just inputting magic numbers, these values need to be found
-        MustangScheduler.getInstance().schedule(new SetRPMTarget(2700, shooter));
+        MustangScheduler.getInstance().schedule(new SetRPMTarget(2275, shooter));
     }
 
     private void setLongShotSpeed() {
-        // TODO: Ideally we aren't just inputting magic numbers, these values need to be found
-        MustangScheduler.getInstance().schedule(new SetRPMTarget(2900, shooter));
+        MustangScheduler.getInstance().schedule(new SetRPMTarget(2725, shooter));
     }
 
     private void shootAll() {
@@ -226,7 +224,7 @@ public class XKeys {
     }
 
     private void visionAlign() {
-        MustangScheduler.getInstance().schedule(new GetLatestDataAndAlignTurret(turret, drivebase, coprocessor));
+        MustangScheduler.getInstance().schedule(new GetVisionData(coprocessor, drivebase));
     }
 
     private void indexerAtIntake() {

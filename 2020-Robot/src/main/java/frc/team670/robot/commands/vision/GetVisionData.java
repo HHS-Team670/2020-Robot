@@ -70,7 +70,6 @@ public class GetVisionData extends CommandBase implements MustangCommand {
         double yToTargetForward = distanceFromTargetMeters * Math.cos(Math.toRadians(angleFromTargetForwardDegrees));
         double currentX = FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS + xToTargetForward;
         driveBase.resetOdometry(new Pose2d(currentX, yToTargetForward, Rotation2d.fromDegrees(driveBase.getHeading())));
-        coprocessor.turnOffLEDs();
         coprocessor.enableVision(false);
     }
 

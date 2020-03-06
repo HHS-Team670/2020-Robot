@@ -237,9 +237,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     public void deployPusher(boolean toPush) {
         this.pusherDeployed = toPush;
         this.conveyorToIndexerPusher.set(pusherDeployed);
-        if (toPush){
-           conveyor.stop();
-        }
+        // if (toPush){
+        //    conveyor.stop();
+        // }
     }
 
     public boolean isPusherDeployed(){
