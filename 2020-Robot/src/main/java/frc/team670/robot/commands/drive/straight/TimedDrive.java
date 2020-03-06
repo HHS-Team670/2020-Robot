@@ -32,7 +32,6 @@ public class TimedDrive extends WaitCommand implements MustangCommand {
   // Called repeatedly when this Command is scheduled to run
   @Override
   public void execute() {
-    Logger.consoleLog("TimedDrive executed");
     driveBase.tankDrive(power, power);
   }
 
@@ -40,7 +39,6 @@ public class TimedDrive extends WaitCommand implements MustangCommand {
   @Override
   public void end(boolean isInteruppted) {
     driveBase.stop();
-    Logger.consoleLog("Robot stopped");
   }
 
   @Override

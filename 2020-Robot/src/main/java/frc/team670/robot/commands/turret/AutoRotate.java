@@ -55,17 +55,13 @@ public class AutoRotate extends CommandBase implements MustangCommand {
         // // Angle from known position on field to center of outer goal/vision target
         double drivebasePosToGoalAngle = Math.toDegrees(
                 Math.atan((currentX - FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS) / currentY));
-        Logger.consoleLog("Drivebase pos to goal angle: %s", drivebasePosToGoalAngle);
         double heading = driveBase.getHeading();
-        Logger.consoleLog("Drivebase heading: %s", heading);
         // Deal with coordinate system, drivebase and turret
         if (heading > 0) {
             heading = -360.0 + heading;
         }
-        Logger.consoleLog("Drivebase heading adjusted: %s", heading);
         // zero degrees = pointing straight forwards, then +180 clockwise, -180 counterclockwise
         angleToTarget = (-1.0 * drivebasePosToGoalAngle) - heading;
-        Logger.consoleLog("Drivebase, angle to target found is %s", angleToTarget);
         turret.setSystemTargetAngleInDegrees(-angleToTarget);
     }
 

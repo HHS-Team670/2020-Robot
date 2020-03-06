@@ -58,7 +58,6 @@ public class Intake extends MustangSubsystemBase {
 
     public boolean isJammed(){
         double intakeCurrent = roller.getOutputCurrent();
-        SmartDashboard.putNumber("intake current",  intakeCurrent);
         if (intakeCurrent > 0.2){
             if (intakeCurrent >= INTAKE_PEAK_CURRENT) {
                 exceededCurrentLimitCount++;
@@ -66,7 +65,6 @@ public class Intake extends MustangSubsystemBase {
                 exceededCurrentLimitCount = 0;
             }
             if (exceededCurrentLimitCount >= 1){ // 4 consecutive readings higher than peak
-                SmartDashboard.putBoolean("past peak", true);
                 return true;
             }
         }

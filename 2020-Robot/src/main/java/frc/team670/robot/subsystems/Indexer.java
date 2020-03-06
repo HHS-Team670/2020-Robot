@@ -237,13 +237,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     public void deployPusher(boolean toPush) {
         this.pusherDeployed = toPush;
         this.conveyorToIndexerPusher.set(pusherDeployed);
-        Logger.consoleLog("Indexer system setpoint at deploy push %s", setpoint);
-        Logger.consoleLog("Indexer current system position at push %s", rotator_encoder.getPosition());
-        Logger.consoleLog("Indexer system will push %s", pusherDeployed);
-        // if (toPush){
-        //    // conveyor.stop();
-        //    conveyor.setRunTimed(-0.05, 0.5);
-        // }
+        if (toPush){
+           conveyor.stop();
+        }
     }
 
     public boolean isPusherDeployed(){
@@ -686,8 +682,6 @@ public class Indexer extends SparkMaxRotatingSubsystem {
             unjamMode = false;
             rotateToNextEmptyChamber();
         }
-
-        SmartDashboard.putNumber("IndexerCurrent", rotator.getOutputCurrent());
 
         pushGameDataToDashboard();
     }
