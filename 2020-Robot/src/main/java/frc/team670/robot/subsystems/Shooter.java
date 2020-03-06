@@ -147,7 +147,7 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public void setVelocityTarget(double targetRPM) {
-    this.targetRPM = targetRPM + this.speedAdjust;
+    this.targetRPM = targetRPM;
   }
 
   public double getDefaultRPM(){
@@ -169,7 +169,7 @@ public class Shooter extends MustangSubsystemBase {
    * calculated from the linear regression
    */
   public double getTargetRPMForDistance(double distance){
-    return speedAtDistance.predict(distance);
+    return Math.min(speedAtDistance.predict(distance), 2725);
   }
 
   public void stop() {
@@ -177,7 +177,7 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public boolean isUpToSpeed() {
-    return MathUtils.doublesEqual(getStage2Velocity(), targetRPM, 200); // TODO: margin of error
+    return MathUtils.doublesEqual(getStage2Velocity(), targetRPM + this.speedAdjust, 200); // TODO: margin of error
   }
 
   public void test() {

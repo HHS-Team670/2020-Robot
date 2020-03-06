@@ -11,6 +11,7 @@ import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.utils.Logger;
 
 public class StartShooterByDistance extends CommandBase implements MustangCommand {
 
@@ -36,7 +37,9 @@ public class StartShooterByDistance extends CommandBase implements MustangComman
             (Math.pow(currentX - FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS, 2) +
              Math.pow(currentY, 2))
         );
+        Logger.consoleLog("Shooter distance to target %s", distanceToTarget);
         targetRPM = shooter.getTargetRPMForDistance(distanceToTarget);
+        Logger.consoleLog("Shooter Stage 2 RPM should be %s", targetRPM);
         shooter.setVelocityTarget(targetRPM);
         shooter.setRampRate(true);
     }

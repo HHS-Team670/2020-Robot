@@ -35,8 +35,9 @@ public class RotateIndexerToUptakeThenShoot extends SequentialCommandGroup imple
             new ParallelCommandGroup(
                 new StartShooterByDistance(shooter, driveBase), 
                 new StageOneBallToShoot(indexer)
-            ),
-            new SendOneBallToShoot(indexer));
+            )
+            // new SendOneBallToShoot(indexer));
+        );
     }
 
     /**

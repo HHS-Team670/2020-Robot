@@ -43,10 +43,7 @@ public class JoystickTurret extends CommandBase implements MustangCommand {
         turret.moveByPercentOutput(0);
       }
     }
-    else{
-      turret.moveByPercentOutput(0);
-    }
-    if (RobotContainer.getDriverController().getRawButton(10)) {
+    else  if (RobotContainer.getDriverController().getRawButton(10)) {
       double power = RobotContainer.getDriverController().getRightStickY()/2;
       if(Math.abs(power) > 0.025){
         turret.moveByPercentOutput(power);

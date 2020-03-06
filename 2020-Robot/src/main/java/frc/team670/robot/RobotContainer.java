@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -39,6 +40,7 @@ import frc.team670.robot.commands.climb.ExtendClimber;
 import frc.team670.robot.commands.climb.HookOnBar;
 import frc.team670.robot.commands.climb.Climb;
 import frc.team670.robot.commands.indexer.RotateToNextChamber;
+import frc.team670.robot.commands.indexer.SendOneBallToShoot;
 import frc.team670.robot.commands.indexer.StopIntaking;
 import frc.team670.robot.commands.indexer.TogglePusher;
 import frc.team670.robot.commands.indexer.UnjamIndexer;
@@ -162,7 +164,7 @@ public class RobotContainer {
     runIntakeIn.whenReleased(new StopIntaking(intake, conveyor, indexer));
     runIntakeOut.toggleWhenPressed((new ReverseIntakeConveyor(intake, conveyor)));
     toggleShooter.toggleWhenPressed(new RotateIndexerToUptakeThenShoot(indexer, shooter, driveBase));
-    sendOneBall.whenHeld(new RotateToNextChamber(indexer, true));
+    sendOneBall.whenHeld(new SendOneBallToShoot(indexer));
     rotateIndexerBackwards.whenHeld(new UnjamIndexer(indexer));
     togglePusher.whenHeld(new TogglePusher(indexer));
     extendClimb.whenPressed(new ExtendClimber(climber));
@@ -181,7 +183,7 @@ public class RobotContainer {
 
   public void robotInit() {
     // Turret should rotate automatically by default the whole time
-    MustangScheduler.getInstance().setDefaultCommand(turret, new AutoRotate(turret, coprocessor, driveBase));
+    // MustangScheduler.getInstance().setDefaultCommand(turret, new AutoRotate(turret, coprocessor, driveBase));
   }
 
   /**
@@ -190,9 +192,26 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
+    Pose2d leftStart = new Pose2d(
+      FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS + 
+      (FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS - FieldConstants.EDGE_OF_BASELINE), 
+      FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(0));
+    Pose2d centerStart = new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS, 
+                 FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180));
+    Pose2d rightStart = new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, 
+                 FieldConstants.EDGE_OF_BASELINE,
+                 Rotation2d.fromDegrees(180));
     return
-      (MustangCommand)(autoSelector.getSelectedRoutine());
-      //new ToTrenchRunAndShoot(-25, driveBase, intake, conveyor, indexer, turret, shooter);
+      //autoSelector.getSelectedRoutine();
+
+      // CENTER: SHOOT THEN DRIVE BACK (AWAY FROM WALL)
+      // new ShootFromAngleThenTimeDrive(centerStart, -166, 0, -0.3, driveBase, intake, conveyor, shooter, indexer, turret);
+
+      // CENTER: SHOOT THEN DRIVE TOWARDS STATION WALL
+      // new ShootFromAngleThenTimeDrive(centerStart, 0, 0, -0.5, driveBase, intake, conveyor, shooter, indexer, turret);
+
+      // SHOOT THEN GO DOWN TRENCH
+      new ToTrenchRunAndShoot(-25, driveBase, intake, conveyor, indexer, turret, shooter);
 }
 
   public static void autonomousInit(){
@@ -216,7 +235,8 @@ public class RobotContainer {
     if (!turret.hasZeroed()) {
       MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
     }
-    turret.initDefaultCommand();
+    MustangScheduler.getInstance().setDefaultCommand(turret, new AutoRotate(turret, coprocessor, driveBase));
+    // turret.initDefaultCommand();
     coprocessor.turnOnLEDs();
 
   }

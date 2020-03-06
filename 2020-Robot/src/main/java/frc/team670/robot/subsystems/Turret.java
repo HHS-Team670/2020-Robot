@@ -17,7 +17,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     // TODO: Set these values. Keeping it small right now for testing.
 
     // Turret pointing straight forward is 180 degrees
-    private static final double TURRET_MIN_DEGREES = -270; // all the way back
+    private static final double TURRET_MIN_DEGREES = -240; // all the way back
     private static final double TURRET_MAX_DEGREES = 14.7; // from front, past straight forward
 
     private static final double SOFT_MINIMUM_DEGREES = TURRET_MIN_DEGREES + 3;

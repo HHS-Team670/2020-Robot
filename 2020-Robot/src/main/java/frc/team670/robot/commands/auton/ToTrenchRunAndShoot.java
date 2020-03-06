@@ -59,7 +59,7 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
                 // Shoots balls from baseline
                 new RotateToHome(turret),
                 new ParallelCommandGroup(
-                    new StartShooterByDistance(shooter, driveBase), 
+                    new StartShooter(shooter), 
                     new RotateToAngle(turret, initAng) // turret angle for shooting when starting on baseline to right
                 ),
                 new Shoot(shooter), 
@@ -86,13 +86,14 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
 
     @Override
     public void initialize() {
+        super.initialize();
         // Front faces away from wall, heading is 180
         driveBase.resetOdometry(new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
     }
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-        return healthReqs;
+        return new HashMap<MustangSubsystemBase, HealthState>();
     }
 
 }

@@ -32,15 +32,15 @@ public class Conveyor extends MustangSubsystemBase {
         }
     }
 
-    public void setRunTimed(double speed, double timeSecs) {
-        Timer timer = new Timer();
-        timer.start();
-        if (timer.hasElapsed(timeSecs)) {
-            roller.set(speed);
-        }
-        timer.stop();
-        stop();
-    }
+    // public void setRunTimed(double speed, double timeSecs) {
+    //     Timer timer = new Timer();
+    //     timer.start();
+    //     if (timer.hasElapsed(timeSecs)) {
+    //         roller.set(speed);
+    //     }
+    //     timer.stop();
+    //     stop();
+    // }
 
     public void stop() {
         roller.set(0);

@@ -58,7 +58,7 @@ public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implemen
                 // Get shooter up to speed and aim
                 new RotateToHome(turret),
                 new ParallelCommandGroup(
-                    new StartShooterByDistance(shooter, driveBase), 
+                    new StartShooter(shooter), 
                     new RotateToAngle(turret, turretAng)
                 ),
                 new Shoot(shooter), 
@@ -76,6 +76,7 @@ public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implemen
 
     @Override
     public void initialize() {
+        super.initialize();
         driveBase.resetOdometry(this.startPose);
     }
 

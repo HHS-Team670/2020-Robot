@@ -10,6 +10,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableType;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SelectCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.robot.commands.MustangCommand;
@@ -155,9 +156,9 @@ public class AutoSelector {
      * 
      * @return the command corresponding to the autonomous routine selected by the driver
      */
-    public MustangCommand getSelectedRoutine(){
+    public CommandBase getSelectedRoutine(){
         return 
-            (MustangCommand)(new SelectCommand(          
+            new SelectCommand(          
                 Map.ofEntries(
                     entry(AutoRoutine.LEFT_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(leftStart, -166, getWaitTime(), -0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
                     entry(AutoRoutine.LEFT_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(leftStart, -166, getWaitTime(), 0.5, driveBase, intake, conveyor, shooter, indexer, turret)),
@@ -205,7 +206,7 @@ public class AutoSelector {
                     // ))                    
         ),
         this::select
-        ));
+        );
     }
 
 }
