@@ -184,8 +184,8 @@ public class RobotContainer {
     // xboxRunIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
     xboxDecreaseSpeed.whenPressed(new SetRPMAdjuster(-100, shooter)); //StopIntaking(intake, conveyor, indexer)
     xboxToggleShooter.toggleWhenPressed(new RotateIndexerToUptakeThenShoot(indexer, shooter, driveBase));
-    xboxLowerClimber.whenPressed(new Climb(climber));
-    xboxRaiseClimber.whenPressed(new ExtendClimber(climber));
+    // xboxLowerClimber.whenPressed(new Climb(climber));
+    // xboxRaiseClimber.whenPressed(new ExtendClimber(climber));
   }
 
   public void robotInit() {
@@ -216,8 +216,8 @@ public class RobotContainer {
       // CENTER: SHOOT THEN DRIVE BACK (AWAY FROM WALL)
       // new ShootFromAngleThenTimeDrive(centerStart, 0, 0, 0.3, driveBase, intake, conveyor, shooter, indexer, turret);
 
-      // CENTER: SHOOT THEN DRIVE TOWARDS STATION WALL
-      // new ShootFromAngleThenTimeDrive(centerStart, 0, 0, -0.5, driveBase, intake, conveyor, shooter, indexer, turret);
+      // CENTER: SHOOT THEN DRIVE TOWARDS STATION WALL (PUSH)
+      // new ShootFromAngleThenTimeDrive(centerStart, 0, 0, -0.7, driveBase, intake, conveyor, shooter, indexer, turret);
 
       // SHOOT THEN GO DOWN TRENCH
       new ToTrenchRunAndShoot(-25, driveBase, intake, conveyor, indexer, turret, shooter);
