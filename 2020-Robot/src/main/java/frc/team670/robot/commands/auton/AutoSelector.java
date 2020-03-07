@@ -1,8 +1,5 @@
 package frc.team670.robot.commands.auton;
 
-import java.util.Map;
-import static java.util.Map.entry;
-
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
@@ -10,15 +7,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableType;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.SelectCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToGenerator2BallSide;
-import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToGenerator3BallMid;
-import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToTrench;
-import frc.team670.robot.commands.auton.generator.Generator2BallSideToTrenchThenShoot;
-import frc.team670.robot.commands.auton.generator.Generator3BallMidToGenerator2BallMidThenShoot;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.Conveyor;
@@ -156,19 +145,50 @@ public class AutoSelector {
      * 
      * @return the command corresponding to the autonomous routine selected by the driver
      */
-    public CommandBase getSelectedRoutine(){
-        return 
-            new SelectCommand(          
-                Map.ofEntries(
-                    entry(AutoRoutine.LEFT_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(leftStart, -166, getWaitTime(), -0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
-                    entry(AutoRoutine.LEFT_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(leftStart, -166, getWaitTime(), 0.5, driveBase, intake, conveyor, shooter, indexer, turret)),
+    public MustangCommand getSelectedRoutine(){
+        AutoRoutine result = select();
+        /**
+        LEFT_EMPTY_THEN_BACK(0),
+        LEFT_EMPTY_THEN_FRONT(1),
+        
+        CENTER_EMPTY_THEN_BACK(2),
+        CENTER_EMPTY_THEN_FRONT(3),
+
+        RIGHT_EMPTY_THEN_BACK(4),
+        RIGHT_EMPTY_THEN_FRONT(5),
+
+        RIGHT_TO_TRENCH_SHOT(6),
+         */
+        switch(result) {
+            case LEFT_EMPTY_THEN_BACK:
+              return new ShootFromAngleThenTimeDrive(leftStart, -166, getWaitTime(), -0.3, driveBase, intake, conveyor, shooter, indexer, turret);
+            case LEFT_EMPTY_THEN_FRONT:
+              return new ShootFromAngleThenTimeDrive(leftStart, -166, getWaitTime(), 0.5, driveBase, intake, conveyor, shooter, indexer, turret);
+            case CENTER_EMPTY_THEN_BACK:
+              return new ShootFromAngleThenTimeDrive(centerStart, 0, getWaitTime(), 0.3, driveBase, intake, conveyor, shooter, indexer, turret);
+            case CENTER_EMPTY_THEN_FRONT:
+              return new ShootFromAngleThenTimeDrive(centerStart, 0, getWaitTime(), -0.5, driveBase, intake, conveyor, shooter, indexer, turret);
+            case RIGHT_EMPTY_THEN_BACK:
+              return new ShootFromAngleThenTimeDrive(rightStart, -27, getWaitTime(), 0.3, driveBase, intake, conveyor, shooter, indexer, turret);
+            case RIGHT_EMPTY_THEN_FRONT:
+              return new ShootFromAngleThenTimeDrive(rightStart, -27, getWaitTime(), -0.5, driveBase, intake, conveyor, shooter, indexer, turret);
+            case RIGHT_TO_TRENCH_SHOT:
+              return new ToTrenchRunAndShoot(-27, driveBase, intake, conveyor, indexer, turret, shooter);
+            default:
+              return new ShootFromAngleThenTimeDrive(centerStart, 0, 0, 0.3, driveBase, intake, conveyor, shooter, indexer, turret);
+          }
+        // return 
+        //     new SelectCommand(          
+        //         Map.ofEntries(
+                    // entry(AutoRoutine.LEFT_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(leftStart, -166, getWaitTime(), -0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
+                    // entry(AutoRoutine.LEFT_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(leftStart, -166, getWaitTime(), 0.5, driveBase, intake, conveyor, shooter, indexer, turret)),
                     
-                    entry(AutoRoutine.CENTER_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(centerStart, 0, getWaitTime(), 0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
-                    entry(AutoRoutine.CENTER_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(centerStart, 0, getWaitTime(), -0.5, driveBase, intake, conveyor, shooter, indexer, turret)),
+                    // entry(AutoRoutine.CENTER_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(centerStart, 0, getWaitTime(), 0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
+                    // entry(AutoRoutine.CENTER_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(centerStart, 0, getWaitTime(), -0.5, driveBase, intake, conveyor, shooter, indexer, turret)),
                     
-                    entry(AutoRoutine.RIGHT_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(rightStart, -27, getWaitTime(), 0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
-                    entry(AutoRoutine.RIGHT_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(rightStart, -27, getWaitTime(), -0.5, driveBase, intake, conveyor, shooter, indexer, turret)),
-                    entry(AutoRoutine.RIGHT_TO_TRENCH_SHOT, new ToTrenchRunAndShoot(-27, driveBase, intake, conveyor, indexer, turret, shooter))
+                    // entry(AutoRoutine.RIGHT_EMPTY_THEN_BACK, new ShootFromAngleThenTimeDrive(rightStart, -27, getWaitTime(), 0.3, driveBase, intake, conveyor, shooter, indexer, turret)),
+                    // entry(AutoRoutine.RIGHT_EMPTY_THEN_FRONT, new ShootFromAngleThenTimeDrive(rightStart, -27, getWaitTime(), -0.5, driveBase, intake, conveyor, shooter, indexer, turret)),
+                    // entry(AutoRoutine.RIGHT_TO_TRENCH_SHOT, new ToTrenchRunAndShoot(-27, driveBase, intake, conveyor, indexer, turret, shooter))
                     // entry(AutoRoutine.LEFT_TO_GENERATOR_2_BALL_SIDE, new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
                     // entry(AutoRoutine.LEFT_TO_GENERATOR_3_BALL_SIDE, new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
                     // entry(AutoRoutine.LEFT_TO_TRENCH, new ShootFromBaseLineThenToTrench(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)),
@@ -204,9 +224,9 @@ public class AutoSelector {
                     //     new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor),
                     //     new Generator3BallMidToGenerator2BallMidThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor)
                     // ))                    
-        ),
-        this::select
-        );
+        // ),
+        // this::select
+        // );
     }
 
 }
