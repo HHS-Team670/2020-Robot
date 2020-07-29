@@ -408,15 +408,22 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     public void setSystemTargetAngleInDegrees(double angleDegrees) {
         deployPusher(false);
         double currentAngle = getCurrentAngleInDegrees();
-        // We find the difference between where we currently are, and where we want to be
-        int sign = (angleDegrees -currentAngle >= 0 && angleDegrees - currentAngle <= 180) || (angleDegrees-currentAngle <=-180 && angleDegrees-currentAngle>=-360) ? 1 : -1;
-        Logger.consoleLog("Angle %s, Sign %s, CurrentAngle %s", angleDegrees, sign, currentAngle);
-        double diff = Math.abs(angleDegrees - currentAngle) % 360;
-        // If the difference is above 180 degrees, it's better to turn in the opposite direction.
-        // Otherwise, we continue turning in the same direction.
-        double finDiff = diff > 180 ? 360 - diff : diff;
-        // Setpoints are absolute, so we want to move from where we currently are plus the difference.
-        setSystemMotionTarget(getMotorRotationsFromAngle(currentAngle + finDiff));
+        // // We find the difference between where we currently are, and where we want to be
+        // int sign = (angleDegrees -currentAngle >= 0 && angleDegrees - currentAngle <= 180) || (angleDegrees-currentAngle <=-180 && angleDegrees-currentAngle>=-360) ? 1 : -1;
+        // Logger.consoleLog("Angle %s, Sign %s, CurrentAngle %s", angleDegrees, sign, currentAngle);
+        // double diff = Math.abs(angleDegrees - currentAngle) % 360;
+        // // If the difference is above 180 degrees, it's better to turn in the opposite direction.
+        // // Otherwise, we continue turning in the same direction.
+        // double finDiff = diff > 180 ? 360 - diff : diff;
+        // // Setpoints are absolute, so we want to move from where we currently are plus the difference.
+        double shortestAngleToTurn = shortestDistDegrees(currentAngle, angleDegrees);
+        setSystemMotionTarget(getMotorRotationsFromAngle(currentAngle + shortestAngleToTurn)); //currentAngle + finDiff
+    }
+
+    public static double shortestDistDegrees(double startAngle, double targetAngle) {      
+        double modDiff = (targetAngle - startAngle) % 360;
+        double shortestDistance = 180 - Math.abs(Math.abs(modDiff) - 180);
+        return (modDiff + 360) % 360 < 180 ? shortestDistance *= 1 : shortestDistance * -1;
     }
 
     private int getTopChamber() {
