@@ -420,10 +420,16 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         setSystemMotionTarget(getMotorRotationsFromAngle(currentAngle + shortestAngleToTurn)); //currentAngle + finDiff
     }
 
+    /**
+     * Used to find the shortest angle to rotate from start to target
+     * @param startAngle the current angle
+     * @param targetAngle the angle you want to turn to
+     * @return shortestDistance
+     */
     public static double shortestDistDegrees(double startAngle, double targetAngle) {      
-        double modDiff = (targetAngle - startAngle) % 360;
-        double shortestDistance = 180 - Math.abs(Math.abs(modDiff) - 180);
-        return (modDiff + 360) % 360 < 180 ? shortestDistance *= 1 : shortestDistance * -1;
+        double modDiff = (targetAngle - startAngle) % 360;                          // Calculates the difference between 2 angles
+        double shortestDistance = 180 - Math.abs(Math.abs(modDiff) - 180);          // Finds the shortest Angle using the difference
+        return (modDiff) % 360 < 180 ? shortestDistance * 1 : shortestDistance * -1;// Changes the shortestAngle to negative for rotating backwards
     }
 
     private int getTopChamber() {
