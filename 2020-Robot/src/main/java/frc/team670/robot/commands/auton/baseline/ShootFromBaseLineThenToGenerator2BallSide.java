@@ -42,6 +42,18 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
         private DriveBase driveBase;
         private MustangCoprocessor coprocessor;
 
+        /**
+         * Initializes this command from the given parameters
+         * 
+         * @param startPosition the position of the robot at the beginning of the game
+         * @param driveBase the drive base
+         * @param intake the intake
+         * @param conveyor the conveyor
+         * @param shooter the shooter
+         * @param indexer the indexer
+         * @param turret the turret
+         * @param coprocessor the coprocessor
+         */
         public ShootFromBaseLineThenToGenerator2BallSide(StartPosition startPosition, DriveBase driveBase, Intake intake, 
         Conveyor conveyor, Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
                 this.driveBase = driveBase;

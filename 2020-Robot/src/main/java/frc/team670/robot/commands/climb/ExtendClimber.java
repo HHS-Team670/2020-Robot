@@ -27,6 +27,11 @@ public class ExtendClimber extends CommandBase implements MustangCommand {
   private static final double MAX_EXTENDING_HEIGHT_CM = 66.24;
   private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+  /**
+   * Initializes this command with the given parameters
+   * 
+   * @param climber the robot climber
+   */
   public ExtendClimber(Climber climber) {
     this.climber = climber;
     addRequirements(climber);

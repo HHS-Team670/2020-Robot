@@ -37,6 +37,11 @@ public class PositionColorWheel extends CommandBase implements MustangCommand {
                                      // color sensor is at a certain position
   // TODO: tune the offset number
 
+  /**
+   * Initializes this command with the given parameters
+   * 
+   * @param spinner the robot's spinner
+   */
   public PositionColorWheel(ColorWheelSpinner spinner) {
     this.spinner = spinner;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -44,6 +49,9 @@ public class PositionColorWheel extends CommandBase implements MustangCommand {
   }
 
   // Called when the command is initially scheduled.
+  /**
+   * Calculates and sets the target color for this game
+   */
   @Override
   public void initialize() {
     int targetColorNumber = ColorMatcher.UNKNOWN_COLOR_NUMBER;

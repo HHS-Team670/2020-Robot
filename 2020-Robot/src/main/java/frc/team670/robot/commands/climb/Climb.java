@@ -25,6 +25,10 @@ public class Climb extends CommandBase implements MustangCommand {
                                                              // allow
   private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+  /**
+   * Initializes this command with the given parameters
+   * @param climber the climber of the robot
+   */
   public Climb(Climber climber) {
     this.climber = climber;
     addRequirements(climber);

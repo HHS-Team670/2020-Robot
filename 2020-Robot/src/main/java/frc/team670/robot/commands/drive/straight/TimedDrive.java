@@ -17,11 +17,20 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.utils.Logger;
 
+/**
+ * Moves the robot for a given duration at a given power
+ */
 public class TimedDrive extends WaitCommand implements MustangCommand {
 
   private DriveBase driveBase;
   private double power;
 
+  /**
+   * Initializes this command with the given parameters
+   * @param seconds the number of seconds to drive
+   * @param power the power level to drive with
+   * @param driveBase the drive base of the robot
+   */
   public TimedDrive(double seconds, double power, DriveBase driveBase) {
     super(seconds);
     this.power = power;
