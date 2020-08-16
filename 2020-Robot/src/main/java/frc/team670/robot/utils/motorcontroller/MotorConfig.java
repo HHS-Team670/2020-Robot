@@ -11,12 +11,18 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
  */
 public class MotorConfig {
 
+    /**
+     * Different motors
+     */
     public enum Motor_Type {
 
         NEO, NEO_550, REDLINE_775PRO, BAG;
 
     }
 
+    /**
+     * Max current for each motor
+     */
     public static final Map<Motor_Type, Integer> MOTOR_MAX_CURRENT = new HashMap<Motor_Type, Integer>() {
         {
             put(Motor_Type.NEO, 40);
@@ -26,6 +32,9 @@ public class MotorConfig {
         }
     };
 
+    /**
+     * Motor type (Brushed vs Brushless)
+     */
     public static final Map<Motor_Type, MotorType> MOTOR_TYPE = new HashMap<Motor_Type, MotorType>() {
         {
             put(Motor_Type.NEO, MotorType.kBrushless);

@@ -54,6 +54,13 @@ public class SparkMAXChecker extends MotorChecker<CANSparkMax> {
         return motor.getOutputCurrent();
     }
 
+    /**
+     * Used to check Motors using SparkMAXChecker
+     * @param subsystem 
+     * @param motorsToCheck
+     * @param checkerConfig
+     * @return
+     */
     public static boolean checkMotors(MustangSubsystemBase subsystem, ArrayList<MotorConfig<CANSparkMax>> motorsToCheck,
             Config checkerConfig) {
         SparkMAXChecker checker = new SparkMAXChecker();

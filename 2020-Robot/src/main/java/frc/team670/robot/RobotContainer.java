@@ -131,6 +131,10 @@ public class RobotContainer {
     addSubsystem(driveBase, intake, conveyor, indexer, shooter, climber, turret);
   }
 
+  /**
+   * Used to add a subsystem(s) to the list
+   * @param subsystems
+   */
   public static void addSubsystem(MustangSubsystemBase... subsystems) {
     for (MustangSubsystemBase m_subsystemBase : subsystems) {
       allSubsystems.add(m_subsystemBase);
@@ -188,6 +192,9 @@ public class RobotContainer {
     // xboxRaiseClimber.whenPressed(new ExtendClimber(climber));
   }
 
+  /**
+   * Set of commands that the robot needs to run when the robot turns on
+   */
   public void robotInit() {
     // Turret should rotate automatically by default the whole time
     // MustangScheduler.getInstance().setDefaultCommand(turret, new AutoRotate(turret, coprocessor, driveBase));
@@ -223,7 +230,9 @@ public class RobotContainer {
       new ToTrenchRunAndShoot(-25, driveBase, intake, conveyor, indexer, turret, shooter);
 }
 
-
+  /**
+   * Set of commands the robot needs to run when the autonomous mode initializes
+   */
   public static void autonomousInit(){
     indexer.reset();
     // 3 balls, in set positions, preloaded for auto
@@ -234,6 +243,9 @@ public class RobotContainer {
     }
   }
 
+  /**
+   * Set of commands the robot needs to run when the teleop mode initializes
+   */
   public static void teleopInit() {
     indexer.reset();
     indexer.setRotatorMode(false); // indexer to brake mode
@@ -253,40 +265,74 @@ public class RobotContainer {
     // MustangScheduler.getInstance().schedule(new RotateToAngle(turret, -180));
   }
 
+  /**
+   * Set of commands that the robot needs to run when the robot is disabled
+   */
   public static void disabled(){
     indexer.setRotatorMode(true); // indexer to coast mode
     coprocessor.turnOffLEDs();
   }
 
+  /**
+   * Used to get the subsystems from the list
+   * @return
+   */
   public static List<MustangSubsystemBase> getSubsystems() {
     return allSubsystems;
   }
 
+  /**
+   * Used to get the operator controller
+   */
   public static Joystick getOperatorController() {
     return oi.getOperatorController();
   }
 
+  /**
+   * Used to rumble the driver controller
+   */
   public static void rumbleDriverController() {
     // oi.rumbleDriverController(0.7, 0.2);
     notifyDriverController(1.0, 0.3);
   }
 
+  /**
+   * Used to rumble the driver controller based on time and power
+   * @param power the power to rumble the controller at
+   * @param time the time to rumble the controller for
+   */
   public static void rumbleDriverController(double power, double time){
     oi.rumbleDriverController(power, time);
   }
 
+  /**
+   * Used to notify the controller by rumbling it differently
+   * @param power the power to rumble the controller at
+   * @param time the time to rumble the controller at
+   */
   public static void notifyDriverController(double power, double time){
     oi.notifyDriverController(power, time);
   }
 
+  /**
+   * Used to get the driver controller
+   * @return
+   */
   public static MustangController getDriverController() {
     return oi.getDriverController();
   }
 
+  /**
+   * Used to check if the quick turn pressed
+   * @return
+   */
   public static boolean isQuickTurnPressed() {
     return oi.isQuickTurnPressed();
   }
 
+  /**
+   * Runs the set of commands periodically
+   */
   public static void periodic() {
     fancyLights.periodic();
   }

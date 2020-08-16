@@ -80,6 +80,17 @@ public class XKeys {
         public static final double CANCEL_ALL = 18;
     }
 
+    /**
+     * Used to create an xkeys object
+     * @param drivebase the drivebase to control
+     * @param intake the intake to run/control
+     * @param conveyor the conveyor to run
+     * @param indexer the indexer to run/control
+     * @param shooter the shooter to run/control
+     * @param climber the climber to run
+     * @param turret the turret to run/control
+     * @param pi the coprocessor specfically the pi
+     */
     public XKeys(DriveBase drivebase, Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Climber climber, Turret turret, MustangCoprocessor pi) {
         SmartDashboard.putString("XKEYS", "XKeys constructor");
         instance = NetworkTableInstance.getDefault();

@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.Ultrasonic;
 
+/**
+ * Used to get inputs from an ultrasonic connected to the DIO ports
+ */
 public class DIOUltrasonic {
 
     private DigitalOutput triggerPin;
@@ -41,6 +44,10 @@ public class DIOUltrasonic {
         return ultrasonic.getRangeInches();
     }
 
+    /**
+     * Used to set the ultrasonic sensor to fire automatically
+     * @param automaticMode
+     */
     public void setUltrasonicAutomaticMode(boolean automaticMode) {
         ultrasonic.setAutomaticMode(automaticMode);
     }

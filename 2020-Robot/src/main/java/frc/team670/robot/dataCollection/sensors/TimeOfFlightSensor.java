@@ -118,6 +118,9 @@ public class TimeOfFlightSensor {
         updater.scheduleAtFixedRate(task, 0, period);
     }
 
+    /**
+     * Used to stop
+     */
     public void stop() {
         updater.cancel();
         updater = new java.util.Timer();

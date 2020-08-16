@@ -3,16 +3,25 @@ package frc.team670.robot.utils;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.XboxController;
 
+/**
+ * Represents an Xbox controller
+ */
 public class MustangController extends XboxController {
 
     private Notifier rumbler;
     private boolean isRumbling;
     private long targetRumbleTime;
 
+    /**
+     * The dpad states for xbox
+     */
     public enum DPadState {
         NEUTRAl, UP, UP_RIGHT, RIGHT, DOWN_RIGHT, DOWN, DOWN_LEFT, LEFT, UP_LEFT;
     }
 
+    /**
+     * Different XBox buttons with their ids
+     */
     public static class XboxButtons {
         // Controller Buttons
         public static final int A = 1;
@@ -53,6 +62,10 @@ public class MustangController extends XboxController {
         public static final int RIGHT_STICK_Y = 5;
     }
 
+    /**
+     * Used to create a mustang controller (xbox) on a spcific port
+     * @param port the port to which the xbox is connected
+     */
     public MustangController(int port) {
         super(port);
         isRumbling = false;
@@ -67,47 +80,88 @@ public class MustangController extends XboxController {
         rumbler.startPeriodic(0.125);
     }
 
-    // helps you get varoius axis and buttons on the XBox controller
+    /**
+     * Used to get left stick x
+     */
     public double getLeftStickX() {
         return super.getRawAxis(XboxButtons.LEFT_STICK_X);
     }
 
+    /**
+     * Used to get left joystick Y
+     * @return
+     */
     public double getLeftStickY() {
         return super.getRawAxis(XboxButtons.LEFT_STICK_Y);
     }
 
+    /**
+     * Used to get the left trigger axis
+     * @return
+     */
     public double getLeftTriggerAxis() {
         return super.getTriggerAxis(Hand.kLeft);
     }
 
+    /**
+     * Used to get the right trigger axis
+     */
     public double getRightTriggerAxis() {
         return super.getTriggerAxis(Hand.kRight);
     }
 
+    /**
+     * Used to get right stick X
+     * @return
+     */
     public double getRightStickX() {
         return super.getRawAxis(XboxButtons.RIGHT_STICK_X);
     }
 
+    /**
+     * Used to get the right stick Y
+     * @return
+     */
     public double getRightStickY() {
         return super.getRawAxis(XboxButtons.RIGHT_STICK_Y);
     }
 
+    /**
+     * Used to check if the left bumper is pressed
+     * @return
+     */
     public boolean getLeftBumper() {
         return super.getBumper(Hand.kLeft);
     }
 
+    /**
+     * Used to check if the right bumper is pressed
+     * @return
+     */
     public boolean getRightBumper() {
         return super.getBumper(Hand.kRight);
     }
 
+    /**
+     * Used to check if the left joystick button is pressed
+     * @return
+     */
     public boolean getLeftJoystickButton() {
         return super.getStickButton(Hand.kLeft);
     }
 
+    /**
+     * Used to check if the right joystick button is pressed
+     * @return
+     */
     public boolean getRightJoystickButton() {
         return super.getStickButton(Hand.kRight);
     }
 
+    /**
+     * Used to get the POV
+     * @return
+     */
     public int getPOVValue() {
         return super.getPOV();
     }

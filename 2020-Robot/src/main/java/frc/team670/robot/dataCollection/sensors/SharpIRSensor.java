@@ -14,6 +14,12 @@ public class SharpIRSensor {
     protected final AnalogTrigger M_ANALOG_TRIGGER;
     protected final Counter M_COUNTER;
 
+    /**
+     * Used to create a sharpIRSensor
+     * @param port the port on which it is connected
+     * @param min_trigger_voltage the minimum voltage to trigger the sensor
+     * @param max_trigger_voltage the maximum voltage to trigger the sensor
+     */
     public SharpIRSensor(int port, double min_trigger_voltage, double max_trigger_voltage) {
         M_ANALOG_INPUT = new AnalogInput(port);
         M_ANALOG_INPUT.setAverageBits(6);

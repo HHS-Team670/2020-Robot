@@ -8,6 +8,9 @@ import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorMatch;
 
+/**
+ * Used to get inputs from a Rev Color sensor
+ */
 public class ColorMatcher {
   /**
    * Change the I2C port below to match the connection of your color sensor
