@@ -31,6 +31,12 @@ public class AutoRotate extends CommandBase implements MustangCommand {
     private MustangCoprocessor coprocessor;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+    /**
+     * Initializes this command from the given parameters
+     * @param turret the turret of the robot
+     * @param pi the raspberry pi
+     * @param driveBase the drivebase of the robot
+     */
     public AutoRotate(Turret turret, MustangCoprocessor pi, DriveBase driveBase) {
         this.turret = turret;
         this.driveBase = driveBase;

@@ -23,6 +23,10 @@ public class UnjamIndexer extends CommandBase implements MustangCommand {
 
     private int rotateForwardTimes;
 
+    /**
+     * Initializes this command from the given indexer
+     * @param indexer the indexer of the robot
+     */
     public UnjamIndexer(Indexer indexer) {
         this.indexer = indexer;
         addRequirements(indexer);

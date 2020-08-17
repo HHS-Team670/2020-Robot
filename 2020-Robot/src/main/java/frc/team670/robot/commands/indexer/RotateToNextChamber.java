@@ -19,6 +19,12 @@ public class RotateToNextChamber extends CommandBase implements MustangCommand {
 
     private boolean isForward;
 
+    /**
+     * Initializes this command with the given parameters
+     * 
+     * @param indexer the indexer of the robot
+     * @param isForward whether to rotate forward or backward
+     */
     public RotateToNextChamber(Indexer indexer, boolean isForward) {
         this.isForward = isForward;
         this.indexer = indexer;

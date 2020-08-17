@@ -21,7 +21,9 @@ public class SetRPMTarget extends InstantCommand implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     /**
+     * Initializes this command from the given parameters
      * @param rpm The shooter target speed, note that this should be absolute
+     * @param shooter the shooter of the robot
      */
     public SetRPMTarget(double rpm, Shooter shooter) {
         this.target = rpm;

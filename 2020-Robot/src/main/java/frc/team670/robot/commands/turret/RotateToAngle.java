@@ -20,6 +20,12 @@ public class RotateToAngle extends CommandBase implements MustangCommand {
 
     private double angle;
 
+    /**
+     * Initializes this command from the given parameters
+     * 
+     * @param turret the turret of the robot
+     * @param angle the angle to rotate to
+     */
     public RotateToAngle(Turret turret, double angle) {
         this.turret = turret;
         this.angle = angle;

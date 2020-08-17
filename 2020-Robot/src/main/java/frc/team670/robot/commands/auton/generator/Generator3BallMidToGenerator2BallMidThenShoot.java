@@ -40,6 +40,16 @@ public class Generator3BallMidToGenerator2BallMidThenShoot extends SequentialCom
   private Path trajectory;
   private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+  /**
+   * Initializes this command from the given parameters
+   * @param driveBase the drivebase of the robot
+   * @param intake the intake of the robot
+   * @param conveyor the conveyor of the robot
+   * @param shooter the shooter of the robot
+   * @param indexer the indexer of the robot
+   * @param turret the turret of the robot
+   * @param coprocessor the raspberry pi
+   */
   public Generator3BallMidToGenerator2BallMidThenShoot(DriveBase driveBase, Intake intake, Conveyor conveyor,
       Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
 

@@ -32,6 +32,11 @@ public class XboxRocketLeagueDrive extends CommandBase implements MustangCommand
 
   private DriveBase driveBase;
 
+  /**
+   * Initializes this command with the given parameters
+   * 
+   * @param driveBase the drive base of the robot
+   */
   public XboxRocketLeagueDrive(DriveBase driveBase) {
     isReversed = false;
     addRequirements(driveBase);

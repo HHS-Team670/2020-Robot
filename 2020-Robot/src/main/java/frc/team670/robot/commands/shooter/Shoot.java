@@ -9,11 +9,18 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
+/**
+ * Shoots the next ball
+ */
 public class Shoot extends InstantCommand implements MustangCommand {
 
     private Shooter shooter;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+    /**
+     * Initializes this command from the given shooter
+     * @param shooter the shooter of the robot
+     */
     public Shoot(Shooter shooter){
         this.shooter = shooter;
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();

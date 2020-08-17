@@ -11,14 +11,19 @@ import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 /**
+ * Rotates the turret to an angle of 0
+ * 
  * @author lakshbhambhani
  */
-
 public class ZeroTurret extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Turret turret;
 
+    /**
+     * Initializes this command from the given turret
+     * @param turret the turret of the robot
+     */
     public ZeroTurret(Turret turret){
         this.turret = turret;
         addRequirements(turret);

@@ -34,6 +34,16 @@ public class AutoSelector {
     
     AutoRoutine selectedRoutine = AutoRoutine.UNKNOWN;
 
+    /**
+     * Initializes this command from the given parameters
+     * @param driveBase the drivebase of the robot
+     * @param intake the intake of the robot
+     * @param conveyor the conveyor of the robot
+     * @param shooter the shooter of the robot
+     * @param indexer the indexer of the robot
+     * @param turret the turret of the robot
+     * @param coprocessor the raspberry pi
+     */
     public AutoSelector(DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Turret turret, MustangCoprocessor coprocessor){
         
         instance = NetworkTableInstance.getDefault();

@@ -30,6 +30,9 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 
+/**
+ * Shoots then moves the robot back
+ */
 public class ShootThenBack extends SequentialCommandGroup implements MustangCommand {
 
     private Path trajectory;
@@ -38,6 +41,18 @@ public class ShootThenBack extends SequentialCommandGroup implements MustangComm
     private MustangCoprocessor coprocessor;
     private Shooter shooter;
 
+    /**
+     * Initializes this command from the given parameters
+     * 
+     * @param startPosition the position of the robot at the beginning of the game
+     * @param driveBase the drive base
+     * @param intake the intake
+     * @param conveyor the conveyor
+     * @param shooter the shooter
+     * @param indexer the indexer
+     * @param turret the turret
+     * @param coprocessor the coprocessor
+    */
     public ShootThenBack(DriveBase driveBase, Intake intake, Conveyor conveyor,
             Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
 

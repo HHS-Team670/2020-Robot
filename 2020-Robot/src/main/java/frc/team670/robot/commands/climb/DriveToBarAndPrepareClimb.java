@@ -21,6 +21,12 @@ public class DriveToBarAndPrepareClimb extends SequentialCommandGroup implements
     private DriveBase driveBase;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+    /**
+     * Initializes this command from the given parameters
+     * 
+     * @param driveBase the drivebase of the robot
+     * @param climber the climber of the robot
+     */
     public DriveToBarAndPrepareClimb(DriveBase driveBase, Climber climber) {
         this.driveBase = driveBase;
         this.climber = climber;
@@ -35,6 +41,11 @@ public class DriveToBarAndPrepareClimb extends SequentialCommandGroup implements
         }
     }
 
+    /**
+     * Schedules an extend climber command after this command completes
+     * 
+     * @param interrupted whether the command was interrupted or completed
+     */
     @Override
     public void end(boolean interrupted) {
         if (!interrupted){

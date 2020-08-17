@@ -18,6 +18,11 @@ public class HookOnBar extends CommandBase implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private boolean hooked;
 
+    /**
+     * Initializes this command with the given parameters
+     * 
+     * @param climber the climber of the robot
+     */
     public HookOnBar(Climber climber) {
         this.climber = climber;
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();

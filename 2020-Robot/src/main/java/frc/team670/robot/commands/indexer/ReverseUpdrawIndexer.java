@@ -10,11 +10,18 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
+/**
+ * Reverses the updraw of the indexer
+ */
 public class ReverseUpdrawIndexer extends CommandBase implements MustangCommand {
 
     private Indexer indexer;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+    /**
+     * Initializes this command from the given indexer
+     * @param indexer the indexer of the robot
+     */
     public ReverseUpdrawIndexer(Indexer indexer) {
         this.indexer = indexer;
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();

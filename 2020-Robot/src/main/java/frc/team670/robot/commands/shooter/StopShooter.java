@@ -9,11 +9,18 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
+/**
+ * Stops the shooter
+ */
 public class StopShooter extends InstantCommand implements MustangCommand {
 
     private Shooter shooter;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+    /**
+     * Initializes this command from the given shooter
+     * @param shooter the shooter of the robot
+     */
     public StopShooter(Shooter shooter){
         this.shooter = shooter;
         addRequirements(shooter);

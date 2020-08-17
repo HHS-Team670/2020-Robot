@@ -21,7 +21,10 @@ public class SetRPMAdjuster extends InstantCommand implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     /**
+     * Initializes this command from the given parameters
+     * 
      * @param diff The amount (RPM) to change the shooter RPM-adjuster by
+     * @param shooter the shooter of the robot
      */
     public SetRPMAdjuster(double diff, Shooter shooter) {
         this.diff = diff;

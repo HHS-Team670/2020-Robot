@@ -10,13 +10,17 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
 /**
- *
+ * Stops the intake
  */
 public class StopIntake extends InstantCommand implements MustangCommand {
 
 	Map<MustangSubsystemBase, HealthState> healthReqs;
 	private Intake intake;
 
+	/**
+	 * Initializes this command from the given intake
+	 * @param intake the intake of the robot
+	 */
 	public StopIntake (Intake intake) {
 		this.intake = intake;
 		healthReqs = new HashMap<MustangSubsystemBase, HealthState>();

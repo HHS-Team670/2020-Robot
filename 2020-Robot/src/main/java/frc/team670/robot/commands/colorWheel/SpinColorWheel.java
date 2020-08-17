@@ -32,6 +32,10 @@ public class SpinColorWheel extends CommandBase implements MustangCommand {
   private boolean isColorDetected;
   private int colorDetectedCount = 0;
 
+  /**
+   * Initializes this command from the given spinner
+   * @param spinner the robot's coler wheel spinner
+   */
   public SpinColorWheel(ColorWheelSpinner spinner) {
     this.spinner = spinner;
     addRequirements(spinner);

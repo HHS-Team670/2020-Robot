@@ -19,11 +19,18 @@ import java.util.Map;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.robot.subsystems.Turret;
 
+/**
+ * Moves the turret based on the controller input
+ */
 public class JoystickTurret extends CommandBase implements MustangCommand {
 
   private Turret turret;
   private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+  /**
+   * Initializes this command from the given turret
+   * @param turret the turret of the robot
+   */
   public JoystickTurret(Turret turret) {
     super();
     this.turret = turret;

@@ -22,6 +22,13 @@ public class StopIntaking extends InstantCommand implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+    /**
+     * Initializes this command with the given parameters
+     * 
+     * @param intake the intake of the robot
+     * @param conveyor the conveyor of the robot
+     * @param indexer the indexer of the robot
+     */
     public StopIntaking(Intake intake, Conveyor conveyor, Indexer indexer) {
         this.indexer = indexer;
         this.intake = intake;

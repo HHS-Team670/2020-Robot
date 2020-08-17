@@ -16,6 +16,9 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.utils.functions.MathUtils;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 
+/**
+ * Gets the latest bision data from the coprocessor
+ */
 public class GetVisionData extends CommandBase implements MustangCommand {
 
     private MustangCoprocessor coprocessor;
@@ -28,6 +31,11 @@ public class GetVisionData extends CommandBase implements MustangCommand {
 
     private static final double MAX_TIME_TO_RUN = 2500; // Max time to run this in ms
 
+    /**
+     * Initializes this command from the given parameters
+     * @param coprocessor the raspberry pi
+     * @param driveBase the drivebase of the robot
+     */
     public GetVisionData(MustangCoprocessor coprocessor, DriveBase driveBase) {
         this.coprocessor = coprocessor;
         this.driveBase = driveBase;

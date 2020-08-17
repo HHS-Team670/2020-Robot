@@ -31,6 +31,9 @@ public class FlipCamera extends InstantCommand implements MustangCommand {
         RobotContainer.rumbleDriverController();
     }
 
+    /**
+     * Changes the camera to the opposite side of what it is currently
+     */
     public static void flipCameraDirection() {
         cameraDirection = !cameraDirection;
         camNumber = (camNumber + 1) % 2;

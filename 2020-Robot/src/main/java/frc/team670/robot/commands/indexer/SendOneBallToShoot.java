@@ -19,6 +19,11 @@ public class SendOneBallToShoot extends CommandBase implements MustangCommand {
     private Indexer indexer;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+    /**
+     * Initializes this command with the given indexer
+     * 
+     * @param indexer the indexer of the robot
+     */
     public SendOneBallToShoot(Indexer indexer) {
         this.indexer = indexer;
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
