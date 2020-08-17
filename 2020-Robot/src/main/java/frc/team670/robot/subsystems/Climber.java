@@ -110,7 +110,7 @@ public class Climber extends MustangSubsystemBase {
     }
 
     /**
-     * hooks climber on bar
+     * brings hook down onto the bar if hook is in position over bar
      */
     public void hookOnBar() {
         if (isHooked() && !onBar) {
@@ -126,7 +126,7 @@ public class Climber extends MustangSubsystemBase {
     /**
      * checks current peaks to see if climber is hooked
      * 
-     * @return if the climber has hooked onto the bar
+     * @return if the climber is hooked
      */
     private boolean isHooked() {
         double current = motor.getOutputCurrent();

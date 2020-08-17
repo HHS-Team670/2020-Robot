@@ -13,6 +13,8 @@ import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 
 /**
  * represents subsytem of turret for shooter
+ * 
+ * @author ctychen, lakshbhambhani
  */
 public class Turret extends SparkMaxRotatingSubsystem {
 

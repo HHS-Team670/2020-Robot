@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Represents the conveyor subsystem that sends balls from intake to indexer
+ * 
+ * @author ctychen
  */
 public class Conveyor extends MustangSubsystemBase {
 
