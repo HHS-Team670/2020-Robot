@@ -30,6 +30,9 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 
+/**
+ * Shoots then moves the robot back
+ */
 public class ShootThenBack extends SequentialCommandGroup implements MustangCommand {
 
     private Path trajectory;

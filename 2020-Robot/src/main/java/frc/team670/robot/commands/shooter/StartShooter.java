@@ -12,6 +12,7 @@ import frc.team670.robot.utils.Logger;
 import frc.team670.robot.subsystems.Shooter;
 
 /**
+ * Starts the shooter of the robot
  * "So anyway, I started blasting..." 
  * - Frank Reynolds
  */
@@ -20,6 +21,10 @@ public class StartShooter extends CommandBase implements MustangCommand {
     private Shooter shooter;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+    /**
+     * Initializes this command from the given shooter
+     * @param shooter the shooter of the robot
+     */
     public StartShooter(Shooter shooter){
         this.shooter = shooter;
         addRequirements(shooter);

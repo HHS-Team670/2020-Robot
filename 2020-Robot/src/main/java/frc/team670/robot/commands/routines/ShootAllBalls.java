@@ -17,12 +17,22 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
+/**
+ * Shoots all the stored balls
+ */
 public class ShootAllBalls extends SequentialCommandGroup implements MustangCommand {
 
     private Indexer indexer;
     private Shooter shooter;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+    /**
+     * Initializes this command from the given parameters
+     * 
+     * @param indexer the indexer of the robot
+     * @param shooter the shooter of the robot
+     * @param driveBase the drivebase of the robot
+     */
     public ShootAllBalls(Indexer indexer, Shooter shooter, DriveBase driveBase){
         this.indexer = indexer;
         this.shooter = shooter;

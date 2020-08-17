@@ -12,11 +12,19 @@ import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.utils.functions.MathUtils;
 
+/**
+ * Toggles the shooter between running and stopped states
+ */
 public class ToggleShooter extends InstantCommand implements MustangCommand {
 
     private Shooter shooter;
     private DriveBase driveBase;
 
+    /**
+     * Initializes this command from the given parametees
+     * @param shooter the shooter of the robot
+     * @param driveBase the drivebase of the robot
+     */
     public ToggleShooter(Shooter shooter, DriveBase driveBase) {
         this.shooter = shooter;
         this.driveBase = driveBase;

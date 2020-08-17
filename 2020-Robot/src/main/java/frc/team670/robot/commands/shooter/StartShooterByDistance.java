@@ -13,6 +13,9 @@ import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.utils.Logger;
 
+/**
+ * Starts the shooter based on the distance to the target
+ */
 public class StartShooterByDistance extends CommandBase implements MustangCommand {
 
     private Shooter shooter;
@@ -21,6 +24,11 @@ public class StartShooterByDistance extends CommandBase implements MustangComman
     private double distanceToTarget;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+    /**
+     * Initializes this command from the given parameters
+     * @param shooter the shooter of the robot
+     * @param driveBase the drivebase of the robot
+     */
     public StartShooterByDistance(Shooter shooter, DriveBase driveBase){
         this.shooter = shooter;
         this.driveBase = driveBase;

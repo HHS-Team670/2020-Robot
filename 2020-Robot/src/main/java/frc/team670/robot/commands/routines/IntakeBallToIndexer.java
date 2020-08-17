@@ -16,10 +16,20 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.RotateToIntakePosition;
 
+/**
+ * Positions the indexer to intake, then starts the intake and conveyor
+ */
 public class IntakeBallToIndexer extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+    /**
+     * Initializes this command with the given parameters
+     * 
+     * @param intake the intake of the robot
+     * @param conveyor the conveyor of the robot
+     * @param indexer the indexer of the robot
+     */
     public IntakeBallToIndexer(Intake intake, Conveyor conveyor, Indexer indexer) {
         addRequirements(intake, conveyor, indexer);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();

@@ -9,12 +9,17 @@ import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
+/**
+ * Toggles the pusher to the opposite of what it is currently
+ */
 public class TogglePusher extends InstantCommand implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Indexer indexer;
 
-    /*
+    /**
+     * Initializes this command with the given indexer
+     *  
      * @param isDeploy true if it is to deploy, false if it is to pick up
      */
     public TogglePusher(Indexer indexer) {

@@ -12,7 +12,7 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.utils.Logger;
 
 /**
- *
+ * Runs the intake of the robot
  */
 public class RunIntake extends CommandBase implements MustangCommand {
 
@@ -22,8 +22,10 @@ public class RunIntake extends CommandBase implements MustangCommand {
 	private int countWasJammed;
 
 	/**
+	 * Initializes this command from the parameters
 	 * @param reversed true to run the intake in reverse (out), false to run it
 	 *                 normally (in)
+	 * @param intake the intake of the robot
 	 */
 	public RunIntake(boolean reversed, Intake intake) {
 		this.reversed = reversed;

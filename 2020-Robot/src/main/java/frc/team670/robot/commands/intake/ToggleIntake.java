@@ -9,13 +9,16 @@ import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
+/**
+ * Toggles the intake btween deployed and non deployed states
+ */
 public class ToggleIntake extends InstantCommand implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Intake intake;
 
-    /*
-     * @param isDeploy true if it is to deploy, false if it is to pick up
+    /** 
+     * @param intake the intake of the robot
      */
     public ToggleIntake(Intake intake) {
         this.intake = intake;
