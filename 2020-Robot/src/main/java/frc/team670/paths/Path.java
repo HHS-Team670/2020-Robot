@@ -31,6 +31,11 @@ public class Path {
     private DriveBase driveBase;
     private List<Pose2d> waypointsList;
 
+    /**
+     * Used to create a path object based on a list of way points and the drivebase
+     * @param waypoints a list of waypoints
+     * @param driveBase the drivebase which has to follow the path
+     */
     public Path(List<Pose2d> waypoints, DriveBase driveBase) {
         this.driveBase = driveBase;
         this.waypointsList = waypoints;
@@ -41,10 +46,16 @@ public class Path {
         this.trajectory = TrajectoryGenerator.generateTrajectory(waypoints, CONFIG);
     }
 
+    /**
+     * Gets the starting pose from the waypoint list
+     */
     public Pose2d getStartingPose(){
         return this.waypointsList.get(0);
     }
 
+    /**
+     * Gets the ending pose from the waypoints list
+     */
     public Pose2d getEndingPose(){
         return this.waypointsList.get(waypointsList.size() - 1);
     }
@@ -74,6 +85,9 @@ public class Path {
                         .addConstraint(RobotConstants.kAutoPathConstraints).addConstraint(AUTO_VOLTAGE_CONSTRAINT);
     }
 
+    /**
+     * Used to get the trajectory
+     */
     public Trajectory getTrajectory(){
         return this.trajectory;
     }
