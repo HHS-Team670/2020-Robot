@@ -57,6 +57,9 @@ public class DriveBase extends MustangSubsystemBase {
   private static final double CURRENT_WHEN_AGAINST_BAR = 5; //TODO: Find this
   private int againstBarCount = 0;
 
+  /**
+   * constructor
+   */
   public DriveBase() {
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
         false, MotorConfig.Motor_Type.NEO);
@@ -107,9 +110,8 @@ public class DriveBase extends MustangSubsystemBase {
   }
 
   /**
-   * Checks the health for driveBase. RED if all motors are dead, GREEN if all
-   * motors are alive and navx is connected, YELLOW if a motor is disconnected or
-   * nav is not connected
+   * Checks the health for driveBase. 
+   * @return RED if all motors are dead, GREEN if all motors are alive and navx is connected, YELLOW if a motor is disconnected or nav is not connected
    */
   @Override
   public HealthState checkHealth() {
@@ -584,15 +586,26 @@ public class DriveBase extends MustangSubsystemBase {
     return new DifferentialDriveWheelSpeeds(left1Encoder.getVelocity(), right1Encoder.getVelocity());
   }
 
+  /**
+   * zeros encoders
+   */
   public void zeroSensors() {
     left1Encoder.setPosition(0);
     right1Encoder.setPosition(0);
   }
 
+  /**
+   * @param leftVoltage set left voltage
+   * @param rightVoltage set right voltage
+   */
   public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
     tankDrive(leftVoltage / RobotController.getBatteryVoltage(), rightVoltage / RobotController.getBatteryVoltage());
   }
 
+  /**
+   * 
+   * @return roboti s aligned on floor bars
+   */
   public boolean isAlignedOnFloorBars(){
     double backLeftCurrent = left2.getOutputCurrent();
     double backRightCurrent = right2.getOutputCurrent();

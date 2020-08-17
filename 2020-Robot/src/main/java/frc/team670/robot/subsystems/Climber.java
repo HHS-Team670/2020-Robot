@@ -15,6 +15,7 @@ import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 
 /**
+ * Represents the subsystem that climbs the generator
  * 
  * @author Pallavi, Eugenia, Sofia, ctychen
  */
@@ -55,6 +56,10 @@ public class Climber extends MustangSubsystemBase {
     private static final float SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
     private static final float SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
 
+    /**
+     * Constructs the climber
+     * @param deployer
+     */
     public Climber(Solenoid deployer) {
         motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR, Motor_Type.NEO);
         motor.setIdleMode(IdleMode.kCoast);
@@ -76,6 +81,9 @@ public class Climber extends MustangSubsystemBase {
         SmartDashboard.putNumber("Climber rotation target", 0);
     }
 
+    /**
+     * sets default PID values using final values
+     */
     public void setDefaultPID() {
         controller.setP(kP);
         controller.setI(kI);
@@ -87,14 +95,23 @@ public class Climber extends MustangSubsystemBase {
         controller.setSmartMotionAllowedClosedLoopError(ALLOWED_ERR, this.SMARTMOTION_SLOT);
     }
 
+    /**
+     * turns off solenoid
+     */
     public void solenoidOff() {
         deployer.set(false);
     }
 
+    /** 
+     * turns on solenoid
+     */
     public void solenoidOn() {
         deployer.set(true);
     }
 
+    /**
+     * hooks climber on bar
+     */
     public void hookOnBar() {
         if (isHooked() && !onBar) {
             setPower(0);
@@ -106,6 +123,11 @@ public class Climber extends MustangSubsystemBase {
         }
     }
 
+    /**
+     * checks current peaks to see if climber is hooked
+     * 
+     * @return if the climber has hooked onto the bar
+     */
     private boolean isHooked() {
         double current = motor.getOutputCurrent();
         if (current > 0.2) {
@@ -122,14 +144,26 @@ public class Climber extends MustangSubsystemBase {
 
     }
 
+    /**
+     * @return climber is on the bar
+     */
     public boolean isHookedOnBar() {
         return this.onBar;
     }
 
+    /**
+     * sets the power of the motor
+     * @param power power level to be set
+     */
     public void setPower(double power) {
         motor.set(power);
     }
 
+    /**
+     * climber goes up
+     * 
+     * @param heightCM height to climb
+     */
     public void climb(double heightCM) {
         double rotations = heightCM * ROTATIONS_PER_CM;
         target = rotations;
@@ -150,6 +184,9 @@ public class Climber extends MustangSubsystemBase {
         }
     }
 
+    /**
+     * @return GREEN if everything is fine. RED if there are issues with the motor or deployer
+     */
     @Override
     public HealthState checkHealth() {
         if (isSparkMaxErrored(motor) || deployer == null) {
@@ -158,24 +195,40 @@ public class Climber extends MustangSubsystemBase {
         return HealthState.GREEN;
     }
 
+    /**
+     * @return if the climber has reached target
+     */
     public boolean isAtTarget() {
         return Math.abs(encoder.getPosition() - target) < HALF_CM;
     }
 
+    /**
+     * @return encoder position
+     */
     protected double getUnadjustedMotorRotations() {
         return this.encoder.getPosition();
     }
 
+    /**
+     * 
+     * @return motor current
+     */
     protected double getMotorCurrent() {
         return this.motor.getOutputCurrent();
     }
 
+    /**
+     * logs climber rotations and current to smart dashboard
+     */
     @Override
     public void mustangPeriodic() {
         SmartDashboard.putNumber("Climber motor rotations", getUnadjustedMotorRotations());
         SmartDashboard.putNumber("Climber motor current", getMotorCurrent());
     }
 
+    /**
+     * testing
+     */
     public void test() {
         setPower(SmartDashboard.getNumber("Climber power", 0.0));
         setExtending(SmartDashboard.getBoolean("Climber deploy", false));

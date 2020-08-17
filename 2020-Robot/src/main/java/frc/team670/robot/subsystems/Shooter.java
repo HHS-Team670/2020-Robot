@@ -105,6 +105,9 @@ public class Shooter extends MustangSubsystemBase {
 
   private static final int VELOCITY_SLOT = 0;
 
+  /**
+   * constructor
+   */
   public Shooter() {
 
     SmartDashboard.putNumber("Stage 2 Velocity Setpoint", 0.0);
@@ -128,10 +131,17 @@ public class Shooter extends MustangSubsystemBase {
     stage2_mainPIDController.setFF(V_FF, VELOCITY_SLOT);
   }
 
+  /**
+   * gets stage 2 velocity
+   * @return
+   */
   public double getStage2Velocity() {
     return stage2_mainEncoder.getVelocity();
   }
 
+  /**
+   * runs the shooter
+   */
   public void run() {
     SmartDashboard.putNumber("Stage 2 speed", mainController.getEncoder().getVelocity());
     stage2_mainPIDController.setReference(targetRPM + speedAdjust, ControlType.kVelocity);
@@ -150,10 +160,17 @@ public class Shooter extends MustangSubsystemBase {
     }
   }
 
+  /**
+   * @param targetRRMP sets velocity target for shoorer
+   */
   public void setVelocityTarget(double targetRPM) {
     this.targetRPM = targetRPM;
   }
 
+  /**
+   * 
+   * @return default RPM speed
+   */
   public double getDefaultRPM(){
     return this.DEFAULT_SPEED;
   }
@@ -182,10 +199,17 @@ public class Shooter extends MustangSubsystemBase {
     return Math.max(Math.min(speedAtDistance.predict(distance), MAX_RPM), MIN_RPM);
   }
 
+  /**
+   * stops running shooter
+   */
   public void stop() {
     stage2_mainPIDController.setReference(0, ControlType.kDutyCycle);
   }
 
+  /**
+   * 
+   * @return if shooter is running at target speed
+   */
   public boolean isUpToSpeed() {
     return MathUtils.doublesEqual(getStage2Velocity(), targetRPM + this.speedAdjust, 200); // TODO: margin of error
   }
@@ -195,6 +219,9 @@ public class Shooter extends MustangSubsystemBase {
     SmartDashboard.putNumber("Stage 2 speed", mainController.getEncoder().getVelocity());
   }
 
+  /**
+   * @return GREEN if everything is fine. RED if theres an error with the controllers
+   */
   @Override
   public HealthState checkHealth() {
     if (isSparkMaxErrored(mainController) || isSparkMaxErrored(followerController)) {
@@ -213,6 +240,10 @@ public class Shooter extends MustangSubsystemBase {
     // SmartDashboard.putNumber("Stage 2 speed", mainController.getEncoder().getVelocity());
   }
 
+  /**
+   * 
+   * @return if the shooter is currently shooting a ball
+   */
   public boolean isShooting() {
     double current = mainController.getOutputCurrent();
     if (current > 0.2) {
@@ -228,6 +259,10 @@ public class Shooter extends MustangSubsystemBase {
     return false;
 }
 
+/**
+ * 
+ * @return if the ball has been shot
+ */
   public boolean hasBallBeenShot() {
     return this.ballHasBeenShot;
   }

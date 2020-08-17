@@ -9,19 +9,25 @@ import com.revrobotics.CANError;
 
 import edu.wpi.first.wpilibj.Timer;
 
+/**
+ * Represents the conveyor subsystem that sends balls from intake to indexer
+ */
 public class Conveyor extends MustangSubsystemBase {
 
     private SparkMAXLite roller;
 
     private double CONVEYOR_SPEED = 0.75; // % output from testing 2/16.
 
+    /**
+     * constructor
+     */
     public Conveyor() {
         // Conveyor motor should not be inverted
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CONVEYOR_ROLLER, Motor_Type.NEO_550);
     }
 
     /**
-     * 
+     * runs the conveyer
      * @param reversed True to run the conveyor in reverse
      */
     public void run(boolean reversed) {
@@ -42,10 +48,16 @@ public class Conveyor extends MustangSubsystemBase {
     //     stop();
     // }
 
+    /**
+     * stops conveyer
+     */
     public void stop() {
         roller.set(0);
     }
 
+    /**
+     * @return GREEN if everything is fine, RED if there are issues with the roller
+     */
     @Override
     public HealthState checkHealth() {
         if (roller.getLastError() != null && roller.getLastError() != CANError.kOk)
