@@ -14,10 +14,19 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -36,6 +45,8 @@ import frc.team670.robot.commands.MustangScheduler;
 import frc.team670.robot.commands.auton.AutoSelector;
 import frc.team670.robot.commands.auton.ShootFromAngleThenTimeDrive;
 import frc.team670.robot.commands.auton.ToTrenchRunAndShoot;
+import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
+import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToGenerator2BallSide;
 import frc.team670.robot.commands.auton.baseline.ShootThenBack;
 import frc.team670.robot.commands.climb.ExtendClimber;
 import frc.team670.robot.commands.climb.HookOnBar;
@@ -69,6 +80,7 @@ import frc.team670.robot.utils.MustangController.XboxButtons;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.OI;
+import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 
@@ -200,7 +212,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  public MustangCommand getAutonomousCommand() {
+  public static MustangCommand getAutonomousCommand() {
+    /*
     Pose2d leftStart = new Pose2d(
       FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS + 
       (FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS - FieldConstants.EDGE_OF_BASELINE), 
@@ -221,6 +234,26 @@ public class RobotContainer {
 
       // SHOOT THEN GO DOWN TRENCH
       new ToTrenchRunAndShoot(-25, driveBase, intake, conveyor, indexer, turret, shooter);
+      */
+      /*
+      driveBase.resetOdometry();
+      SimpleMotorFeedforward feedForward = new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter, RobotConstants.kaVoltSecondsSquaredPerMeter);
+      DifferentialDriveVoltageConstraint autoVoltageConstraint = new DifferentialDriveVoltageConstraint(feedForward, RobotConstants.kDriveKinematics, 10);
+      TrajectoryConfig trajectoryConfig = new TrajectoryConfig(RobotConstants.kMaxSpeedMetersPerSecond, RobotConstants.kMaxAccelerationMetersPerSecondSquared);
+      trajectoryConfig.setKinematics(RobotConstants.kDriveKinematics);
+      trajectoryConfig.addConstraint(autoVoltageConstraint);
+      Pose2d start = new Pose2d();
+      Pose2d end = new Pose2d(2, 6, new Rotation2d(0));
+      Trajectory trajectory = TrajectoryGenerator.generateTrajectory(start, List.of(new Translation2d(3, 1), new Translation2d(0, 4)), end, trajectoryConfig);
+      RamseteCommand ramseteCommand = new RamseteCommand(trajectory, driveBase::getPose, 
+      new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta), 
+      feedForward, RobotConstants.kDriveKinematics, driveBase::getWheelSpeeds, 
+      new PIDController(RobotConstants.kPDriveVel, 0, 0), 
+      new PIDController(RobotConstants.kPDriveVel, 0, 0), driveBase::tankDriveVoltage, driveBase);
+      return (MustangCommand) ramseteCommand.andThen(() -> driveBase.stop());
+      */
+    return new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+      
 }
 
 
