@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
   private Timer timer;
   private double SYSTEM_CHECK_PERIOD = 5;
 
-  public static boolean overrideAtCompetition = true;
+  public static boolean overrideAtCompetition = false;
 
   /**
    * This function is run when the robot is first started up and should be used

@@ -8,13 +8,13 @@ import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToGenerato
 import org.junit.Assert;
 import static org.mockito.Mockito.*;
 
-class GetAutonomousCommandTest {
+public class GetAutonomousCommandTest {
 
 
   @Test
-  public void testGetAutonomousCommand() {
+  public void testGetAutonomousCommand() throws Exception{
     RobotContainer robotContainer = mock(RobotContainer.class);
-    MustangCommand autonomousCommand = RobotContainer.getAutonomousCommand();
+    MustangCommand autonomousCommand = robotContainer.getAutonomousCommand();
 
     Assert.assertEquals(autonomousCommand, mock(ShootFromBaseLineThenToGenerator2BallSide.class));
 
