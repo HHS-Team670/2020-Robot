@@ -26,9 +26,8 @@ public class RightToGenerator3BallMidPath extends Path{
     public RightToGenerator3BallMidPath(DriveBase driveBase){
         super(
             List.of(
-                new Pose2d(3.201, 4.5, Rotation2d.fromDegrees(0)),
-                new Pose2d(3.201, 7.451, Rotation2d.fromDegrees(-90)),
-                new Pose2d(5.687, 3.6, Rotation2d.fromDegrees(18))
+                new Pose2d(6.802, 3.076, Rotation2d.fromDegrees(0)),
+                new Pose2d(4.081, 5.679, Rotation2d.fromDegrees(22.255))
             ),
             driveBase);
     }
