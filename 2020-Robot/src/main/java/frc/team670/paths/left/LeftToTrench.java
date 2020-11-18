@@ -26,7 +26,7 @@ public class LeftToTrench extends Path{
         super(
                 List.of(
                     new Pose2d(3.915, 3.053, Rotation2d.fromDegrees(0)),
-                    new Pose2d(0.674, 5.206, Rotation2d.fromDegrees(0)),
+                    new Pose2d(0.674, 5.206, Rotation2d.fromDegrees(0))
                 ),
             driveBase);
     }
