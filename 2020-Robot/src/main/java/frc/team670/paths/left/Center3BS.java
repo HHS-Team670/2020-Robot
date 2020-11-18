@@ -15,20 +15,19 @@ import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Trajectory starting on intitiation line closest to enemy loading station (facing towards your driverstation)
- * and going through the trench
+ * Trajectory starting on the line near the opponent's loading station (robot facing towards your own driverstation)
+ * and facing the 3 Power Cells under the middle of the generator.
  * 
  * @author meganchoy, ctychen
  */
-public class LeftToTrenchPath extends Path {
+public class Center3BS extends Path{
 
-    public LeftToTrenchPath(DriveBase driveBase) {
+    public Center3BS(DriveBase driveBase) {
         super(
             List.of(
-                new Pose2d(3.186, 1, Rotation2d.fromDegrees(0)),
-                new Pose2d(3.186, 1, Rotation2d.fromDegrees(82.163)),
-                new Pose2d(3.857, 5.602, Rotation2d.fromDegrees(80.541)),
-                new Pose2d(7.989, 7.504, Rotation2d.fromDegrees(-0.201))
+                new Pose2d(3.186, -2.4, Rotation2d.fromDegrees(90)),
+                new Pose2d(4.083, -3.721, Rotation2d.fromDegrees(-40.5)),
+                new Pose2d(5.299, -4.353, Rotation2d.fromDegrees(26))
             ),
         driveBase);
     }

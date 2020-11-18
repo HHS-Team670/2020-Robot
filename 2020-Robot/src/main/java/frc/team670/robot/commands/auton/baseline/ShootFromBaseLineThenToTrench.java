@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.Path;
 import frc.team670.paths.center.CenterToTrenchPath;
-import frc.team670.paths.left.LeftToTrenchPath;
+import frc.team670.paths.left.CenterToTrenchPath;
 import frc.team670.paths.right.RightToTrenchPath;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
@@ -67,7 +67,7 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
         this.driveBase = driveBase;
         this.coprocessor = coprocessor;
         if (startPosition == StartPosition.LEFT)
-            trajectory = new LeftToTrenchPath(driveBase);
+            trajectory = new CenterToTrenchPath(driveBase);
         if (startPosition == StartPosition.CENTER)
             trajectory = new CenterToTrenchPath(driveBase);
         if (startPosition == StartPosition.RIGHT)

@@ -13,14 +13,13 @@ import frc.team670.paths.Path;
  * 
  * @author meganchoy, ctychen
  */
-public class LeftToGenerator2BallSidePath extends Path{
+public class Center2BS extends Path{
 
-        public LeftToGenerator2BallSidePath(DriveBase driveBase) {
+        public Center2BS(DriveBase driveBase) {
                 super(
                         List.of(
-                        new Pose2d(3.186, 1, Rotation2d.fromDegrees(0)),
-                        new Pose2d(3.186, 1, Rotation2d.fromDegrees(82.163)),
-                        new Pose2d(5.8, 5.445, Rotation2d.fromDegrees(-65))
+                        new Pose2d(3.186, -2.4, Rotation2d.fromDegrees(0)),
+                        new Pose2d(6.077, -2.651, Rotation2d.fromDegrees(-64))
                         ),
                 driveBase);
         }

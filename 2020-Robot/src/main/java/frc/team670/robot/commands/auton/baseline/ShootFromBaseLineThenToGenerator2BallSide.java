@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.Path;
 import frc.team670.paths.center.CenterToGenerator2BallSidePath;
-import frc.team670.paths.left.LeftToGenerator2BallSidePath;
+import frc.team670.paths.left.Center2BS;
 import frc.team670.paths.right.RightToGenerator2BallSidePath;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.SendAllBalls;
@@ -59,7 +59,7 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
                 this.driveBase = driveBase;
                 this.coprocessor = coprocessor;
                 if (startPosition == StartPosition.LEFT)
-                        trajectory = new LeftToGenerator2BallSidePath(driveBase);
+                        trajectory = new CenterToGenerator2BallSidePath(driveBase);
                 if (startPosition == StartPosition.CENTER)
                         trajectory = new CenterToGenerator2BallSidePath(driveBase);
                 if (startPosition == StartPosition.RIGHT)
