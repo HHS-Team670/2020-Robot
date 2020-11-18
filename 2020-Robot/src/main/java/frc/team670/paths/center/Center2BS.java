@@ -8,7 +8,7 @@ import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.paths.Path;
 
 /**
- * Trajectory starting on the line near the opponent's loading station (robot facing towards your own driverstation), 
+ * Trajectory starting on the line closest to your score port (robot facing towards your own driverstation), 
  * and facing the 2 Power Cells under the generator near your trench side.
  * 
  * @author meganchoy, ctychen

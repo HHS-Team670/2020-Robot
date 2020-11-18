@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.team670.paths.left;
+package frc.team670.paths.center;
 
 import java.util.List;
 
@@ -15,20 +15,20 @@ import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Trajectory starting on intitiation line closest to enemy loading station (facing towards your driverstation)
- * and going through the trench
+ * Trajectory starting from the middle of the initiation line (to the left of the scoring port) (facing towards
+ * your driver station) and facing 2 Power Cells under the generator near your
+ * trench.
  * 
  * @author meganchoy, ctychen
  */
-public class CenterToTrenchPath extends Path {
+public class Left2BS extends Path{
 
-    public CenterToTrenchPath(DriveBase driveBase) {
-        super(
-            List.of(
-                new Pose2d(3.186, -2.4, Rotation2d.fromDegrees(90)),
-                new Pose2d(4.156, -1.483, Rotation2d.fromDegrees(71.54)),
-                new Pose2d(5.25, 5.602, Rotation2d.fromDegrees(91))
-            ),
-        driveBase);
-    }
+        public Left2BS(DriveBase driveBase) {
+                super(
+                        List.of(
+                                new Pose2d(3.186, 4.296, Rotation2d.fromDegrees(0)),
+                                new Pose2d(5.8, 5.445, Rotation2d.fromDegrees(-65))
+                        ), 
+                driveBase);
+        }
 }

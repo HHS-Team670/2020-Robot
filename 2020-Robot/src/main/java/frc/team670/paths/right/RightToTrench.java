@@ -19,11 +19,11 @@ import frc.team670.robot.subsystems.DriveBase;
  * Trajectory starting on the line and to the righ of your power port (intake facing towards your own driver station)
  * and through the trench
  * 
- * @author meganchoy, ctychen
+ * @author meganchoy, ctychen, arnavyk
  */
-public class RightToTrenchPath extends Path{
+public class RightToTrench extends Path{
 
-        public RightToTrenchPath(DriveBase driveBase) {
+        public RightToTrench(DriveBase driveBase) {
                 super(
                         List.of(
                                 new Pose2d(0.981, 3.005, Rotation2d.fromDegrees(0)),

@@ -19,11 +19,11 @@ import frc.team670.robot.subsystems.DriveBase;
  * Trajectory starting on the line and to the right of your power port and facing the 3 Power Cells under
  * the middle of the generator.
  * 
- * @author meganchoy, ctychen
+ * @author meganchoy, ctychen, arnavyk
  */
-public class RightToGenerator3BallMidPath extends Path{
+public class Right3BS extends Path{
 
-    public RightToGenerator3BallMidPath(DriveBase driveBase){
+    public Right3BS(DriveBase driveBase){
         super(
             List.of(
                 new Pose2d(1.005, 2.958, Rotation2d.fromDegrees(0)),

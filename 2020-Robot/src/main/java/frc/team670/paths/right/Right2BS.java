@@ -20,9 +20,9 @@ import frc.team670.robot.subsystems.DriveBase;
  * 
  * @author meganchoy, ctychen, arnavyk
  */
-public class RightToGenerator2BallSidePath extends Path {
+public class Right2BS extends Path {
 
-        public RightToGenerator2BallSidePath(DriveBase driveBase) {
+        public Right2BS(DriveBase driveBase) {
                 super(
                         List.of(
                                 new Pose2d(0.792, 2.982, Rotation2d.fromDegrees(0)),

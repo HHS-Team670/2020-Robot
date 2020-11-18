@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.Path;
 import frc.team670.paths.center.CenterToTrenchPath;
-import frc.team670.paths.center.CenterThenBack;
+import frc.team670.paths.left.LeftThenBack;
 import frc.team670.paths.left.CenterToTrenchPath;
 import frc.team670.paths.right.RightToTrenchPath;
 import frc.team670.robot.commands.MustangCommand;
@@ -58,7 +58,7 @@ public class ShootThenBack extends SequentialCommandGroup implements MustangComm
 
         this.driveBase = driveBase;
         this.coprocessor = coprocessor;
-        trajectory = new CenterThenBack(driveBase);
+        trajectory = new LeftThenBack(driveBase);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
