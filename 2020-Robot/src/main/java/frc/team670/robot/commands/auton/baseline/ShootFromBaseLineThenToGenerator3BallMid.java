@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.Path;
 import frc.team670.paths.center.CenterToGenerator3BallMidPath;
-import frc.team670.paths.left.Center3BS;
-import frc.team670.paths.right.RightToGenerator3BallMidPath;
+import frc.team670.paths.center.Center3BS;
+import frc.team670.paths.right.Right3BS;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
@@ -70,7 +70,7 @@ public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandG
           if (startPosition == StartPosition.CENTER)
               trajectory = new CenterToGenerator3BallMidPath(driveBase);
           if (startPosition == StartPosition.RIGHT)
-              trajectory = new RightToGenerator3BallMidPath(driveBase);
+              trajectory = new Right3BS(driveBase);
           healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
           healthReqs.put(driveBase, HealthState.GREEN);
           healthReqs.put(shooter, HealthState.GREEN);

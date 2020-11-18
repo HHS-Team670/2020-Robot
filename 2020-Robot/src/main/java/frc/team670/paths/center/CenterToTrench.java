@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.team670.paths.left;
+package frc.team670.paths.center;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Trajectory starting on intitiation line closest to enemy loading station (facing towards your driverstation)
+ * Trajectory starting on intitiation line closest to your score port (facing towards your driverstation)
  * and going through the trench
  * 
  * @author meganchoy, ctychen
