@@ -26,7 +26,6 @@ public class CenterToTrenchPath extends Path{
         super(
                 List.of(
                     new Pose2d(3.194, 4.296, Rotation2d.fromDegrees(0)),
-                    new Pose2d(3.194, 4.296, Rotation2d.fromDegrees(80.404)),
                     new Pose2d(6.363, 7.519, Rotation2d.fromDegrees(0)),
                     new Pose2d(8.008, 7.508, Rotation2d.fromDegrees(0))
                 ),

@@ -27,7 +27,6 @@ public class CenterToGenerator2BallSidePath extends Path{
                 super(
                         List.of(
                                 new Pose2d(3.186, 4.296, Rotation2d.fromDegrees(0)),
-                                new Pose2d(3.186, 4.296, Rotation2d.fromDegrees(39.748)),
                                 new Pose2d(5.8, 5.445, Rotation2d.fromDegrees(-65))
                         ), 
                 driveBase);
