@@ -15,10 +15,10 @@ import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Trajectory starting on the line near your power port and facing the 2 Power
+ * Trajectory starting on the line and to the right of your power port and facing the 2 Power
  * Cells under the generator near your trench side.
  * 
- * @author meganchoy, ctychen
+ * @author meganchoy, ctychen, arnavyk
  */
 public class RightToGenerator2BallSidePath extends Path {
 

@@ -16,7 +16,7 @@ import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Trajectory starting on the line near your power port and facing the 3 Power Cells under
+ * Trajectory starting on the line and to the right of your power port and facing the 3 Power Cells under
  * the middle of the generator.
  * 
  * @author meganchoy, ctychen

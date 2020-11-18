@@ -16,7 +16,7 @@ import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Trajectory starting on the line near your power port (intake facing towards your own driver station)
+ * Trajectory starting on the line and to the righ of your power port (intake facing towards your own driver station)
  * and through the trench
  * 
  * @author meganchoy, ctychen
