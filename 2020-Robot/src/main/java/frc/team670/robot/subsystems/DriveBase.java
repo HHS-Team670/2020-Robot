@@ -84,7 +84,7 @@ public class DriveBase extends MustangSubsystemBase {
     // The DifferentialDrive inverts the right side automatically, however we want
     // to invert straight from the Spark so that we can
     // still use it properly with the CANPIDController, so we need to tell
-    // differenetial drive to not invert.
+    // differential drive to not invert.
     setMotorsInvert(leftControllers, false);
     setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController
 
