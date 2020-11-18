@@ -167,6 +167,14 @@ NetworkTables.addKeyListener('/Vision/vision-data', (key, value) => {
     document.getElementById('vision-status').style.fill = "none";
     document.getElementById('vision-status').style.stroke = "rgb(255,255,255)";
   }
+  if (key === 'speed') {
+    document.getElementById('vision-status').style.fill = "rgb(255, 255, 255)";
+    document.getElementById('vision-status').style.stroke = "rgb(255, 255, 255)";
+  }
+  if (key == 'direction') {
+    document.getElementById('vision-status').style.fill = "rgb(255, 255, 255)";
+    document.getElementById('vision-status').style.stroke = "rgb(255, 255, 255)";
+  }
 });
 
 // listens for keystrokes from the external keypad and passes the corresponding values over networktables
