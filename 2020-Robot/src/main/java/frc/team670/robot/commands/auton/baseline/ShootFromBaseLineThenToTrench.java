@@ -13,6 +13,7 @@ import java.util.Map;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.Path;
+import frc.team670.paths.left.LeftToTrench;
 import frc.team670.paths.center.CenterToTrench;
 import frc.team670.paths.right.RightToTrench;
 import frc.team670.robot.commands.MustangCommand;
@@ -66,11 +67,11 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
         this.driveBase = driveBase;
         this.coprocessor = coprocessor;
         if (startPosition == StartPosition.LEFT)
-            trajectory = new CenterToTrenchPath(driveBase);
+            trajectory = new LeftToTrench(driveBase);
         if (startPosition == StartPosition.CENTER)
-            trajectory = new CenterToTrenchPath(driveBase);
+            trajectory = new CenterToTrench(driveBase);
         if (startPosition == StartPosition.RIGHT)
-            trajectory = new RightToTrenchPath(driveBase);
+            trajectory = new RightToTrench(driveBase);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
