@@ -13,7 +13,8 @@ import java.util.Map;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.Path;
-import frc.team670.paths.center.CenterToGenerator3BallMidPath;
+import frc.team670.paths.right.Right3BS;
+import frc.team670.paths.left.Left3BS;
 import frc.team670.paths.center.Center3BS;
 import frc.team670.paths.right.Right3BS;
 import frc.team670.robot.commands.MustangCommand;
@@ -66,9 +67,9 @@ public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandG
           this.driveBase = driveBase;
           this.coprocessor = coprocessor;
           if (startPosition == StartPosition.LEFT)
-              trajectory = new CenterToGenerator3BallMidPath(driveBase);
+              trajectory = new Left3BS(driveBase);
           if (startPosition == StartPosition.CENTER)
-              trajectory = new CenterToGenerator3BallMidPath(driveBase);
+              trajectory = new Center3BS(driveBase);
           if (startPosition == StartPosition.RIGHT)
               trajectory = new Right3BS(driveBase);
           healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
