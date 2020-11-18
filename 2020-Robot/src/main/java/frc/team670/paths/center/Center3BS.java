@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.team670.paths.left;
+package frc.team670.paths.center;
 
 import java.util.List;
 
