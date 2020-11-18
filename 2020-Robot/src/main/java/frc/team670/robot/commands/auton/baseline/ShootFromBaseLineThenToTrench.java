@@ -13,6 +13,7 @@ import java.util.Map;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.Path;
+import frc.team670.paths.left.LeftToTrench;
 import frc.team670.paths.center.CenterToTrench;
 import frc.team670.paths.right.RightToTrench;
 import frc.team670.paths.left.LeftToTrench;
