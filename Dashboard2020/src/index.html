@@ -2,34 +2,34 @@
 <html>
 
 <head>
-  <meta charset="utf-8">
-  <title>FRC Dashboard</title>
-  <link href="css/style.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <title>FRC Dashboard</title>
+    <link href="css/style.css" rel="stylesheet">
 </head>
 
 <body>
-  <!-- <div id="camera-large">
+    <!-- <div id="camera-large">
       <img id="camera-stream-large" style='height:100%; width:100%; object-fit:fill' src="http://10.6.70.26:443/?action=stream" onerror="this.src='http://10.6.70.26:443/?action=stream'"/>
     </div> -->
-  <div id="v-crosshairs-large"> </div>
+    <div id="v-crosshairs-large"> </div>
 
-  <!-- <svg id="back-indicator" width="33vw" height="58vh">
+    <!-- <svg id="back-indicator" width="33vw" height="58vh">
       <rect x="0%" y="0%" width="100%" height="100%" style="stroke:rgb(0,200,0)"/>
     </svg> -->
-  <!-- <svg id="front-indicator" width="50vw" height="20vh">
+    <!-- <svg id="front-indicator" width="50vw" height="20vh">
       <rect x="0%" y="0%" width="100%" height="100%" style="stroke:rgb(0,200,0)"/>
     </svg> -->
 
-  <!-- <div id="camera1">
+    <!-- <div id="camera1">
       <img id="camera-stream-1" style='height:100%; width:100%; object-fit:fill' src="http://10.6.70.26:80/?action=stream" onerror="this.src='http://10.6.70.26:80/?action=stream'"/>
     </div>
     <div id="camera2">
       <img id="camera-stream-2" style='height:100%; width:100%; object-fit:fill' src="http://10.6.70.26:443/?action=stream" onerror="this.src='http://10.6.70.26:443/?action=stream'"/>
     </div> -->
-  <div id="v-crosshairs-left"> </div>
-  <div id="v-crosshairs-right"> </div>
+    <div id="v-crosshairs-left"> </div>
+    <div id="v-crosshairs-right"> </div>
 
-  <svg id="status-lights-commands" width="700" height="100">
+    <svg id="status-lights-commands" width="700" height="100">
     <rect x="0%" y="0%" width="100%" height="100%" style="stroke:rgb(0,200,0)" />
     <rect id="vision-status" x="17%" y="50%" width="40" height="20" />
     <text x="20%" y="30%" style="text-anchor: middle">Vision</text>
@@ -41,7 +41,7 @@
     <text x="80%" y="80%" style="text-anchor: middle">Reversed</text>
   </svg>
 
-  <svg id="status-lights-subsystems" width="700" height="200">
+    <svg id="status-lights-subsystems" width="700" height="200">
     <rect x="0%" y="0" width="100%" height="100%" style="stroke:rgb(0,200,0)" />
 
     <rect id="drivebase-status" x="17%" y="40" width="40" height="20" />
@@ -61,7 +61,7 @@
     <text x="60%" y="66%" style="text-anchor: middle">Indexer</text>
   </svg>
 
-  <!-- <svg id="auton-chooser" width="400" height="100">
+    <!-- <svg id="auton-chooser" width="400" height="100">
       <rect x="0%" y="0%" width="100%" height="100%" style="stroke:rgb(0,200,0)"/>
       <circle id="left" cx="25%" cy="20%" r="5"/>
       <text x="25%" y="10%" style="text-anchor: middle">Left</text>
@@ -75,21 +75,21 @@
       <text x="75%" y="35%" style="text-anchor: middle">Trench</text>
     </svg> -->
 
-  <div id="login">
-    <input id="connect-address" type="text" value="localhost" disabled>
-    <button id="connect" disabled>Connecting</button>
-  </div>
+    <div id="login">
+        <input id="connect-address" type="text" value="localhost" disabled>
+        <button id="connect" disabled>Connecting</button>
+    </div>
 
-  <svg id="warning-info" width="700" height="60">
+    <svg id="warning-info" width="700" height="60">
     <rect x="0%" y="0%" width="100%" height="100%" style="stroke:rgb(0,200,0)" />
     <text id="warnings" x="0%" y="66%" style="text-anchor: start">Warnings:</text>
   </svg>
 
-  <svg id="big-warning">
+    <svg id="big-warning">
     <text id="big-warning-text" x="50%" y="50%" style="text-anchor: middle; font:bold 60px sans-serif">WARNING!</text>
   </svg>
 
-  <!-- <svg id="robot-diagram">
+    <!-- <svg id="robot-diagram">
       <rect x="0%" y="0%" width="100%" height="100%"/>
       <text id="current-arm-state" x="50%" y="10%" style="text-anchor: middle">Current State</text>
       <rect x="20%" y="85%" width="50%" height="12%"/>
@@ -101,49 +101,47 @@
       <circle cx="45%" cy="95%" r="5%"/>
     </svg> -->
 
-  <svg id="current-text" width="400" height="60">
+    <svg id="current-text" width="400" height="60">
     <rect x="0%" y="0%" width="100%" height="100%" style="stroke:rgb(0,200,0)" />
     <text id="balls-in-robot" x="20%" y="50%" style="text-anchor: start" alignment-baseline="middle">Balls in Robot:
     </text>
   </svg>
 
-  <div id="auton-chooser">
-    <rect x="0%" y="0%" width="100%" height="100%" style="stroke:rgb(0,200,0)" />
-    <form id="auto-chooser">
-      <fieldset id="position">
-        <center>
-          <input style="margin:5px;" type="radio" id="start-position-left" value="Left"> Left</input>
-          <input style="margin:5px;" type="radio" id="start-position-center" value="Center"> Center</input>
-          <input style="margin:5px;" type="radio" id="start-position-right" value="Right"> Right</input>
-        </center>
-      </fieldset>
-      <fieldset id="path">
-        <center>
-          <input style="margin:5px;" type="radio" id="shoot-then-back" value="EmptyToBack"> Shoot Then Back</input>
-        </center>
-      </fieldset>
-      <fieldset id="path2">
-        <center>
-          <input style="margin:5px;" type="radio" id="shoot-then-trench" value="Trench"> Shoot Then Trench</input>
-        </center>
-      </fieldset>
-      <fieldset id="path3">
-        <center>
-          <input style="margin:5px;" type="radio" id="shoot-then-forward" value="EmptyToFront"> Shoot Then Forward</input>
-        </center>
-      </fieldset>
-    </form>
-    <button id="confirm-button" onclick="sendAuton();">OK</button>
-  </div>
+    <div id="auton-chooser">
+        <rect x="0%" y="0%" width="100%" height="100%" style="stroke:rgb(0,200,0)" />
+        <form id="auto-chooser">
+            <fieldset id="position">
+                <center>
+                    <input style="margin:5px;" type="radio" id="start-position-left" value="Left"> Left</input>
+                    <input style="margin:5px;" type="radio" id="start-position-center" value="Center"> Center</input>
+                    <input style="margin:5px;" type="radio" id="start-position-right" value="Right"> Right</input>
+                </center>
+            </fieldset>
+            <fieldset id="path">
+                <center>
+                    <input style="margin:5px;" type="radio" id="next-path-gen2" value="Generator2"> Generator 2</input>
+                    <input style="margin:5px;" type="radio" id="next-path-gen3" value="Generator3"> Generator 3</input>
+                    <input style="margin:5px;" type="radio" id="next-path-trench" value="Trench"> Trench</input>
+                </center>
+            </fieldset>
+            <fieldset id="path2">
+                <center>
+                    <input style="margin:5px;" type="radio" id="next-path2-gen2" value="Generator2"> Generator 2</input>
+                    <input style="margin:5px;" type="radio" id="next-path2-trench" value="Trench"> Trench</input>
+                </center>
+            </fieldset>
+        </form>
+        <button id="confirm-button" onclick="sendAuton();">OK</button>
+    </div>
 
-  <div id="shooter">
-    <text id="speed" x="10%" y="10%" value="" style="text-anchor: middle"> </text>
-    <text id="direction" x="100%"" y="70%" value="" style="text-anchor: middle"> </text>
-  </div>
+    <div id="shooter" x="0%" y="0%">
+        <text id="speed" x="10%" y="10%" value="" style="text-anchor: middle">Speed:  </text>
+        <text id="direction" x="10%" y="70%" value="" style="text-anchor: middle">Direction: </text>
+    </div>
 
-  <script src="networktables/networktables.js"></script>
-  <script src="connection.js"></script>
-  <script src="ui.js"></script>
+    <script src="networktables/networktables.js"></script>
+    <script src="connection.js"></script>
+    <script src="ui.js"></script>
 
 
 </body>
