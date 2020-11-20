@@ -83,6 +83,10 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         public abstract int getPeakCurrent();
     }
 
+    /**
+     * constructor
+     * @param config
+     */
     public SparkMaxRotatingSubsystem(Config config) {
         this.rotator = SparkMAXFactory.buildFactorySparkMAX(config.getDeviceID(), config.getMotorType());
         this.rotator_encoder = rotator.getEncoder();
@@ -237,10 +241,16 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         return (MathUtils.doublesEqual(rotator_encoder.getPosition(), setpoint, ALLOWED_ERR));
     }
 
+    /**
+     * enables coast mode
+     */
     protected void enableCoastMode() {
         rotator.setIdleMode(IdleMode.kCoast);
     }
 
+    /**
+     * enables brake mode
+     */
     protected void enableBrakeMode() {
         rotator.setIdleMode(IdleMode.kBrake);
     }
@@ -259,14 +269,26 @@ public abstract class SparkMaxRotatingSubsystem extends MustangSubsystemBase imp
         rotator_controller.setReference(0, ControlType.kDutyCycle);
     }
 
+    /**
+     * 
+     * @return SparkMAXLite rotator
+     */
     public SparkMAXLite getRotator() {
         return this.rotator;
     }
 
+    /**
+     * 
+     * @return encoder of the SparkMAXLite rotator
+     */
     public CANEncoder getRotatorEncoder() {
         return this.rotator_encoder;
     }
 
+    /**
+     * 
+     * @return controller of the SparkMAXLite rotator
+     */
     public CANPIDController getRotatorController() {
         return this.rotator_controller;
     }

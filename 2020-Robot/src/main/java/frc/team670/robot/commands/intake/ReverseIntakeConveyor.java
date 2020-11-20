@@ -10,12 +10,20 @@ import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
+/**
+ * Reverses the conveyor of the intake
+ */
 public class ReverseIntakeConveyor extends ParallelCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Intake intake;
     private Conveyor conveyor;
 
+    /**
+     * Initializes this command from the given parameters
+     * @param intake the intake of the robot
+     * @param conveyor the conveyor of the robot
+     */
     public ReverseIntakeConveyor(Intake intake, Conveyor conveyor){
         this.intake = intake;
         this.conveyor = conveyor;

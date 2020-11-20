@@ -70,6 +70,14 @@ jar {
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
 
+sourceSets {
+    test {
+        java {
+            srcDirs = ['src/test/java/']
+        }
+    }
+}
 repositories {
     maven { url "https://frcmaven.wpi.edu/artifactory/release/" }
 }
+

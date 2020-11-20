@@ -10,11 +10,18 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
+/**
+ * Stops the updraw of the indexer
+ */
 public class StopUpdraw extends InstantCommand implements MustangCommand {
 
     private Indexer indexer;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+    /**
+     * Initializes this command from the given indexer
+     * @param indexer the indexer of the robot
+     */
     public StopUpdraw(Indexer indexer){
         this.indexer = indexer;
         addRequirements(indexer);

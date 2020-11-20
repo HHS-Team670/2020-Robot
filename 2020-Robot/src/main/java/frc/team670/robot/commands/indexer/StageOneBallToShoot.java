@@ -21,6 +21,10 @@ public class StageOneBallToShoot extends CommandBase implements MustangCommand {
     private Indexer indexer;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+    /**
+     * Initializes this command with the given indexer
+     * @param indexer the indexer of the robot
+     */
     public StageOneBallToShoot(Indexer indexer) {
         this.indexer = indexer;
         addRequirements(indexer);

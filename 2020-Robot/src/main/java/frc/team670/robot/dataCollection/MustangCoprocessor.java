@@ -40,6 +40,9 @@ public class MustangCoprocessor {
     // Vision Constants
     public static final double OUTER_TARGET_CENTER = 249; // centimeters
 
+    /**
+     * Used to create a mustangCoprocessor object based on the key of the table that returns the values from vision processing
+     */
     public MustangCoprocessor() {
         this(VISION_RETURN_NETWORK_KEY);
     }
@@ -51,12 +54,18 @@ public class MustangCoprocessor {
         SmartDashboard.putBoolean("LEDs on", false);
     }
 
+    /**
+     * Used to trigger the vision system to run and get new values
+     */
     public void getLatestVisionData() {
         SmartDashboard.putString(VISION_TRIGGER_NETWORK_KEY, "vision");
         // NetworkTableEntry visionTrigger = visionTable.getEntry(VISION_TRIGGER_NETWORK_KEY);
         // visionTrigger.forceSetString("vision");
     }
 
+    /**
+     * Used to clear last values present on the table
+     */
     public void clearLastValues(){
         NetworkTableEntry visionTrigger = visionTable.getEntry(VISION_RETURN_NETWORK_KEY);
         visionTrigger.forceSetDoubleArray(new double[] { RobotConstants.VISION_ERROR_CODE, RobotConstants.VISION_ERROR_CODE, RobotConstants.VISION_ERROR_CODE });
@@ -169,14 +178,23 @@ public class MustangCoprocessor {
         return this.currentlyUsingVision;
     }
 
+    /**
+     * Used to turn on the bright green leds for vision
+     */
     public void turnOnLEDs() {
         cameraLEDs.set(true);
     }
 
+    /**
+     * Used to turn off the bright green leds for vision
+     */
     public void turnOffLEDs() {
         cameraLEDs.set(false);
     }
 
+    /**
+     * Used to test the leds for vision
+     */
     public void testLEDS() {
         cameraLEDs.set(SmartDashboard.getBoolean("LEDs on", true));
     }

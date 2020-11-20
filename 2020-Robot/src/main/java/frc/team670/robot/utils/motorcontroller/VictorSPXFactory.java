@@ -61,6 +61,13 @@ public class VictorSPXFactory {
         return buildVictorSPX(deviceID, defaultConfig, invert);
     }
 
+    /**
+     * Used to build victor spx based on device id, config and whether you want to rever the motor
+     * @param deviceID
+     * @param config
+     * @param invert
+     * @return
+     */
     public static VictorSPXLite buildVictorSPX(int deviceID, Config config, boolean invert) {
         VictorSPXLite victorspx = new VictorSPXLite(deviceID);
         victorspx.set(ControlMode.PercentOutput, 0.0);

@@ -18,15 +18,25 @@ public class ColorWheelSpinner extends MustangSubsystemBase {
 
     public final double MOTOR_SPEED = 0.1; // TODO: tune for actual motor
 
+    /**
+     * constructor
+     */
     public ColorWheelSpinner() {
         colorMatch = new ColorMatcher();
         rotator = new SparkMAXLite(RobotMap.COLOR_WHEEL_MOTOR_ID, MotorConfig.Motor_Type.NEO_550);
     }
 
+    /**
+     * set rotator speed
+     * @param motorSpeed speed
+     */
     public void setSpeed(double motorSpeed) {
         rotator.set(motorSpeed);
     }
 
+    /**
+     * @return color as int
+     */
     public int detectColor() {
         return colorMatch.detectColor();
     }

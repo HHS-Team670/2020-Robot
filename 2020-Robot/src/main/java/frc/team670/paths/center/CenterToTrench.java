@@ -15,21 +15,20 @@ import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Trajectory starting from the middle of the initiation line (facing towards
- * your driver station) and facing 2 Power Cells under the generator near your
- * trench.
+ * Trajectory starting on intitiation line closest to your score port (facing towards your driverstation)
+ * and going through the trench
  * 
  * @author meganchoy, ctychen
  */
-public class CenterToGenerator2BallSidePath extends Path{
+public class CenterToTrench extends Path {
 
-        public CenterToGenerator2BallSidePath(DriveBase driveBase) {
-                super(
-                        List.of(
-                                new Pose2d(3.186, 4.296, Rotation2d.fromDegrees(0)),
-                                new Pose2d(3.186, 4.296, Rotation2d.fromDegrees(39.748)),
-                                new Pose2d(5.8, 5.445, Rotation2d.fromDegrees(-65))
-                        ), 
-                driveBase);
-        }
+    public CenterToTrench(DriveBase driveBase) {
+        super(
+            List.of(
+                new Pose2d(3.186, -2.4, Rotation2d.fromDegrees(90)),
+                new Pose2d(4.156, -1.483, Rotation2d.fromDegrees(71.54)),
+                new Pose2d(5.25, 5.602, Rotation2d.fromDegrees(91))
+            ),
+        driveBase);
+    }
 }

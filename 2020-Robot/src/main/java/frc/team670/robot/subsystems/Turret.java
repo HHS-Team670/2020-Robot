@@ -11,6 +11,11 @@ import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 
+/**
+ * represents subsytem of turret for shooter
+ * 
+ * @author ctychen, lakshbhambhani
+ */
 public class Turret extends SparkMaxRotatingSubsystem {
 
     // TODO: Set these values. Keeping it small right now for testing.
@@ -123,6 +128,9 @@ public class Turret extends SparkMaxRotatingSubsystem {
     public static final Config turretConfig = new Config();
     private final double DEGREES_PER_MOTOR_ROTATION = 360 / turretConfig.getRotatorGearRatio();
 
+    /**
+     * constructor
+     */
     public Turret() {
         super(turretConfig);
         rotator.setInverted(true);
@@ -132,6 +140,9 @@ public class Turret extends SparkMaxRotatingSubsystem {
         reverseLimit.enableLimitSwitch(true);
     }
 
+    /**
+     * @return GREEN if everything is good, RED if there's an issue with the rotator
+     */
     @Override
     public HealthState checkHealth() {
         if (isSparkMaxErrored(rotator)) {
@@ -140,6 +151,10 @@ public class Turret extends SparkMaxRotatingSubsystem {
         return HealthState.GREEN;
     }
 
+    /**
+     * 
+     * @return if turret has zeroed already
+     */
     public boolean hasZeroed() {
         return this.zeroedAlready;
     }
@@ -157,6 +172,10 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     }
 
+    /**
+     * sets target angle of turret to turn to
+     * @param targetAngle target angle in degrees
+     */
     @Override
     public void setSystemTargetAngleInDegrees(double targetAngle) {
         if (targetAngle > SOFT_MAXIMUM_DEGREES || targetAngle < SOFT_MINIMUM_DEGREES) {
@@ -166,11 +185,19 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
     }
 
+    /**
+     * @return current angle of rotator in degrees
+     */
     @Override
     public double getCurrentAngleInDegrees() {
         return getUnadjustedPosition() * DEGREES_PER_MOTOR_ROTATION;
     }
 
+    /**
+     * calculates absolute angle from relative angle
+     * @param relAngle relative angle in degrees
+     * @return absolute angle in degrees
+     */
     public double relativeAngleToAbsoluteInDegrees(double relAngle) {
         return getCurrentAngleInDegrees() + relAngle;
     }
@@ -221,6 +248,9 @@ public class Turret extends SparkMaxRotatingSubsystem {
         this.rotator.set(output);
     }
 
+    /**
+     * default command at init
+     */
     public void initDefaultCommand() {
         MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret(this));
         Logger.consoleLog("Turret defaulted to joystick");

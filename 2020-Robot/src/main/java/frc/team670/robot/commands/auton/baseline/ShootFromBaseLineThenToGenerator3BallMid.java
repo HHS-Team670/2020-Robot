@@ -13,9 +13,10 @@ import java.util.Map;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.Path;
-import frc.team670.paths.center.CenterToGenerator3BallMidPath;
-import frc.team670.paths.left.LeftToGenerator3BallMidPath;
-import frc.team670.paths.right.RightToGenerator3BallMidPath;
+import frc.team670.paths.right.Right3BS;
+import frc.team670.paths.left.Left3BS;
+import frc.team670.paths.center.Center3BS;
+import frc.team670.paths.right.Right3BS;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
@@ -49,16 +50,28 @@ public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandG
         private DriveBase driveBase;
         private MustangCoprocessor coprocessor;
 
+        /**
+         * Initializes this command from the given parameters
+         * 
+         * @param startPosition the position of the robot at the beginning of the game
+         * @param driveBase the drive base
+         * @param intake the intake
+         * @param conveyor the conveyor
+         * @param shooter the shooter
+         * @param indexer the indexer
+         * @param turret the turret
+         * @param coprocessor the coprocessor
+         */
         public ShootFromBaseLineThenToGenerator3BallMid(StartPosition startPosition, DriveBase driveBase, Intake intake,
             Conveyor conveyor, Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
           this.driveBase = driveBase;
           this.coprocessor = coprocessor;
           if (startPosition == StartPosition.LEFT)
-              trajectory = new LeftToGenerator3BallMidPath(driveBase);
+              trajectory = new Left3BS(driveBase);
           if (startPosition == StartPosition.CENTER)
-              trajectory = new CenterToGenerator3BallMidPath(driveBase);
+              trajectory = new Center3BS(driveBase);
           if (startPosition == StartPosition.RIGHT)
-              trajectory = new RightToGenerator3BallMidPath(driveBase);
+              trajectory = new Right3BS(driveBase);
           healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
           healthReqs.put(driveBase, HealthState.GREEN);
           healthReqs.put(shooter, HealthState.GREEN);

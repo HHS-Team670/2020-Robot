@@ -6,9 +6,9 @@ import java.util.Map;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.Path;
-import frc.team670.paths.center.CenterToGenerator2BallSidePath;
-import frc.team670.paths.left.LeftToGenerator2BallSidePath;
-import frc.team670.paths.right.RightToGenerator2BallSidePath;
+import frc.team670.paths.left.Left2BS;
+import frc.team670.paths.center.Center2BS;
+import frc.team670.paths.right.Right2BS;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
@@ -42,16 +42,28 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
         private DriveBase driveBase;
         private MustangCoprocessor coprocessor;
 
+        /**
+         * Initializes this command from the given parameters
+         * 
+         * @param startPosition the position of the robot at the beginning of the game
+         * @param driveBase the drive base
+         * @param intake the intake
+         * @param conveyor the conveyor
+         * @param shooter the shooter
+         * @param indexer the indexer
+         * @param turret the turret
+         * @param coprocessor the coprocessor
+         */
         public ShootFromBaseLineThenToGenerator2BallSide(StartPosition startPosition, DriveBase driveBase, Intake intake, 
         Conveyor conveyor, Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
                 this.driveBase = driveBase;
                 this.coprocessor = coprocessor;
                 if (startPosition == StartPosition.LEFT)
-                        trajectory = new LeftToGenerator2BallSidePath(driveBase);
+                        trajectory = new Left2BS(driveBase);
                 if (startPosition == StartPosition.CENTER)
-                        trajectory = new CenterToGenerator2BallSidePath(driveBase);
+                        trajectory = new Center2BS(driveBase);
                 if (startPosition == StartPosition.RIGHT)
-                        trajectory = new RightToGenerator2BallSidePath(driveBase);
+                        trajectory = new Right2BS(driveBase);
                 healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
                 healthReqs.put(driveBase, HealthState.GREEN);
                 healthReqs.put(shooter, HealthState.GREEN);

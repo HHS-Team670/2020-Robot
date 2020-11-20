@@ -19,6 +19,10 @@ public class TestIndexerEncoder extends CommandBase implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Indexer indexer;
 
+    /**
+     * Initializes this command from the given indexer
+     * @param indexer the indexer of the robot
+     */
     public TestIndexerEncoder(Indexer indexer) {
         this.indexer = indexer;
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();

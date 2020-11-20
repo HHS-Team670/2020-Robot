@@ -22,6 +22,11 @@ public class EmptyRevolver extends CommandBase implements MustangCommand {
     private boolean indexerSpun = false;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
+    /**
+     * Initializes this command with the given indexer
+     * 
+     * @param indexer the indexer of the robot
+     */
     public EmptyRevolver(Indexer indexer) {
         this.indexer = indexer;
         addRequirements(indexer);

@@ -40,13 +40,28 @@ public abstract class MotorChecker<T> {
     }
 
     protected ArrayList<MotorConfig<T>> motorsToCheck;
-
+    
+    /**
+     * Used to save the config
+     */
     public abstract void storeConfig();
 
+    /**
+     * Used to restore the config
+     */
     public abstract void restoreConfig();
 
+    /**
+     * Used to set output
+     * @param motor the motor to set output on
+     * @param output the output to be set
+     */
     public abstract void setOutput(T motor, double output);
 
+    /**
+     * Used to get the current
+     * @param motor the motor to get the current from
+     */
     public abstract double getCurrent(T motor);
 
     /**
@@ -144,6 +159,13 @@ public abstract class MotorChecker<T> {
         return result;
     }
 
+    /**
+     * Used to check if 2 values are close to each other withtin a certain threshold
+     * @param a value 1
+     * @param b value 2
+     * @param error the max error betweeen the values
+     * @return true if a and b are close to each within error
+     */
     public static boolean aboutEquals(double a, double b, double error) {
         return (a - error <= b) && (a + error >= b);
     }

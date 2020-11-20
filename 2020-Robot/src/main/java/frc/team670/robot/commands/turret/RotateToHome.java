@@ -19,6 +19,10 @@ public class RotateToHome extends CommandBase implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     boolean hasReachedLimit = false;
 
+    /**
+     * Initializes this command from the given turret
+     * @param turret the turret of the robot
+     */
     public RotateToHome(Turret turret) {
         this.turret = turret;
         addRequirements(turret);

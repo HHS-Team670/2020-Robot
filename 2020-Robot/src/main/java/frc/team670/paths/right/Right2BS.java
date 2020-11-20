@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.team670.paths.center;
+package frc.team670.paths.right;
 
 import java.util.List;
 
@@ -15,19 +15,19 @@ import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Trajectory starting from middle of the initiation line (facing towards your
- * driver station) and facing the 3 Power Cells in the middle of the generator
+ * Trajectory starting on the line and to the right of your power port and facing the 2 Power
+ * Cells under the generator near your trench side.
  * 
- * @author meganchoy, ctychen
+ * @author meganchoy, ctychen, arnavyk
  */
-public class CenterToGenerator3BallMidPath extends Path{
+public class Right2BS extends Path {
 
-        public CenterToGenerator3BallMidPath(DriveBase driveBase){
+        public Right2BS(DriveBase driveBase) {
                 super(
                         List.of(
-                                new Pose2d(3.186, 4.296, Rotation2d.fromDegrees(0)),
-                                new Pose2d(5.687, 3.6, Rotation2d.fromDegrees(18))
-                        ), 
+                                new Pose2d(0.792, 2.982, Rotation2d.fromDegrees(0)),
+                                new Pose2d(2.661, 6.105, Rotation2d.fromDegrees(-68.488))
+                ), 
                 driveBase);
         }
 }

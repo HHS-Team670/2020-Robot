@@ -4,6 +4,11 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+/**
+ * Represents the subsystem of LED lights
+ * 
+ * @author Eugenia Cho
+ */
 public class LEDSubsystem extends SubsystemBase {
 
     private AddressableLED led;
@@ -27,6 +32,9 @@ public class LEDSubsystem extends SubsystemBase {
         rainbowFirstPixelHue = 0;
     }
 
+    /**
+     * sets to rainbow
+     */
     public void periodic() {
         // TODO: set different animations/colors based on conditions
         led.setData(ledBuffer);
@@ -34,6 +42,9 @@ public class LEDSubsystem extends SubsystemBase {
 
     }
 
+    /**
+     * sets LED color values to be a rianbow gradient
+     */
     private void rainbow() {
         // For every pixel
         for (var i = 0; i < ledBuffer.getLength(); i++) {

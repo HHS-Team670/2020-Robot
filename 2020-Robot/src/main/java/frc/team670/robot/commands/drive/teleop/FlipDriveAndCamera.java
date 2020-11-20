@@ -11,6 +11,9 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.utils.Logger;
 import frc.team670.robot.RobotContainer;
 
+/**
+ * Flips the drive direction, then flips the camera to match the new drive direction
+ */
 public class FlipDriveAndCamera extends InstantCommand implements MustangCommand {
 
     public FlipDriveAndCamera() {

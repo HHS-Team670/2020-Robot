@@ -30,6 +30,9 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 
+/**
+ * Rotates the turret to a given angle, shoots, waits, and then drives for a specified time
+ */
 public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
@@ -37,7 +40,7 @@ public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implemen
     private Pose2d startPose;
 
     /**
-     * 
+     * Initializes this command with the given parameters
      * @param turretAng Angle the turret should turn to at the beginning for shooting
      * @param waitTime The delay (s) between shooting and driving, if no delay use 0
      * @param speed Drivebase percent output. Negative reverse, positive forward

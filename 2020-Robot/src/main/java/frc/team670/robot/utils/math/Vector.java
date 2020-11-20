@@ -1,5 +1,8 @@
 package frc.team670.robot.utils.math;
 
+/**
+ * Represents a vector
+ */
 public class Vector {
 	public double x, y, z;
 	private double velocity;

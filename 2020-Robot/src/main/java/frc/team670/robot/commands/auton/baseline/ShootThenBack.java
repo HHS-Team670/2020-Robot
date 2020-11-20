@@ -6,10 +6,10 @@ import java.util.Map;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.Path;
-import frc.team670.paths.center.CenterToTrenchPath;
-import frc.team670.paths.center.CenterThenBack;
-import frc.team670.paths.left.LeftToTrenchPath;
-import frc.team670.paths.right.RightToTrenchPath;
+import frc.team670.paths.left.LeftToTrench;
+import frc.team670.paths.center.CenterToTrench;
+import frc.team670.paths.left.LeftThenBack;
+import frc.team670.paths.right.RightToTrench;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.SendAllBalls;
@@ -30,6 +30,9 @@ import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 
+/**
+ * Shoots then moves the robot back
+ */
 public class ShootThenBack extends SequentialCommandGroup implements MustangCommand {
 
     private Path trajectory;
@@ -38,12 +41,24 @@ public class ShootThenBack extends SequentialCommandGroup implements MustangComm
     private MustangCoprocessor coprocessor;
     private Shooter shooter;
 
+    /**
+     * Initializes this command from the given parameters
+     * 
+     * @param startPosition the position of the robot at the beginning of the game
+     * @param driveBase the drive base
+     * @param intake the intake
+     * @param conveyor the conveyor
+     * @param shooter the shooter
+     * @param indexer the indexer
+     * @param turret the turret
+     * @param coprocessor the coprocessor
+    */
     public ShootThenBack(DriveBase driveBase, Intake intake, Conveyor conveyor,
             Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
 
         this.driveBase = driveBase;
         this.coprocessor = coprocessor;
-        trajectory = new CenterThenBack(driveBase);
+        trajectory = new LeftThenBack(driveBase);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);

@@ -16,12 +16,21 @@ import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 
+/**
+ * Rotates the indexer to the uptake and shoots the ball
+ */
 public class RotateIndexerToUptakeThenShoot extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Indexer indexer;
     private Shooter shooter;
 
+    /**
+     * Initializes this command with the given parameters
+     * @param indexer the indexer of the robot
+     * @param shooter the shooter of the robot
+     * @param driveBase the drivebase of the robot
+     */
     public RotateIndexerToUptakeThenShoot(Indexer indexer, Shooter shooter, DriveBase driveBase) {
         this.indexer = indexer;
         this.shooter = shooter;

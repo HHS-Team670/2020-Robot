@@ -19,6 +19,10 @@ public class SendAllBalls extends SequentialCommandGroup implements MustangComma
 
     private Indexer indexer;
 
+    /**
+     * Initializes this command from the given indexer
+     * @param indexer the indexer of the robot
+     */
     public SendAllBalls(Indexer indexer) {
         addRequirements(indexer);
         this.indexer = indexer;

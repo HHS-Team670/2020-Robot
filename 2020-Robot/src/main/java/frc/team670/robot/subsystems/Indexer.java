@@ -177,6 +177,11 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     public static final Config INDEXER_CONFIG = new Config();
 
+    /**
+     * constructor
+     * @param conveyor
+     * @param pusher
+     */
     public Indexer(Conveyor conveyor, Solenoid pusher) {
         super(INDEXER_CONFIG);
 
@@ -208,6 +213,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         timer.start();
     }
 
+    /**
+     * game data to smart dashboard
+     */
     private void pushGameDataToDashboard(){
         NetworkTableInstance instance = NetworkTableInstance.getDefault();
         NetworkTable table = instance.getTable("/SmartDashboard");
@@ -216,8 +224,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     }
 
     /**
-     * At the beginning of autonomous, we preload the indexer with 3 balls, 
-     * in the green-labeled chamber (#0) and the chambers on either side of it (#1 and #4).
+     * At the beginning of autonomous, we preload the indexer with 3 balls, in the green-labeled chamber (#0) and the chambers on either side of it (#1 and #4).
      * This sets the states of those chambers so we know that those are filled.
      */
     public void setChamberStatesForMatchInit(){
@@ -234,6 +241,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         this.isIntaking = false;
     }
 
+    /**
+     * deploys pusher
+     * @param toPush true if pusher is to be deployed
+     */
     public void deployPusher(boolean toPush) {
         this.pusherDeployed = toPush;
         this.conveyorToIndexerPusher.set(pusherDeployed);
@@ -242,10 +253,17 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         // }
     }
 
+    /**
+     * 
+     * @return if pusher is deployed
+     */
     public boolean isPusherDeployed(){
         return pusherDeployed;
     }
 
+    /**
+     * @return total number of balls in the indexer chambers
+     */
     public int totalNumOfBalls() {
         int totalNumBalls = 0;
         for (boolean c : chamberStates) {
@@ -258,6 +276,7 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     /**
      * Updates the states of the chambers after intaking a ball
+     * @return false if the ball was not taken in
      */
     public boolean intakeBall() {
         if (isIntaking){
@@ -307,6 +326,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         setSystemTargetAngleInDegrees(setpoint);
     }
 
+    /**
+     * spins the revolver fully once
+     */
     public void spinRevolver()  {
         Logger.consoleLog("Indexer system current angle degrees %s", getCurrentAngleInDegrees());
         Logger.consoleLog("Indexer system current position %s", rotator_encoder.getPosition());
@@ -334,6 +356,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
                 getShootChamber() * INDEXER_DEGREES_PER_CHAMBER + CHAMBER_0_AT_TOP_POS_IN_DEGREES);
     }
 
+    /**
+     * toggles updraw
+     */
     public void toggleUpdraw() {
         double c = updraw.getMotorOutputPercent();
         if (MathUtils.doublesEqual(c, 0.0, 0.1)) {
@@ -343,6 +368,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
     }
 
+    /**
+     * @return if indexer chamber is at the target position
+     */
     public boolean hasReachedTargetPosition() {
         boolean hasReachedTarget = (MathUtils.doublesEqual(rotator_encoder.getPosition(), setpoint, ALLOWED_ERR));
         if(hasReachedTarget && !isIntaking){
@@ -368,6 +396,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
     }
 
+    /**
+     * turns updraw off
+     */
     public void stopUpdraw() {
         updraw.set(ControlMode.PercentOutput, 0);
         updrawStartTime = null;
@@ -403,22 +434,39 @@ public class Indexer extends SparkMaxRotatingSubsystem {
 
     /**
      * Turns to a target angle the most efficient way.
+     * @param angleDegrees target angle in degrees
      */
     @Override
     public void setSystemTargetAngleInDegrees(double angleDegrees) {
         deployPusher(false);
         double currentAngle = getCurrentAngleInDegrees();
-        // We find the difference between where we currently are, and where we want to be
-        int sign = (angleDegrees -currentAngle >= 0 && angleDegrees - currentAngle <= 180) || (angleDegrees-currentAngle <=-180 && angleDegrees-currentAngle>=-360) ? 1 : -1;
-        Logger.consoleLog("Angle %s, Sign %s, CurrentAngle %s", angleDegrees, sign, currentAngle);
-        double diff = Math.abs(angleDegrees - currentAngle) % 360;
-        // If the difference is above 180 degrees, it's better to turn in the opposite direction.
-        // Otherwise, we continue turning in the same direction.
-        double finDiff = diff > 180 ? 360 - diff : diff;
-        // Setpoints are absolute, so we want to move from where we currently are plus the difference.
-        setSystemMotionTarget(getMotorRotationsFromAngle(currentAngle + finDiff));
+        // // We find the difference between where we currently are, and where we want to be
+        // int sign = (angleDegrees -currentAngle >= 0 && angleDegrees - currentAngle <= 180) || (angleDegrees-currentAngle <=-180 && angleDegrees-currentAngle>=-360) ? 1 : -1;
+        // Logger.consoleLog("Angle %s, Sign %s, CurrentAngle %s", angleDegrees, sign, currentAngle);
+        // double diff = Math.abs(angleDegrees - currentAngle) % 360;
+        // // If the difference is above 180 degrees, it's better to turn in the opposite direction.
+        // // Otherwise, we continue turning in the same direction.
+        // double finDiff = diff > 180 ? 360 - diff : diff;
+        // // Setpoints are absolute, so we want to move from where we currently are plus the difference.
+        double shortestAngleToTurn = shortestDistDegrees(currentAngle, angleDegrees);
+        setSystemMotionTarget(getMotorRotationsFromAngle(currentAngle + shortestAngleToTurn)); //currentAngle + finDiff
     }
 
+    /**
+     * Used to find the shortest angle to rotate from start to target
+     * @param startAngle the current angle
+     * @param targetAngle the angle you want to turn to
+     * @return shortestDistance
+     */
+    public static double shortestDistDegrees(double startAngle, double targetAngle) {      
+        double modDiff = (targetAngle - startAngle) % 360;                          // Calculates the difference between 2 angles
+        double shortestDistance = 180 - Math.abs(Math.abs(modDiff) - 180);          // Finds the shortest Angle using the difference
+        return (modDiff) % 360 < 180 ? shortestDistance * 1 : shortestDistance * -1;// Changes the shortestAngle to negative for rotating backwards
+    }
+
+    /**
+     * @return the number of the chamber currently closest to the shoot position
+     */
     private int getTopChamber() {
         double pos = getPosition() % 1.0;
         if (pos < 0) {
@@ -454,6 +502,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
          */
     }
 
+    /**
+     * 
+     * @return the number of the chamber currently closest to the intake position
+     */
     private int getBottomChamber() {
 
         double pos = getPosition() % 1.0;
@@ -491,6 +543,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
     }
 
     // Designed by JOSHIE SANGYALSWEIO
+    /**
+     * 
+     * @return chamber ready to store ball from intake
+     */
     private int getIntakeChamber() {
         if (totalNumOfBalls() == 5) {
             return -1;
@@ -507,6 +563,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         return currentBottom;
     }
 
+    /**
+     * 
+     * @return chamber ready to send ball to shooter
+     */
     private int getShootChamber() {
         if (totalNumOfBalls() == 5) {
             return getTopChamber();
@@ -545,10 +605,17 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         return IntakingState.NOT_IN;
     }
 
+    /**
+     * @return rotation speed of indexer
+     */
     public double getSpeed() {
         return rotator.get();
     }
 
+    /**
+     * 
+     * @return encoder rotations
+     */
     public double getAbsoluteEncoderRotations() {
         return ((revolverAbsoluteEncoder.get() + 1.0) % 1.0);
     }
@@ -571,6 +638,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         return rotator_encoder.getPosition() / ROTATOR_GEAR_RATIO;
     }
 
+    /**
+     * @return GREEN if everything is good. Otherwise, YELLOW if theres something wrong with the intake sensors. RED if the theres an issue with the controller or a jam
+     */
     @Override
     public HealthState checkHealth() {
         // if either the rotator or updraw breaks, we can't use the indexer anymore.
@@ -586,6 +656,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         return HealthState.GREEN;
     }
 
+    /**
+     * sets rotator to power output
+     * @param output power output
+     */
     @Override
     public void moveByPercentOutput(double output) {
         rotator.set(output);
@@ -624,6 +698,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         return false;
     }
 
+    /**
+     * @return if updraw is pushing up a ball
+     */
     public boolean isUpdrawing(){
         double updrawCurrent = updraw.getSupplyCurrent();
         if (updrawCurrent > 0.2) {
@@ -639,6 +716,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         return false;
     }
 
+    /**
+     * constantly checking for unjams
+     */
     @Override
     public void mustangPeriodic() {
         double posWhenJammed = 0;
@@ -695,6 +775,9 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         pushGameDataToDashboard();
     }
 
+    /**
+     * stops intaking
+     */
     public void stopIntaking() {
         isIntaking = false;
         if(hasReachedTargetPosition()){
@@ -702,6 +785,10 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
     }
 
+    /**
+     * 
+     * @return if chamber ready to shoot a ball is empty
+     */
     public boolean isShootingChamberEmpty() {
         return !chamberStates[getTopChamber()];
     }

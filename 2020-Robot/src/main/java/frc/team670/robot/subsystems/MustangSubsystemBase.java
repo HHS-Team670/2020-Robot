@@ -110,6 +110,9 @@ public abstract class MustangSubsystemBase extends SubsystemBase {
         }
     }
 
+    /**
+     * sends health data to dashboard
+     */
     public void pushHealthToDashboard() {
         /*
         NetworkTableEntry subsystem = table.getEntry(this.getName());

@@ -53,6 +53,13 @@ public class TalonSRXChecker extends MotorChecker<TalonSRX> {
         return motor.getStatorCurrent();
     }
 
+    /**
+     * Used to check Motors using TalonSRXChecker
+     * @param subsystem 
+     * @param motorsToCheck
+     * @param checkerConfig
+     * @return
+     */
     public static boolean checkMotors(MustangSubsystemBase subsystem, ArrayList<MotorConfig<TalonSRX>> motorsToCheck,
             Config checkerConfig) {
         TalonSRXChecker checker = new TalonSRXChecker();

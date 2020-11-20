@@ -32,6 +32,13 @@ public class RotateTurret extends CommandBase implements MustangCommand {
 
     private boolean validData = false;
 
+    /**
+     * Initializes this command from the given parameters
+     * 
+     * @param turret the turret of the robot
+     * @param driveBase the drivebase of the robot
+     * @param pi the raspberry pi
+     */
     public RotateTurret(Turret turret, DriveBase driveBase, MustangCoprocessor pi) {
         this.turret = turret;
         this.driveBase = driveBase;

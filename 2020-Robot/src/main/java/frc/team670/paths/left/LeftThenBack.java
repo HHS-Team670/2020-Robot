@@ -14,21 +14,14 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
 
-/**
- * Trajectory starting on the line near the opponent's loading station (robot facing towards your own driverstation)
- * and facing the 3 Power Cells under the middle of the generator.
- * 
- * @author meganchoy, ctychen
- */
-public class LeftToGenerator3BallMidPath extends Path{
+public class LeftThenBack extends Path{
 
-    public LeftToGenerator3BallMidPath(DriveBase driveBase) {
+    public LeftThenBack(DriveBase driveBase){
         super(
-            List.of(
-                new Pose2d(3.186, 1, Rotation2d.fromDegrees(0)),
-                new Pose2d(3.186, 1, Rotation2d.fromDegrees(65.511)),
-                new Pose2d(5.687, 3.6, Rotation2d.fromDegrees(18))
-            ),
-        driveBase);
+                List.of(
+                    new Pose2d(3.194, 4.296, Rotation2d.fromDegrees(0)),
+                    new Pose2d(4.194, 4.296, Rotation2d.fromDegrees(0))
+                ),
+            driveBase);
     }
 }

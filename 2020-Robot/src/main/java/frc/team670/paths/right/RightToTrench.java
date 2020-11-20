@@ -16,20 +16,19 @@ import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Trajectory starting on the line near your power port and facing the 3 Power Cells under
- * the middle of the generator.
+ * Trajectory starting on the line and to the righ of your power port (intake facing towards your own driver station)
+ * and through the trench
  * 
- * @author meganchoy, ctychen
+ * @author meganchoy, ctychen, arnavyk
  */
-public class RightToGenerator3BallMidPath extends Path{
+public class RightToTrench extends Path{
 
-    public RightToGenerator3BallMidPath(DriveBase driveBase){
-        super(
-            List.of(
-                new Pose2d(3.201, 4.5, Rotation2d.fromDegrees(0)),
-                new Pose2d(3.201, 7.451, Rotation2d.fromDegrees(-90)),
-                new Pose2d(5.687, 3.6, Rotation2d.fromDegrees(18))
-            ),
-            driveBase);
-    }
+        public RightToTrench(DriveBase driveBase) {
+                super(
+                        List.of(
+                                new Pose2d(0.981, 3.005, Rotation2d.fromDegrees(0)),
+                                new Pose2d(0.745, 5.159, Rotation2d.fromDegrees(0))
+                        ),
+                        driveBase);
+        }
 }

@@ -17,6 +17,9 @@ import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.utils.MustangController;
 import frc.team670.robot.utils.MustangController.XboxButtons;
 
+/**
+This class is the glue that binds the controls on the physical operator interface to the commands and command groups that allow control of the robot.
+*/
 public class OI {
 
   private MustangController driverController;
@@ -26,6 +29,17 @@ public class OI {
 
   private XKeys xkeys;
 
+  /**
+   * Used to create the joysticks used to control this robot
+   * @param drivebase the drivebase to control
+   * @param intake the intake to control
+   * @param conveyor the conveyor to run
+   * @param indexer the indexer to run/control
+   * @param shooter the shooter to run/control
+   * @param climber the climber to run
+   * @param turret the turret to run/control
+   * @param pi the coprocessor, specificallly pi
+   */
   public OI(DriveBase drivebase, Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Climber climber, Turret turret, MustangCoprocessor pi) {
     driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
     toggleReverseDrive = new JoystickButton(driverController, XboxButtons.LEFT_BUMPER);
@@ -34,6 +48,10 @@ public class OI {
     xkeys = new XKeys(drivebase, intake, conveyor, indexer, shooter, climber, turret, pi);
   }
 
+  /**
+   * Used to check if the quickturn button on the driver controller is pressed
+   * @return true if the button is pressed
+   */
   public boolean isQuickTurnPressed() {
     return driverController.getRightBumper();
   }
@@ -62,10 +80,17 @@ public class OI {
     controller.rumble(power, time);
   }
 
+  /**
+   * Used to get the driver controller
+   */
   public MustangController getDriverController() {
     return driverController;
   }
 
+  /**
+   * Used to get the operator controller
+   * @return
+   */
   public Joystick getOperatorController() {
     return operatorController;
   }
