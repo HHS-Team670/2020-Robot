@@ -93,10 +93,13 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
                 // Roll intake out and shoot
                 new ParallelCommandGroup(
                     new Shoot(shooter), 
-                    new SendAllBalls(indexer),
-                    new IntakeBallToIndexer(intake, conveyor, indexer)
+                    new SendAllBalls(indexer)
                 ),
-                getTrajectoryFollowerCommand(trajectory, driveBase)
+
+                new ParallelCommandGroup(
+                    new IntakeBallToIndexer(intake, conveyor, indexer),
+                    getTrajectoryFollowerCommand(trajectory, driveBase)
+                )
         );
     }
 
