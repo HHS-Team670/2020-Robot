@@ -91,7 +91,7 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
                                 new IntakeBallToIndexer(intake, conveyor, indexer)       
                         )
                 );
-
+                System.out.println("test");
         }
 
         @Override 
