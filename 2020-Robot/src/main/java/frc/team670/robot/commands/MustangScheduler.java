@@ -97,6 +97,8 @@ public class MustangScheduler {
                                 MustangNotifications.reportWarning(
                                         "%s not run because of health issue! Required health: %s, Actual health: %s",
                                         m_command.getName(), healthReq, currentHealth);
+                                RobotContainer.getDriverController.rumble();
+                                scheduleOrCancel();
                                 return;
                             }
                         }
@@ -156,5 +158,12 @@ public class MustangScheduler {
             this.currentCommand = null;
         }
     }
-
+    
+    public void scheduleOrCancel () {
+    	if (RobotContainer.getDriverController.getRightJoystick == 1) {
+    		scheduler.schedule(currentCommand);
+    	} else if (RobotContainer.getDriverController.getRightJoystick == -1) {
+    		return;
+    	}
+    }
 }
