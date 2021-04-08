@@ -135,7 +135,10 @@ public class DriveBase extends MustangSubsystemBase {
       state = HealthState.RED;
       MustangNotifications.reportError("RED Errors: l1: %s, l2: %s, r1: %s, r2: %s", left1Error, left2Error,
           right1Error, right2Error);
-    } else {
+    } else if (isNavXError) { // ONLY FOR TESTING OVERRIDE
+      state = HealthState.RED;
+      MustangNotifications.reportError("RED Errors: NavX");
+    }else {
       state = HealthState.YELLOW;
       MustangNotifications.reportError("YELLOW Errors: l1: %s, l2: %s, r1: %s, r2: %s, navX: %s", left1Error,
           left2Error, right1Error, right2Error, isNavXError);

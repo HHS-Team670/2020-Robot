@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.DriverStation;
 
 import frc.team670.robot.utils.MustangNotifications;
+import frc.team670.robot.RobotContainer;
 import frc.team670.robot.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.utils.Logger;
@@ -97,7 +98,7 @@ public class MustangScheduler {
                                 MustangNotifications.reportWarning(
                                         "%s not run because of health issue! Required health: %s, Actual health: %s",
                                         m_command.getName(), healthReq, currentHealth);
-                                RobotContainer.getDriverController.rumble();
+                                RobotContainer.rumbleDriverController();
                                 scheduleOrCancel();
                                 return;
                             }
@@ -160,9 +161,9 @@ public class MustangScheduler {
     }
     
     public void scheduleOrCancel () {
-    	if (RobotContainer.getDriverController.getRightJoystick == 1) {
+    	if (RobotContainer.getDriverController().getRightJoystickButton() == true) {
     		scheduler.schedule(currentCommand);
-    	} else if (RobotContainer.getDriverController.getRightJoystick == -1) {
+    	} else if (RobotContainer.getDriverController().getRightJoystickButton() == false) {
     		return;
     	}
     }
