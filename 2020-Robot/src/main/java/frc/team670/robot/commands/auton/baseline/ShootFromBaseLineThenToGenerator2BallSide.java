@@ -11,8 +11,6 @@ import frc.team670.paths.center.Center2BS;
 import frc.team670.paths.right.Right2BS;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.SendAllBalls;
-import frc.team670.robot.commands.indexer.SendOneBallToShoot;
-import frc.team670.robot.commands.indexer.StageOneBallToShoot;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooter;
@@ -84,13 +82,8 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
                         ),
                          
                         new ParallelCommandGroup(
-                                // new Shoot(shooter), 
-                                // new SendAllBalls(indexer)
-                                new Shoot(shooter),
-                                new StageOneBallToShoot(indexer),
-                                new SendOneBallToShoot(indexer),
-                                new SendOneBallToShoot(indexer),
-                                new SendOneBallToShoot(indexer)
+                                new Shoot(shooter), 
+                                new SendAllBalls(indexer)
                         ),
 
                         new ParallelCommandGroup (
@@ -98,7 +91,6 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
                                 new IntakeBallToIndexer(intake, conveyor, indexer)       
                         )
                 );
-                System.out.println("test");
         }
 
         @Override 
