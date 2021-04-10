@@ -47,6 +47,7 @@ import frc.team670.robot.commands.auton.ShootFromAngleThenTimeDrive;
 import frc.team670.robot.commands.auton.ToTrenchRunAndShoot;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToGenerator2BallSide;
+import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToTrench;
 import frc.team670.robot.commands.auton.baseline.ShootThenBack;
 import frc.team670.robot.commands.climb.ExtendClimber;
 import frc.team670.robot.commands.climb.HookOnBar;
@@ -259,7 +260,7 @@ public class RobotContainer {
       new PIDController(RobotConstants.kPDriveVel, 0, 0), driveBase::tankDriveVoltage, driveBase);
       return (MustangCommand) ramseteCommand.andThen(() -> driveBase.stop());
       */
-    return new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+    return new ShootFromBaseLineThenToTrench(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
       
 }
 
