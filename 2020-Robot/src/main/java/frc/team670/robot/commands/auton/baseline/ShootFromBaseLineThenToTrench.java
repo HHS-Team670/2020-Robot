@@ -86,9 +86,8 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
 
         addCommands(
                 // Get shooter up to speed and aim
-                new ParallelCommandGroup(
-                    new StartShooterByDistance(shooter, driveBase)
-                ),
+                new StartShooterByDistance(shooter, driveBase),
+                
                 new RotateTurret(turret, driveBase, coprocessor),
                 // Roll intake out and shoot
                 new ParallelCommandGroup(

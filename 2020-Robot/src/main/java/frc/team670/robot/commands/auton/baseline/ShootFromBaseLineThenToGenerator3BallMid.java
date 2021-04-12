@@ -84,11 +84,11 @@ public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandG
           driveBase.resetOdometry(trajectory.getStartingPose());        
 
           addCommands(
-              new ParallelCommandGroup (
+
               new StartShooterByDistance(shooter, driveBase),
-              new RotateTurret(turret, driveBase, coprocessor)
-            ),
-            
+
+              new RotateTurret(turret, driveBase, coprocessor),
+              
               new ParallelCommandGroup (
               new SendAllBalls(indexer), 
               new Shoot(shooter)        

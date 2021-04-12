@@ -78,20 +78,19 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
                 driveBase.resetOdometry(trajectory.getStartingPose());
 
                 addCommands(
-                        new ParallelCommandGroup(
-                                new StartShooterByDistance(shooter, driveBase),
-                                new RotateTurret(turret, driveBase, coprocessor)
-                        ),
+                        new StartShooterByDistance(shooter, driveBase),
+                        new RotateTurret(turret, driveBase, coprocessor),
                          
                         new ParallelCommandGroup(
                                 // new Shoot(shooter), 
                                 // new SendAllBalls(indexer)
-                                new Shoot(shooter),
-                                new StageOneBallToShoot(indexer),
-                                new SendOneBallToShoot(indexer),
-                                new SendOneBallToShoot(indexer),
-                                new SendOneBallToShoot(indexer)
+                                new Shoot(shooter)        
                         ),
+
+                        new StageOneBallToShoot(indexer),
+                        new SendOneBallToShoot(indexer),
+                        new SendOneBallToShoot(indexer),
+                        new SendOneBallToShoot(indexer),
 
                         new ParallelCommandGroup (
                                 getTrajectoryFollowerCommand(trajectory, driveBase),
