@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -29,6 +30,7 @@ import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.LEDSubsystem;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Turret;
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Climber;
 
 import frc.team670.robot.commands.MustangCommand;
@@ -84,7 +86,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private static List<MustangSubsystemBase> allSubsystems = new ArrayList<MustangSubsystemBase>();
 
-  private static Solenoid indexerPusherClimberDeploy = new Solenoid(RobotMap.PCMODULE, RobotMap.INDEXER_PUSHER_CLIMBER_DEPLOY);
+  private static Solenoid indexerPusherClimberDeploy = new Solenoid(RobotMap.PCMODULE,
+      RobotMap.INDEXER_PUSHER_CLIMBER_DEPLOY);
 
   private static DriveBase driveBase = new DriveBase();
   private static Intake intake = new Intake();
@@ -99,7 +102,8 @@ public class RobotContainer {
 
   private static OI oi = new OI(driveBase, intake, conveyor, indexer, shooter, climber, turret, coprocessor);
 
-  private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret, coprocessor);
+  private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
+      coprocessor);
 
   private static JoystickButton toggleIntake = new JoystickButton(oi.getOperatorController(), 1);
   private static JoystickButton runIntakeIn = new JoystickButton(oi.getOperatorController(), 3);
@@ -112,15 +116,16 @@ public class RobotContainer {
   private static JoystickButton retractClimb = new JoystickButton(oi.getOperatorController(), 12);
   private static JoystickButton turnToNextIndexer = new JoystickButton(oi.getOperatorController(), 10);
   private static JoystickButton zeroTurret = new JoystickButton(oi.getOperatorController(), 8);
-  
-  //xboxButtons
+
+  // xboxButtons
   private static JoystickButton xboxVision = new JoystickButton(oi.getDriverController(), XboxButtons.A);
   private static JoystickButton xboxIncreaseSpeed = new JoystickButton(oi.getDriverController(), XboxButtons.B);
   private static JoystickButton xboxDecreaseSpeed = new JoystickButton(oi.getDriverController(), XboxButtons.X);
   private static JoystickButton xboxToggleShooter = new JoystickButton(oi.getDriverController(), XboxButtons.Y);
-  private static JoystickButton xboxRaiseClimber = new JoystickButton(oi.getDriverController(), XboxButtons.LEFT_JOYSTICK_BUTTON);
-  private static JoystickButton xboxLowerClimber = new JoystickButton(oi.getDriverController(), XboxButtons.RIGHT_JOYSTICK_BUTTON);
-
+  private static JoystickButton xboxRaiseClimber = new JoystickButton(oi.getDriverController(),
+      XboxButtons.LEFT_JOYSTICK_BUTTON);
+  private static JoystickButton xboxLowerClimber = new JoystickButton(oi.getDriverController(),
+      XboxButtons.RIGHT_JOYSTICK_BUTTON);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -143,19 +148,26 @@ public class RobotContainer {
   public static void checkSubsystemsHealth() {
     for (MustangSubsystemBase s : allSubsystems) {
       s.getHealth(true);
+      if (s.getHealth(true).equals(HealthState.GREEN)) {
+        CommandScheduler.getInstance().registerSubsystem(s);
+      }
+      else if (s.getHealth(true).equals(HealthState.RED)) {
+        MustangScheduler.getInstance().cancel(s.getDefaultMustangCommand());
+        CommandScheduler.getInstance().unregisterSubsystem(s);
+      }
       s.pushHealthToDashboard();
     }
   }
 
   /**
-   * Resets subsystem points of reference.
-   * Rotates the indexer to its zero position.
+   * Resets subsystem points of reference. Rotates the indexer to its zero
+   * position.
    */
   public static void zeroSubsystemPositions() {
     indexer.setEncoderPositionFromAbsolute();
   }
 
-  public static void clearSubsystemSetpoints(){
+  public static void clearSubsystemSetpoints() {
     indexer.clearSetpoint();
   }
 
@@ -181,8 +193,9 @@ public class RobotContainer {
 
     xboxVision.whenPressed(new GetLatestDataAndAlignTurret(turret, driveBase, coprocessor));
     xboxIncreaseSpeed.whenPressed(new SetRPMAdjuster(100, shooter));
-    // xboxRunIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
-    xboxDecreaseSpeed.whenPressed(new SetRPMAdjuster(-100, shooter)); //StopIntaking(intake, conveyor, indexer)
+    // xboxRunIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor,
+    // indexer));
+    xboxDecreaseSpeed.whenPressed(new SetRPMAdjuster(-100, shooter)); // StopIntaking(intake, conveyor, indexer)
     xboxToggleShooter.toggleWhenPressed(new RotateIndexerToUptakeThenShoot(indexer, shooter, driveBase));
     // xboxLowerClimber.whenPressed(new Climb(climber));
     // xboxRaiseClimber.whenPressed(new ExtendClimber(climber));
@@ -190,9 +203,12 @@ public class RobotContainer {
 
   public void robotInit() {
     // Turret should rotate automatically by default the whole time
-    // MustangScheduler.getInstance().setDefaultCommand(turret, new AutoRotate(turret, coprocessor, driveBase));
-    //REMOVE THE LINE BELOW---------TESTINGONLY
-    // driveBase.resetOdometry(new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, 8.6868, Rotation2d.fromDegrees(180)));
+    // MustangScheduler.getInstance().setDefaultCommand(turret, new
+    // AutoRotate(turret, coprocessor, driveBase));
+    // REMOVE THE LINE BELOW---------TESTINGONLY
+    // driveBase.resetOdometry(new
+    // Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, 8.6868,
+    // Rotation2d.fromDegrees(180)));
   }
 
   /**
@@ -202,29 +218,29 @@ public class RobotContainer {
    */
   public MustangCommand getAutonomousCommand() {
     Pose2d leftStart = new Pose2d(
-      FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS + 
-      (FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS - FieldConstants.EDGE_OF_BASELINE), 
-      FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(0));
-    Pose2d centerStart = new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS, 
-                 FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180));
-    Pose2d rightStart = new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, 
-                 FieldConstants.EDGE_OF_BASELINE,
-                 Rotation2d.fromDegrees(180));
+        FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS
+            + (FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS - FieldConstants.EDGE_OF_BASELINE),
+        FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(0));
+    Pose2d centerStart = new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS,
+        FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180));
+    Pose2d rightStart = new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS,
+        FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180));
     return
-      //autoSelector.getSelectedRoutine();
+    // autoSelector.getSelectedRoutine();
 
-      // CENTER: SHOOT THEN DRIVE BACK (AWAY FROM WALL)
-      // new ShootFromAngleThenTimeDrive(centerStart, 0, 0, 0.3, driveBase, intake, conveyor, shooter, indexer, turret);
+    // CENTER: SHOOT THEN DRIVE BACK (AWAY FROM WALL)
+    // new ShootFromAngleThenTimeDrive(centerStart, 0, 0, 0.3, driveBase, intake,
+    // conveyor, shooter, indexer, turret);
 
-      // CENTER: SHOOT THEN DRIVE TOWARDS STATION WALL (PUSH)
-      // new ShootFromAngleThenTimeDrive(centerStart, 0, 0, -0.7, driveBase, intake, conveyor, shooter, indexer, turret);
+    // CENTER: SHOOT THEN DRIVE TOWARDS STATION WALL (PUSH)
+    // new ShootFromAngleThenTimeDrive(centerStart, 0, 0, -0.7, driveBase, intake,
+    // conveyor, shooter, indexer, turret);
 
-      // SHOOT THEN GO DOWN TRENCH
-      new ToTrenchRunAndShoot(-25, driveBase, intake, conveyor, indexer, turret, shooter);
-}
+    // SHOOT THEN GO DOWN TRENCH
+    new ToTrenchRunAndShoot(-25, driveBase, intake, conveyor, indexer, turret, shooter);
+  }
 
-
-  public static void autonomousInit(){
+  public static void autonomousInit() {
     indexer.reset();
     // 3 balls, in set positions, preloaded for auto
     indexer.setChamberStatesForMatchInit();
@@ -237,8 +253,8 @@ public class RobotContainer {
   public static void teleopInit() {
     indexer.reset();
     indexer.setRotatorMode(false); // indexer to brake mode
-    driveBase.resetOdometry(new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS, 
-    FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
+    driveBase.resetOdometry(new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS,
+        FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
     zeroSubsystemPositions();
     driveBase.setTeleopRampRate();
     driveBase.initDefaultCommand();
@@ -248,12 +264,14 @@ public class RobotContainer {
     turret.initDefaultCommand();
     coprocessor.turnOnLEDs();
 
-    //REMOVE THE LINE BELOW ---- TESTINGOJYL
-    // driveBase.resetOdometry(new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, 8.6868, Rotation2d.fromDegrees(180)));
+    // REMOVE THE LINE BELOW ---- TESTINGOJYL
+    // driveBase.resetOdometry(new
+    // Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, 8.6868,
+    // Rotation2d.fromDegrees(180)));
     // MustangScheduler.getInstance().schedule(new RotateToAngle(turret, -180));
   }
 
-  public static void disabled(){
+  public static void disabled() {
     indexer.setRotatorMode(true); // indexer to coast mode
     coprocessor.turnOffLEDs();
   }
@@ -271,11 +289,11 @@ public class RobotContainer {
     notifyDriverController(1.0, 0.3);
   }
 
-  public static void rumbleDriverController(double power, double time){
+  public static void rumbleDriverController(double power, double time) {
     oi.rumbleDriverController(power, time);
   }
 
-  public static void notifyDriverController(double power, double time){
+  public static void notifyDriverController(double power, double time) {
     oi.notifyDriverController(power, time);
   }
 
