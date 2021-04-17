@@ -92,9 +92,10 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
                 new RotateTurret(turret, driveBase, coprocessor),
                 // Roll intake out and shoot
                 new EmptyRevolver(indexer),
-                
-                new IntakeBallToIndexer(intake, conveyor, indexer),
-                getTrajectoryFollowerCommand(trajectory, driveBase)
+                new ParallelCommandGroup(
+                    new IntakeBallToIndexer(intake, conveyor, indexer),
+                    getTrajectoryFollowerCommand(trajectory, driveBase)
+                )
         );
     }
 
