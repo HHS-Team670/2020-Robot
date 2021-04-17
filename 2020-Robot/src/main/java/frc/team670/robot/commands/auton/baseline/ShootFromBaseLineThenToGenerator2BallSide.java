@@ -10,6 +10,7 @@ import frc.team670.paths.left.Left2BS;
 import frc.team670.paths.center.Center2BS;
 import frc.team670.paths.right.Right2BS;
 import frc.team670.robot.commands.MustangCommand;
+import frc.team670.robot.commands.indexer.EmptyRevolver;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.Shoot;
@@ -76,16 +77,12 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
                 driveBase.resetOdometry(trajectory.getStartingPose());
 
                 addCommands(
-                        new ParallelCommandGroup(
-                                new StartShooterByDistance(shooter, driveBase),
-                                new RotateTurret(turret, driveBase, coprocessor)
-                        ),
+                        new StartShooterByDistance(shooter, driveBase),
+                        new RotateTurret(turret, driveBase, coprocessor),
                          
-                        new ParallelCommandGroup(
-                                new Shoot(shooter), 
-                                new SendAllBalls(indexer)
-                        ),
-
+                        
+                        new Shoot(shooter),
+                        new EmptyRevolver(indexer),
                         new ParallelCommandGroup (
                                 getTrajectoryFollowerCommand(trajectory, driveBase),
                                 new IntakeBallToIndexer(intake, conveyor, indexer)       

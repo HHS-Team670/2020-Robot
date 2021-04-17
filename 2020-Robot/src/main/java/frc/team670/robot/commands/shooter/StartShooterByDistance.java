@@ -37,8 +37,10 @@ public class StartShooterByDistance extends CommandBase implements MustangComman
         healthReqs.put(shooter, HealthState.GREEN);
     }
 
+
     @Override
     public void initialize() {
+        // TODO: switch out for vision speed calculation
         double currentX = driveBase.getPose().getTranslation().getX();
         double currentY = driveBase.getPose().getTranslation().getY();
         double distanceToTarget = Math.sqrt(
