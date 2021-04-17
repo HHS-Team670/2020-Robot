@@ -159,6 +159,7 @@ public class RamseteCommand extends CommandBase {
 
   @Override
   public void execute() {
+
     double curTime = m_timer.get();
     double dt = curTime - m_prevTime;
 
