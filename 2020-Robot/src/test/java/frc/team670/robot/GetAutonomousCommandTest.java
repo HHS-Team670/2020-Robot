@@ -24,7 +24,7 @@ public class GetAutonomousCommandTest {
   public void testGetAutonomousCommand() throws Exception{
     //MustangCommand autonomousCommand = RobotContainer.getAutonomousCommand();
 
-    ShootFromBaseLineThenToGenerator2BallSide command = new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.CENTER, mock(DriveBase.class), mock(Intake.class), mock(Conveyor.class), mock(Shooter.class), mock(Indexer.class), mock(Turret.class), mock(MustangCoprocessor.class));
+    // ShootFromBaseLineThenToGenerator2BallSide command = new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.CENTER, mock(DriveBase.class), mock(Intake.class), mock(Conveyor.class), mock(Shooter.class), mock(Indexer.class), mock(Turret.class), mock(MustangCoprocessor.class));
 
 
   }

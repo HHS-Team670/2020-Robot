@@ -34,7 +34,6 @@ public interface MustangCommand{
         RobotConstants.kDDriveVel);
         PIDController rightPIDController = new PIDController(RobotConstants.kPDriveVel, RobotConstants.kIDriveVel,
         RobotConstants.kDDriveVel);
-        // TODO change this: should return cmd group that zeros and then follows path
         path.reset();
         return new RamseteCommand(path.getTrajectory(), driveBase::getPose,
             new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
