@@ -599,7 +599,13 @@ public class DriveBase extends MustangSubsystemBase {
    * @param rightVoltage set right voltage
    */
   public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
-    tankDrive(leftVoltage / RobotController.getBatteryVoltage(), rightVoltage / RobotController.getBatteryVoltage());
+    for(SparkMAXLite leftMotor : getLeftControllers()){
+      leftMotor.setVoltage(leftVoltage);
+    }
+    for(SparkMAXLite rightMotor : getLeftControllers()){
+      rightMotor.setVoltage(rightVoltage);
+    }
+    driveTrain.feed();
   }
 
   /**
