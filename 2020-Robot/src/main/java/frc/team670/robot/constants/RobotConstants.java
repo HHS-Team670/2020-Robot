@@ -42,12 +42,12 @@ public class RobotConstants {
     // Talon PID Constants
     public static final int kTimeoutMs = 0;
 
-    public static final double ksVolts = 0.204;
-    public static final double kvVoltSecondsPerMeter = 2.17;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.533;
+    public static final double ksVolts = 0.208;
+    public static final double kvVoltSecondsPerMeter = 2.2;
+    public static final double kaVoltSecondsSquaredPerMeter = 0.578;
 
     // "WHEEL_BASE" is really track width
-    public static final double kTrackwidthMeters = 0.691;
+    public static final double kTrackwidthMeters = 0.702;
 
     // VISION Constants
 
@@ -57,14 +57,14 @@ public class RobotConstants {
 
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
             kTrackwidthMeters);
-    public static final double kPDriveVel = 4;
+    public static final double kPDriveVel = 2.7;
     public static final double kIDriveVel = 0.00;
     public static final double kDDriveVel = 0.0;
     public static final double kMaxSpeedInchesPerSecond = 12;
     public static final double kMaxAccelerationInchesPerSecondSquared = 12;
 
-    public static final double kMaxSpeedMetersPerSecond = 0.305;// 1; //0.305;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 0.305;// 1; //0.305;
+    public static final double kMaxSpeedMetersPerSecond = 1.22;// 1; //0.305;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 1.22;// 1; //0.305;
 
     public static final DifferentialDriveKinematicsConstraint kAutoPathConstraints = new DifferentialDriveKinematicsConstraint(
             kDriveKinematics, kMaxSpeedMetersPerSecond);

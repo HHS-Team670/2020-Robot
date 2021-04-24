@@ -69,7 +69,7 @@ public interface MustangCommand{
             // Add kinematics to ensure max speed is actually obeyed
             .setKinematics(RobotConstants.kDriveKinematics)
             // Apply the voltage constraint
-            .addConstraint(RobotConstants.kAutoPathConstraints)
+            // .addConstraint(RobotConstants.kAutoPathConstraints)
             .addConstraint(autoVoltageConstraint);
 
     // An example trajectory to follow.  All units in meters.

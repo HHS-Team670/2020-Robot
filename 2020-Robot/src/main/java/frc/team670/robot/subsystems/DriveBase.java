@@ -81,6 +81,11 @@ public class DriveBase extends MustangSubsystemBase {
     right1Encoder.setVelocityConversionFactor(sparkMaxVelocityConversionFactor);
     right2Encoder.setVelocityConversionFactor(sparkMaxVelocityConversionFactor);
 
+    left1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
+    left2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION); // Do not invert for right side
+    right1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
+    right2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
+
     allMotors.addAll(leftControllers);
     allMotors.addAll(rightControllers);
 
@@ -602,7 +607,7 @@ public class DriveBase extends MustangSubsystemBase {
     for(SparkMAXLite leftMotor : getLeftControllers()){
       leftMotor.setVoltage(leftVoltage);
     }
-    for(SparkMAXLite rightMotor : getLeftControllers()){
+    for(SparkMAXLite rightMotor : getRightControllers()){
       rightMotor.setVoltage(rightVoltage);
     }
     driveTrain.feed();
