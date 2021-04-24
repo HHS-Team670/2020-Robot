@@ -1,6 +1,7 @@
 package frc.team670.robot.constants;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 
 public class RobotConstants {
@@ -57,9 +58,12 @@ public class RobotConstants {
 
     public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
             kTrackwidthMeters);
-    public static final double kPDriveVel = 2.7;
-    public static final double kIDriveVel = 0.00;
-    public static final double kDDriveVel = 0.0;
+    public static final double leftKPDriveVel = 2.7;
+    public static final double leftKIDriveVel = 0.00;
+    public static final double leftKDDriveVel = 0.0;
+    public static final double rightKPDriveVel = 2;
+    public static final double rightKIDriveVel = 0.00;
+    public static final double rightKDDriveVel = 0.0;
     public static final double kMaxSpeedInchesPerSecond = 12;
     public static final double kMaxAccelerationInchesPerSecondSquared = 12;
 

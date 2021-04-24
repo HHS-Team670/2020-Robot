@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
@@ -78,8 +79,8 @@ public interface MustangCommand{
         new Pose2d(0, 0, new Rotation2d(0)),
         // Pass through these two interior waypoints, making an 's' curve path
         List.of(
-            new Translation2d(1, 1),
-            new Translation2d(2, -1)
+            new Translation2d(1, 0),
+            new Translation2d(2, -0)
         ),
         // End 3 meters straight ahead of where we started, facing forward
         new Pose2d(3, 0, new Rotation2d(0)),
@@ -96,8 +97,8 @@ public interface MustangCommand{
                                    RobotConstants.kaVoltSecondsSquaredPerMeter),
         RobotConstants.kDriveKinematics,
         driveBase::getWheelSpeeds,
-        new PIDController(RobotConstants.kPDriveVel, RobotConstants.kIDriveVel, RobotConstants.kDDriveVel),
-        new PIDController(RobotConstants.kPDriveVel, RobotConstants.kIDriveVel, RobotConstants.kDDriveVel),
+        new PIDController(RobotConstants.leftKPDriveVel, RobotConstants.leftKIDriveVel, RobotConstants.leftKDDriveVel),
+        new PIDController(SmartDashboard.getNumber("rightkP", 0), RobotConstants.rightKIDriveVel, SmartDashboard.getNumber("rightKD", 0)),
         // RamseteCommand passes volts to the callback
         driveBase::tankDriveVoltage,
         driveBase
