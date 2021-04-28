@@ -46,7 +46,7 @@ public class Robot extends TimedRobot {
     RobotContainer.checkSubsystemsHealth();
     timer = new Timer();
     timer.start();
-
+    m_robotContainer.robotInit();
     MustangScheduler.getInstance();
   }
 

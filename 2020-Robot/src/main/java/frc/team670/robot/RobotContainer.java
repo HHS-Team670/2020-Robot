@@ -214,6 +214,9 @@ public class RobotContainer {
     // MustangScheduler.getInstance().setDefaultCommand(turret, new AutoRotate(turret, coprocessor, driveBase));
     //REMOVE THE LINE BELOW---------TESTINGONLY
     // driveBase.resetOdometry(new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, 8.6868, Rotation2d.fromDegrees(180)));
+    SmartDashboard.putNumber("leftKP", 0.00);
+    SmartDashboard.putNumber("leftKD", 0.00);
+    
     SmartDashboard.putNumber("rightKP", 0.00);
     SmartDashboard.putNumber("rightKD", 0.00);
   }

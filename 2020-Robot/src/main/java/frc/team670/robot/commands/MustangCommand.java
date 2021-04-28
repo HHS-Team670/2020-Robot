@@ -80,7 +80,7 @@ public interface MustangCommand{
         // Pass through these two interior waypoints, making an 's' curve path
         List.of(
             new Translation2d(1, 0),
-            new Translation2d(2, -0)
+            new Translation2d(2, 0)
         ),
         // End 3 meters straight ahead of where we started, facing forward
         new Pose2d(3, 0, new Rotation2d(0)),
@@ -97,8 +97,8 @@ public interface MustangCommand{
                                    RobotConstants.kaVoltSecondsSquaredPerMeter),
         RobotConstants.kDriveKinematics,
         driveBase::getWheelSpeeds,
-        new PIDController(RobotConstants.leftKPDriveVel, RobotConstants.leftKIDriveVel, RobotConstants.leftKDDriveVel),
-        new PIDController(SmartDashboard.getNumber("rightkP", 0), RobotConstants.rightKIDriveVel, SmartDashboard.getNumber("rightKD", 0)),
+        new PIDController(SmartDashboard.getNumber("leftKP", 0), RobotConstants.leftKIDriveVel, SmartDashboard.getNumber("leftKD", 0)),
+        new PIDController(SmartDashboard.getNumber("rightKP", 0), RobotConstants.rightKIDriveVel, SmartDashboard.getNumber("rightKD", 0)),
         // RamseteCommand passes volts to the callback
         driveBase::tankDriveVoltage,
         driveBase
