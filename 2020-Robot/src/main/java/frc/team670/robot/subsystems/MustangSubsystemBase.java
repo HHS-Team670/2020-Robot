@@ -1,7 +1,5 @@
 package frc.team670.robot.subsystems;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 import com.revrobotics.CANError;
@@ -11,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team670.robot.RobotContainer;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.utils.MustangNotifications;

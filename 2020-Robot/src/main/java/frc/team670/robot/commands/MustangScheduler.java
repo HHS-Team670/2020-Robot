@@ -160,8 +160,12 @@ public class MustangScheduler {
     }
     
     public void scheduleOrCancel (CommandBase mustangCommand) {
-    	if (RobotContainer.getDriverController().getAButton()) {
+    	if (RobotContainer.getDriverController().getBButton()) {
     		scheduler.schedule(mustangCommand);
         }
+    }
+
+    public void unregisterSubsystem(MustangSubsystemBase... subsystems){
+        scheduler.unregisterSubsystem(subsystems);
     }
 }
