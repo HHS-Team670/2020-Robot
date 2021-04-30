@@ -39,74 +39,78 @@ public interface MustangCommand{
      * @return A RamseteCommand which will drive the given trajectory
      */
     default RamseteCommand getTrajectoryFollowerCommand(Path path, DriveBase driveBase){
-        PIDController leftPIDController = new PIDController(SmartDashboard.getNumber("leftkP", 0), RobotConstants.leftKIDriveVel, SmartDashboard.getNumber("leftKD", 0));
-        PIDController rightPIDController = new PIDController(SmartDashboard.getNumber("rightkP", 0), RobotConstants.rightKIDriveVel, SmartDashboard.getNumber("rightKD", 0));
+        // PIDController leftPIDController = new PIDController(SmartDashboard.getNumber("leftkP", 0), RobotConstants.leftKIDriveVel, SmartDashboard.getNumber("leftKD", 0));
+        // PIDController rightPIDController = new PIDController(SmartDashboard.getNumber("rightkP", 0), RobotConstants.rightKIDriveVel, SmartDashboard.getNumber("rightKD", 0));
         
-        // TODO change this: should return cmd group that zeros and then follows path
-        path.reset();
-        return new RamseteCommand(path.getTrajectory(), driveBase::getPose,
-            new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
-            new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
-                RobotConstants.kaVoltSecondsSquaredPerMeter),
-            RobotConstants.kDriveKinematics, driveBase::getWheelSpeeds, leftPIDController, rightPIDController,
-            // RamseteCommand passes volts to the callback
-            driveBase::tankDriveVoltage, driveBase);
+        // // TODO change this: should return cmd group that zeros and then follows path
+        // path.reset();
+        // return new RamseteCommand(path.getTrajectory(), driveBase::getPose,
+        //     new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
+        //     new SimpleMotorFeedforward(RobotConstants.ksVolts, RobotConstants.kvVoltSecondsPerMeter,
+        //         RobotConstants.kaVoltSecondsSquaredPerMeter),
+        //     RobotConstants.kDriveKinematics, driveBase::getWheelSpeeds, leftPIDController, rightPIDController,
+        //     // RamseteCommand passes volts to the callback
+        //     driveBase::tankDriveVoltage, driveBase);
 
-    // // public Command getAutonomousCommand() {
-    // // Create a voltage constraint to ensure we don't accelerate too fast
-    // DifferentialDriveVoltageConstraint autoVoltageConstraint =
-    //     new DifferentialDriveVoltageConstraint(
-    //         new SimpleMotorFeedforward(RobotConstants.ksVolts,
-    //                                    RobotConstants.kvVoltSecondsPerMeter,
-    //                                    RobotConstants.kaVoltSecondsSquaredPerMeter),
-    //         RobotConstants.kDriveKinematics,
-    //         10);
+     //public Command getAutonomousCommand() {
+    // Create a voltage constraint to ensure we don't accelerate too fast
+    DifferentialDriveVoltageConstraint autoVoltageConstraint =
+        new DifferentialDriveVoltageConstraint(
+            new SimpleMotorFeedforward(RobotConstants.ksVolts,
+                                       RobotConstants.kvVoltSecondsPerMeter,
+                                       RobotConstants.kaVoltSecondsSquaredPerMeter),
+            RobotConstants.kDriveKinematics,
+            10);
 
-    // // Create config for trajectory
-    // TrajectoryConfig config =
-    //     new TrajectoryConfig(RobotConstants.kMaxSpeedMetersPerSecond,
-    //                          RobotConstants.kMaxAccelerationMetersPerSecondSquared)
-    //         // Add kinematics to ensure max speed is actually obeyed
-    //         .setKinematics(RobotConstants.kDriveKinematics)
-    //         // Apply the voltage constraint
-    //         // .addConstraint(RobotConstants.kAutoPathConstraints)
-    //         .addConstraint(autoVoltageConstraint);
+    // Create config for trajectory
+    TrajectoryConfig config =
+        new TrajectoryConfig(RobotConstants.kMaxSpeedMetersPerSecond,
+                             RobotConstants.kMaxAccelerationMetersPerSecondSquared)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(RobotConstants.kDriveKinematics)
+            // Apply the voltage constraint
+            // .addConstraint(RobotConstants.kAutoPathConstraints)
+            .addConstraint(autoVoltageConstraint);
 
-    // // An example trajectory to follow.  All units in meters.
-    // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-    //     // Start at the origin facing the +X direction
-    //     new Pose2d(0, 0, new Rotation2d(0)),
-    //     // Pass through these two interior waypoints, making an 's' curve path
-    //     List.of(
-    //         new Translation2d(1, 0),
-    //         new Translation2d(2, -0)
-    //     ),
-    //     // End 3 meters straight ahead of where we started, facing forward
-    //     new Pose2d(3, 0, new Rotation2d(0)),
-    //     // Pass config
-    //     config
-    // );
+    // An example trajectory to follow.  All units in meters.
+    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+        // Start at the origin facing the +X direction
+        new Pose2d(0, 0, new Rotation2d(0)),
+        // Pass through these two interior waypoints, making an 's' curve path
+        List.of(
+            new Translation2d(1, 0),
+            new Translation2d(2, -0),
+            new Translation2d(3, -0),
+            new Translation2d(4, -0),
+            new Translation2d(5, -0)
 
-    // RamseteCommand ramseteCommand = new RamseteCommand(
-    //     exampleTrajectory,
-    //     driveBase::getPose,
-    //     new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
-    //     new SimpleMotorFeedforward(RobotConstants.ksVolts,
-    //                                RobotConstants.kvVoltSecondsPerMeter,
-    //                                RobotConstants.kaVoltSecondsSquaredPerMeter),
-    //     RobotConstants.kDriveKinematics,
-    //     driveBase::getWheelSpeeds,
-    //     new PIDController(RobotConstants.leftKPDriveVel, RobotConstants.leftKIDriveVel, RobotConstants.leftKDDriveVel),
-    //     new PIDController(SmartDashboard.getNumber("rightkP", 0), RobotConstants.rightKIDriveVel, SmartDashboard.getNumber("rightKD", 0)),
-    //     // RamseteCommand passes volts to the callback
-    //     driveBase::tankDriveVoltage,
-    //     driveBase
-    // );
+        ),
+        // End 3 meters straight ahead of where we started, facing forward
+        new Pose2d(6, 0, new Rotation2d(0)),
+        // Pass config
+        config
+    );
 
-    // // Reset odometry to the starting pose of the trajectory.
-    // driveBase.resetOdometry(exampleTrajectory.getInitialPose());
+    RamseteCommand ramseteCommand = new RamseteCommand(
+        exampleTrajectory,
+        driveBase::getPose,
+        new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
+        new SimpleMotorFeedforward(RobotConstants.ksVolts,
+                                   RobotConstants.kvVoltSecondsPerMeter,
+                                   RobotConstants.kaVoltSecondsSquaredPerMeter),
+        RobotConstants.kDriveKinematics,
+        driveBase::getWheelSpeeds,
+        new PIDController(SmartDashboard.getNumber("leftkP", 0), RobotConstants.leftKIDriveVel, SmartDashboard.getNumber("leftKD", 0)),
+        new PIDController(SmartDashboard.getNumber("rightkP", 0), RobotConstants.rightKIDriveVel, SmartDashboard.getNumber("rightKD", 0)),
+        // RamseteCommand passes volts to the callback
+        driveBase::tankDriveVoltage,
+        driveBase
+    );
 
-    // // Run path following command, then stop at the end.
-    // return ramseteCommand;
+    // Reset odometry to the starting pose of the trajectory.
+    driveBase.resetOdometry(exampleTrajectory.getInitialPose());
+
+    // Run path following command, then stop at the end.
+    return ramseteCommand;
   }
     }

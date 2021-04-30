@@ -61,7 +61,11 @@ public class RobotConstants {
     public static final double leftKPDriveVel = 2.7;
     public static final double leftKIDriveVel = 0.00;
     public static final double leftKDDriveVel = 0.0;
-    public static final double rightKPDriveVel = 0.9;
+
+
+
+
+    public static final double rightKPDriveVel = 0.09;
     public static final double rightKIDriveVel = 0.00;
     public static final double rightKDDriveVel = 0.0;
     public static final double kMaxSpeedInchesPerSecond = 12;
