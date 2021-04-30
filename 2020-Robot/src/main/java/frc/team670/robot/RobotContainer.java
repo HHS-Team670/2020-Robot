@@ -228,7 +228,7 @@ public class RobotContainer {
    */
   public static MustangCommand getAutonomousCommand() {
    
-    return new ShootFromBaseLineThenToTrench(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+    return new ShootThenBack(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
     
   }
 
