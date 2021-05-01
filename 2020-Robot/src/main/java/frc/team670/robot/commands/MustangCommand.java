@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
@@ -92,10 +93,19 @@ public interface MustangCommand{
         config
     );
 
+    // Paste this variable in
+    RamseteController disabledRamsete = new RamseteController() {
+    @Override
+    public ChassisSpeeds calculate(Pose2d currentPose, Pose2d poseRef, double linearVelocityRefMeters,
+            double angularVelocityRefRadiansPerSecond) {
+        return new ChassisSpeeds(linearVelocityRefMeters, 0.0, angularVelocityRefRadiansPerSecond);
+    }
+    };
+
     RamseteCommand ramseteCommand = new RamseteCommand(
         exampleTrajectory,
         driveBase::getPose,
-        new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
+        disabledRamsete,
         new SimpleMotorFeedforward(RobotConstants.leftKsVolts,
                                    RobotConstants.leftKvVoltSecondsPerMeter,
                                    RobotConstants.leftKaVoltSecondsSquaredPerMeter
