@@ -1,13 +1,13 @@
 package frc.team670.robot.commands.turret;
 
-import frc.team670.robot.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
-import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.utils.Logger;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.subsystems.Turret;
 
 import java.util.HashMap;
