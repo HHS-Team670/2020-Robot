@@ -87,7 +87,7 @@ public interface MustangCommand{
             new Translation2d(5, -0)
 
         ),
-        // End 3 meters straight ahead of where we started, facing forward
+        // End 6 meters straight ahead of where we started, facing forward
         new Pose2d(6, 0, new Rotation2d(0)),
         // Pass config
         config
@@ -106,13 +106,20 @@ public interface MustangCommand{
         exampleTrajectory,
         driveBase::getPose,
         disabledRamsete,
-        new SimpleMotorFeedforward(RobotConstants.leftKsVolts,
-                                   RobotConstants.leftKvVoltSecondsPerMeter,
-                                   RobotConstants.leftKaVoltSecondsSquaredPerMeter
+        new SimpleMotorFeedforward(//RobotConstants.leftKsVolts,
+                                    SmartDashboard.getNumber("leftKs", 0),
+                                    SmartDashboard.getNumber("leftKv", 0),
+                                    SmartDashboard.getNumber("leftKa", 0)
+                                   //RobotConstants.leftKvVoltSecondsPerMeter,
+                                   //RobotConstants.leftKaVoltSecondsSquaredPerMeter
                                    ),
-        new SimpleMotorFeedforward(RobotConstants.rightKsVolts,
-                                   RobotConstants.rightKvVoltSecondsPerMeter,
-                                   RobotConstants.rightKaVoltSecondsSquaredPerMeter
+        new SimpleMotorFeedforward(
+                                    SmartDashboard.getNumber("rightKs", 0),
+                                    SmartDashboard.getNumber("rightKv", 0),
+                                    SmartDashboard.getNumber("rightKa", 0)    
+                                //     RobotConstants.rightKsVolts,
+                                //    RobotConstants.rightKvVoltSecondsPerMeter,
+                                //    RobotConstants.rightKaVoltSecondsSquaredPerMeter
                                    ),
         RobotConstants.kDriveKinematics,
         driveBase::getWheelSpeeds,

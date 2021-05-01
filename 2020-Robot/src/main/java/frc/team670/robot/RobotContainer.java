@@ -219,6 +219,15 @@ public class RobotContainer {
     
     SmartDashboard.putNumber("rightKP", 0.00);
     SmartDashboard.putNumber("rightKD", 0.00);
+
+    SmartDashboard.putNumber("leftKs", 0.00);
+    SmartDashboard.putNumber("leftKv", 0.00);
+    SmartDashboard.putNumber("leftKa", 0.00);
+
+    SmartDashboard.putNumber("rightKs", 0.00);
+    SmartDashboard.putNumber("rightKv", 0.00);
+    SmartDashboard.putNumber("rightKa", 0.00);
+
   }
 
   /**

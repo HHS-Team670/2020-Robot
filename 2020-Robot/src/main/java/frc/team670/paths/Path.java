@@ -25,7 +25,8 @@ import frc.team670.robot.subsystems.DriveBase;
  */
 public class Path {
 
-    private static final DifferentialDriveVoltageConstraint AUTO_VOLTAGE_CONSTRAINT = getAutoVoltageConstraint();
+    //TODO this only gets the left voltage constraint, make it get both left and right
+    private static final DifferentialDriveVoltageConstraint AUTO_VOLTAGE_CONSTRAINT = getLeftAutoVoltageConstraint();
     private static final TrajectoryConfig CONFIG = getConfig();
     private Trajectory trajectory;
     private DriveBase driveBase;
@@ -70,9 +71,15 @@ public class Path {
         driveBase.resetOdometry(driveBase.getPose());
     }
 
-    private static DifferentialDriveVoltageConstraint getAutoVoltageConstraint() {
-        return new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(RobotConstants.ksVolts,
-                RobotConstants.kvVoltSecondsPerMeter, RobotConstants.kaVoltSecondsSquaredPerMeter),
+    private static DifferentialDriveVoltageConstraint getLeftAutoVoltageConstraint() {
+        return new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(RobotConstants.leftKsVolts,
+                RobotConstants.leftKvVoltSecondsPerMeter, RobotConstants.leftKaVoltSecondsSquaredPerMeter),
+                RobotConstants.kDriveKinematics, 10);
+    }
+
+    private static DifferentialDriveVoltageConstraint getRightAutoVoltageConstraint() {
+        return new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(RobotConstants.rightKsVolts,
+                RobotConstants.rightKvVoltSecondsPerMeter, RobotConstants.rightKaVoltSecondsSquaredPerMeter),
                 RobotConstants.kDriveKinematics, 10);
     }
 

@@ -75,7 +75,7 @@ public class RobotConstants {
     public static final double kMaxSpeedInchesPerSecond = 12;
     public static final double kMaxAccelerationInchesPerSecondSquared = 12;
 
-    public static final double kMaxSpeedMetersPerSecond = 1.22;// 1; //0.305;
+    public static final double kMaxSpeedMetersPerSecond = 1.5; //0.61;// 1.22;// 1; //0.305;
     public static final double kMaxAccelerationMetersPerSecondSquared = 1.22;// 1; //0.305;
 
     public static final DifferentialDriveKinematicsConstraint kAutoPathConstraints = new DifferentialDriveKinematicsConstraint(
