@@ -43,9 +43,13 @@ public class RobotConstants {
     // Talon PID Constants
     public static final int kTimeoutMs = 0;
 
-    public static final double ksVolts = 0.208;
-    public static final double kvVoltSecondsPerMeter = 2.2;
-    public static final double kaVoltSecondsSquaredPerMeter = 0.578;
+    public static final double rightKsVolts = 0.208;
+    public static final double rightKvVoltSecondsPerMeter = 2.2;
+    public static final double rightKaVoltSecondsSquaredPerMeter = 0.578;
+
+    public static final double leftKsVolts = 0.208;
+    public static final double leftKvVoltSecondsPerMeter = 2.2;
+    public static final double leftKaVoltSecondsSquaredPerMeter = 0.578;
 
     // "WHEEL_BASE" is really track width
     public static final double kTrackwidthMeters = 0.702;

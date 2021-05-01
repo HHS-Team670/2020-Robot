@@ -46,7 +46,8 @@ public class RamseteCommand extends CommandBase {
   private final Trajectory m_trajectory;
   private final Supplier<Pose2d> m_pose;
   private final RamseteController m_follower;
-  private final SimpleMotorFeedforward m_feedforward;
+  private final SimpleMotorFeedforward m_rightFeedForward;
+  private final SimpleMotorFeedforward m_leftFeedForward;
   private final DifferentialDriveKinematics m_kinematics;
   private final Supplier<DifferentialDriveWheelSpeeds> m_speeds;
   private final PIDController m_leftController;
@@ -64,25 +65,28 @@ public class RamseteCommand extends CommandBase {
    * this
    * is left to the user, since it is not appropriate for paths with nonstationary endstates.
    *
-   * @param trajectory      The trajectory to follow.
-   * @param pose            A function that supplies the robot pose - use one of
-   *                        the odometry classes to provide this.
-   * @param controller      The RAMSETE controller used to follow the trajectory.
-   * @param feedforward     The feedforward to use for the drive.
-   * @param kinematics      The kinematics for the robot drivetrain.
-   * @param wheelSpeeds     A function that supplies the speeds of the left and
-   *                        right sides of the robot drive.
-   * @param leftController  The PIDController for the left side of the robot drive.
-   * @param rightController The PIDController for the right side of the robot drive.
-   * @param outputVolts     A function that consumes the computed left and right
-   *                        outputs (in volts) for the robot drive.
-   * @param requirements    The subsystems to require.
+   * @param trajectory       The trajectory to follow.
+   * @param pose             A function that supplies the robot pose - use one of
+   *                         the odometry classes to provide this.
+   * @param controller       The RAMSETE controller used to follow the trajectory.
+   * @param feedforward      The feedforward to use for the drive.
+   * @param leftFeedForward  The feedforward to use for left motors.
+   * @param rightFeedForward The feedforward to use for right motors.
+   * @param kinematics       The kinematics for the robot drivetrain.
+   * @param wheelSpeeds      A function that supplies the speeds of the left and
+   *                         right sides of the robot drive.
+   * @param leftController   The PIDController for the left side of the robot drive.
+   * @param rightController  The PIDController for the right side of the robot drive.
+   * @param outputVolts      A function that consumes the computed left and right
+   *                         outputs (in volts) for the robot drive.
+   * @param requirements     The subsystems to require.
    */
   @SuppressWarnings("PMD.ExcessiveParameterList")
   public RamseteCommand(Trajectory trajectory,
                         Supplier<Pose2d> pose,
                         RamseteController controller,
-                        SimpleMotorFeedforward feedforward,
+                        SimpleMotorFeedforward leftFeedForward,
+                        SimpleMotorFeedforward rightFeedForward,
                         DifferentialDriveKinematics kinematics,
                         Supplier<DifferentialDriveWheelSpeeds> wheelSpeeds,
                         PIDController leftController,
@@ -92,7 +96,8 @@ public class RamseteCommand extends CommandBase {
     m_trajectory = requireNonNullParam(trajectory, "trajectory", "RamseteCommand");
     m_pose = requireNonNullParam(pose, "pose", "RamseteCommand");
     m_follower = requireNonNullParam(controller, "controller", "RamseteCommand");
-    m_feedforward = feedforward;
+    m_leftFeedForward = leftFeedForward;
+    m_rightFeedForward = rightFeedForward;
     m_kinematics = requireNonNullParam(kinematics, "kinematics", "RamseteCommand");
     m_speeds = requireNonNullParam(wheelSpeeds, "wheelSpeeds", "RamseteCommand");
     m_leftController = requireNonNullParam(leftController, "leftController", "RamseteCommand");
@@ -118,27 +123,27 @@ public class RamseteCommand extends CommandBase {
    *                              wheel speeds.
    * @param requirements          The subsystems to require.
    */
-  public RamseteCommand(Trajectory trajectory,
-                        Supplier<Pose2d> pose,
-                        RamseteController follower,
-                        DifferentialDriveKinematics kinematics,
-                        BiConsumer<Double, Double> outputMetersPerSecond,
-                        Subsystem... requirements) {
-    m_trajectory = requireNonNullParam(trajectory, "trajectory", "RamseteCommand");
-    m_pose = requireNonNullParam(pose, "pose", "RamseteCommand");
-    m_follower = requireNonNullParam(follower, "follower", "RamseteCommand");
-    m_kinematics = requireNonNullParam(kinematics, "kinematics", "RamseteCommand");
-    m_output = requireNonNullParam(outputMetersPerSecond, "output", "RamseteCommand");
+  // public RamseteCommand(Trajectory trajectory,
+  //                       Supplier<Pose2d> pose,
+  //                       RamseteController follower,
+  //                       DifferentialDriveKinematics kinematics,
+  //                       BiConsumer<Double, Double> outputMetersPerSecond,
+  //                       Subsystem... requirements) {
+  //   m_trajectory = requireNonNullParam(trajectory, "trajectory", "RamseteCommand");
+  //   m_pose = requireNonNullParam(pose, "pose", "RamseteCommand");
+  //   m_follower = requireNonNullParam(follower, "follower", "RamseteCommand");
+  //   m_kinematics = requireNonNullParam(kinematics, "kinematics", "RamseteCommand");
+  //   m_output = requireNonNullParam(outputMetersPerSecond, "output", "RamseteCommand");
 
-    m_feedforward = null;
-    m_speeds = null;
-    m_leftController = null;
-    m_rightController = null;
+  //   m_feedforward = null;
+  //   m_speeds = null;
+  //   m_leftController = null;
+  //   m_rightController = null;
 
-    m_usePID = false;
+  //   m_usePID = false;
 
-    addRequirements(requirements);
-  }
+  //   addRequirements(requirements);
+  // }
 
   @Override
   public void initialize() {
@@ -174,11 +179,11 @@ public class RamseteCommand extends CommandBase {
 
     if (m_usePID) {
       double leftFeedforward =
-          m_feedforward.calculate(leftSpeedSetpoint,
+          m_leftFeedForward.calculate(leftSpeedSetpoint,
               (leftSpeedSetpoint - m_prevSpeeds.leftMetersPerSecond) / dt);
 
       double rightFeedforward =
-          m_feedforward.calculate(rightSpeedSetpoint,
+          m_rightFeedForward.calculate(rightSpeedSetpoint,
               (rightSpeedSetpoint - m_prevSpeeds.rightMetersPerSecond) / dt);
 
       leftOutput = leftFeedforward

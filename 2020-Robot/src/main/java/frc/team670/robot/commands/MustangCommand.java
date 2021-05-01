@@ -55,10 +55,11 @@ public interface MustangCommand{
      //public Command getAutonomousCommand() {
     // Create a voltage constraint to ensure we don't accelerate too fast
     DifferentialDriveVoltageConstraint autoVoltageConstraint =
+    // TODO: This uses the left feedforward constants, but applies to all motors... Should change this to reflect all motors
         new DifferentialDriveVoltageConstraint(
-            new SimpleMotorFeedforward(RobotConstants.ksVolts,
-                                       RobotConstants.kvVoltSecondsPerMeter,
-                                       RobotConstants.kaVoltSecondsSquaredPerMeter),
+            new SimpleMotorFeedforward(RobotConstants.leftKsVolts,
+                                       RobotConstants.leftKvVoltSecondsPerMeter,
+                                       RobotConstants.leftKaVoltSecondsSquaredPerMeter),
             RobotConstants.kDriveKinematics,
             10);
 
@@ -95,9 +96,14 @@ public interface MustangCommand{
         exampleTrajectory,
         driveBase::getPose,
         new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
-        new SimpleMotorFeedforward(RobotConstants.ksVolts,
-                                   RobotConstants.kvVoltSecondsPerMeter,
-                                   RobotConstants.kaVoltSecondsSquaredPerMeter),
+        new SimpleMotorFeedforward(RobotConstants.leftKsVolts,
+                                   RobotConstants.leftKvVoltSecondsPerMeter,
+                                   RobotConstants.leftKaVoltSecondsSquaredPerMeter
+                                   ),
+        new SimpleMotorFeedforward(RobotConstants.rightKsVolts,
+                                   RobotConstants.rightKvVoltSecondsPerMeter,
+                                   RobotConstants.rightKaVoltSecondsSquaredPerMeter
+                                   ),
         RobotConstants.kDriveKinematics,
         driveBase::getWheelSpeeds,
         new PIDController(SmartDashboard.getNumber("leftkP", 0), RobotConstants.leftKIDriveVel, SmartDashboard.getNumber("leftKD", 0)),
