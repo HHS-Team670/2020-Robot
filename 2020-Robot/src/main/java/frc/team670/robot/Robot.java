@@ -13,10 +13,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.commands.MustangScheduler;
+import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangScheduler;
 
-import frc.team670.robot.utils.Logger;
+import frc.team670.mustanglib.utils.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the

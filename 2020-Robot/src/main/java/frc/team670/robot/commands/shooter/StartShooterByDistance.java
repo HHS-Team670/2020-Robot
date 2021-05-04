@@ -4,14 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.team670.robot.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
-import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.utils.Logger;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.utils.Logger;
 
 public class StartShooterByDistance extends CommandBase implements MustangCommand {
 

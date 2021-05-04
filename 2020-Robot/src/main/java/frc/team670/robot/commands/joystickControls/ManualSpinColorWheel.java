@@ -8,10 +8,10 @@
 package frc.team670.robot.commands.joystickControls;
 
 import frc.team670.robot.RobotContainer;
-import frc.team670.robot.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.robot.subsystems.ColorWheelSpinner;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
-import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 
 import java.util.Map;
 import java.util.HashMap;

@@ -11,8 +11,9 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
-import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 
 public class CancelAllCommands extends InstantCommand implements MustangCommand {
 

@@ -15,13 +15,14 @@ import com.revrobotics.ControlType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.RobotMap;
-import frc.team670.robot.utils.functions.MathUtils;
-import frc.team670.robot.utils.math.interpolable.InterpolatingDouble;
-import frc.team670.robot.utils.math.interpolable.InterpolatingTreeMap;
-import frc.team670.robot.utils.math.interpolable.LinearRegression;
-import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
-import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
-import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.utils.functions.MathUtils;
+import frc.team670.mustanglib.utils.math.interpolable.InterpolatingDouble;
+import frc.team670.mustanglib.utils.math.interpolable.InterpolatingTreeMap;
+import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
+import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
+import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 
 /**
  * Represents a 2-stage shooter, with 1st stage using a VictorSPX and 2-NEO 2nd

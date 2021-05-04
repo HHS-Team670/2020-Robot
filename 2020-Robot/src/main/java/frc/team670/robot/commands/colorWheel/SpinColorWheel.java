@@ -7,11 +7,11 @@
 
 package frc.team670.robot.commands.colorWheel;
 
-import frc.team670.robot.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.robot.subsystems.ColorWheelSpinner;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
-import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.utils.Logger;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.utils.Logger;
 
 import java.util.Map;
 import java.util.HashMap;

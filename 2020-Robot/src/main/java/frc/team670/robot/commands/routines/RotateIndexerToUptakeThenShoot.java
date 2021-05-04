@@ -5,16 +5,16 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.team670.robot.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.SendOneBallToShoot;
 import frc.team670.robot.commands.indexer.StageOneBallToShoot;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
-import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 
 public class RotateIndexerToUptakeThenShoot extends SequentialCommandGroup implements MustangCommand {
 

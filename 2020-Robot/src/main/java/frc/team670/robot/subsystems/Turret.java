@@ -5,11 +5,11 @@ import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax;
 
-import frc.team670.robot.commands.MustangScheduler;
+import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.robot.commands.joystickControls.JoystickTurret;
 import frc.team670.robot.constants.RobotMap;
-import frc.team670.robot.utils.Logger;
-import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
+import frc.team670.mustanglib.utils.Logger;
+import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 
 public class Turret extends SparkMaxRotatingSubsystem {
 
@@ -224,6 +224,12 @@ public class Turret extends SparkMaxRotatingSubsystem {
     public void initDefaultCommand() {
         MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret(this));
         Logger.consoleLog("Turret defaulted to joystick");
+    }
+
+    @Override
+    public boolean getTimeout() {
+        // TODO Auto-generated method stub
+        return false;
     }
 
 }

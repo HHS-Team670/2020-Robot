@@ -14,11 +14,11 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.RobotMap;
-import frc.team670.robot.dataCollection.sensors.TimeOfFlightSensor;
-import frc.team670.robot.utils.Logger;
-import frc.team670.robot.utils.functions.MathUtils;
-import frc.team670.robot.utils.motorcontroller.MotorConfig;
-import frc.team670.robot.utils.motorcontroller.TalonSRXFactory;
+import frc.team670.mustanglib.dataCollection.sensors.TimeOfFlightSensor;
+import frc.team670.mustanglib.utils.Logger;
+import frc.team670.mustanglib.utils.functions.MathUtils;
+import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
+import frc.team670.mustanglib.utils.motorcontroller.TalonSRXFactory;
 
 /**
  * Represents the ball indexer subsystem, which tracks and stores up to 5 balls.
@@ -715,5 +715,11 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         } else {
             rotator.setIdleMode(IdleMode.kBrake);
         }
+    }
+
+    @Override
+    public boolean getTimeout() {
+        // TODO Auto-generated method stub
+        return false;
     }
 }

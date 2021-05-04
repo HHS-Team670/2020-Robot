@@ -7,9 +7,9 @@
 
 package frc.team670.robot.commands.climb;
 
-import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
-import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Climber;
 
 import java.util.HashMap;

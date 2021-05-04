@@ -21,22 +21,22 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Intake;
-import frc.team670.robot.subsystems.LEDSubsystem;
+import frc.team670.mustanglib.subsystems.LEDSubsystem;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.Climber;
 
-import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.commands.MustangScheduler;
-import frc.team670.robot.commands.auton.AutoSelector;
-import frc.team670.robot.commands.auton.ShootFromAngleThenTimeDrive;
-import frc.team670.robot.commands.auton.ToTrenchRunAndShoot;
-import frc.team670.robot.commands.auton.baseline.ShootThenBack;
+import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangScheduler;
+// import frc.team670.robot.commands.auton.AutoSelector;
+// import frc.team670.robot.commands.auton.ShootFromAngleThenTimeDrive;
+// import frc.team670.robot.commands.auton.ToTrenchRunAndShoot;
+// import frc.team670.robot.commands.auton.baseline.ShootThenBack;
 import frc.team670.robot.commands.climb.ExtendClimber;
 import frc.team670.robot.commands.climb.HookOnBar;
 import frc.team670.robot.commands.climb.Climb;
@@ -64,8 +64,8 @@ import frc.team670.robot.commands.turret.RotateToHome;
 import frc.team670.robot.commands.turret.RotateTurret;
 import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.commands.vision.GetVisionData;
-import frc.team670.robot.utils.MustangController;
-import frc.team670.robot.utils.MustangController.XboxButtons;
+import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.OI;
@@ -99,7 +99,7 @@ public class RobotContainer {
 
   private static OI oi = new OI(driveBase, intake, conveyor, indexer, shooter, climber, turret, coprocessor);
 
-  private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret, coprocessor);
+  // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret, coprocessor);
 
   private static JoystickButton toggleIntake = new JoystickButton(oi.getOperatorController(), 1);
   private static JoystickButton runIntakeIn = new JoystickButton(oi.getOperatorController(), 3);
@@ -210,7 +210,7 @@ public class RobotContainer {
     Pose2d rightStart = new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, 
                  FieldConstants.EDGE_OF_BASELINE,
                  Rotation2d.fromDegrees(180));
-    return
+    return null;
       //autoSelector.getSelectedRoutine();
 
       // CENTER: SHOOT THEN DRIVE BACK (AWAY FROM WALL)
@@ -220,7 +220,7 @@ public class RobotContainer {
       // new ShootFromAngleThenTimeDrive(centerStart, 0, 0, -0.7, driveBase, intake, conveyor, shooter, indexer, turret);
 
       // SHOOT THEN GO DOWN TRENCH
-      new ToTrenchRunAndShoot(-25, driveBase, intake, conveyor, indexer, turret, shooter);
+      // new ToTrenchRunAndShoot(-25, driveBase, intake, conveyor, indexer, turret, shooter);
 }
 
 

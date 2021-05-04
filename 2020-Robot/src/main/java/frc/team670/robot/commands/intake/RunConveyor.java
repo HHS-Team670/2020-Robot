@@ -4,10 +4,10 @@ import java.util.Map;
 import java.util.HashMap;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Conveyor;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 
 public class RunConveyor extends CommandBase implements MustangCommand {
 

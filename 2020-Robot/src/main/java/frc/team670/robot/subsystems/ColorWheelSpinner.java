@@ -1,10 +1,11 @@
 package frc.team670.robot.subsystems;
 
 import frc.team670.robot.constants.RobotMap;
-import frc.team670.robot.dataCollection.sensors.ColorMatcher;
-import frc.team670.robot.utils.motorcontroller.MotorConfig;
-import frc.team670.robot.utils.MustangNotifications;
-import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
+import frc.team670.mustanglib.dataCollection.sensors.ColorMatcher;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
+import frc.team670.mustanglib.utils.MustangNotifications;
+import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 
 /**
  * Represents the subsystem for spinning the control panel/color wheel.

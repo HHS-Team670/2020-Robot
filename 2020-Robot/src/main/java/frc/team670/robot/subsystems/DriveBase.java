@@ -23,23 +23,26 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.team670.mustanglib.commands.MustangScheduler;
-import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeagueDrive.XboxRocketLeagueDrive;
+import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
 import frc.team670.mustanglib.utils.Logger;
+import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.MustangNotifications;
 import frc.team670.mustanglib.utils.functions.MathUtils;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.drivebase.TankDriveBase;
 
 /**
  * Represents a tank drive base.
  * 
  * @author lakshbhambhani, ctychen
  */
-public class DriveBase extends MustangSubsystemBase {
+public class DriveBase extends TankDriveBase {
 
   private SparkMAXLite left1, left2, right1, right2;
   private CANEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
@@ -103,7 +106,7 @@ public class DriveBase extends MustangSubsystemBase {
    * Used to initialized teleop command for the driveBase
    */
   public void initDefaultCommand() {
-    MustangScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive(this));
+    MustangScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive(this, null));
   }
 
   /**
@@ -607,6 +610,72 @@ public class DriveBase extends MustangSubsystemBase {
       }
   }
     return false;
+  }
+
+  @Override
+  public double getLeftPositionTicks() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public double getLeftVelocityTicks() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public MustangController getMustangController() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public double getRightPositionTicks() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public double getRightVelocityTicks() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public double inchesToTicks(double arg0) {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  @Override
+  public boolean isQuickTurnPressed() {
+    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public void setEncodersPositionControl(double arg0, double arg1) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setRampRate(double arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public void setVelocityControl(double arg0, double arg1) {
+    // TODO Auto-generated method stub
+    
+  }
+
+  @Override
+  public double ticksToInches(double arg0) {
+    // TODO Auto-generated method stub
+    return 0;
   }
 
 }
