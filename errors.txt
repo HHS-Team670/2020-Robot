@@ -1,131 +1,8 @@
-Starting a Gradle Daemon, 1 incompatible Daemon could not be reused, use --status for details
-
-> Task :compileJava
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:25: error: cannot find symbol
-import frc.team670.robot.commands.MustangScheduler; --DONE 
-                                 ^
-  symbol:   class MustangScheduler
-  location: package frc.team670.robot.commands
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:26: error: package frc.team670.robot.commands.drive.teleop does not exist
-import frc.team670.robot.commands.drive.teleop.XboxRocketLeagueDrive; --DONE
-                                              ^
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:29: error: package frc.team670.robot.dataCollection.sensors does not exist
-import frc.team670.robot.dataCollection.sensors.NavX; --DONE
-                                               ^
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:30: error: cannot find symbol
-import frc.team670.robot.utils.Logger; --DOne
-                              ^
-  symbol:   class Logger
-  location: package frc.team670.robot.utils
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:31: error: package frc.team670.robot.utils.motorcontroller does not exist
-import frc.team670.robot.utils.motorcontroller.MotorConfig; --DONE
-                                              ^
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:32: error: cannot find symbol
-import frc.team670.robot.utils.MustangNotifications; --DONE
-                              ^
-  symbol:   class MustangNotifications
-  location: package frc.team670.robot.utils
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:33: error: cannot find symbol
-import frc.team670.robot.utils.functions.MathUtils; --DONE
-                                        ^
-  symbol:   class MathUtils
-  location: package frc.team670.robot.utils.functions
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:34: error: package frc.team670.robot.utils.motorcontroller does not exist
-import frc.team670.robot.utils.motorcontroller.SparkMAXFactory; --DONE
-                                              ^
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:35: error: package frc.team670.robot.utils.motorcontroller does not exist
-import frc.team670.robot.utils.motorcontroller.SparkMAXLite; --DONE
-                                              ^
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:42: error: cannot find symbol
-public class DriveBase extends MustangSubsystemBase {
-                               ^
-  symbol: class MustangSubsystemBase
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:44: error: cannot find symbol
-  private SparkMAXLite left1, left2, right1, right2;
-          ^
-  symbol:   class SparkMAXLite
-  location: class DriveBase
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:49: error: cannot find symbol
-  private List<SparkMAXLite> leftControllers, rightControllers;
-               ^
-  symbol:   class SparkMAXLite
-  location: class DriveBase
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:50: error: cannot find symbol
-  private List<SparkMAXLite> allMotors = new ArrayList<SparkMAXLite>();;
-               ^
-  symbol:   class SparkMAXLite
-  location: class DriveBase
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:52: error: cannot find symbol
-  private NavX navXMicro;
-          ^
-  symbol:   class NavX
-  location: class DriveBase
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:115: error: cannot find symbol
-  public HealthState checkHealth() {
-         ^
-  symbol:   class HealthState
-  location: class DriveBase
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:234: error: cannot find symbol
-  private void setMotorsInvert(List<SparkMAXLite> motorGroup, boolean invert) {
-                                    ^
-  symbol:   class SparkMAXLite
-  location: class DriveBase
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:261: error: cannot find symbol
-  public void setMotorsBrakeMode(List<SparkMAXLite> motorGroup, IdleMode mode) {
-                                      ^
-  symbol:   class SparkMAXLite
-  location: class DriveBase
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:412: error: cannot find symbol
-  public List<SparkMAXLite> getLeftControllers() {
-              ^
-  symbol:   class SparkMAXLite
-  location: class DriveBase
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:421: error: cannot find symbol
-  public List<SparkMAXLite> getRightControllers() {
-              ^
-  symbol:   class SparkMAXLite
-  location: class DriveBase
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/DriveBase.java:428: error: cannot find symbol
-  public void setRampRate(List<SparkMAXLite> motors, double rampRate) {
-                               ^
-  symbol:   class SparkMAXLite
-  location: class DriveBase
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/RobotContainer.java:24: error: cannot find symbol
-import frc.team670.robot.subsystems.MustangSubsystemBase;
-                                   ^
-  symbol:   class MustangSubsystemBase
-  location: package frc.team670.robot.subsystems
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/RobotContainer.java:29: error: cannot find symbol
-import frc.team670.robot.subsystems.LEDSubsystem;
-                                   ^
-  symbol:   class LEDSubsystem
-  location: package frc.team670.robot.subsystems
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/RobotContainer.java:34: error: cannot find symbol
-import frc.team670.robot.commands.MustangCommand;
-                                 ^
-  symbol:   class MustangCommand
-  location: package frc.team670.robot.commands
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/RobotContainer.java:35: error: cannot find symbol
-import frc.team670.robot.commands.MustangScheduler;
-                                 ^
-  symbol:   class MustangScheduler
-  location: package frc.team670.robot.commands
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/RobotContainer.java:67: error: cannot find symbol
-import frc.team670.robot.utils.MustangController;
-                              ^
-  symbol:   class MustangController
-  location: package frc.team670.robot.utils
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/RobotContainer.java:68: error: package frc.team670.robot.utils.MustangController does not exist
-import frc.team670.robot.utils.MustangController.XboxButtons;
-                                                ^
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/RobotContainer.java:69: error: package frc.team670.robot.dataCollection does not exist
-import frc.team670.robot.dataCollection.MustangCoprocessor;
-                                       ^
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/RobotContainer.java:85: error: cannot find symbol
-  private static List<MustangSubsystemBase> allSubsystems = new ArrayList<MustangSubsystemBase>();
-                      ^
-  symbol:   class MustangSubsystemBase
-  location: class RobotContainer
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/RobotContainer.java:69: error: cannot find symbol
+import frc.team670.mustanglib.dataCollection.MustangCoprocessor; ???
+                                            ^
+  symbol:   class MustangCoprocessor
+  location: package frc.team670.mustanglib.dataCollection
 /Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/Intake.java:4: error: package frc.team670.robot.utils.motorcontroller.MotorConfig does not exist
 import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
                                                           ^
@@ -261,11 +138,6 @@ import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
 public class Climber extends MustangSubsystemBase {
                              ^
   symbol: class MustangSubsystemBase
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/RobotContainer.java:96: error: cannot find symbol
-  private static LEDSubsystem fancyLights = new LEDSubsystem(RobotMap.LEFT_SIDE_LEDS_PWM, 150);
-                 ^
-  symbol:   class LEDSubsystem
-  location: class RobotContainer
 /Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/RobotContainer.java:98: error: cannot find symbol
   private static MustangCoprocessor coprocessor = new MustangCoprocessor();
                  ^
@@ -299,26 +171,6 @@ import frc.team670.robot.commands.MustangCommand;
 /Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/commands/auton/AutoSelector.java:12: error: package frc.team670.robot.dataCollection does not exist
 import frc.team670.robot.dataCollection.MustangCoprocessor;
                                        ^
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/RobotContainer.java:134: error: cannot find symbol
-  public static void addSubsystem(MustangSubsystemBase... subsystems) {
-                                  ^
-  symbol:   class MustangSubsystemBase
-  location: class RobotContainer
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/RobotContainer.java:203: error: cannot find symbol
-  public MustangCommand getAutonomousCommand() {
-         ^
-  symbol:   class MustangCommand
-  location: class RobotContainer
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/RobotContainer.java:261: error: cannot find symbol
-  public static List<MustangSubsystemBase> getSubsystems() {
-                     ^
-  symbol:   class MustangSubsystemBase
-  location: class RobotContainer
-/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/RobotContainer.java:282: error: cannot find symbol
-  public static MustangController getDriverController() {
-                ^
-  symbol:   class MustangController
-  location: class RobotContainer
 /Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/commands/auton/AutoSelector.java:33: error: cannot find symbol
     private MustangCoprocessor coprocessor;
             ^
@@ -422,13 +274,157 @@ import frc.team670.robot.dataCollection.MustangCoprocessor;
             ^
   symbol:   class TimeOfFlightSensor
   location: class Indexer
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/Indexer.java:575: error: cannot find symbol
+    public HealthState checkHealth() {
+           ^
+  symbol:   class HealthState
+  location: class Indexer
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/Indexer.java:102: error: package MotorConfig does not exist
+        public MotorConfig.Motor_Type getMotorType() {
+                          ^
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/SparkMaxRotatingSubsystem.java:26: error: cannot find symbol
+    protected SparkMAXLite rotator;
+              ^
+  symbol:   class SparkMAXLite
+  location: class SparkMaxRotatingSubsystem
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/SparkMaxRotatingSubsystem.java:262: error: cannot find symbol
+    public SparkMAXLite getRotator() {
+           ^
+  symbol:   class SparkMAXLite
+  location: class SparkMaxRotatingSubsystem
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/Conveyor.java:14: error: cannot find symbol
+    private SparkMAXLite roller;
+            ^
+  symbol:   class SparkMAXLite
+  location: class Conveyor
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/Conveyor.java:50: error: cannot find symbol
+    public HealthState checkHealth() {
+           ^
+  symbol:   class HealthState
+  location: class Conveyor
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/Intake.java:17: error: cannot find symbol
+    private SparkMAXLite roller;
+            ^
+  symbol:   class SparkMAXLite
+  location: class Intake
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/Intake.java:85: error: cannot find symbol
+    public HealthState checkHealth() {
+           ^
+  symbol:   class HealthState
+  location: class Intake
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/Robot.java:16: error: cannot find symbol
+import frc.team670.robot.commands.MustangCommand;
+                                 ^
+  symbol:   class MustangCommand
+  location: package frc.team670.robot.commands
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/Robot.java:17: error: cannot find symbol
+import frc.team670.robot.commands.MustangScheduler;
+                                 ^
+  symbol:   class MustangScheduler
+  location: package frc.team670.robot.commands
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/Robot.java:19: error: cannot find symbol
+import frc.team670.robot.utils.Logger;
+                              ^
+  symbol:   class Logger
+  location: package frc.team670.robot.utils
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/Robot.java:30: error: cannot find symbol
+  private MustangCommand m_autonomousCommand;
+          ^
+  symbol:   class MustangCommand
+  location: class Robot
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/ColorWheelSpinner.java:4: error: package frc.team670.robot.dataCollection.sensors does not exist
+import frc.team670.robot.dataCollection.sensors.ColorMatcher;
+                                               ^
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/ColorWheelSpinner.java:5: error: package frc.team670.robot.utils.motorcontroller does not exist
+import frc.team670.robot.utils.motorcontroller.MotorConfig;
+                                              ^
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/ColorWheelSpinner.java:6: error: cannot find symbol
+import frc.team670.robot.utils.MustangNotifications;
+                              ^
+  symbol:   class MustangNotifications
+  location: package frc.team670.robot.utils
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/ColorWheelSpinner.java:7: error: package frc.team670.robot.utils.motorcontroller does not exist
+import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
+                                              ^
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/ColorWheelSpinner.java:14: error: cannot find symbol
+public class ColorWheelSpinner extends MustangSubsystemBase {
+                                       ^
+  symbol: class MustangSubsystemBase
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/ColorWheelSpinner.java:16: error: cannot find symbol
+    private static ColorMatcher colorMatch;
+                   ^
+  symbol:   class ColorMatcher
+  location: class ColorWheelSpinner
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/ColorWheelSpinner.java:17: error: cannot find symbol
+    private SparkMAXLite rotator;
+            ^
+  symbol:   class SparkMAXLite
+  location: class ColorWheelSpinner
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/subsystems/ColorWheelSpinner.java:38: error: cannot find symbol
+    public HealthState checkHealth() {
+           ^
+  symbol:   class HealthState
+  location: class ColorWheelSpinner
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/commands/climb/ExtendClimber.java:10: error: cannot find symbol
+import frc.team670.robot.commands.MustangCommand;
+                                 ^
+  symbol:   class MustangCommand
+  location: package frc.team670.robot.commands
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/commands/climb/ExtendClimber.java:11: error: cannot find symbol
+import frc.team670.robot.subsystems.MustangSubsystemBase;
+                                   ^
+  symbol:   class MustangSubsystemBase
+  location: package frc.team670.robot.subsystems
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/commands/climb/ExtendClimber.java:12: error: package frc.team670.robot.subsystems.MustangSubsystemBase does not exist
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+                                                        ^
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/commands/climb/ExtendClimber.java:24: error: cannot find symbol
+public class ExtendClimber extends CommandBase implements MustangCommand {
+                                                          ^
+  symbol: class MustangCommand
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/commands/climb/ExtendClimber.java:28: error: cannot find symbol
+  private Map<MustangSubsystemBase, HealthState> healthReqs;
+              ^
+  symbol:   class MustangSubsystemBase
+  location: class ExtendClimber
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/commands/climb/ExtendClimber.java:28: error: cannot find symbol
+  private Map<MustangSubsystemBase, HealthState> healthReqs;
+                                    ^
+  symbol:   class HealthState
+  location: class ExtendClimber
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/commands/climb/ExtendClimber.java:64: error: cannot find symbol
+  public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+             ^
+  symbol:   class MustangSubsystemBase
+  location: class ExtendClimber
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/commands/climb/ExtendClimber.java:64: error: cannot find symbol
+  public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
+                                   ^
+  symbol:   class HealthState
+  location: class ExtendClimber
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/commands/climb/HookOnBar.java:7: error: cannot find symbol
+import frc.team670.robot.commands.MustangCommand;
+                                 ^
+  symbol:   class MustangCommand
+  location: package frc.team670.robot.commands
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/commands/climb/HookOnBar.java:8: error: cannot find symbol
+import frc.team670.robot.subsystems.MustangSubsystemBase;
+                                   ^
+  symbol:   class MustangSubsystemBase
+  location: package frc.team670.robot.subsystems
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/commands/climb/HookOnBar.java:9: error: package frc.team670.robot.subsystems.MustangSubsystemBase does not exist
+import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+                                                        ^
+/Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/commands/climb/HookOnBar.java:15: error: cannot find symbol
+public class HookOnBar extends CommandBase implements MustangCommand {
+                                                      ^
+  symbol: class MustangCommand
 /Users/araj/Documents/GitHub/2020-Robot/2020-Robot/src/main/java/frc/team670/robot/utils/functions/SettingUtils.java:24: warning: [removal] PIDController in edu.wpi.first.wpilibj has been deprecated and marked for removal
   public static void releaseController(PIDController controller) {
                                        ^
+Note: Some messages have been simplified; recompile with -Xdiags:verbose to get full output
 100 errors
 1 warning
-
-> Task :compileJava FAILED
 Compilation Error!
 GradleRIO detected this build failed due to a Compile Error (compileJava).
 Check that all your files are saved, then scroll up in this log for more information.
@@ -448,11 +444,5 @@ Deprecated Gradle features were used in this build, making it incompatible with 
 Use '--warning-mode all' to show the individual deprecation warnings.
 See https://docs.gradle.org/6.0.1/userguide/command_line_interface.html#sec:command_line_warnings
 
-BUILD FAILED in 39s
+BUILD FAILED in 2s
 1 actionable task: 1 executed
-
-
-
-Aaditya - up to 150
-Rohan - 150-300
-Johnny - 300 to end
