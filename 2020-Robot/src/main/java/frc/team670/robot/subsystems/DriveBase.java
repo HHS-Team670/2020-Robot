@@ -109,7 +109,7 @@ public class DriveBase extends TankDriveBase {
    * Used to initialized teleop command for the driveBase
    */
   public void initDefaultCommand() {
-    MustangScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive(this, null));
+    MustangScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive(this, mController));
   }
 
   /**
@@ -635,18 +635,17 @@ public class DriveBase extends TankDriveBase {
     mController.getRightBumper();
   }
 
-  // @Override
-  // public void setEncodersPositionControl(double arg0, double arg1) {
-  //   // TODO Auto-generated method stub
+  @Override
+  public void setEncodersPositionControl(double arg0, double arg1) {
+    // TODO Auto-generated method stub
     
-  // }
+  }
 
-  // @Override
-  // public void setRampRate(double arg0) {
-  //   arg0 = RobotConstants.rampRate;
-  //   // TODO Auto-generated method stub
+  @Override
+  public void setRampRate(double arg0) {
+    // TODO Auto-generated method stub
     
-  // }
+  }
 
   @Override
   public void setVelocityControl(double leftSpeed, double rightSpeed) {
