@@ -47,6 +47,8 @@ public class DriveBase extends TankDriveBase {
   private SparkMAXLite left1, left2, right1, right2;
   private CANEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
 
+  private MustangController mController;
+
   private DifferentialDrive driveTrain;
 
   private List<SparkMAXLite> leftControllers, rightControllers;
@@ -217,19 +219,8 @@ public class DriveBase extends TankDriveBase {
     return output;
   }
 
-  /**
-   * Gets the encoder position of the front left motor in ticks.
-   */
-  public int getLeftSparkEncoderPosition() {
-    return (int) (left1.getEncoder().getPosition() / RobotConstants.SPARK_TICKS_PER_ROTATION);
-  }
+  
 
-  /**
-   * Gets the encoder position of the front right motor in ticks.
-   */
-  public int getRightSparkEncoderPosition() {
-    return (int) (right1.getEncoder().getPosition() / RobotConstants.SPARK_TICKS_PER_ROTATION);
-  }
 
   /**
    * Inverts a list of motors.
@@ -354,13 +345,7 @@ public class DriveBase extends TankDriveBase {
         left1.getEncoder().getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION) / 60);
   }
 
-  /**
-   * Returns the velocity of the right side of the drivebase in ticks/second from
-   * the Spark Encoder
-   */
-  public double getLeftSparkEncoderVelocityTicks() {
-    return (left1.getEncoder().getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION / 60);
-  }
+  
 
   /**
    * Returns the velocity of the right side of the drivebase in inches/second from
@@ -371,13 +356,7 @@ public class DriveBase extends TankDriveBase {
         right1.getEncoder().getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION) / 60);
   }
 
-  /**
-   * Returns the velocity of the right side of the drivebase in ticks/second from
-   * the Spark Encoder
-   */
-  public double getRightSparkEncoderVelocityTicks() {
-    return (right1.getEncoder().getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION / 60);
-  }
+  
 
   /**
    * Returns the Spark Max Encoder for the Left Main Motor
@@ -615,30 +594,32 @@ public class DriveBase extends TankDriveBase {
   @Override
   public double getLeftPositionTicks() {
     // TODO Auto-generated method stub
-    return 0;
+    return (int) (left1Encoder.getPosition() / RobotConstants.SPARK_TICKS_PER_ROTATION);
+    ;
   }
 
   @Override
   public double getLeftVelocityTicks() {
-    return 0;
+    return (left1Encoder.getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION / 60);
+    ;
   }
 
   @Override
   public MustangController getMustangController() {
     // TODO Auto-generated method stub
-    return null;
+    return mController;
   }
 
   @Override
   public double getRightPositionTicks() {
     // TODO Auto-generated method stub
-    return 0;
+    return (int) (left1Encoder.getPosition() / RobotConstants.SPARK_TICKS_PER_ROTATION);
   }
 
   @Override
   public double getRightVelocityTicks() {
     // TODO Auto-generated method stub
-    return 0;
+    return (right1Encoder.getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION / 60);
   }
 
   @Override
