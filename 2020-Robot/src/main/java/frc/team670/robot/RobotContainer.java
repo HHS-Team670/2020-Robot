@@ -81,12 +81,14 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
  */
 public class RobotContainer {
 
+
+  private static MustangController mController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
   // The robot's subsystems and commands are defined here...
   private static List<MustangSubsystemBase> allSubsystems = new ArrayList<MustangSubsystemBase>();
 
   private static Solenoid indexerPusherClimberDeploy = new Solenoid(RobotMap.PCMODULE, RobotMap.INDEXER_PUSHER_CLIMBER_DEPLOY);
 
-  private static DriveBase driveBase = new DriveBase();
+  private static DriveBase driveBase = new DriveBase(mController);
   private static Intake intake = new Intake();
   private static Conveyor conveyor = new Conveyor();
   private static Indexer indexer = new Indexer(conveyor, indexerPusherClimberDeploy);
@@ -120,7 +122,6 @@ public class RobotContainer {
   private static JoystickButton xboxToggleShooter = new JoystickButton(oi.getDriverController(), XboxButtons.Y);
   private static JoystickButton xboxRaiseClimber = new JoystickButton(oi.getDriverController(), XboxButtons.LEFT_JOYSTICK_BUTTON);
   private static JoystickButton xboxLowerClimber = new JoystickButton(oi.getDriverController(), XboxButtons.RIGHT_JOYSTICK_BUTTON);
-
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.

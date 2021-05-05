@@ -62,7 +62,8 @@ public class DriveBase extends TankDriveBase {
   private static final double CURRENT_WHEN_AGAINST_BAR = 5; //TODO: Find this
   private int againstBarCount = 0;
 
-  public DriveBase() {
+  public DriveBase(MustangController mustangController) {
+    mController = mustangController;
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
         false, MotorConfig.Motor_Type.NEO);
     rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
@@ -623,43 +624,42 @@ public class DriveBase extends TankDriveBase {
   }
 
   @Override
-  public double inchesToTicks(double arg0) {
+  public double inchesToTicks(double inches) {
     // TODO Auto-generated method stub
-    return arg0 * RobotConstants.DIO_TICKS_PER_INCH;
+    return inches * RobotConstants.DIO_TICKS_PER_INCH;
   }
 
   @Override
   public boolean isQuickTurnPressed() {
     // TODO Auto-generated method stub
-    if (RobotConstants.turning= true){
-      return true;
-    }
-    return false;
+    mController.getRightBumper();
   }
 
+  // @Override
+  // public void setEncodersPositionControl(double arg0, double arg1) {
+  //   // TODO Auto-generated method stub
+    
+  // }
+
+  // @Override
+  // public void setRampRate(double arg0) {
+  //   arg0 = RobotConstants.rampRate;
+  //   // TODO Auto-generated method stub
+    
+  // }
+
   @Override
-  public void setEncodersPositionControl(double arg0, double arg1) {
+  public void setVelocityControl(double leftSpeed, double rightSpeed) {
     // TODO Auto-generated method stub
+    left1.set(leftSpeed);
+    right1.set(rightSpeed);
     
   }
 
   @Override
-  public void setRampRate(double arg0) {
-    arg0 = RobotConstants.rampRate;
+  public double ticksToInches(double ticks) {
     // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void setVelocityControl(double arg0, double arg1) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public double ticksToInches(double arg0) {
-    // TODO Auto-generated method stub
-    return arg0 / RobotConstants.DIO_TICKS_PER_INCH;
+    return ticks / RobotConstants.DIO_TICKS_PER_INCH;
   }
 
 }
