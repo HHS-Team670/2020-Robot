@@ -620,7 +620,6 @@ public class DriveBase extends TankDriveBase {
 
   @Override
   public double getLeftVelocityTicks() {
-    // TODO Auto-generated method stub
     return 0;
   }
 
@@ -645,12 +644,15 @@ public class DriveBase extends TankDriveBase {
   @Override
   public double inchesToTicks(double arg0) {
     // TODO Auto-generated method stub
-    return 0;
+    return arg0 * RobotConstants.DIO_TICKS_PER_INCH;
   }
 
   @Override
   public boolean isQuickTurnPressed() {
     // TODO Auto-generated method stub
+    if (RobotConstants.turning= true){
+      return true;
+    }
     return false;
   }
 
@@ -662,6 +664,7 @@ public class DriveBase extends TankDriveBase {
 
   @Override
   public void setRampRate(double arg0) {
+    arg0 = RobotConstants.rampRate;
     // TODO Auto-generated method stub
     
   }
@@ -675,7 +678,7 @@ public class DriveBase extends TankDriveBase {
   @Override
   public double ticksToInches(double arg0) {
     // TODO Auto-generated method stub
-    return 0;
+    return arg0 / RobotConstants.DIO_TICKS_PER_INCH;
   }
 
 }
