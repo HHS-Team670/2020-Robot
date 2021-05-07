@@ -20,7 +20,7 @@ public class LeftThenBack extends Path{
         super(
                 List.of(
                     new Pose2d(3.194, 4.296, Rotation2d.fromDegrees(0)),
-                    new Pose2d(4.194, 4.296, Rotation2d.fromDegrees(0))
+                    new Pose2d(5.194, 4.296, Rotation2d.fromDegrees(0))
                 ),
             driveBase);
     }

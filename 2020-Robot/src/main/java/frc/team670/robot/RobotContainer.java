@@ -48,6 +48,7 @@ import frc.team670.robot.commands.auton.ShootFromAngleThenTimeDrive;
 import frc.team670.robot.commands.auton.ToTrenchRunAndShoot;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToGenerator2BallSide;
+import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToGenerator3BallMid;
 import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToTrench;
 import frc.team670.robot.commands.auton.baseline.ShootThenBack;
 import frc.team670.robot.commands.climb.ExtendClimber;
@@ -237,7 +238,7 @@ public class RobotContainer {
    */
   public static MustangCommand getAutonomousCommand() {
    
-    return new ShootThenBack(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+    return new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
     
   }
 

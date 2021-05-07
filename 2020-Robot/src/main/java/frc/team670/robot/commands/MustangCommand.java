@@ -43,7 +43,7 @@ public interface MustangCommand{
         // PIDController leftPIDController = new PIDController(SmartDashboard.getNumber("leftkP", 0), RobotConstants.leftKIDriveVel, SmartDashboard.getNumber("leftKD", 0));
         // PIDController rightPIDController = new PIDController(SmartDashboard.getNumber("rightkP", 0), RobotConstants.rightKIDriveVel, SmartDashboard.getNumber("rightKD", 0));
         
-        // // TODO change this: should return cmd group that zeros and then follows path
+        // TODO change this: should return cmd group that zeros and then follows path
         // path.reset();
         // return new RamseteCommand(path.getTrajectory(), driveBase::getPose,
         //     new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
@@ -53,86 +53,98 @@ public interface MustangCommand{
         //     // RamseteCommand passes volts to the callback
         //     driveBase::tankDriveVoltage, driveBase);
 
-     //public Command getAutonomousCommand() {
-    // Create a voltage constraint to ensure we don't accelerate too fast
-    DifferentialDriveVoltageConstraint autoVoltageConstraint =
-    // TODO: This uses the left feedforward constants, but applies to all motors... Should change this to reflect all motors
-        new DifferentialDriveVoltageConstraint(
-            new SimpleMotorFeedforward(RobotConstants.leftKsVolts,
-                                       RobotConstants.leftKvVoltSecondsPerMeter,
-                                       RobotConstants.leftKaVoltSecondsSquaredPerMeter),
-            RobotConstants.kDriveKinematics,
-            10);
+            
 
-    // Create config for trajectory
-    TrajectoryConfig config =
-        new TrajectoryConfig(RobotConstants.kMaxSpeedMetersPerSecond,
-                             RobotConstants.kMaxAccelerationMetersPerSecondSquared)
-            // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(RobotConstants.kDriveKinematics)
-            .setReversed(true)
-            // Apply the voltage constraint
-            // .addConstraint(RobotConstants.kAutoPathConstraints)
-            .addConstraint(autoVoltageConstraint);
+    // //  public Command getAutonomousCommand() {
+    // // Create a voltage constraint to ensure we don't accelerate too fast
+    // DifferentialDriveVoltageConstraint autoVoltageConstraint =
+    // // TODO: This uses the left feedforward constants, but applies to all motors... Should change this to reflect all motors
+    //     new DifferentialDriveVoltageConstraint(
+    //         new SimpleMotorFeedforward(RobotConstants.leftKsVolts,
+    //                                    RobotConstants.leftKvVoltSecondsPerMeter,
+    //                                    RobotConstants.leftKaVoltSecondsSquaredPerMeter),
+    //         RobotConstants.kDriveKinematics,
+    //         10);
 
-    // An example trajectory to follow.  All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(180)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(
-            new Translation2d(1, 0),
-            new Translation2d(2, 0)
-            //new Translation2d(3, -0),
-            //n Translation2d(2, -0),
-            //new Translation2d(1, -0)
+    // // Create config for trajectory
+    // TrajectoryConfig config =
+    //     new TrajectoryConfig(RobotConstants.kMaxSpeedMetersPerSecond,
+    //                          RobotConstants.kMaxAccelerationMetersPerSecondSquared)
+    //         // Add kinematics to ensure max speed is actually obeyed
+    //         .setKinematics(RobotConstants.kDriveKinematics)
+    //         .setReversed(true)
+    //         // Apply the voltage constraint
+    //         // .addConstraint(RobotConstants.kAutoPathConstraints)
+    //         .addConstraint(autoVoltageConstraint);
 
-        ),
-        // End 6 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(180)),
-        // Pass config
-        config
-    );
+    // // An example trajectory to follow.  All units in meters.
+    // Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+    //     // Start at the origin facing the +X direction
+    //     new Pose2d(0, 0, new Rotation2d(180)),
+    //     // Pass through these two interior waypoints, making an 's' curve path
+    //     List.of(
+    //         new Translation2d(1, 0),
+    //         new Translation2d(2, 0)
+    //         //new Translation2d(3, -0),
+    //         //n Translation2d(2, -0),
+    //         //new Translation2d(1, -0)
 
-    // Paste this variable in
-    RamseteController disabledRamsete = new RamseteController() {
-    @Override
-    public ChassisSpeeds calculate(Pose2d currentPose, Pose2d poseRef, double linearVelocityRefMeters,
-            double angularVelocityRefRadiansPerSecond) {
-        return new ChassisSpeeds(linearVelocityRefMeters, 0.0, angularVelocityRefRadiansPerSecond);
-    }
-    };
+    //     ),
+    //     // End 6 meters straight ahead of where we started, facing forward
+    //     new Pose2d(3, 0, new Rotation2d(180)),
+    //     // Pass config
+    //     config
+    // );
+
+    // // Paste this variable in
+    // RamseteController disabledRamsete = new RamseteController() {
+    // @Override
+    // public ChassisSpeeds calculate(Pose2d currentPose, Pose2d poseRef, double linearVelocityRefMeters,
+    //         double angularVelocityRefRadiansPerSecond) {
+    //     return new ChassisSpeeds(linearVelocityRefMeters, 0.0, angularVelocityRefRadiansPerSecond);
+    // }
+    // };
 
     RamseteCommand ramseteCommand = new RamseteCommand(
-        exampleTrajectory,
+        path.getTrajectory(),
         driveBase::getPose,
         new RamseteController(RobotConstants.kRamseteB, RobotConstants.kRamseteZeta),
-        new SimpleMotorFeedforward(//RobotConstants.leftKsVolts,
-                                    SmartDashboard.getNumber("leftKs", 0),
-                                    SmartDashboard.getNumber("leftKv", 0),
-                                    SmartDashboard.getNumber("leftKa", 0)
-                                   //RobotConstants.leftKvVoltSecondsPerMeter,
-                                   //RobotConstants.leftKaVoltSecondsSquaredPerMeter
+        new SimpleMotorFeedforward(RobotConstants.leftKsVolts,
+                                    //SmartDashboard.getNumber("leftKs", 0),
+                                    //SmartDashboard.getNumber("leftKv", 0),
+                                    //SmartDashboard.getNumber("leftKa", 0)
+                                   RobotConstants.leftKvVoltSecondsPerMeter,
+                                   RobotConstants.leftKaVoltSecondsSquaredPerMeter
                                    ),
         new SimpleMotorFeedforward(
-                                    SmartDashboard.getNumber("rightKs", 0),
-                                    SmartDashboard.getNumber("rightKv", 0),
-                                    SmartDashboard.getNumber("rightKa", 0)    
-                                //     RobotConstants.rightKsVolts,
-                                //    RobotConstants.rightKvVoltSecondsPerMeter,
-                                //    RobotConstants.rightKaVoltSecondsSquaredPerMeter
+                                    // SmartDashboard.getNumber("rightKs", 0),
+                                    // SmartDashboard.getNumber("rightKv", 0),
+                                    // SmartDashboard.getNumber("rightKa", 0)    
+                                    RobotConstants.rightKsVolts,
+                                    RobotConstants.rightKvVoltSecondsPerMeter,
+                                    RobotConstants.rightKaVoltSecondsSquaredPerMeter
                                    ),
         RobotConstants.kDriveKinematics,
         driveBase::getWheelSpeeds,
-        new PIDController(SmartDashboard.getNumber("leftkP", 0), RobotConstants.leftKIDriveVel, SmartDashboard.getNumber("leftKD", 0)),
-        new PIDController(SmartDashboard.getNumber("rightkP", 0), RobotConstants.rightKIDriveVel, SmartDashboard.getNumber("rightKD", 0)),
+        new PIDController(
+            //SmartDashboard.getNumber("leftkP", 0), 
+            RobotConstants.leftKPDriveVel,
+            RobotConstants.leftKIDriveVel, 
+            RobotConstants.leftKDDriveVel),
+            //SmartDashboard.getNumber("leftKD", 0)),
+        new PIDController(
+            //SmartDashboard.getNumber("rightkP", 0), 
+            RobotConstants.rightKPDriveVel,
+            RobotConstants.rightKIDriveVel, 
+            RobotConstants.rightKDDriveVel),
+            //SmartDashboard.getNumber("rightKD", 0)),
         // RamseteCommand passes volts to the callback
         driveBase::tankDriveVoltage,
         driveBase
     );
 
-    // Reset odometry to the starting pose of the trajectory.
-    driveBase.resetOdometry(exampleTrajectory.getInitialPose());
+    // // Reset odometry to the starting pose of the trajectory.
+    // driveBase.resetOdometry(path.getStartingPose());
 
     // Run path following command, then stop at the end.
     return ramseteCommand;

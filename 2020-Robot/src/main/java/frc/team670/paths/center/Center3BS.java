@@ -26,7 +26,7 @@ public class Center3BS extends Path{
         super(
             List.of(
                 new Pose2d(3.186, -2.4, Rotation2d.fromDegrees(90)),
-                new Pose2d(4.083, -3.721, Rotation2d.fromDegrees(-40.5)),
+                new Pose2d(4.083, -3.721, Rotation2d.fromDegrees(135)),
                 new Pose2d(5.299, -4.353, Rotation2d.fromDegrees(26))
             ),
         driveBase);
