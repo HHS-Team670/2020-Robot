@@ -25,8 +25,8 @@ public class Left3BS extends Path{
         public Left3BS(DriveBase driveBase){
                 super(
                         List.of(
-                                new Pose2d(3.963, 3.029, Rotation2d.fromDegrees(0)),
-                                new Pose2d(4.128, 5.703, Rotation2d.fromDegrees(23.347))
+                                new Pose2d(3.053, -3.915, Rotation2d.fromDegrees(90)),
+                                new Pose2d(5.703, -4.128, Rotation2d.fromDegrees(67.75))
                         ), 
                 driveBase);
         }
