@@ -25,8 +25,8 @@ public class Right2BS extends Path {
         public Right2BS(DriveBase driveBase) {
                 super(
                         List.of(
-                                new Pose2d(0.792, 2.982, Rotation2d.fromDegrees(0)),
-                                new Pose2d(2.661, 6.105, Rotation2d.fromDegrees(-68.488))
+                                new Pose2d(2.982, -0.792, Rotation2d.fromDegrees(90)),
+                                new Pose2d(2.661, -6.105, Rotation2d.fromDegrees(111.516))
                 ), 
                 driveBase);
         }

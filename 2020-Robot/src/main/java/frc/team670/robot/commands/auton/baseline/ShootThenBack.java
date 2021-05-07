@@ -67,6 +67,8 @@ public class ShootThenBack extends SequentialCommandGroup implements MustangComm
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(turret, HealthState.GREEN);
 
+        driveBase.resetOdometry(trajectory.getStartingPose());
+        
         addCommands(
                 //     new RotateToHome(turret),
                 // // Get shooter up to speed and aim
