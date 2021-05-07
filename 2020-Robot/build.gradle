@@ -60,6 +60,7 @@ dependencies {
     simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
 
     runtime "edu.wpi.first.ntcore:ntcore-jni:2020.2.2:windowsx86-64"
+    implementation group: 'gov.nist.math', name: 'jama', version: '1.0.3'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')

@@ -19,6 +19,7 @@ import frc.team670.robot.utils.functions.MathUtils;
 import frc.team670.robot.utils.math.interpolable.InterpolatingDouble;
 import frc.team670.robot.utils.math.interpolable.InterpolatingTreeMap;
 import frc.team670.robot.utils.math.interpolable.LinearRegression;
+import frc.team670.robot.utils.math.interpolable.PolynomialRegression;
 import frc.team670.robot.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.robot.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -40,8 +41,8 @@ public class Shooter extends MustangSubsystemBase {
   private double targetRPM = 2500; // Will change later if we adjust by distance
   private static double DEFAULT_SPEED = 2500;
 
-  private static double MIN_RPM = 2125;
-  private static double MAX_RPM = 2725;
+  private static double MIN_RPM = 2000;
+  private static double MAX_RPM = 3100;
 
   private double speedAdjust = 0; // By default, we don't adjust, but this may get set later
 
@@ -101,7 +102,7 @@ public class Shooter extends MustangSubsystemBase {
     2725
   };
 
-  private static final LinearRegression speedAtDistance = new LinearRegression(measuredDistancesMeters, measuredRPMs);
+  private static final PolynomialRegression speedAtDistance = new PolynomialRegression(measuredDistancesMeters, measuredRPMs, 2);
 
   private static final int VELOCITY_SLOT = 0;
 

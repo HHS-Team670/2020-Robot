@@ -3,6 +3,7 @@ package frc.team670.robot.commands.shooter;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.constants.FieldConstants;
@@ -46,7 +47,7 @@ public class StartShooterByDistance extends CommandBase implements MustangComman
              Math.pow(currentY, 2))
         );
         Logger.consoleLog("Shooter distance to target %s", distanceToTarget);
-        targetRPM = shooter.getTargetRPMForDistance(distanceToTarget);
+        targetRPM = shooter.getTargetRPMForDistance(SmartDashboard.getNumber("distance", 3));
         Logger.consoleLog("Shooter Stage 2 RPM should be %s", targetRPM);
         shooter.setVelocityTarget(targetRPM);
         shooter.setRampRate(true);
