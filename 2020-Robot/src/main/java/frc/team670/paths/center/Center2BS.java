@@ -18,8 +18,8 @@ public class Center2BS extends Path{
         public Center2BS(DriveBase driveBase) {
                 super(
                         List.of(
-                        new Pose2d(3.186, -2.4, Rotation2d.fromDegrees(0)),
-                        new Pose2d(6.077, -2.651, Rotation2d.fromDegrees(-64))
+                        new Pose2d(3.186, -2.4, Rotation2d.fromDegrees(90)),
+                        new Pose2d(6.077, -2.651, Rotation2d.fromDegrees(154))
                         ),
                 driveBase);
         }
