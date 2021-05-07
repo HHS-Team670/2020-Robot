@@ -71,10 +71,15 @@ public class Shooter extends MustangSubsystemBase {
   // Distance currently from bumper
   private static final double[][] FLYWHEEL_RPM_AT_DISTANCE = { 
 
-    { 3.32232, 2125},  // 10.9 ft  2125 rpm 
-    { 4.572,  2275 }, // 15 ft  2275 rpm 
-    { 7.3152, 2575 }, // 24 ft 2575 rpm 
-    { 8.6868, 2725 } // 28.5 ft 2725 rpm 
+    // { 3.32232, 2125},  // 10.9 ft  2125 rpm 
+    // { 4.572,  2275 }, // 15 ft  2275 rpm 
+    // { 7.3152, 2575 }, // 24 ft 2575 rpm 
+    // { 8.6868, 2725 } // 28.5 ft 2725 rpm 
+
+    { 3.32232, 2750},  // 10.9 ft  2125 rpm 
+    { 4.572,  2350 }, // 15 ft  2275 rpm 
+    { 7.3152, 2650 }, // 24 ft 2575 rpm 
+     {9.4488, 3100}
 
   };
 
