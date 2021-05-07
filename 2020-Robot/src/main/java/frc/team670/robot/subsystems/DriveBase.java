@@ -312,23 +312,6 @@ public class DriveBase extends TankDriveBase {
   }
 
   /*
-   * Gets the input voltage of all the drivebase motor controllers on the robot
-   */
-  public double getDriveBaseInputVoltage() {
-    double output = left1.getBusVoltage() + left2.getBusVoltage() + right1.getBusVoltage() + right2.getBusVoltage();
-    return output;
-  }
-
-  /*
-   * Gets the output voltage of all the drivebase motor controllers on the robot
-   */
-  public double getDriveBaseOutputVoltage() {
-    double output = left1.getAppliedOutput() + left2.getAppliedOutput() + right1.getAppliedOutput()
-        + right2.getAppliedOutput();
-    return output;
-  }
-
-  /*
    * Gets the output current of all the motor controllers on the robot
    */
   public double getRobotOutputCurrent() {
@@ -338,15 +321,13 @@ public class DriveBase extends TankDriveBase {
   }
 
   /**
-   * Returns the velocity of the right side of the drivebase in inches/second from
+   * Returns the velocity of the left side of the drivebase in inches/second from
    * the Spark Encoder
    */
   public double getLeftSparkEncoderVelocityInches() {
     return (DriveBase.convertDriveBaseTicksToInches(
         left1.getEncoder().getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION) / 60);
   }
-
-  
 
   /**
    * Returns the velocity of the right side of the drivebase in inches/second from
@@ -356,8 +337,6 @@ public class DriveBase extends TankDriveBase {
     return (DriveBase.convertDriveBaseTicksToInches(
         right1.getEncoder().getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION) / 60);
   }
-
-  
 
   /**
    * Returns the Spark Max Encoder for the Left Main Motor
@@ -440,14 +419,6 @@ public class DriveBase extends TankDriveBase {
   public static double convertSparkRevolutionsToInches(double revolutions) {
     // rev * 2piR in / rev
     return revolutions * Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER / RobotConstants.DRIVEBASE_GEAR_RATIO;
-  }
-
-  /**
-   * Converts an inch value into drive base DIO Encoder ticks.
-   */
-  public static int convertInchesToDriveBaseTicks(double inches) {
-    double rotations = inches / (Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER);
-    return (int) (rotations * RobotConstants.DIO_TICKS_PER_ROTATION);
   }
 
   /**
@@ -624,12 +595,6 @@ public class DriveBase extends TankDriveBase {
   }
 
   @Override
-  public double inchesToTicks(double inches) {
-    // TODO Auto-generated method stub
-    return inches * RobotConstants.DIO_TICKS_PER_INCH;
-  }
-
-  @Override
   public boolean isQuickTurnPressed() {
     // TODO Auto-generated method stub
     mController.getRightBumper();
@@ -655,10 +620,23 @@ public class DriveBase extends TankDriveBase {
     
   }
 
+  /**
+   * Converts an inch value into drive base DIO Encoder ticks.
+   */
+  @Override
+  public double inchesToTicks(double inches) {
+    double rotations = inches / (Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER);
+    return (int) (rotations * RobotConstants.DIO_TICKS_PER_ROTATION);
+  }
+
+  /**
+   * Returns the velocity of the right side of the drivebase in inches/second from
+   * the Spark Encoder
+   */
   @Override
   public double ticksToInches(double ticks) {
-    // TODO Auto-generated method stub
-    return ticks / RobotConstants.DIO_TICKS_PER_INCH;
+    return (DriveBase.convertDriveBaseTicksToInches(
+        left1.getEncoder().getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION) / 60);
   }
 
 }
