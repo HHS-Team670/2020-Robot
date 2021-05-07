@@ -15,6 +15,7 @@ import com.revrobotics.ControlType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.RobotMap;
+import frc.team670.robot.utils.Logger;
 import frc.team670.robot.utils.functions.MathUtils;
 import frc.team670.robot.utils.math.interpolable.InterpolatingDouble;
 import frc.team670.robot.utils.math.interpolable.InterpolatingTreeMap;
@@ -94,17 +95,17 @@ public class Shooter extends MustangSubsystemBase {
   // and RPM from this data should have a correlation coefficient of 0.9999 so it should be fine
 
   private static final double[] measuredDistancesMeters = {
-    3.32232, // baseline
-    4.572, // 15 ft
-    7.3152, // 24 ft
-    8.6868 // trench (28-29ft)
+    3.32232,  // 10.9 ft  2125 rpm 
+    4.572, // 15 ft  2275 rpm 
+    7.3152, // 24 ft 2575 rpm 
+    9.4488,// trench (28-29ft)
   };
 
   private static final double[] measuredRPMs = {
-    2125,
-    2275,
-    2575,
-    2725
+    2750,  // 10.9 ft  2125 rpm 
+    2350, // 15 ft  2275 rpm 
+    2650, // 24 ft 2575 rpm 
+    3100
   };
 
   private static final PolynomialRegression speedAtDistance = new PolynomialRegression(measuredDistancesMeters, measuredRPMs, 2);
@@ -202,7 +203,11 @@ public class Shooter extends MustangSubsystemBase {
    * calculated from the linear regression
    */
   public double getTargetRPMForDistance(double distance){
-    return Math.max(Math.min(speedAtDistance.predict(distance), MAX_RPM), MIN_RPM);
+    double predictedVal = speedAtDistance.predict(distance);
+    Logger.consoleLog("predictedVal: %s", predictedVal);
+    double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
+    SmartDashboard.putNumber("expectedSpeed", expectedSpeed);
+    return expectedSpeed;
   }
 
   /**

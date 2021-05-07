@@ -49,8 +49,8 @@ public class StartShooterByDistance extends CommandBase implements MustangComman
         Logger.consoleLog("Shooter distance to target %s", distanceToTarget);
         targetRPM = shooter.getTargetRPMForDistance(SmartDashboard.getNumber("distance", 3));
         Logger.consoleLog("Shooter Stage 2 RPM should be %s", targetRPM);
-        shooter.setVelocityTarget(targetRPM);
-        shooter.setRampRate(true);
+        // shooter.setVelocityTarget(targetRPM);
+        // shooter.setRampRate(true);
     }
 
     @Override

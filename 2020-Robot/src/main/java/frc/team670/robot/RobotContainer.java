@@ -67,6 +67,7 @@ import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
 import frc.team670.robot.commands.shooter.SetRPMAdjuster;
 import frc.team670.robot.commands.shooter.StartShooter;
+import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.shooter.StopUpdraw;
 import frc.team670.robot.commands.shooter.ToggleShooter;
 import frc.team670.robot.commands.turret.AutoRotate;
@@ -187,7 +188,8 @@ public class RobotContainer {
     runIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
     runIntakeIn.whenReleased(new StopIntaking(intake, conveyor, indexer));
     runIntakeOut.toggleWhenPressed((new ReverseIntakeConveyor(intake, conveyor)));
-    toggleShooter.toggleWhenPressed(new ToggleShooter(shooter, driveBase));
+    // toggleShooter.toggleWhenPressed(new ToggleShooter(shooter, driveBase));
+    toggleShooter.toggleWhenPressed(new StartShooterByDistance(shooter, driveBase));
     toggleUpdraw.toggleWhenPressed(new ToggleUpdraw(indexer));
     rotateIndexerBackwards.whenHeld(new UnjamIndexer(indexer));
     togglePusher.whenHeld(new TogglePusher(indexer));
