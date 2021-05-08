@@ -59,7 +59,7 @@ public class DriveBase extends TankDriveBase {
 
   private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
   
-  private static final double CURRENT_WHEN_AGAINST_BAR = 5; //TODO: Find this
+  private static final double CURRENT_WHEN_AGAINST_BAR = 5; //: FinTODOd this
   private int againstBarCount = 0;
 
   public DriveBase(MustangController mustangController) {
@@ -519,7 +519,7 @@ public class DriveBase extends TankDriveBase {
 
   public void setHeading(double angleDegrees){
     // TODO
-    // navXMicro.
+    navXMicro.setHeading(angleDegrees);
   }
 
   /**
@@ -565,59 +565,54 @@ public class DriveBase extends TankDriveBase {
 
   @Override
   public double getLeftPositionTicks() {
-    // TODO Auto-generated method stub
     return (int) (left1Encoder.getPosition() / RobotConstants.SPARK_TICKS_PER_ROTATION);
-    ;
   }
 
   @Override
   public double getLeftVelocityTicks() {
     return (left1Encoder.getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION / 60);
-    ;
   }
 
   @Override
   public MustangController getMustangController() {
-    // TODO Auto-generated method stub
     return mController;
   }
 
   @Override
   public double getRightPositionTicks() {
-    // TODO Auto-generated method stub
     return (int) (left1Encoder.getPosition() / RobotConstants.SPARK_TICKS_PER_ROTATION);
   }
 
   @Override
   public double getRightVelocityTicks() {
-    // TODO Auto-generated method stub
     return (right1Encoder.getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION / 60);
   }
 
   @Override
   public boolean isQuickTurnPressed() {
-    // TODO Auto-generated method stub
-    mController.getRightBumper();
+    return mController.getRightBumper();
   }
 
   @Override
-  public void setEncodersPositionControl(double arg0, double arg1) {
-    // TODO Auto-generated method stub
-    
+  public void setEncodersPositionControl(double position, double arg1) {
+    // TODO
+    left1Encoder.setPosition(position);
+    left2Encoder.setPosition(position);
+    right1Encoder.setPosition(position);
+    right2Encoder.setPosition(position);
   }
 
   @Override
-  public void setRampRate(double arg0) {
-    // TODO Auto-generated method stub
-    
+  public void setRampRate(double rampRate) {
+    // TODO
+    left1.setOpenLoopRampRate(rampRate);
+    right1.setOpenLoopRampRate(rampRate);
   }
 
   @Override
   public void setVelocityControl(double leftSpeed, double rightSpeed) {
-    // TODO Auto-generated method stub
     left1.set(leftSpeed);
     right1.set(rightSpeed);
-    
   }
 
   /**
