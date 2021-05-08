@@ -77,10 +77,15 @@ public class Shooter extends MustangSubsystemBase {
     // { 7.3152, 2575 }, // 24 ft 2575 rpm 
     // { 8.6868, 2725 } // 28.5 ft 2725 rpm 
 
-    { 3.32232, 2750},  // 10.9 ft  2125 rpm 
-    { 4.572,  2350 }, // 15 ft  2275 rpm 
-    { 7.3152, 2650 }, // 24 ft 2575 rpm 
-     {9.4488, 3100}
+    // { 3.32232, 2250},  // 10.9 ft  2125 rpm 
+    // { 4.572,  2350 }, // 15 ft  2275 rpm 
+    // { 7.3152, 2650 }, // 24 ft 2575 rpm 
+    //  {9.4488, 3100} //edward list
+
+    { 3.32232, 2125},  // 10.9 ft  2125 rpm 
+    { 4.572,  2275 }, // 15 ft  2275 rpm 
+    { 7.3152, 2575 }, // 24 ft 2575 rpm 
+    { 8.6868, 2725 } // 28.5 ft 2725 rpm  2550
 
   };
 
@@ -97,18 +102,20 @@ public class Shooter extends MustangSubsystemBase {
   private static final double[] measuredDistancesMeters = {
     3.32232,  // 10.9 ft  2125 rpm 
     4.572, // 15 ft  2275 rpm 
-    7.3152, // 24 ft 2575 rpm 
+    7.3152, // 24 ft 2575 rpm
+    8.6868, 
     9.4488,// trench (28-29ft)
   };
 
   private static final double[] measuredRPMs = {
-    2750,  // 10.9 ft  2125 rpm 
-    2350, // 15 ft  2275 rpm 
-    2650, // 24 ft 2575 rpm 
+    2125,  // 10.9 ft  2125 rpm 
+    2275, // 15 ft  2275 rpm 
+    2575, // 24 ft 2575 rpm 
+    2725, 
     3100
   };
 
-  private static final PolynomialRegression speedAtDistance = new PolynomialRegression(measuredDistancesMeters, measuredRPMs, 2);
+  private static final PolynomialRegression speedAtDistance = new PolynomialRegression(measuredDistancesMeters, measuredRPMs, 4);
 
   private static final int VELOCITY_SLOT = 0;
 
@@ -207,7 +214,7 @@ public class Shooter extends MustangSubsystemBase {
     Logger.consoleLog("predictedVal: %s", predictedVal);
     double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
     SmartDashboard.putNumber("expectedSpeed", expectedSpeed);
-    return expectedSpeed;
+    return predictedVal;
   }
 
   /**
