@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.Path;
 import frc.team670.paths.right.Right3BS;
 import frc.team670.paths.left.Left3BS;
+import frc.team670.paths.left.LeftThenBack;
 import frc.team670.paths.center.Center3BS;
 import frc.team670.paths.right.Right3BS;
 import frc.team670.robot.commands.MustangCommand;
@@ -85,19 +86,19 @@ public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandG
 
           addCommands(
 
-              new StartShooterByDistance(shooter, driveBase),
+            //   new StartShooterByDistance(shooter, driveBase),
 
-              new RotateTurret(turret, driveBase, coprocessor),
+            //   new RotateTurret(turret, driveBase, coprocessor),
               
-              new ParallelCommandGroup (
-              new SendAllBalls(indexer), 
-              new Shoot(shooter)        
-            ),
+            //   new ParallelCommandGroup (
+            //   new SendAllBalls(indexer), 
+            //   new Shoot(shooter)        
+            // ),
             
-              new ParallelCommandGroup (
-              getTrajectoryFollowerCommand(trajectory, driveBase),
-              new IntakeBallToIndexer(intake, conveyor, indexer)       
-            )
+            //   new ParallelCommandGroup (
+              getTrajectoryFollowerCommand(trajectory, driveBase)
+            //   new IntakeBallToIndexer(intake, conveyor, indexer)       
+            // )
           );
         }
 

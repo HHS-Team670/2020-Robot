@@ -517,7 +517,7 @@ public class DriveBase extends MustangSubsystemBase {
   public void mustangPeriodic() {
     // Update the odometry in the periodic block
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
-  
+    SmartDashboard.putNumber("heading", getHeading());
     // Logger.consoleLog("Left encoder position on Pose update %s", left1Encoder.getPosition());
     // Logger.consoleLog("Right encoder position on Pose update %s", right1Encoder.getPosition());
   }

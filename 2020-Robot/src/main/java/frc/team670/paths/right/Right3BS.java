@@ -27,8 +27,8 @@ public class Right3BS extends Path{
         super(
             List.of(
                 new Pose2d(2.958, -1.005,  Rotation2d.fromDegrees(0)),
-                new Pose2d(4.283, -3.276,  Rotation2d.fromDegrees(170.354)),
-                new Pose2d(5.679, -4.081, Rotation2d.fromDegrees(67.745))
+                new Pose2d(4.283, -3.276,  Rotation2d.fromDegrees(-80.354)),
+                new Pose2d(5.679, -4.081, Rotation2d.fromDegrees(22.255))
             ),
             driveBase);
     }
