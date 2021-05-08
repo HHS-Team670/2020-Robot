@@ -19,51 +19,46 @@ import frc.team670.robot.constants.RobotMap;
  */
 public class VisionSubsystem extends MustangSubsystemBase {
 
-    private NetworkTableObject keyData;
-
     private Solenoid cameraLEDs;
 
-    private boolean currentlyUsingVision;
+    private final String VISION_TRIGGER_KEY = "vision-enable";
+    private final String VISION_VALUES_KEY = "vision-values";
 
-    // The name of the subtable set on the Pi
-    public static final String VISION_TABLE_NAME = "SmartDashboard";
-    public static final String VISION_RETURN_NETWORK_KEY = "vision_values";
-    public static final String VISION_TRIGGER_NETWORK_KEY = "vision-data";
-
-    // These are for sending vision health to dashboard
-    private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
-    private static NetworkTable healthTable = instance.getTable("/SmartDashboard");
-
-    // table for vision
-    NetworkTable visionTable = instance.getTable(VISION_TABLE_NAME);
-
-    
+    private final String VISION_MIN_HSV_KEY = "vision-minHSV";
+    private final String VISION_MAX_HSV_KEY = "vision-maxHSV";
+    private final String VISION_SHAPE_KEY = "vision-shape";
 
     /**
      * Used to create a mustangCoprocessor object based on the key of the table that returns the values from vision processing
      */
     private VisionSubsystem(String key, int[] minHSV, int[] maxHSV, int[] shape) {
-        keyData = new NetworkTableObject(key);
-        this.currentlyUsingVision = false;
         cameraLEDs = new Solenoid(RobotMap.PCMODULE, RobotMap.VISION_LED_PCM);
         SmartDashboard.putBoolean("LEDs on", false);
+        
+        SmartDashboard.putNumberArray(VISION_MIN_HSV_KEY, minHSV);
+        SmartDashboard.putNumberArray(VISION_MAX_HSV_KEY, maxHSV);
+        SmardDashboard.putNumberArray(VISION_SHAPE_KEY, shape);
+    }
+
+    /**
+     * Used to trigger the vision system to run and get new values
+     */
+    public void triggerVision() {
+        SmartDashboard.putBoolean(VISION_TRIGGER_KEY, true);
     }
 
     /**
      * Used to trigger the vision system to run and get new values
      */
     public void getLatestVisionData() {
-        SmartDashboard.putString(VISION_TRIGGER_NETWORK_KEY, "vision");
-        // NetworkTableEntry visionTrigger = visionTable.getEntry(VISION_TRIGGER_NETWORK_KEY);
-        // visionTrigger.forceSetString("vision");
+        SmartDashboard.getNumberArray(VISION_VALUES_KEY, [-1,-1]);
     }
 
     /**
      * Used to clear last values present on the table
      */
     public void clearLastValues(){
-        NetworkTableEntry visionTrigger = visionTable.getEntry(VISION_RETURN_NETWORK_KEY);
-        visionTrigger.forceSetDoubleArray(new double[] { RobotConstants.VISION_ERROR_CODE, RobotConstants.VISION_ERROR_CODE, RobotConstants.VISION_ERROR_CODE });
+        SmartDashboard.putNumberArray(VISION_VALUES_KEY, [-1, -1]);
     }
 
     /**
@@ -155,16 +150,17 @@ public class VisionSubsystem extends MustangSubsystemBase {
      * 
      * @param enabled true for vision, false for no vision
      */
-    public void enableVision(boolean enabled) {
-        NetworkTableEntry visionHealth = healthTable.getEntry("vision");
-        if (enabled) {
-            this.currentlyUsingVision = true;
-            visionHealth.forceSetString("green");
-        } else {
-            this.currentlyUsingVision = false;
-            visionHealth.forceSetString("red");
-        }
-    }
+    // public void enableVision(boolean enabled) {
+
+    //     NetworkTableEntry visionHealth = healthTable.getEntry("vision");
+    //     if (enabled) {
+    //         this.currentlyUsingVision = true;
+    //         visionHealth.forceSetString("green");
+    //     } else {
+    //         this.currentlyUsingVision = false;
+    //         visionHealth.forceSetString("red");
+    //     }
+    // }
 
     /**
      * @return whether or not vision is currently running/in use
@@ -196,8 +192,17 @@ public class VisionSubsystem extends MustangSubsystemBase {
 
     @Override
     public HealthState checkHealth() {
-        // TODO Auto-generated method stub
-        return null;
+        HealthState state = HealthState.GREEN;
+
+        visionHealth = SmartDashboard.getString(visionHealth);
+
+        if (visionKey == "RED") {
+            state = HealthState.RED;
+            MustangNotifications.reportError("RED Error: %s", visionKey);
+        } else {
+            state = HealthState.GREEN;
+        }
+        return state;
     }
 
     @Override
