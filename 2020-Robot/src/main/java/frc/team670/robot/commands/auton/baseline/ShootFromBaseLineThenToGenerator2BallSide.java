@@ -77,16 +77,14 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
                 driveBase.resetOdometry(trajectory.getStartingPose());
 
                 addCommands(
-                        // new StartShooterByDistance(shooter, driveBase),
-                        // new RotateTurret(turret, driveBase, coprocessor),
-                         
-                        
-                        // new Shoot(shooter),
-                        // new EmptyRevolver(indexer),
-                        // new ParallelCommandGroup (
-                                getTrajectoryFollowerCommand(trajectory, driveBase)
-                        //         new IntakeBallToIndexer(intake, conveyor, indexer)       
-                        // )
+                        new StartShooterByDistance(shooter, driveBase),
+                        new RotateTurret(turret, driveBase, coprocessor),
+                        new Shoot(shooter),
+                        new EmptyRevolver(indexer),
+                        new ParallelCommandGroup (
+                                getTrajectoryFollowerCommand(trajectory, driveBase),
+                                new IntakeBallToIndexer(intake, conveyor, indexer)       
+                        )
                 );
         }
 

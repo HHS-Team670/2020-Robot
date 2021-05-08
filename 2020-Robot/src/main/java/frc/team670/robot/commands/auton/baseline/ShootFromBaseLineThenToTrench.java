@@ -86,15 +86,17 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
         driveBase.resetOdometry(trajectory.getStartingPose());
 
         addCommands(
-                // // Get shooter up to speed and aim
-                // new StartShooterByDistance(shooter, driveBase),
+                // Get shooter up to speed and aim
+                new StartShooterByDistance(shooter, driveBase),
                 
-                // new RotateTurret(turret, driveBase, coprocessor),
-                // // Roll intake out and shoot
-                // new EmptyRevolver(indexer),
+                new RotateTurret(turret, driveBase, coprocessor),
+                // Roll intake out and shoot
+                new EmptyRevolver(indexer),
                 
-                // new IntakeBallToIndexer(intake, conveyor, indexer),
-                getTrajectoryFollowerCommand(trajectory, driveBase)
+                new ParallelCommandGroup(
+                    new IntakeBallToIndexer(intake, conveyor, indexer),
+                    getTrajectoryFollowerCommand(trajectory, driveBase)
+                )
         );
     }
 

@@ -86,19 +86,19 @@ public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandG
 
           addCommands(
 
-            //   new StartShooterByDistance(shooter, driveBase),
+              new StartShooterByDistance(shooter, driveBase),
 
-            //   new RotateTurret(turret, driveBase, coprocessor),
+              new RotateTurret(turret, driveBase, coprocessor),
               
-            //   new ParallelCommandGroup (
-            //   new SendAllBalls(indexer), 
-            //   new Shoot(shooter)        
-            // ),
+              new ParallelCommandGroup (
+              new SendAllBalls(indexer), 
+              new Shoot(shooter)        
+            ),
             
-            //   new ParallelCommandGroup (
-              getTrajectoryFollowerCommand(trajectory, driveBase)
-            //   new IntakeBallToIndexer(intake, conveyor, indexer)       
-            // )
+              new ParallelCommandGroup (
+              getTrajectoryFollowerCommand(trajectory, driveBase),
+              new IntakeBallToIndexer(intake, conveyor, indexer)       
+            )
           );
         }
 
