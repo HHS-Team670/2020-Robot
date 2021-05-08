@@ -146,30 +146,6 @@ public class VisionSubsystem extends MustangSubsystemBase {
     }
 
     /**
-     * Sets whether to use vision
-     * 
-     * @param enabled true for vision, false for no vision
-     */
-    // public void enableVision(boolean enabled) {
-
-    //     NetworkTableEntry visionHealth = healthTable.getEntry("vision");
-    //     if (enabled) {
-    //         this.currentlyUsingVision = true;
-    //         visionHealth.forceSetString("green");
-    //     } else {
-    //         this.currentlyUsingVision = false;
-    //         visionHealth.forceSetString("red");
-    //     }
-    // }
-
-    /**
-     * @return whether or not vision is currently running/in use
-     */
-    public boolean isVisionEnabled(){
-        return this.currentlyUsingVision;
-    }
-
-    /**
      * Used to turn on the bright green leds for vision
      */
     public void turnOnLEDs() {
@@ -206,9 +182,6 @@ public class VisionSubsystem extends MustangSubsystemBase {
     }
 
     @Override
-    public void mustangPeriodic() { 
-        // TODO Auto-generated method stub
-        
-    }
+    public void mustangPeriodic() {  }
 
 }
