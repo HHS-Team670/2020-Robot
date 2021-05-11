@@ -12,13 +12,13 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.dataCollection.sensors.TimeOfFlightSensor;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.functions.MathUtils;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.TalonSRXFactory;
+import frc.team670.mustanglib.subsystems.SparkMaxRotatingSubsystem;
 
 /**
  * Represents the ball indexer subsystem, which tracks and stores up to 5 balls.

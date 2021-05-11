@@ -2,8 +2,9 @@ package frc.team670.robot.constants;
 
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
+import frc.team670.mustanglib.constants.RobotConstantsBase;
 
-public class RobotConstants {
+public class RobotConstants extends RobotConstantsBase{
 
     // Robot Dimensions in Inches
     public static final double ROBOT_LENGTH = 29.5, ROBOT_WIDTH = 30.3, DRIVEBASE_TO_GROUND = 2.03;
@@ -22,18 +23,10 @@ public class RobotConstants {
     public static final double DRIVEBASE_INCHES_PER_ROTATION = 1 / DRIVEBASE_GEAR_RATIO * DRIVE_BASE_WHEEL_DIAMETER
             * Math.PI;
 
-    /**
-     * The number of ticks per rotation of a drivebase wheel for the DIO Encoders
-     */
-    public static final int DIO_TICKS_PER_ROTATION = 1024;
-
     /** The number of ticks per inch of wheel travel */
     public static final int DIO_TICKS_PER_INCH = (int) (DIO_TICKS_PER_ROTATION / (Math.PI * DRIVE_BASE_WHEEL_DIAMETER));
 
-    /**
-     * The number of ticks per rotation of a drivebase wheel for the SPARK Encoders
-     */
-    public static final int SPARK_TICKS_PER_ROTATION = 1024;
+
 
     /** The number of meters per roatation of a drivebase wheel */
     public static final double DRIVEBASE_METERS_PER_ROTATION = (1 / DRIVEBASE_GEAR_RATIO) * DRIVE_BASE_WHEEL_DIAMETER

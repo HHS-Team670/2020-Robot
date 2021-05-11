@@ -30,6 +30,7 @@ import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
+import frc.team670.robot.subsystems.Vision;
 import frc.team670.robot.subsystems.Climber;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.commands.CancelAllCommands;
@@ -54,7 +55,7 @@ public class XKeys {
     private Conveyor conveyor;
     private Indexer indexer;
     private Turret turret;
-    private MustangCoprocessor coprocessor;
+    private Vision coprocessor;
     private class xkeysCommands { // do not use enums as getID has to be called over enum call
 
         public static final double RUN_INTAKE_IN = 0;
@@ -89,9 +90,9 @@ public class XKeys {
      * @param shooter the shooter to run/control
      * @param climber the climber to run
      * @param turret the turret to run/control
-     * @param pi the coprocessor specfically the pi
+     * @param vision the coprocessor specfically the pi
      */
-    public XKeys(DriveBase drivebase, Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Climber climber, Turret turret, MustangCoprocessor pi) {
+    public XKeys(DriveBase drivebase, Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Climber climber, Turret turret, Vision vision) {
         SmartDashboard.putString("XKEYS", "XKeys constructor");
         instance = NetworkTableInstance.getDefault();
         table = instance.getTable("SmartDashboard");
@@ -104,7 +105,7 @@ public class XKeys {
         this.shooter = shooter;
         this.climber = climber;
         this.turret = turret;
-        this.coprocessor = pi;
+        this.coprocessor = vision;
 
         table.addEntryListener((table2, key2, entry, value, flags) -> {
             try {

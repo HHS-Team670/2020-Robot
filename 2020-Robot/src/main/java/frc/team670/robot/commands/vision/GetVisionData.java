@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
-import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Vision;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.functions.MathUtils;
@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 
 public class GetVisionData extends CommandBase implements MustangCommand {
 
-    private MustangCoprocessor coprocessor;
+    private Vision coprocessor;
 
     private long startTime;
 
@@ -28,7 +28,7 @@ public class GetVisionData extends CommandBase implements MustangCommand {
 
     private static final double MAX_TIME_TO_RUN = 2500; // Max time to run this in ms
 
-    public GetVisionData(MustangCoprocessor coprocessor, DriveBase driveBase) {
+    public GetVisionData(Vision coprocessor, DriveBase driveBase) {
         this.coprocessor = coprocessor;
         this.driveBase = driveBase;
     }
@@ -56,21 +56,17 @@ public class GetVisionData extends CommandBase implements MustangCommand {
     @Override
     public boolean isFinished() {
         long time = System.currentTimeMillis();
-        return (!MathUtils.doublesEqual(SmartDashboard.getNumberArray(coprocessor.VISION_RETURN_NETWORK_KEY,
-                new double[] { RobotConstants.VISION_ERROR_CODE, RobotConstants.VISION_ERROR_CODE,
-                        RobotConstants.VISION_ERROR_CODE })[2],
-                RobotConstants.VISION_ERROR_CODE) && time > startTime + 100 || time > startTime + MAX_TIME_TO_RUN);
+        return (time > startTime + 100 || time > startTime + MAX_TIME_TO_RUN); //TODO add check for error code
     }
 
     @Override
     public void end(boolean interrupted) {
         double distanceFromTargetMeters = coprocessor.getDistanceToTargetCm() * 100;
-        double angleFromTargetForwardDegrees = coprocessor.getAngleToTargetPerpendicular();
+        double angleFromTargetForwardDegrees = coprocessor.getAngleToTarget();
         double xToTargetForward = distanceFromTargetMeters * Math.sin(Math.toRadians(angleFromTargetForwardDegrees));
         double yToTargetForward = distanceFromTargetMeters * Math.cos(Math.toRadians(angleFromTargetForwardDegrees));
         double currentX = FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS + xToTargetForward;
         driveBase.resetOdometry(new Pose2d(currentX, yToTargetForward, Rotation2d.fromDegrees(driveBase.getHeading())));
-        coprocessor.enableVision(false);
     }
 
     @Override

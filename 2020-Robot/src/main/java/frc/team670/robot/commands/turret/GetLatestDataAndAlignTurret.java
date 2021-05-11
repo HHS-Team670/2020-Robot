@@ -7,10 +7,10 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.robot.commands.vision.GetVisionData;
-import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Turret;
+import frc.team670.robot.subsystems.Vision;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 
 /**
@@ -21,7 +21,7 @@ public class GetLatestDataAndAlignTurret extends SequentialCommandGroup implemen
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public GetLatestDataAndAlignTurret(Turret turret, DriveBase driveBase, MustangCoprocessor pi){
+    public GetLatestDataAndAlignTurret(Turret turret, DriveBase driveBase, Vision pi){
         addRequirements(turret);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(turret, HealthState.GREEN);

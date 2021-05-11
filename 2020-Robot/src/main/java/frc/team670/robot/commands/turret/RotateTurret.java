@@ -3,12 +3,12 @@ package frc.team670.robot.commands.turret;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
-import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.subsystems.Turret;
+import frc.team670.robot.subsystems.Vision;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,14 +25,14 @@ public class RotateTurret extends CommandBase implements MustangCommand {
 
     private Turret turret;
     private DriveBase driveBase;
-    private MustangCoprocessor coprocessor;
+    private Vision coprocessor;
     private double targetAngle;
     private double heading;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     private boolean validData = false;
 
-    public RotateTurret(Turret turret, DriveBase driveBase, MustangCoprocessor pi) {
+    public RotateTurret(Turret turret, DriveBase driveBase, Vision pi) {
         this.turret = turret;
         this.driveBase = driveBase;
         this.coprocessor = pi;

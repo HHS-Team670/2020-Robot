@@ -10,6 +10,8 @@ import frc.team670.robot.commands.joystickControls.JoystickTurret;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
+import frc.team670.mustanglib.subsystems.SparkMaxRotatingSubsystem;
+
 
 public class Turret extends SparkMaxRotatingSubsystem {
 

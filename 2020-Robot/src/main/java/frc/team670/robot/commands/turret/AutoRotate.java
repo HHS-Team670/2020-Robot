@@ -7,10 +7,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
-import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Turret;
+import frc.team670.robot.subsystems.Vision;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
 
@@ -28,10 +28,10 @@ public class AutoRotate extends CommandBase implements MustangCommand {
 
     private Turret turret;
     private DriveBase driveBase;
-    private MustangCoprocessor coprocessor;
+    private Vision coprocessor;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public AutoRotate(Turret turret, MustangCoprocessor pi, DriveBase driveBase) {
+    public AutoRotate(Turret turret, Vision pi, DriveBase driveBase) {
         this.turret = turret;
         this.driveBase = driveBase;
         this.coprocessor = pi;

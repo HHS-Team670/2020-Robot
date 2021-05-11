@@ -31,16 +31,14 @@ import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.MustangNotifications;
-import frc.team670.mustanglib.utils.functions.MathUtils;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.drivebase.TankDriveBase;
 
 /**
  * Represents a tank drive base.
  * 
- * @author lakshbhambhani, ctychen
+ * @author lakshbhambhani
  */
 public class DriveBase extends TankDriveBase {
 
@@ -63,7 +61,9 @@ public class DriveBase extends TankDriveBase {
   private int againstBarCount = 0;
 
   public DriveBase(MustangController mustangController) {
+    super();
     mController = mustangController;
+    
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
         false, MotorConfig.Motor_Type.NEO);
     rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
@@ -150,57 +150,17 @@ public class DriveBase extends TankDriveBase {
   }
 
   /**
-   * 
-   * Drives the Robot using a tank drive configuration (two joysticks, or auton).
-   * Squares inputs to linearize them.
-   * 
-   * @param leftSpeed  Speed for left side of drive base [-1, 1]. Automatically
-   *                   squares this value to linearize it.
-   * @param rightSpeed Speed for right side of drive base [-1, 1]. Automatically
-   *                   squares this value to linearize it.
-   */
-  public void tankDrive(double leftSpeed, double rightSpeed) {
-    tankDrive(leftSpeed, rightSpeed, false);
-  }
-
-  /**
-   * 
-   * Drives the Robot using a tank drive configuration (two joysticks, or auton)
-   * 
-   * @param leftSpeed     Speed for left side of drive base [-1, 1]
-   * @param rightSpeed    Speed for right side of drive base [-1, 1]
-   * @param squaredInputs If true, decreases sensitivity at lower inputs
-   */
-  public void tankDrive(double leftSpeed, double rightSpeed, boolean squaredInputs) {
-    driveTrain.tankDrive(leftSpeed, rightSpeed, squaredInputs);
-  }
-
-  /**
-   * 
-   * Drives the Robot using a curvature drive configuration (wheel)
-   * 
-   * @param xSpeed      The forward throttle speed [-1, 1]
-   * @param zRotation   The amount of rotation to turn [-1, 1] with positive being
-   *                    right
-   * @param isQuickTurn If true enables turning in place and running one side
-   *                    backwards to turn faster
-   */
-  public void curvatureDrive(double xSpeed, double zRotation, boolean isQuickTurn) {
-    driveTrain.curvatureDrive(xSpeed, zRotation, isQuickTurn);
-  }
-
-  /**
-   * Stops the motors on the drive base (sets them to 0).
-   */
-  public void stop() {
-    tankDrive(0, 0);
-  }
-
-  /**
    * Sets all motors to Brake Mode
    */
   public void initBrakeMode() {
     setMotorsBrakeMode(allMotors, IdleMode.kBrake);
+  }
+
+  /**
+   * Sets all motors to Coast Mode
+   */
+  public void initCoastMode() {
+    setMotorsNeutralMode(IdleMode.kCoast);
   }
 
   /*
@@ -219,9 +179,6 @@ public class DriveBase extends TankDriveBase {
         + right2.getAppliedOutput();
     return output;
   }
-
-  
-
 
   /**
    * Inverts a list of motors.
@@ -321,24 +278,6 @@ public class DriveBase extends TankDriveBase {
   }
 
   /**
-   * Returns the velocity of the left side of the drivebase in inches/second from
-   * the Spark Encoder
-   */
-  public double getLeftSparkEncoderVelocityInches() {
-    return (DriveBase.convertDriveBaseTicksToInches(
-        left1.getEncoder().getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION) / 60);
-  }
-
-  /**
-   * Returns the velocity of the right side of the drivebase in inches/second from
-   * the Spark Encoder
-   */
-  public double getRightSparkEncoderVelocityInches() {
-    return (DriveBase.convertDriveBaseTicksToInches(
-        right1.getEncoder().getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION) / 60);
-  }
-
-  /**
    * Returns the Spark Max Encoder for the Left Main Motor
    */
   public CANEncoder getLeftMainEncoder() {
@@ -401,54 +340,6 @@ public class DriveBase extends TankDriveBase {
     setRampRate(allMotors, 0.36); // Will automatically cook some Cheezy Poofs
   }
 
-  /**
-   * Converts a tick value taken from a drive base DIO encoder to inches.
-   */
-  public static double convertDriveBaseTicksToInches(double ticks) {
-    double rotations = ticks / RobotConstants.DIO_TICKS_PER_ROTATION;
-    return rotations * Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER;
-  }
-
-  /**
-   * Converts revolutions to inches rotated
-   * 
-   * @param revolutions The number of revolutions that has to be converted to
-   *                    distance travelled
-   * @return The distance rotated in inches
-   */
-  public static double convertSparkRevolutionsToInches(double revolutions) {
-    // rev * 2piR in / rev
-    return revolutions * Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER / RobotConstants.DRIVEBASE_GEAR_RATIO;
-  }
-
-  /**
-   * Gets inches per rotations of a NEO motor on the drive base since SparkMAX
-   * encoders work in rotations.
-   */
-  public static double convertDriveBaseRotationsToInches(double rotations) {
-    return RobotConstants.DRIVEBASE_INCHES_PER_ROTATION * rotations;
-  }
-
-  /**
-   * Gets rotations of a NEO motor on the drive base per a value in inches ince
-   * SparkMAX encoders work in rotations.
-   */
-  public static double convertInchesToDriveBaseRotations(double inches) {
-    return inches / RobotConstants.DRIVEBASE_INCHES_PER_ROTATION;
-  }
-
-  /**
-   * Converts a value of per second of the DriveBase Rounds Per Minute
-   */
-  public static double convertInchesPerSecondToDriveBaseRoundsPerMinute(double inchesPerSecond) {
-    // (Inches/seconds) * (60 seconds/1 minute) * ((2 * Diameter inches)/Rotation)
-    return inchesPerSecond * 60 / (Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER);
-  }
-
-  public void initCoastMode() {
-    setMotorsNeutralMode(IdleMode.kCoast);
-  }
-
   public void sendEncoderDataToDashboard() {
     SmartDashboard.putNumber("Left M Position Ticks", left1Encoder.getPosition());
     SmartDashboard.putNumber("Left M Velocity Ticks", left1Encoder.getVelocity());
@@ -464,9 +355,6 @@ public class DriveBase extends TankDriveBase {
   public void mustangPeriodic() {
     // Update the odometry in the periodic block
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
-  
-    // Logger.consoleLog("Left encoder position on Pose update %s", left1Encoder.getPosition());
-    // Logger.consoleLog("Right encoder position on Pose update %s", right1Encoder.getPosition());
   }
 
   /**
@@ -508,18 +396,6 @@ public class DriveBase extends TankDriveBase {
     right1Encoder.setPosition(0);
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
         new Pose2d(0, 0, new Rotation2d()));
-  }
-
-  /**
-   * Zeroes the heading of the robot.
-   */
-  public void zeroHeading() {
-    navXMicro.reset();
-  }
-
-  public void setHeading(double angleDegrees){
-    // TODO
-    navXMicro.setHeading(angleDegrees);
   }
 
   /**
@@ -594,17 +470,13 @@ public class DriveBase extends TankDriveBase {
   }
 
   @Override
-  public void setEncodersPositionControl(double position, double arg1) {
-    // TODO
-    left1Encoder.setPosition(position);
-    left2Encoder.setPosition(position);
-    right1Encoder.setPosition(position);
-    right2Encoder.setPosition(position);
+  public void setEncodersPositionControl(double leftPos, double rightPos) {
+    left1Encoder.setPosition(leftPos);
+    right1Encoder.setPosition(rightPos);
   }
 
   @Override
   public void setRampRate(double rampRate) {
-    // TODO
     left1.setOpenLoopRampRate(rampRate);
     right1.setOpenLoopRampRate(rampRate);
   }
@@ -616,22 +488,26 @@ public class DriveBase extends TankDriveBase {
   }
 
   /**
-   * Converts an inch value into drive base DIO Encoder ticks.
-   */
-  @Override
-  public double inchesToTicks(double inches) {
-    double rotations = inches / (Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER);
-    return (int) (rotations * RobotConstants.DIO_TICKS_PER_ROTATION);
-  }
-
-  /**
    * Returns the velocity of the right side of the drivebase in inches/second from
    * the Spark Encoder
    */
   @Override
   public double ticksToInches(double ticks) {
-    return (DriveBase.convertDriveBaseTicksToInches(
-        left1.getEncoder().getVelocity() / RobotConstants.SPARK_TICKS_PER_ROTATION) / 60);
+    double rotations = ticks / RobotConstants.SPARK_TICKS_PER_ROTATION;
+    return rotations * Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER; 
   }
+
+  @Override
+  public double inchesToTicks(double inches) {
+    double rotations = inches/(Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER);
+    return rotations * RobotConstants.SPARK_TICKS_PER_ROTATION;
+  }
+
+  @Override
+  public void zeroHeading() {
+    navXMicro.reset();
+  }
+
+ 
 
 }
