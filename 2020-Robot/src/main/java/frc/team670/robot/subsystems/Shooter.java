@@ -23,6 +23,7 @@ import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
+import frc.team670.mustanglib.utils.math.interpolable.PolynomialRegression;
 
 /**
  * Represents a 2-stage shooter, with 1st stage using a VictorSPX and 2-NEO 2nd
@@ -89,20 +90,22 @@ public class Shooter extends MustangSubsystemBase {
   // and RPM from this data should have a correlation coefficient of 0.9999 so it should be fine
 
   private static final double[] measuredDistancesMeters = {
-    3.32232, // baseline
-    4.572, // 15 ft
-    7.3152, // 24 ft
-    8.6868 // trench (28-29ft)
+    3.32232,  // 10.9 ft  2125 rpm 
+    4.572, // 15 ft  2275 rpm 
+    7.3152, // 24 ft 2575 rpm
+    8.6868, 
+    9.4488,// trench (28-29ft)
   };
 
   private static final double[] measuredRPMs = {
-    2125,
-    2275,
-    2575,
-    2725
+    2125,  // 10.9 ft  2125 rpm 
+    2275, // 15 ft  2275 rpm 
+    2575, // 24 ft 2575 rpm 
+    2800, 
+    3100
   };
 
-  private static final LinearRegression speedAtDistance = new LinearRegression(measuredDistancesMeters, measuredRPMs);
+  private static final PolynomialRegression speedAtDistance = new PolynomialRegression(measuredDistancesMeters, measuredRPMs, 4);
 
   private static final int VELOCITY_SLOT = 0;
 
@@ -180,7 +183,10 @@ public class Shooter extends MustangSubsystemBase {
    * calculated from the linear regression
    */
   public double getTargetRPMForDistance(double distance){
-    return Math.max(Math.min(speedAtDistance.predict(distance), MAX_RPM), MIN_RPM);
+    double predictedVal = speedAtDistance.predict(distance);
+    double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
+    SmartDashboard.putNumber("expectedSpeed", expectedSpeed);
+    return expectedSpeed;
   }
 
   public void stop() {
