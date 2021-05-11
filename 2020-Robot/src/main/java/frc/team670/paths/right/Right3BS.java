@@ -5,31 +5,31 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.team670.paths.left;
+package frc.team670.paths.right;
 
 import java.util.List;
 
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+
 import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Trajectory starting on intitiation line closest to enemy loading station (facing towards your driverstation)
- * and going through the trench
+ * Trajectory starting on the line and to the right of your power port and facing the 3 Power Cells under
+ * the middle of the generator.
  * 
- * @author meganchoy, ctychen
+ * @author meganchoy, ctychen, arnavyk
  */
-public class LeftToTrenchPath extends Path {
+public class Right3BS extends Path{
 
-    public LeftToTrenchPath(DriveBase driveBase) {
+    public Right3BS(DriveBase driveBase){
         super(
             List.of(
-                new Pose2d(3.186, 1, Rotation2d.fromDegrees(0)),
-                new Pose2d(3.186, 1, Rotation2d.fromDegrees(82.163)),
-                new Pose2d(3.857, 5.602, Rotation2d.fromDegrees(80.541)),
-                new Pose2d(7.989, 7.504, Rotation2d.fromDegrees(-0.201))
+                new Pose2d(2.958, -1.005,  Rotation2d.fromDegrees(0)),
+                new Pose2d(4.283, -3.276,  Rotation2d.fromDegrees(-80.354)),
+                new Pose2d(5.679, -4.081, Rotation2d.fromDegrees(22.255))
             ),
-        driveBase);
+            driveBase);
     }
 }

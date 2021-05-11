@@ -14,14 +14,21 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
 
-public class CenterThenBack extends Path{
+/**
+ * Trajectory starting on intitiation line closest to your score port (facing towards your driverstation)
+ * and going through the trench
+ * 
+ * @author meganchoy, ctychen
+ */
+public class CenterToTrench extends Path {
 
-    public CenterThenBack(DriveBase driveBase){
+    public CenterToTrench(DriveBase driveBase) {
         super(
-                List.of(
-                    new Pose2d(3.194, 4.296, Rotation2d.fromDegrees(0)),
-                    new Pose2d(4.194, 4.296, Rotation2d.fromDegrees(0))
+            List.of(
+                new Pose2d(3.186, -2.4, Rotation2d.fromDegrees(0)),
+                new Pose2d(4.156, -1.483, Rotation2d.fromDegrees(70.54)),
+                new Pose2d(5.159, -0.745, Rotation2d.fromDegrees(0))
                 ),
-            driveBase);
+        driveBase);
     }
 }

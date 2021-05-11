@@ -15,19 +15,20 @@ import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Trajectory starting from middle of the initiation line (facing towards your
- * driver station) and facing the 3 Power Cells in the middle of the generator
+ * Trajectory starting on the line closest to your score port (robot facing towards your own driverstation)
+ * and facing the 3 Power Cells under the middle of the generator.
  * 
  * @author meganchoy, ctychen
  */
-public class CenterToGenerator3BallMidPath extends Path{
+public class Center3BS extends Path{
 
-        public CenterToGenerator3BallMidPath(DriveBase driveBase){
-                super(
-                        List.of(
-                                new Pose2d(3.186, 4.296, Rotation2d.fromDegrees(0)),
-                                new Pose2d(5.687, 3.6, Rotation2d.fromDegrees(18))
-                        ), 
-                driveBase);
-        }
+    public Center3BS(DriveBase driveBase) {
+        super(
+            List.of(
+                new Pose2d(3.186, -2.4, Rotation2d.fromDegrees(0)),
+                new Pose2d(4.083, -3.721, Rotation2d.fromDegrees(-40)),
+                new Pose2d(5.299, -4.353, Rotation2d.fromDegrees(26))
+            ),
+        driveBase);
+    }
 }

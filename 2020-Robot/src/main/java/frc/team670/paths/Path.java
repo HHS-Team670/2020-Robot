@@ -25,12 +25,18 @@ import frc.team670.robot.subsystems.DriveBase;
  */
 public class Path {
 
-    private static final DifferentialDriveVoltageConstraint AUTO_VOLTAGE_CONSTRAINT = getAutoVoltageConstraint();
+    //TODO this only gets the left voltage constraint, make it get both left and right
+    private static final DifferentialDriveVoltageConstraint AUTO_VOLTAGE_CONSTRAINT = getLeftAutoVoltageConstraint();
     private static final TrajectoryConfig CONFIG = getConfig();
     private Trajectory trajectory;
     private DriveBase driveBase;
     private List<Pose2d> waypointsList;
 
+    /**
+     * Used to create a path object based on a list of way points and the drivebase
+     * @param waypoints a list of waypoints
+     * @param driveBase the drivebase which has to follow the path
+     */
     public Path(List<Pose2d> waypoints, DriveBase driveBase) {
         this.driveBase = driveBase;
         this.waypointsList = waypoints;
@@ -41,10 +47,16 @@ public class Path {
         this.trajectory = TrajectoryGenerator.generateTrajectory(waypoints, CONFIG);
     }
 
+    /**
+     * Gets the starting pose from the waypoint list
+     */
     public Pose2d getStartingPose(){
         return this.waypointsList.get(0);
     }
 
+    /**
+     * Gets the ending pose from the waypoints list
+     */
     public Pose2d getEndingPose(){
         return this.waypointsList.get(waypointsList.size() - 1);
     }
@@ -59,9 +71,15 @@ public class Path {
         driveBase.resetOdometry(driveBase.getPose());
     }
 
-    private static DifferentialDriveVoltageConstraint getAutoVoltageConstraint() {
-        return new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(RobotConstants.ksVolts,
-                RobotConstants.kvVoltSecondsPerMeter, RobotConstants.kaVoltSecondsSquaredPerMeter),
+    private static DifferentialDriveVoltageConstraint getLeftAutoVoltageConstraint() {
+        return new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(RobotConstants.leftKsVolts,
+                RobotConstants.leftKvVoltSecondsPerMeter, RobotConstants.leftKaVoltSecondsSquaredPerMeter),
+                RobotConstants.kDriveKinematics, 10);
+    }
+
+    private static DifferentialDriveVoltageConstraint getRightAutoVoltageConstraint() {
+        return new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(RobotConstants.rightKsVolts,
+                RobotConstants.rightKvVoltSecondsPerMeter, RobotConstants.rightKaVoltSecondsSquaredPerMeter),
                 RobotConstants.kDriveKinematics, 10);
     }
 
@@ -74,6 +92,9 @@ public class Path {
                         .addConstraint(RobotConstants.kAutoPathConstraints).addConstraint(AUTO_VOLTAGE_CONSTRAINT);
     }
 
+    /**
+     * Used to get the trajectory
+     */
     public Trajectory getTrajectory(){
         return this.trajectory;
     }
