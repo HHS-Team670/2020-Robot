@@ -18,10 +18,14 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
 import frc.team670.robot.constants.RobotConstants;
@@ -56,14 +60,14 @@ public class DriveBase extends TankDriveBase {
   private DifferentialDriveOdometry m_odometry;
 
   private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
-  
-  private static final double CURRENT_WHEN_AGAINST_BAR = 5; //: FinTODOd this
+
+  private static final double CURRENT_WHEN_AGAINST_BAR = 5; // : FinTODOd this
   private int againstBarCount = 0;
 
   public DriveBase(MustangController mustangController) {
     super();
     mController = mustangController;
-    
+
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
         false, MotorConfig.Motor_Type.NEO);
     rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
@@ -379,7 +383,7 @@ public class DriveBase extends TankDriveBase {
     Logger.consoleLog("Encoder return value %s %s", lE, rE);
     Logger.consoleLog("Encoder positions %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
     int counter = 0;
-    while((left1Encoder.getPosition() != 0 || right1Encoder.getPosition() != 0) && counter <30){
+    while ((left1Encoder.getPosition() != 0 || right1Encoder.getPosition() != 0) && counter < 30) {
       lE = left1Encoder.setPosition(0);
       rE = right1Encoder.setPosition(0);
       counter++;
@@ -387,7 +391,8 @@ public class DriveBase extends TankDriveBase {
     Logger.consoleLog("Encoder return value %s %s", lE, rE);
     Logger.consoleLog("Encoder positions %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
     Logger.consoleLog("Drivebase pose reset %s", pose);
-    Logger.consoleLog("Drivebase get position after reset %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
+    Logger.consoleLog("Drivebase get position after reset %s %s", left1Encoder.getPosition(),
+        right1Encoder.getPosition());
   }
 
   public void resetOdometry() {
@@ -423,19 +428,19 @@ public class DriveBase extends TankDriveBase {
     tankDrive(leftVoltage / RobotController.getBatteryVoltage(), rightVoltage / RobotController.getBatteryVoltage());
   }
 
-  public boolean isAlignedOnFloorBars(){
+  public boolean isAlignedOnFloorBars() {
     double backLeftCurrent = left2.getOutputCurrent();
     double backRightCurrent = right2.getOutputCurrent();
-    if (backLeftCurrent > 0.2 && backRightCurrent > 0.2){
+    if (backLeftCurrent > 0.2 && backRightCurrent > 0.2) {
       if (backLeftCurrent >= CURRENT_WHEN_AGAINST_BAR && backRightCurrent >= CURRENT_WHEN_AGAINST_BAR) {
-          againstBarCount++;
+        againstBarCount++;
       } else {
-          againstBarCount = 0;
+        againstBarCount = 0;
       }
-      if (againstBarCount>= 4){ // 4 consecutive readings higher than peak
-          return true;
+      if (againstBarCount >= 4) { // 4 consecutive readings higher than peak
+        return true;
       }
-  }
+    }
     return false;
   }
 
@@ -494,18 +499,59 @@ public class DriveBase extends TankDriveBase {
   @Override
   public double ticksToInches(double ticks) {
     double rotations = ticks / RobotConstants.SPARK_TICKS_PER_ROTATION;
-    return rotations * Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER; 
+    return rotations * Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER;
   }
 
   @Override
   public double inchesToTicks(double inches) {
-    double rotations = inches/(Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER);
+    double rotations = inches / (Math.PI * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER);
     return rotations * RobotConstants.SPARK_TICKS_PER_ROTATION;
   }
 
   @Override
   public void zeroHeading() {
     navXMicro.reset();
+  }
+
+  @Override
+  public DifferentialDriveKinematics getKDriveKinematics() {
+    // TODO Auto-generated method stub
+    return RobotConstants.kDriveKinematics;
+  }
+
+  @Override
+  public PIDController getLeftPIDController() {
+    // TODO Auto-generated method stub
+    return new PIDController(RobotConstants.leftKPDriveVel,
+              RobotConstants.leftKIDriveVel, RobotConstants.leftKDDriveVel);
+  }
+
+  @Override
+  public SimpleMotorFeedforward getLeftSimpleMotorFeedforward() {
+    // TODO Auto-generated method stub
+    return new SimpleMotorFeedforward(RobotConstants.leftKsVolts, RobotConstants.leftKvVoltSecondsPerMeter,
+                    RobotConstants.leftKaVoltSecondsSquaredPerMeter);
+  }
+
+  @Override
+  public PIDController getRightPIDController() {
+    // TODO Auto-generated method stub
+    return new PIDController(RobotConstants.rightKPDriveVel,
+            RobotConstants.rightKIDriveVel, RobotConstants.rightKDDriveVel);
+  }
+
+  @Override
+  public SimpleMotorFeedforward getRightSimpleMotorFeedforward() {
+    // TODO Auto-generated method stub
+    return new SimpleMotorFeedforward(RobotConstants.rightKsVolts, RobotConstants.rightKvVoltSecondsPerMeter,
+                     RobotConstants.rightKaVoltSecondsSquaredPerMeter);
+  }
+
+  // useless
+  @Override
+  public RamseteController getRamseteController() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
  
