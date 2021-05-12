@@ -547,12 +547,6 @@ public class DriveBase extends TankDriveBase {
                      RobotConstants.rightKaVoltSecondsSquaredPerMeter);
   }
 
-  // useless
-  @Override
-  public RamseteController getRamseteController() {
-    // TODO Auto-generated method stub
-    return null;
-  }
 
  
 
