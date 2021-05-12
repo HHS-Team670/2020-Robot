@@ -515,39 +515,31 @@ public class DriveBase extends TankDriveBase {
 
   @Override
   public DifferentialDriveKinematics getKDriveKinematics() {
-    // TODO Auto-generated method stub
     return RobotConstants.kDriveKinematics;
   }
 
   @Override
   public PIDController getLeftPIDController() {
-    // TODO Auto-generated method stub
     return new PIDController(RobotConstants.leftKPDriveVel,
               RobotConstants.leftKIDriveVel, RobotConstants.leftKDDriveVel);
   }
 
   @Override
   public SimpleMotorFeedforward getLeftSimpleMotorFeedforward() {
-    // TODO Auto-generated method stub
     return new SimpleMotorFeedforward(RobotConstants.leftKsVolts, RobotConstants.leftKvVoltSecondsPerMeter,
                     RobotConstants.leftKaVoltSecondsSquaredPerMeter);
   }
 
   @Override
   public PIDController getRightPIDController() {
-    // TODO Auto-generated method stub
     return new PIDController(RobotConstants.rightKPDriveVel,
             RobotConstants.rightKIDriveVel, RobotConstants.rightKDDriveVel);
   }
 
   @Override
   public SimpleMotorFeedforward getRightSimpleMotorFeedforward() {
-    // TODO Auto-generated method stub
     return new SimpleMotorFeedforward(RobotConstants.rightKsVolts, RobotConstants.rightKvVoltSecondsPerMeter,
                      RobotConstants.rightKaVoltSecondsSquaredPerMeter);
   }
-
-
- 
 
 }
