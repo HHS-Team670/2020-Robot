@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import frc.team670.mustanglib.commands.MustangScheduler;
+import frc.team670.mustanglib.commands.drive.teleop.XboxTankDrive;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -38,6 +39,7 @@ import frc.team670.mustanglib.utils.MustangNotifications;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.subsystems.drivebase.TankDriveBase;
+import edu.wpi.first.wpilibj.SpeedController;
 
 /**
  * Represents a tank drive base.
@@ -65,13 +67,13 @@ public class DriveBase extends TankDriveBase {
   private int againstBarCount = 0;
 
   public DriveBase(MustangController mustangController) {
-    super();
     mController = mustangController;
 
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
         false, MotorConfig.Motor_Type.NEO);
     rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
         RobotMap.SPARK_RIGHT_MOTOR_2, false, MotorConfig.Motor_Type.NEO);
+
 
     left1 = leftControllers.get(0);
     left2 = leftControllers.get(1);
@@ -98,6 +100,7 @@ public class DriveBase extends TankDriveBase {
     setMotorsInvert(leftControllers, false);
     setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController
 
+    super.setMotorControllers(new SpeedController[] {left1, left2}, new SpeedController[] {right1, right2}, false, false, .1, true);
     driveTrain = new DifferentialDrive(left1, right1);
     driveTrain.setMaxOutput(1.0);
     driveTrain.setRightSideInverted(false);
@@ -113,7 +116,7 @@ public class DriveBase extends TankDriveBase {
    * Used to initialized teleop command for the driveBase
    */
   public void initDefaultCommand() {
-    MustangScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive(this, mController));
+    MustangScheduler.getInstance().setDefaultCommand(this, new XboxTankDrive(this, mController));
   }
 
   /**

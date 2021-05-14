@@ -48,7 +48,6 @@ public class GetVisionData extends CommandBase implements MustangCommand {
     @Override
     public void execute() {
         if(!runVisionOnce && System.currentTimeMillis()-startTime > 800){
-            coprocessor.getLatestVisionData();
             runVisionOnce = true;
         }
     }
@@ -61,7 +60,7 @@ public class GetVisionData extends CommandBase implements MustangCommand {
 
     @Override
     public void end(boolean interrupted) {
-        double distanceFromTargetMeters = coprocessor.getDistanceToTargetCm() * 100;
+        double distanceFromTargetMeters = coprocessor.getDistanceToTargetMeters() * 100;
         double angleFromTargetForwardDegrees = coprocessor.getAngleToTarget();
         double xToTargetForward = distanceFromTargetMeters * Math.sin(Math.toRadians(angleFromTargetForwardDegrees));
         double yToTargetForward = distanceFromTargetMeters * Math.cos(Math.toRadians(angleFromTargetForwardDegrees));

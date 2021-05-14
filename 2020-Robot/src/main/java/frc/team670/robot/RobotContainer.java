@@ -23,7 +23,8 @@ import frc.team670.robot.subsystems.Climber;
 
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.MustangScheduler;
-// import frc.team670.robot.commands.auton.AutoSelector;
+import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToGenerator2BallSide;
+import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 // import frc.team670.robot.commands.auton.ShootFromAngleThenTimeDrive;
 // import frc.team670.robot.commands.auton.ToTrenchRunAndShoot;
 // import frc.team670.robot.commands.auton.baseline.ShootThenBack;
@@ -55,6 +56,7 @@ public class RobotContainer extends RobotContainerBase{
 
   private static OI oi = new OI(driveBase, intake, conveyor, indexer, shooter, climber, turret, vision);
 
+  private static MustangCommand m_autonomousCommand;
   // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret, coprocessor);
 
   /**
@@ -87,7 +89,7 @@ public class RobotContainer extends RobotContainerBase{
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    return null;
+    return new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, vision);
   }
 
 
@@ -99,6 +101,10 @@ public class RobotContainer extends RobotContainerBase{
     if (!turret.hasZeroed()) { // only zero indexer if needed
       MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
     }
+    //  m_autonomousCommand = getAutonomousCommand();
+    //  if (m_autonomousCommand != null) {
+    //    MustangScheduler.getInstance().schedule(m_autonomousCommand);
+    //  }
   }
 
   public void teleopInit() {

@@ -33,8 +33,8 @@ import frc.team670.robot.subsystems.Vision;
 
 public class OI extends OIBase{
 
-  private MustangController driverController;
-  private Joystick operatorController;
+  private MustangController driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
+  private Joystick operatorController  = new Joystick(RobotMap.OPERATOR_CONTROLLER_PORT);
 
   private JoystickButton toggleReverseDrive;
 
@@ -71,7 +71,6 @@ public class OI extends OIBase{
   Vision vision;
 
   public OI(DriveBase drivebase, Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Climber climber, Turret turret, Vision vision) {
-    super();
 
     this.drivebase = drivebase;
     this.intake = intake;
@@ -82,11 +81,10 @@ public class OI extends OIBase{
     this.turret = turret;
     this.vision = vision;
 
-    driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
     toggleReverseDrive = new JoystickButton(driverController, XboxButtons.LEFT_BUMPER);
     toggleReverseDrive.whenPressed(new FlipDriveDirection());
-    operatorController = new Joystick(RobotMap.OPERATOR_CONTROLLER_PORT);
     xkeys = new XKeys(drivebase, intake, conveyor, indexer, shooter, climber, turret, vision);
+    configureButtonBindings();
   }
 
   public boolean isQuickTurnPressed() {
