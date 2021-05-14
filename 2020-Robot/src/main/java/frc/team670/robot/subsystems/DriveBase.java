@@ -53,8 +53,6 @@ public class DriveBase extends TankDriveBase {
 
   private MustangController mController;
 
-  private DifferentialDrive driveTrain;
-
   private List<SparkMAXLite> leftControllers, rightControllers;
   private List<SparkMAXLite> allMotors = new ArrayList<SparkMAXLite>();;
 
@@ -73,7 +71,6 @@ public class DriveBase extends TankDriveBase {
         false, MotorConfig.Motor_Type.NEO);
     rightControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_RIGHT_MOTOR_1,
         RobotMap.SPARK_RIGHT_MOTOR_2, false, MotorConfig.Motor_Type.NEO);
-
 
     left1 = leftControllers.get(0);
     left2 = leftControllers.get(1);
@@ -101,9 +98,6 @@ public class DriveBase extends TankDriveBase {
     setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController
 
     super.setMotorControllers(new SpeedController[] {left1, left2}, new SpeedController[] {right1, right2}, false, false, .1, true);
-    driveTrain = new DifferentialDrive(left1, right1);
-    driveTrain.setMaxOutput(1.0);
-    driveTrain.setRightSideInverted(false);
 
     // initialized NavX and sets Odometry
     navXMicro = new NavX(RobotMap.NAVX_PORT);
@@ -428,7 +422,9 @@ public class DriveBase extends TankDriveBase {
   }
 
   public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
-    tankDrive(leftVoltage / RobotController.getBatteryVoltage(), rightVoltage / RobotController.getBatteryVoltage());
+    left1.setVoltage(leftVoltage);
+    right1.setVoltage(rightVoltage);
+    getDriveTrain().feed();
   }
 
   public boolean isAlignedOnFloorBars() {

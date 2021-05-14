@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.FlipDriveDirection;
 import frc.team670.mustanglib.constants.OIBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.climb.Climb;
@@ -33,59 +34,32 @@ import frc.team670.robot.subsystems.Vision;
 
 public class OI extends OIBase{
 
-  private MustangController driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
-  private Joystick operatorController  = new Joystick(RobotMap.OPERATOR_CONTROLLER_PORT);
+  private static MustangController driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
+  private static Joystick operatorController  = new Joystick(RobotMap.OPERATOR_CONTROLLER_PORT);
 
-  private JoystickButton toggleReverseDrive;
-
-  private XKeys xkeys;
+  private static XKeys xkeys;
 
   //operator buttons
-  private JoystickButton toggleIntake = new JoystickButton(getOperatorController(), 1);
-  private JoystickButton runIntakeIn = new JoystickButton(getOperatorController(), 3);
-  private JoystickButton runIntakeOut = new JoystickButton(getOperatorController(), 5);
-  private JoystickButton toggleShooter = new JoystickButton(getOperatorController(), 6);
-  private JoystickButton toggleUpdraw = new JoystickButton(getOperatorController(), 2);
-  private JoystickButton rotateIndexerBackwards = new JoystickButton(getOperatorController(), 9);
-  private JoystickButton togglePusher = new JoystickButton(getOperatorController(), 7);
-  private JoystickButton extendClimb = new JoystickButton(getOperatorController(), 11);
-  private JoystickButton retractClimb = new JoystickButton(getOperatorController(), 12);
-  private JoystickButton turnToNextIndexer = new JoystickButton(getOperatorController(), 10);
-  private JoystickButton zeroTurret = new JoystickButton(getOperatorController(), 8);
+  private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), 1);
+  private static JoystickButton runIntakeIn = new JoystickButton(getOperatorController(), 3);
+  private static JoystickButton runIntakeOut = new JoystickButton(getOperatorController(), 5);
+  private static JoystickButton toggleShooter = new JoystickButton(getOperatorController(), 6);
+  private static JoystickButton toggleUpdraw = new JoystickButton(getOperatorController(), 2);
+  private static JoystickButton rotateIndexerBackwards = new JoystickButton(getOperatorController(), 9);
+  private static JoystickButton togglePusher = new JoystickButton(getOperatorController(), 7);
+  private static JoystickButton extendClimb = new JoystickButton(getOperatorController(), 11);
+  private static JoystickButton retractClimb = new JoystickButton(getOperatorController(), 12);
+  private static JoystickButton turnToNextIndexer = new JoystickButton(getOperatorController(), 10);
+  private static JoystickButton zeroTurret = new JoystickButton(getOperatorController(), 8);
   
   //xbox buttons
-  private JoystickButton xboxVision = new JoystickButton(getDriverController(), XboxButtons.A);
-  private JoystickButton xboxIncreaseSpeed = new JoystickButton(getDriverController(), XboxButtons.B);
-  private JoystickButton xboxDecreaseSpeed = new JoystickButton(getDriverController(), XboxButtons.X);
-  private JoystickButton xboxToggleShooter = new JoystickButton(getDriverController(), XboxButtons.Y);
-  private JoystickButton xboxRaiseClimber = new JoystickButton(getDriverController(), XboxButtons.LEFT_JOYSTICK_BUTTON);
-  private JoystickButton xboxLowerClimber = new JoystickButton(getDriverController(), XboxButtons.RIGHT_JOYSTICK_BUTTON);
-
-  DriveBase drivebase;
-  Intake intake;
-  Conveyor conveyor;
-  Indexer indexer;
-  Shooter shooter;
-  Climber climber;
-  Turret turret;
-  Vision vision;
-
-  public OI(DriveBase drivebase, Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Climber climber, Turret turret, Vision vision) {
-
-    this.drivebase = drivebase;
-    this.intake = intake;
-    this.conveyor = conveyor;
-    this.indexer = indexer;
-    this.shooter = shooter;
-    this.climber = climber;
-    this.turret = turret;
-    this.vision = vision;
-
-    toggleReverseDrive = new JoystickButton(driverController, XboxButtons.LEFT_BUMPER);
-    toggleReverseDrive.whenPressed(new FlipDriveDirection());
-    xkeys = new XKeys(drivebase, intake, conveyor, indexer, shooter, climber, turret, vision);
-    configureButtonBindings();
-  }
+  private static JoystickButton xboxVision = new JoystickButton(getDriverController(), XboxButtons.A);
+  private static JoystickButton xboxIncreaseSpeed = new JoystickButton(getDriverController(), XboxButtons.B);
+  private static JoystickButton xboxDecreaseSpeed = new JoystickButton(getDriverController(), XboxButtons.X);
+  private static JoystickButton xboxToggleShooter = new JoystickButton(getDriverController(), XboxButtons.Y);
+  private static JoystickButton xboxRaiseClimber = new JoystickButton(getDriverController(), XboxButtons.LEFT_JOYSTICK_BUTTON);
+  private static JoystickButton xboxLowerClimber = new JoystickButton(getDriverController(), XboxButtons.RIGHT_JOYSTICK_BUTTON);
+  private static JoystickButton toggleReverseDrive = new JoystickButton(driverController, XboxButtons.LEFT_BUMPER);
 
   public boolean isQuickTurnPressed() {
     return driverController.getRightBumper();
@@ -101,15 +75,24 @@ public class OI extends OIBase{
     rumbleController(driverController, power, time);
   }
 
-  public MustangController getDriverController() {
+  public static MustangController getDriverController() {
     return driverController;
   }
 
-  public Joystick getOperatorController() {
+  public static Joystick getOperatorController() {
     return operatorController;
   }
 
-  public void configureButtonBindings(){
+  public void configureButtonBindings(MustangSubsystemBase... subsystemBases){
+    DriveBase drivebase = (DriveBase)subsystemBases[0];
+    Intake intake = (Intake)subsystemBases[1];
+    Conveyor conveyor = (Conveyor)subsystemBases[2];
+    Indexer indexer = (Indexer)subsystemBases[3];
+    Turret turret = (Turret)subsystemBases[4];
+    Shooter shooter = (Shooter)subsystemBases[5];
+    Climber climber = (Climber)subsystemBases[6];
+    Vision vision = (Vision)subsystemBases[7];
+
     toggleIntake.whenPressed(new ToggleIntake(intake));
     runIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
     runIntakeIn.whenReleased(new StopIntaking(intake, conveyor, indexer));
@@ -130,6 +113,9 @@ public class OI extends OIBase{
     xboxToggleShooter.toggleWhenPressed(new RotateIndexerToUptakeThenShoot(indexer, shooter, drivebase));
     // xboxLowerClimber.whenPressed(new Climb(climber));
     // xboxRaiseClimber.whenPressed(new ExtendClimber(climber));
+    toggleReverseDrive.whenPressed(new FlipDriveDirection());
+
+    xkeys = new XKeys(drivebase, intake, conveyor, indexer, shooter, climber, turret, vision);
   }
 
 }

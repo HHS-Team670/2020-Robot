@@ -39,11 +39,11 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 public class RobotContainer extends RobotContainerBase{
 
 
-  private static MustangController mController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
+  private static OI oi = new OI();
 
   private static Solenoid indexerPusherClimberDeploy = new Solenoid(RobotMap.PCMODULE, RobotMap.INDEXER_PUSHER_CLIMBER_DEPLOY);
 
-  private static DriveBase driveBase = new DriveBase(mController);
+  private static DriveBase driveBase = new DriveBase(oi.getDriverController());
   private static Intake intake = new Intake();
   private static Conveyor conveyor = new Conveyor();
   private static Indexer indexer = new Indexer(conveyor, indexerPusherClimberDeploy);
@@ -54,9 +54,7 @@ public class RobotContainer extends RobotContainerBase{
 
   private static Vision vision = new Vision();
 
-  private static OI oi = new OI(driveBase, intake, conveyor, indexer, shooter, climber, turret, vision);
 
-  private static MustangCommand m_autonomousCommand;
   // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret, coprocessor);
 
   /**
@@ -64,7 +62,8 @@ public class RobotContainer extends RobotContainerBase{
    */
   public RobotContainer() {
     super();
-    addSubsystem(driveBase, intake, conveyor, indexer, shooter, climber, turret);
+    addSubsystem(driveBase, intake, conveyor, indexer, turret, shooter, climber, vision);
+    oi.configureButtonBindings(driveBase, intake, conveyor, indexer, turret, shooter, climber, vision);
   }
 
   /**
