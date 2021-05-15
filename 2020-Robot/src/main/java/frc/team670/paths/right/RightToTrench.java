@@ -26,7 +26,7 @@ public class RightToTrench extends Path{
         public RightToTrench(DriveBase driveBase) {
                 super(
                         List.of(
-                                new Pose2d(3.0763, -0.981, Rotation2d.fromDegrees(0)),
+                                new Pose2d(3.9763, -0.981, Rotation2d.fromDegrees(0)),
                                 new Pose2d(5.159, -0.745, Rotation2d.fromDegrees(0))
                         ),
                         driveBase);

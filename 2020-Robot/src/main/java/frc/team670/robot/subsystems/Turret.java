@@ -136,11 +136,11 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     @Override
     public HealthState checkHealth() {
-        // if (isSparkMaxErrored(rotator)) {
-        //     return HealthState.RED;
-        // }
-        // return HealthState.GREEN;
-        return HealthState.RED;
+        if (isSparkMaxErrored(rotator)) {
+            return HealthState.RED;
+        }
+        return HealthState.GREEN;
+        // return HealthState.RED;
     }
 
     public boolean hasZeroed() {
