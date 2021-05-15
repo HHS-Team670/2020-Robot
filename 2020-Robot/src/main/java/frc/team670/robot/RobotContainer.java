@@ -88,7 +88,7 @@ public class RobotContainer extends RobotContainerBase{
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    return new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, vision);
+    return new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, vision);
   }
 
 
