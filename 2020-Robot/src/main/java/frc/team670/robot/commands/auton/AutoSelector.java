@@ -7,16 +7,17 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableType;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.robot.commands.MustangCommand;
 import frc.team670.robot.commands.auton.baseline.*;
+import frc.team670.robot.commands.auton.generator.*;
 import frc.team670.robot.constants.FieldConstants;
+import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
-import frc.team670.robot.subsystems.Vision;
 /**
  * Selects an autonomous routine to run based on choice from driver
  */
@@ -31,7 +32,7 @@ public class AutoSelector {
     private Indexer indexer;
     private Shooter shooter;
     private Turret turret;
-    private Vision coprocessor;
+    private MustangCoprocessor coprocessor;
     
     AutoRoutine selectedRoutine = AutoRoutine.UNKNOWN;
 
@@ -45,7 +46,7 @@ public class AutoSelector {
      * @param turret the turret of the robot
      * @param coprocessor the raspberry pi
      */
-    public AutoSelector(DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Turret turret, Vision coprocessor){
+    public AutoSelector(DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Turret turret, MustangCoprocessor coprocessor){
         
         instance = NetworkTableInstance.getDefault();
         table = instance.getTable("SmartDashboard");
@@ -219,29 +220,28 @@ public class AutoSelector {
             case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_RIGHT:
               return new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
 
-            // case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_LEFT:
-            //   return new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            // case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_CENTER:
-            //   return new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            // case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_RIGHT:
-            //   return new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+            case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_LEFT:
+              return new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+            case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_CENTER:
+              return new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+            case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_RIGHT:
+              return new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
 
-            // case SHOOT_FROM_BASELINE_THEN_TO_TRENCH_LEFT:
-            //   return new ShootFromBaseLineThenToTrench(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            // case SHOOT_FROM_BASELINE_THEN_TO_TRENCH_CENTER:
-            //   return new ShootFromBaseLineThenToTrench(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            // case SHOOT_FROM_BASELINE_THEN_TO_TRENCH_RIGHT:
-            //   return new ShootFromBaseLineThenToTrench(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+            case SHOOT_FROM_BASELINE_THEN_TO_TRENCH_LEFT:
+              return new ShootFromBaseLineThenToTrench(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+            case SHOOT_FROM_BASELINE_THEN_TO_TRENCH_CENTER:
+              return new ShootFromBaseLineThenToTrench(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+            case SHOOT_FROM_BASELINE_THEN_TO_TRENCH_RIGHT:
+              return new ShootFromBaseLineThenToTrench(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
               
-            // case SHOOT_THEN_BACK:
-            //   return new ShootThenBack(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            // case GENERATOR_2_BALL_SIDE_TO_TRENCH_THEN_SHOOT:
-            //   return new Generator2BallSideToTrenchThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            // case GENERATOR_3_BALL_MID_TO_GENERATOR_2_BALL_MID_THEN_SHOOT:
-            //   return new Generator3BallMidToGenerator2BallMidThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+            case SHOOT_THEN_BACK:
+              return new ShootThenBack(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+            case GENERATOR_2_BALL_SIDE_TO_TRENCH_THEN_SHOOT:
+              return new Generator2BallSideToTrenchThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+            case GENERATOR_3_BALL_MID_TO_GENERATOR_2_BALL_MID_THEN_SHOOT:
+              return new Generator3BallMidToGenerator2BallMidThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
             default:
-                return null;
-            //   return new ShootThenBack(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+              return new ShootThenBack(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
           }
         // return 
         //     new SelectCommand(          
