@@ -35,8 +35,6 @@ public class XboxTankDrive extends CommandBase implements MustangCommand {
         addRequirements(driveBase);
         this.driveBase = driveBase;
         this.controller = controller;
-        Logger.consoleLog("DRIVEBASE: %s", driveBase);
-        Logger.consoleLog("CONTROLLER: %s", controller);
     }
 
     // Called once when the command executes

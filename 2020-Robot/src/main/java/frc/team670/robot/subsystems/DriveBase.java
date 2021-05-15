@@ -428,8 +428,6 @@ public class DriveBase extends TankDriveBase {
   }
 
   public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
-    Logger.consoleLog("LeftVoltage: %s", leftVoltage);
-    Logger.consoleLog("RightVoltage: %s", rightVoltage);
     left1.setVoltage(leftVoltage);
     right1.setVoltage(rightVoltage);
     getDriveTrain().feed();

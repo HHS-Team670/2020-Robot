@@ -147,7 +147,6 @@ public abstract class TankDriveBase extends MustangSubsystemBase {
    *                   squares this value to linearize it.
    */
   public void tankDrive(double leftSpeed, double rightSpeed) {
-    Logger.consoleLog("tankDrive");
     tankDrive(leftSpeed, rightSpeed, true);
   }
   /**
