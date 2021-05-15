@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.team670.robot.commands.MustangCommand;
-import frc.team670.robot.commands.drive.straight.TimedDrive;
+import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.commands.drive.straight.TimedDrive;
 import frc.team670.robot.commands.indexer.EmptyRevolver;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
@@ -24,10 +24,10 @@ import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Intake;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
-import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 
 /**
  * Shoot from baseline then drive to trench run, hopefully intake and shoot 3 balls.

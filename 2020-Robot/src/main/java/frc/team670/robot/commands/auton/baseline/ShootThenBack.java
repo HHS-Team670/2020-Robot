@@ -10,7 +10,7 @@ import frc.team670.paths.left.LeftToTrench;
 import frc.team670.paths.center.CenterToTrench;
 import frc.team670.paths.left.LeftThenBack;
 import frc.team670.paths.right.RightToTrench;
-import frc.team670.robot.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
@@ -20,15 +20,15 @@ import frc.team670.robot.commands.turret.RotateToHome;
 import frc.team670.robot.commands.turret.RotateTurret;
 import frc.team670.robot.commands.vision.GetVisionData;
 import frc.team670.robot.commands.shooter.Shoot;
-import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Intake;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
-import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
+import frc.team670.robot.subsystems.Vision;
 
 /**
  * Shoots then moves the robot back
@@ -38,7 +38,7 @@ public class ShootThenBack extends SequentialCommandGroup implements MustangComm
     private Path trajectory;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private DriveBase driveBase;
-    private MustangCoprocessor coprocessor;
+    private  Vision coprocessor;
     private Shooter shooter;
 
     /**
@@ -54,7 +54,7 @@ public class ShootThenBack extends SequentialCommandGroup implements MustangComm
      * @param coprocessor the coprocessor
     */
     public ShootThenBack(DriveBase driveBase, Intake intake, Conveyor conveyor,
-            Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
+            Shooter shooter, Indexer indexer, Turret turret, Vision coprocessor) {
 
         this.driveBase = driveBase;
         this.coprocessor = coprocessor;

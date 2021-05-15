@@ -16,8 +16,7 @@ import frc.team670.paths.Path;
 import frc.team670.paths.left.LeftToTrench;
 import frc.team670.paths.center.CenterToTrench;
 import frc.team670.paths.right.RightToTrench;
-import frc.team670.paths.left.LeftToTrench;
-import frc.team670.robot.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.EmptyRevolver;
 import frc.team670.robot.commands.indexer.SendAllBalls;
@@ -27,15 +26,15 @@ import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.turret.RotateTurret;
 import frc.team670.robot.commands.vision.GetVisionData;
 import frc.team670.robot.commands.shooter.Shoot;
-import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Intake;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
-import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
+import frc.team670.robot.subsystems.Vision;
 
 /**
  * Autonomous routine starting with shooting from the initiation line (facing
@@ -49,7 +48,7 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
     private Path trajectory;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private DriveBase driveBase;
-    private MustangCoprocessor coprocessor;
+    private Vision coprocessor;
 
     /**
      * Initializes this command from the given parameters
@@ -64,7 +63,7 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
      * @param coprocessor the coprocessor
     */
     public ShootFromBaseLineThenToTrench(StartPosition startPosition, DriveBase driveBase, Intake intake,
-            Conveyor conveyor, Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
+            Conveyor conveyor, Shooter shooter, Indexer indexer, Turret turret, Vision coprocessor) {
 
         this.driveBase = driveBase;
         this.coprocessor = coprocessor;

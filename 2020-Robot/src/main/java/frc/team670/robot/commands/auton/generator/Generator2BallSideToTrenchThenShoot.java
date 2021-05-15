@@ -14,19 +14,19 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.Generator3BallMidToGenerator2BallSidePath;
 import frc.team670.paths.Path;
-import frc.team670.robot.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.robot.commands.indexer.SendAllBalls;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.turret.RotateTurret;
-import frc.team670.robot.dataCollection.MustangCoprocessor;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Intake;
-import frc.team670.robot.subsystems.MustangSubsystemBase;
-import frc.team670.robot.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
+import frc.team670.robot.subsystems.Vision;
 
 /**
  * Autonomous routine starting in front of the 2 power cells under the
@@ -51,7 +51,7 @@ public class Generator2BallSideToTrenchThenShoot extends SequentialCommandGroup 
    * @param coprocessor the raspberry pi
    */
   public Generator2BallSideToTrenchThenShoot(DriveBase driveBase, Intake intake, Conveyor conveyor,
-      Shooter shooter, Indexer indexer, Turret turret, MustangCoprocessor coprocessor) {
+      Shooter shooter, Indexer indexer, Turret turret, Vision coprocessor) {
 
     trajectory = new Generator3BallMidToGenerator2BallSidePath(driveBase);
 
