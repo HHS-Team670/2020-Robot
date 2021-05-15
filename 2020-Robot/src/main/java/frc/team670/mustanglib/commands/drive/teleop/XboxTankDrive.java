@@ -16,6 +16,7 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.subsystems.drivebase.TankDriveBase;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 
 /**
@@ -32,11 +33,16 @@ public class XboxTankDrive extends CommandBase implements MustangCommand {
     public XboxTankDrive(TankDriveBase driveBase, MustangController controller) {
         super();
         addRequirements(driveBase);
+        this.driveBase = driveBase;
+        this.controller = controller;
+        Logger.consoleLog("DRIVEBASE: %s", driveBase);
+        Logger.consoleLog("CONTROLLER: %s", controller);
     }
 
     // Called once when the command executes
     @Override
     public void execute() {
+
         driveBase.tankDrive(-1 * controller.getLeftStickY(),
                 -1 * controller.getRightStickY());
     }

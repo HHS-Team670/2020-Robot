@@ -24,7 +24,6 @@ import frc.team670.mustanglib.utils.Logger;
 public class RobotBase extends TimedRobot {
 
   private MustangCommand m_autonomousCommand;
-  private RobotContainerBase m_robotContainer;
 
   private Timer timer;
   private double SYSTEM_CHECK_PERIOD = 5;
@@ -96,7 +95,7 @@ public class RobotBase extends TimedRobot {
   public void autonomousInit() {
     Logger.consoleLog("Autonomous Init");
     robotContainer.autonomousInit();
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = robotContainer.getAutonomousCommand();
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       MustangScheduler.getInstance().schedule(m_autonomousCommand);

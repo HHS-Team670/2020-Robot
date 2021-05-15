@@ -76,6 +76,7 @@ public class MustangController extends XboxController {
     }
 
     public double getLeftStickY() {
+        Logger.consoleLog("LeftStickY");
         return super.getRawAxis(XboxButtons.LEFT_STICK_Y);
     }
 
@@ -92,6 +93,7 @@ public class MustangController extends XboxController {
     }
 
     public double getRightStickY() {
+        Logger.consoleLog("RightStickY");
         return super.getRawAxis(XboxButtons.RIGHT_STICK_Y);
     }
 

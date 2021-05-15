@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.DriverStation;
 
 import frc.team670.mustanglib.utils.MustangNotifications;
+import frc.team670.robot.RobotContainer;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
@@ -88,20 +89,22 @@ public class MustangScheduler {
                 Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> requirements = ((MustangCommand) (m_command))
                         .getHealthRequirements();
 
-                // if (requirements != null) {
-                //     for (MustangSubsystemBase s : requirements.keySet()) {
-                //         MustangSubsystemBase.HealthState healthReq = requirements.get(s);
-                //         if (s != null && healthReq != null) {
-                //             HealthState currentHealth = s.getHealth(false);
-                //             if (currentHealth.getId() > healthReq.getId()) {
-                //                 MustangNotifications.reportWarning(
-                //                         "%s not run because of health issue! Required health: %s, Actual health: %s",
-                //                         m_command.getName(), healthReq, currentHealth);
-                //                 return;
-                //             }
-                //         }
-                //     }
-                // }
+                if (requirements != null) {
+                    for (MustangSubsystemBase s : requirements.keySet()) {
+                        MustangSubsystemBase.HealthState healthReq = requirements.get(s);
+                        if (s != null && healthReq != null) {
+                            HealthState currentHealth = s.getHealth(false);
+                            if (currentHealth.getId() > healthReq.getId()) {
+                                MustangNotifications.reportWarning(
+                                        "%s not run because of health issue! Required health: %s, Actual health: %s",
+                                        m_command.getName(), healthReq, currentHealth);
+                                RobotContainer.getDriverController().rumble(0.75, 1);
+                                scheduleOrCancel(m_command);
+                                return;
+                            }
+                        }
+                    }
+                }
                 this.currentCommand = m_command;
                 scheduler.schedule(currentCommand);
                 Logger.consoleLog("Command scheduled: %s", this.currentCommand.getName());
@@ -135,20 +138,22 @@ public class MustangScheduler {
             Map<MustangSubsystemBase, MustangSubsystemBase.HealthState> requirements = ((MustangCommand) (m_command))
                     .getHealthRequirements();
 
-            // if (requirements != null) {
-            //     for (MustangSubsystemBase s : requirements.keySet()) {
-            //         MustangSubsystemBase.HealthState healthReq = requirements.get(s);
-            //         if (s != null && healthReq != null) {
-            //             HealthState currentHealth = s.getHealth(false);
-            //             if (currentHealth.getId() > healthReq.getId()) {
-            //                 MustangNotifications.reportError(
-            //                         "%s not run because of health issue! Required health: %s, Actual health: %s",
-            //                         m_command.getName(), healthReq, currentHealth);
-            //                 return;
-            //             }
-            //         }
-            //     }
-            // }
+            if (requirements != null) {
+                for (MustangSubsystemBase s : requirements.keySet()) {
+                    MustangSubsystemBase.HealthState healthReq = requirements.get(s);
+                    if (s != null && healthReq != null) {
+                        HealthState currentHealth = s.getHealth(false);
+                        if (currentHealth.getId() > healthReq.getId()) {
+                            MustangNotifications.reportError(
+                                    "%s not run because of health issue! Required health: %s, Actual health: %s",
+                                    m_command.getName(), healthReq, currentHealth);
+                            RobotContainer.getDriverController().rumble(0.75, 1);
+                            scheduleOrCancel(m_command);
+                            return;
+                        }
+                    }
+                }
+            }
             this.currentCommand = m_command;
             scheduler.setDefaultCommand(subsystem, currentCommand);
             Logger.consoleLog("Command scheduled: %s", this.currentCommand.getName());
@@ -165,9 +170,10 @@ public class MustangScheduler {
         scheduler.registerSubsystem(subsystems);
     }
 
-    // public void scheduleOrCancel (CommandBase mustangCommand) {
-    // 	if (RobotContainer.getDriverController().getAButton()) {
-    // 		scheduler.schedule(mustangCommand);
-    //     }
-    // }
+    public void scheduleOrCancel (CommandBase command) {
+    	if (RobotContainer.getDriverController().getRightJoystickButton() == true) {
+            Logger.consoleLog("Hello from scheduleorcancel");
+    		scheduler.schedule(command);
+        }
+    }
 }

@@ -87,6 +87,12 @@ public class DriveBase extends TankDriveBase {
     right1Encoder.setVelocityConversionFactor(sparkMaxVelocityConversionFactor);
     right2Encoder.setVelocityConversionFactor(sparkMaxVelocityConversionFactor);
 
+    left1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
+    left2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
+    right1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
+    right2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
+
+
     allMotors.addAll(leftControllers);
     allMotors.addAll(rightControllers);
 
@@ -110,7 +116,7 @@ public class DriveBase extends TankDriveBase {
    * Used to initialized teleop command for the driveBase
    */
   public void initDefaultCommand() {
-    MustangScheduler.getInstance().setDefaultCommand(this, new XboxTankDrive(this, mController));
+    MustangScheduler.getInstance().setDefaultCommand(this, new XboxRocketLeagueDrive(this, mController));
   }
 
   /**
@@ -422,6 +428,8 @@ public class DriveBase extends TankDriveBase {
   }
 
   public void tankDriveVoltage(double leftVoltage, double rightVoltage) {
+    Logger.consoleLog("LeftVoltage: %s", leftVoltage);
+    Logger.consoleLog("RightVoltage: %s", rightVoltage);
     left1.setVoltage(leftVoltage);
     right1.setVoltage(rightVoltage);
     getDriveTrain().feed();

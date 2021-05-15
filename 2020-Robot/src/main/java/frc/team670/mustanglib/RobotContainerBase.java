@@ -42,6 +42,9 @@ public abstract class RobotContainerBase {
       s.getHealth(true);
       if (s.getHealth(true).equals(HealthState.GREEN)) {
         MustangScheduler.getInstance().registerSubsystem(s);
+        if(s.getDefaultMustangCommand() != null){
+          MustangScheduler.getInstance().setDefaultCommand(s, s.getDefaultMustangCommand());
+        }
       }
       else if (s.getHealth(true).equals(HealthState.RED)) {
         MustangScheduler.getInstance().cancel(s.getDefaultMustangCommand());
