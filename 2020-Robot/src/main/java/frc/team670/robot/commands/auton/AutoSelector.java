@@ -8,6 +8,7 @@ import edu.wpi.first.networktables.NetworkTableType;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.commands.auton.baseline.*;
 import frc.team670.robot.commands.auton.generator.*;
 import frc.team670.robot.constants.FieldConstants;
@@ -156,12 +157,15 @@ public class AutoSelector {
      * @return
      */
     public AutoRoutine select() {
-        table.addEntryListener("auton-chooser", (table2, key2, entry, value, flags) -> {
-            if (value.getType() != NetworkTableType.kDouble)
-                return;
-            double autoID = value.getDouble();
-            this.selectedRoutine = AutoRoutine.getById((int)(autoID));
-        }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+        NetworkTableEntry value = table.getEntry("auton-chooser");
+        if (value.getType() != NetworkTableType.kDouble) {
+          Logger.consoleLog("value: %s" , value.getType());
+          return this.selectedRoutine;
+        }
+        Number autoID = value.getNumber(-1);
+        Logger.consoleLog("auton selector id: %s", autoID);
+        this.selectedRoutine = AutoRoutine.getById((int)(autoID));
+        Logger.consoleLog("auton selector routine: %s", this.selectedRoutine);
         return this.selectedRoutine;
     }
 

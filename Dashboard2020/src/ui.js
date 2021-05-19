@@ -276,14 +276,14 @@ function getAutonFromMap() {
   // RIGHT_TO_TRENCH_SHOT(6),
 
   
-
-  switch(document.getElementById('start-position').value){
+  
+  switch(document.querySelector('input[name="start-position"]:checked').value){
     case "Left":
-      return getLocation(0, document.getElementById('location').value)
+      return getLocation(0, document.querySelector('input[name="location"]:checked').value)
     case "Center":
-      return getLocation(1, document.getElementById('location').value)
+      return getLocation(1, document.querySelector('input[name="location"]:checked').value)
     case "Right":
-      return getLocation(2, document.getElementById('location').value)
+      return getLocation(2, document.querySelector('input[name="location"]:checked').value)
   }
 }
 
