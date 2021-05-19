@@ -275,41 +275,25 @@ function getAutonFromMap() {
 
   // RIGHT_TO_TRENCH_SHOT(6),
 
-  if (document.getElementById('start-position-left').checked) {
-    // if (document.getElementById('next-path-gen2').checked) return 0;
-    // if (document.getElementById("next-path-gen3").checked) return 1;
-    // if (document.getElementById("next-path-trench").checked) return 2;
-    // if (document.getElementById("next-path2-trench").checked) return 3;
-    // if (document.getElementById('next-path2-gen2').checked) return 4;
-    // if (document.getElementById('shoot-then-back').checked) return 0;
-    // if (document.getElementById('shoot-then-front').checked) return 1;
-     if (document.getElementById('Generator-2').checked) return 0;
-    if (document.getElementById('Generator-3').checked) return 3;
-    if (document.getElementById('Trench').checked) return 6;
+  
 
+  switch(document.getElementById('start-position').value){
+    case "Left":
+      return getLocation(0, document.getElementById('location').value)
+    case "Center":
+      return getLocation(1, document.getElementById('location').value)
+    case "Right":
+      return getLocation(2, document.getElementById('location').value)
   }
+}
 
-  if (document.getElementById('start-position-center').checked) {
-    // if (document.getElementById('next-path-gen2').checked) return 5;
-    // if (document.getElementById("next-path-gen3").checked) return 6;
-    // if (document.getElementById("next-path-trench").checked) return 7;
-    // if (document.getElementById("next-path2-trench").checked) return 8;
-    // if (document.getElementById('next-path2-gen2').checked) return 9;
-    if (document.getElementById('Generator-2').checked) return 1;
-    if (document.getElementById('Generator-3').checked) return 4;
-    if (document.getElementById('Trench').checked) return 7;
+function getLocation(offset, value){
+  switch(value){
+    case "Generator 2": return 0 + offset;
+    case "Generator 3" : return 3 + offset;
+    case "Trench": return 6 + offset;
   }
-
-  if (document.getElementById('start-position-right').checked) {
-    // if (document.getElementById('next-path-gen2').checked) return 10;
-    // if (document.getElementById("next-path-gen3").checked) return 11;
-    // if (document.getElementById("next-path-trench").checked) return 12;
-    // if (document.getElementById("next-path2-trench").checked) return 13;
-    // if (document.getElementById('next-path2-gen2').checked) return 14;
-    if (document.getElementById('Generator-2').checked) return 2;
-    if (document.getElementById('Generator-3').checked) return 5;
-    if (document.getElementById('Trench').checked) return 8;
-  }
+  return -1;
 }
 
 function sendAuton() {
