@@ -281,8 +281,12 @@ function getAutonFromMap() {
     // if (document.getElementById("next-path-trench").checked) return 2;
     // if (document.getElementById("next-path2-trench").checked) return 3;
     // if (document.getElementById('next-path2-gen2').checked) return 4;
-    if (document.getElementById('shoot-then-back').checked) return 0;
-    if (document.getElementById('shoot-then-front').checked) return 1;
+    // if (document.getElementById('shoot-then-back').checked) return 0;
+    // if (document.getElementById('shoot-then-front').checked) return 1;
+     if (document.getElementById('Generator-2').checked) return 0;
+    if (document.getElementById('Generator-3').checked) return 3;
+    if (document.getElementById('Trench').checked) return 6;
+
   }
 
   if (document.getElementById('start-position-center').checked) {
@@ -291,8 +295,9 @@ function getAutonFromMap() {
     // if (document.getElementById("next-path-trench").checked) return 7;
     // if (document.getElementById("next-path2-trench").checked) return 8;
     // if (document.getElementById('next-path2-gen2').checked) return 9;
-    if (document.getElementById('shoot-then-back').checked) return 2;
-    if (document.getElementById('shoot-then-front').checked) return 3;
+    if (document.getElementById('Generator-2').checked) return 1;
+    if (document.getElementById('Generator-3').checked) return 4;
+    if (document.getElementById('Trench').checked) return 7;
   }
 
   if (document.getElementById('start-position-right').checked) {
@@ -301,9 +306,9 @@ function getAutonFromMap() {
     // if (document.getElementById("next-path-trench").checked) return 12;
     // if (document.getElementById("next-path2-trench").checked) return 13;
     // if (document.getElementById('next-path2-gen2').checked) return 14;
-    if (document.getElementById('shoot-then-back').checked) return 4;
-    if (document.getElementById('shoot-then-front').checked) return 5;
-    if (document.getElementById('shoot-then-trench').checked) return 6;
+    if (document.getElementById('Generator-2').checked) return 2;
+    if (document.getElementById('Generator-3').checked) return 5;
+    if (document.getElementById('Trench').checked) return 8;
   }
 }
 
