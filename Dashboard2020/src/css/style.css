@@ -331,7 +331,16 @@ body.login #login {
 
 #shooter {
     position: absolute;
-    transform: translate(10vw, 30vh);
+    /* 0 is center of screen, neg moves up*/
+    transform: translate(70vw, -30vh);
     width: 40vw;
+    height: 50vh;
+}
+
+#shootertext  {
+    position: absolute;
+    /* 0 is center of screen, neg moves up*/
+    transform: translate(75vw, 15vh);
+    width: 20vw;
     height: 5vh;
 }
