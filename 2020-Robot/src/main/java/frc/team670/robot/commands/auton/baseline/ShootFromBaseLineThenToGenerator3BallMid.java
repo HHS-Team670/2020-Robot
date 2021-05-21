@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.Path;
 import frc.team670.paths.right.Right3BS;
 import frc.team670.paths.left.Left3BS;
-import frc.team670.paths.left.LeftThenBack;
 import frc.team670.paths.center.Center3BS;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;

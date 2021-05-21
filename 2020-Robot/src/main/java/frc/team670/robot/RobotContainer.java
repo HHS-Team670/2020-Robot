@@ -30,6 +30,7 @@ import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 // import frc.team670.robot.commands.auton.ToTrenchRunAndShoot;
 // import frc.team670.robot.commands.auton.baseline.ShootThenBack;
 import frc.team670.robot.commands.turret.ZeroTurret;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.OI;
@@ -88,7 +89,9 @@ public class RobotContainer extends RobotContainerBase{
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    return autoSelector.getSelectedRoutine();
+    MustangCommand autonCommand = autoSelector.getSelectedRoutine();
+    Logger.consoleLog("autonCommand: %s", autonCommand);
+    return autonCommand;
   }
 
 
@@ -107,6 +110,8 @@ public class RobotContainer extends RobotContainerBase{
   }
 
   public void teleopInit() {
+    shooter.stop();
+    indexer.stopUpdraw();
     indexer.reset();
     indexer.setRotatorMode(false); // indexer to brake mode
     driveBase.resetOdometry(new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS, 

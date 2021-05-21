@@ -70,6 +70,10 @@ public class RobotConstants extends RobotConstantsBase{
     public static final DifferentialDriveKinematicsConstraint kAutoPathConstraints = new DifferentialDriveKinematicsConstraint(
             kDriveKinematics, kMaxSpeedMetersPerSecond);
 
+    //The turret angles depending on the robot start position
+    public static final double leftTurretAng = 0;
+    public static final double rightTurretAng = -25;
+
     // Reasonable baseline values for a RAMSETE follower in units of meters and
     // seconds
     public static final double kRamseteB = 2;

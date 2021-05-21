@@ -5,8 +5,10 @@ import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.commands.auton.baseline.*;
@@ -34,6 +36,8 @@ public class AutoSelector {
     private Shooter shooter;
     private Turret turret;
     private Vision coprocessor;
+
+    private Timer timer;
     
     AutoRoutine selectedRoutine = AutoRoutine.UNKNOWN;
 
@@ -59,6 +63,8 @@ public class AutoSelector {
         this.shooter = shooter;
         this.turret = turret;
         this.coprocessor = coprocessor;
+
+        timer = new Timer();
     }
 
     public static enum AutoRoutine {
@@ -140,15 +146,15 @@ public class AutoSelector {
         RIGHT;
     }
 
-    private Pose2d leftStart = new Pose2d(
-        FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS + 
-        (FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS - FieldConstants.EDGE_OF_BASELINE), 
-        FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(0));
-    private Pose2d centerStart = new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS, 
-                   FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180));
-    private Pose2d rightStart = new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, 
-                   FieldConstants.EDGE_OF_BASELINE,
-                   Rotation2d.fromDegrees(180));
+    // private Pose2d leftStart = new Pose2d(
+    //     FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS + 
+    //     (FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS - FieldConstants.EDGE_OF_BASELINE), 
+    //     FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(0));
+    // private Pose2d centerStart = new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS, 
+    //                FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180));
+    // private Pose2d rightStart = new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, 
+    //                FieldConstants.EDGE_OF_BASELINE,
+    //                Rotation2d.fromDegrees(180));
 
     /**
      * Gets the value of the enum for auto routines based on an int input from the
@@ -157,14 +163,22 @@ public class AutoSelector {
      * @return
      */
     public AutoRoutine select() {
-        NetworkTableEntry value = table.getEntry("auton-chooser");
-        if (value.getType() != NetworkTableType.kDouble) {
-          Logger.consoleLog("value: %s" , value.getType());
-          return this.selectedRoutine;
+        Number autoID = SmartDashboard.getNumber("auton-chooser", -1);
+        timer.start();
+        while (autoID.intValue() == -1) {
+          autoID = SmartDashboard.getNumber("auton-chooser", -1);
+          Logger.consoleLog("trying to get different value");
+          if (timer.hasPeriodPassed(5))
+            break;
         }
-        Number autoID = value.getNumber(-1);
+        // NetworkTableEntry value = table.getEntry("auton-chooser");
+        // if (value.getType() != NetworkTableType.kDouble) {
+        //   Logger.consoleLog("value: %s" , value.getType());
+        //   return this.selectedRoutine;
+        // }
+        // Number autoID = value.getNumber(-1);
         Logger.consoleLog("auton selector id: %s", autoID);
-        this.selectedRoutine = AutoRoutine.getById((int)(autoID));
+        this.selectedRoutine = AutoRoutine.getById((int)(autoID.intValue()));
         Logger.consoleLog("auton selector routine: %s", this.selectedRoutine);
         return this.selectedRoutine;
     }
@@ -239,13 +253,13 @@ public class AutoSelector {
               return new ShootFromBaseLineThenToTrench(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
               
             case SHOOT_THEN_BACK:
-              return new ShootThenBack(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+              return new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
             case GENERATOR_2_BALL_SIDE_TO_TRENCH_THEN_SHOOT:
               return new Generator2BallSideToTrenchThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
             case GENERATOR_3_BALL_MID_TO_GENERATOR_2_BALL_MID_THEN_SHOOT:
               return new Generator3BallMidToGenerator2BallMidThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
             default:
-              return new ShootThenBack(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+              return new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
           }
         // return 
         //     new SelectCommand(          

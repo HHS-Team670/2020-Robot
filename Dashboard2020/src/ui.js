@@ -169,6 +169,10 @@ NetworkTables.addKeyListener('/Vision/vision-data', (key, value) => {
   }
 });
 
+// document.getElementById("").onclick = function() {
+//   sendAuton();
+// };
+
 // listens for keystrokes from the external keypad and passes the corresponding values over networktables
 var keys = [];
 var allKeys = '';

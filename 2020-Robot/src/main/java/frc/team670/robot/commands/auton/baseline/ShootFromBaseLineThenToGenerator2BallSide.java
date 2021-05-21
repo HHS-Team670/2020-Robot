@@ -16,8 +16,10 @@ import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StartShooterByDistance;
+import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.RotateTurret;
 import frc.team670.robot.commands.vision.GetVisionData;
+import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
@@ -59,12 +61,17 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
         Conveyor conveyor, Shooter shooter, Indexer indexer, Turret turret, Vision coprocessor) {
                 this.driveBase = driveBase;
                 this.coprocessor = coprocessor;
-                if (startPosition == StartPosition.LEFT)
+                double turretAng = 0;
+                if (startPosition == StartPosition.LEFT) {
                         trajectory = new Left2BS(driveBase);
+                        turretAng = RobotConstants.leftTurretAng;
+                }
                 if (startPosition == StartPosition.CENTER)
                         trajectory = new Center2BS(driveBase);
-                if (startPosition == StartPosition.RIGHT)
+                if (startPosition == StartPosition.RIGHT) {
                         trajectory = new Right2BS(driveBase);
+                        turretAng = RobotConstants.rightTurretAng;
+                }
                 healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
                 healthReqs.put(driveBase, HealthState.GREEN);
                 healthReqs.put(shooter, HealthState.GREEN);
@@ -78,7 +85,8 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
 
                 addCommands(
                         new StartShooterByDistance(shooter, driveBase),
-                        new RotateTurret(turret, driveBase, coprocessor),
+                        // new RotateTurret(turret, driveBase, coprocessor),
+                        new RotateToAngle(turret, turretAng),
                         new Shoot(shooter),
                         new EmptyRevolver(indexer),
                         new ParallelCommandGroup (
