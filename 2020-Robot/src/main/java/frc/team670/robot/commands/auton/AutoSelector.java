@@ -12,7 +12,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.commands.auton.baseline.*;
+import frc.team670.robot.commands.auton.twentytwentyone.*;
 import frc.team670.robot.commands.auton.generator.*;
+import frc.team670.robot.commands.auton.twentytwentyone.Shoot3Get3Shoot3Get3_GODSPEED;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
@@ -99,6 +101,8 @@ public class AutoSelector {
 
         // RIGHT_TO_TRENCH_SHOT(6),
 
+
+
         //baseline
         SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_LEFT(0),        
         SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_CENTER(1),
@@ -117,6 +121,9 @@ public class AutoSelector {
         //generator
         GENERATOR_2_BALL_SIDE_TO_TRENCH_THEN_SHOOT(10),
         GENERATOR_3_BALL_MID_TO_GENERATOR_2_BALL_MID_THEN_SHOOT(11),
+
+        //2021
+        RIGHT_SHOOT_3_GET_3_SHOOT_3_GET_3_GODSPEED(12),
 
         UNKNOWN(-1);
 
@@ -230,7 +237,10 @@ public class AutoSelector {
         //   }
 
           switch(result) {
-            //TODO: check start position! -> only left or do a case&enum for each of the 3 directions?
+
+            case RIGHT_SHOOT_3_GET_3_SHOOT_3_GET_3_GODSPEED:
+              return new Shoot3Get3Shoot3Get3_GODSPEED(driveBase, intake, conveyor, indexer, turret, shooter);
+
             case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_LEFT:
               return new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
             case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_CENTER:
