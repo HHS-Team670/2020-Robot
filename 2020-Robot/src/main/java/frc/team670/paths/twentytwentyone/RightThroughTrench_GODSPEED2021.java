@@ -15,16 +15,16 @@ import frc.team670.robot.subsystems.DriveBase;
  * 
  * @author AkshatAdsule, EliseVbp
  */
-public class RightShoot3Get3Shoot3Get3_GODSPEED extends Path{
+public class RightThroughTrench_GODSPEED2021 extends Path{
 
-        public RightShoot3Get3Shoot3Get3_GODSPEED(DriveBase driveBase) {
+        public RightThroughTrench_GODSPEED2021(DriveBase driveBase) {
                 super(
 
                         List.of(
                                 //for now j goes forward 
                                 
-                                new Pose2d(3.944, -0.705, Rotation2d.fromDegrees(0)),
-                                new Pose2d(8.386, -0.705, Rotation2d.fromDegrees(0))
+                                new Pose2d(3.944, -0.706, Rotation2d.fromDegrees(0)),
+                                new Pose2d(7.666, -0.706, Rotation2d.fromDegrees(0))
                         ), 
                 driveBase);
         }

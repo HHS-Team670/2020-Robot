@@ -12,17 +12,20 @@ import frc.team670.mustanglib.commands.drive.straight.TimedDrive;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.paths.Path;
-import frc.team670.paths.twentytwentyone.RightShoot3Get3Shoot3Get3_GODSPEED;
+import frc.team670.paths.twentytwentyone.RightThroughTrench_GODSPEED2021;
+import frc.team670.paths.twentytwentyone.TrenchTo3BallLine_GODSPEED2021;
 import frc.team670.robot.commands.indexer.EmptyRevolver;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.SetRPMTarget;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooter;
+import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.RotateToHome;
 import frc.team670.robot.constants.FieldConstants;
+import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
@@ -30,15 +33,17 @@ import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 
-public class Shoot3Get3Shoot3Get3_GODSPEED extends SequentialCommandGroup implements MustangCommand {
+public class RightShoot3Get3Shoot3Get3_GODSPEED extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private DriveBase driveBase;
-    private Path trajectory;
+    private Path trajectory1, trajectory2;
     
-    public Shoot3Get3Shoot3Get3_GODSPEED(DriveBase driveBase, Intake intake, Conveyor conveyor, 
+    public RightShoot3Get3Shoot3Get3_GODSPEED(DriveBase driveBase, Intake intake, Conveyor conveyor, 
     Indexer indexer, Turret turret, Shooter shooter) {
         
+        double turretAng = RobotConstants.rightTurretAng;
+
         this.driveBase = driveBase;
 
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -48,12 +53,40 @@ public class Shoot3Get3Shoot3Get3_GODSPEED extends SequentialCommandGroup implem
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(turret, HealthState.GREEN);
-        this.trajectory = new RightShoot3Get3Shoot3Get3_GODSPEED(driveBase);
+        // this.trajectory = new RightShoot3Get3Shoot3Get3_GODSPEED(driveBase);
+        this.trajectory1 = new RightThroughTrench_GODSPEED2021(driveBase);
+        this.trajectory2 = new TrenchTo3BallLine_GODSPEED2021(driveBase);
 
-        driveBase.resetOdometry(trajectory.getStartingPose());
+        driveBase.resetOdometry(trajectory1.getStartingPose());
 
         addCommands(
-                getTrajectoryFollowerCommand(trajectory, driveBase)
+
+            //shoot all balls from baseline
+            // new StartShooterByDistance(shooter, driveBase),
+            // new RotateToAngle(turret, turretAng),
+            // new Shoot(shooter),
+            // new EmptyRevolver(indexer),
+
+            //TODO: see if shooter needs to be stopped while traversing and not shooting
+
+            //from initiation line to end of trench w 3 balls intaked
+            new ParallelCommandGroup(
+                getTrajectoryFollowerCommand(trajectory1, driveBase),
+                new IntakeBallToIndexer(intake, conveyor, indexer)       
+            )
+
+            //shoot from color wheel, 
+            //TODO: find new turretAng 
+            // turretAng = ...;
+            // new StartShooterByDistance(shooter, driveBase),
+            // new RotateToAngle(turret, turretAng),
+            // new Shoot(shooter),
+            // new EmptyRevolver(indexer),
+
+            // new ParallelCommandGroup(
+            //     getTrajectoryFollowerCommand(trajectory2, driveBase),
+            //     new IntakeBallToIndexer(intake, conveyor, indexer)       
+            // )
         );
 
     }
