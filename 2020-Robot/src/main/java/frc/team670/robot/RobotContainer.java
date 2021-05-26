@@ -10,7 +10,7 @@ package frc.team670.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Shooter;
@@ -96,7 +96,7 @@ public class RobotContainer extends RobotContainerBase{
     // MustangCommand autonCoxmmand = autoSelector.getSelectedRoutine();
     MustangCommand autonCommand = new RightShoot3Get3Shoot3Get3_GODSPEED(driveBase, intake, conveyor, indexer, turret, shooter);
     // Logger.consoleLog("autonCommand: %s", autonCommand);
-    // MustangCommand autonCommand = new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, vision);
+    //MustangCommand autonCommand = new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, vision);
     return autonCommand;
   }
 
@@ -159,6 +159,7 @@ public class RobotContainer extends RobotContainerBase{
   }
 
   public void periodic() {
+    SmartDashboard.putNumber("heading", driveBase.getHeading());
     fancyLights.periodic();
   }
 

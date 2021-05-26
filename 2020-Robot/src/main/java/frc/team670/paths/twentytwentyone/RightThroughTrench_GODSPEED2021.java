@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.mustanglib.utils.Logger;
 
 /**
  * Trajectory starting from the right of the field in line with the trench
@@ -22,10 +23,11 @@ public class RightThroughTrench_GODSPEED2021 extends Path{
 
                         List.of(
                                 //for now j goes forward 
-                                
+
                                 new Pose2d(3.944, -0.706, Rotation2d.fromDegrees(0)),
                                 new Pose2d(7.666, -0.706, Rotation2d.fromDegrees(0))
                         ), 
                 driveBase);
+                //Logger.consoleLog("running godspeed part 1");
         }
 }

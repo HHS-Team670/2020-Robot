@@ -11,6 +11,7 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.drive.straight.TimedDrive;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.paths.Path;
 import frc.team670.paths.twentytwentyone.RightThroughTrench_GODSPEED2021;
 import frc.team670.paths.twentytwentyone.TrenchTo3BallLine_GODSPEED2021;
@@ -58,6 +59,7 @@ public class RightShoot3Get3Shoot3Get3_GODSPEED extends SequentialCommandGroup i
         this.trajectory2 = new TrenchTo3BallLine_GODSPEED2021(driveBase);
 
         driveBase.resetOdometry(trajectory1.getStartingPose());
+        //Logger.consoleLog("running godspeed from right");
 
         addCommands(
 
@@ -94,8 +96,8 @@ public class RightShoot3Get3Shoot3Get3_GODSPEED extends SequentialCommandGroup i
     @Override
     public void initialize() {
         super.initialize();
-        // Front faces away from wall, heading is 180
-        driveBase.resetOdometry(new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(0)));
+        // // Front faces away from wall, heading is 180
+        // driveBase.resetOdometry(new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(0)));
     }
 
     @Override

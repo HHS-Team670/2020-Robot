@@ -20,7 +20,7 @@ public class LeftThenForward extends Path{
         super(
                 List.of(
                     new Pose2d(3.953, -3.915, Rotation2d.fromDegrees(0)),
-                    new Pose2d(5.053, -3.915, Rotation2d.fromDegrees(0)) //Forward 2 meters
+                    new Pose2d(7.053, -3.915, Rotation2d.fromDegrees(0)) //Forward 2 meters
                     ),
             driveBase);
     }
