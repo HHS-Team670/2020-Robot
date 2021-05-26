@@ -34,6 +34,12 @@ import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 
+/**
+ * Autonomous routine starting by shooting 3 balls from right, go to trench, intake 3, and shoot again, 
+ * then go to switch and intake 3 more
+ * for 2021 field
+ * @author meganchoy, elisevbp, tarini
+ */
 public class RightShoot3Get3Shoot3Get3_GODSPEED extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;

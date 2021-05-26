@@ -8,8 +8,9 @@ import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
 
 /**
- * Trajectory starting from the right of the field in line with the trench
- * Shoot 3, 
+ * second part of godspeed trajectory
+ * starts at trench then goes upder switch to intake 3 balls in a row
+ * fits 2021 field
  * google doc link: https://docs.google.com/document/d/1AsYxFidJCVz2cBFPJEAD1MU-b7dWLGTkcGLwushU1f8/edit?usp=sharing
  *
  * 
@@ -21,12 +22,6 @@ public class TrenchTo3BallLine_GODSPEED2021 extends Path{
                 super(
 
                         List.of(
-                                //for now j goes forward 
-                                
-                                new Pose2d(7.666, -0.706, Rotation2d.fromDegrees(0)),
-                                new Pose2d(7.985, -2.804, Rotation2d.fromDegrees(159.174)),
-                                new Pose2d(6.453, -3.441, Rotation2d.fromDegrees(159.174))
-
                         ), 
                 driveBase);
         }

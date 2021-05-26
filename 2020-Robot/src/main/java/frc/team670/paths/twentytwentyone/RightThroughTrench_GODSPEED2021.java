@@ -9,12 +9,10 @@ import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.mustanglib.utils.Logger;
 
 /**
- * Trajectory starting from the right of the field in line with the trench
- * Shoot 3, 
+ * first part of godspeed trajectory
+ * Trajectory starting from the right of the field in line with the trench then through the trench
  * google doc link: https://docs.google.com/document/d/1AsYxFidJCVz2cBFPJEAD1MU-b7dWLGTkcGLwushU1f8/edit?usp=sharing
- *
- * 
- * @author AkshatAdsule, EliseVbp
+ * @author meganchoy, elisevbp, tarini
  */
 public class RightThroughTrench_GODSPEED2021 extends Path{
 
