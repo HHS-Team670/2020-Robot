@@ -2,3 +2,6 @@
 	path = 2020-Robot/src/main/java/frc/team670/mustanglib
 	url = https://github.com/HHS-Team670/MustangLib
 	branch = 2021
+[submodule "MustangLib"]
+	path = MustangLib
+	url = https://github.com/HHS-Team670/MustangLib
