@@ -26,7 +26,7 @@ import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToGenerator2BallSide;
 import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToGenerator3BallMid;
 import frc.team670.robot.commands.auton.baseline.ShootThenForward;
-import frc.team670.robot.commands.auton.twentytwentyone.RightShoot3Get3Shoot3Get3_GODSPEED;
+import frc.team670.robot.commands.auton.twentytwentyone.RightTrenchLoop3Line_GODSPEED;
 import frc.team670.robot.commands.auton.AutoSelector;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 // import frc.team670.robot.commands.auton.ShootFromAngleThenTimeDrive;
@@ -94,7 +94,7 @@ public class RobotContainer extends RobotContainerBase{
    */
   public MustangCommand getAutonomousCommand() {
     // MustangCommand autonCoxmmand = autoSelector.getSelectedRoutine();
-    MustangCommand autonCommand = new RightShoot3Get3Shoot3Get3_GODSPEED(driveBase, intake, conveyor, indexer, turret, shooter);
+    MustangCommand autonCommand = new RightTrenchLoop3Line_GODSPEED(driveBase, intake, conveyor, indexer, turret, shooter);
     // Logger.consoleLog("autonCommand: %s", autonCommand);
     //MustangCommand autonCommand = new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, vision);
     return autonCommand;
