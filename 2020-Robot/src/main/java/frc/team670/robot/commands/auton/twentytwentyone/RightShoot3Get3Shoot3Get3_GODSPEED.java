@@ -17,6 +17,7 @@ import frc.team670.paths.twentytwentyone.RightThroughTrench_GODSPEED2021;
 import frc.team670.paths.twentytwentyone.TrenchTo3BallLine_GODSPEED2021;
 import frc.team670.robot.commands.indexer.EmptyRevolver;
 import frc.team670.robot.commands.intake.DeployIntake;
+import frc.team670.robot.commands.intake.StopIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.SetRPMTarget;
 import frc.team670.robot.commands.shooter.Shoot;
@@ -64,6 +65,7 @@ public class RightShoot3Get3Shoot3Get3_GODSPEED extends SequentialCommandGroup i
         this.trajectory1 = new RightThroughTrench_GODSPEED2021(driveBase);
         this.trajectory2 = new TrenchTo3BallLine_GODSPEED2021(driveBase);
 
+        //TODO: reset to trajectory 1
         driveBase.resetOdometry(trajectory1.getStartingPose());
         //Logger.consoleLog("running godspeed from right");
 
@@ -79,10 +81,10 @@ public class RightShoot3Get3Shoot3Get3_GODSPEED extends SequentialCommandGroup i
 
             //from initiation line to end of trench w 3 balls intaked
             new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory1, driveBase),
-                new IntakeBallToIndexer(intake, conveyor, indexer)       
-            )
-
+                getTrajectoryFollowerCommand(trajectory1, driveBase)
+                //new IntakeBallToIndexer(intake, conveyor, indexer)       
+            ),
+            //new StopIntake(intake),
             //shoot from color wheel, 
             //TODO: find new turretAng 
             // turretAng = ...;
@@ -91,10 +93,11 @@ public class RightShoot3Get3Shoot3Get3_GODSPEED extends SequentialCommandGroup i
             // new Shoot(shooter),
             // new EmptyRevolver(indexer),
 
-            // new ParallelCommandGroup(
-            //     getTrajectoryFollowerCommand(trajectory2, driveBase),
-            //     new IntakeBallToIndexer(intake, conveyor, indexer)       
-            // )
+            new ParallelCommandGroup(
+                getTrajectoryFollowerCommand(trajectory2, driveBase)
+                //new IntakeBallToIndexer(intake, conveyor, indexer)       
+            )
+            
         );
 
     }
