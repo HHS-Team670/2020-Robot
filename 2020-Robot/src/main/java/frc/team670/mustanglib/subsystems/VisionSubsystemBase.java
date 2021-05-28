@@ -1,5 +1,7 @@
 package frc.team670.mustanglib.subsystems;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -16,15 +18,14 @@ public class VisionSubsystemBase extends MustangSubsystemBase {
     private Solenoid cameraLEDs;
 
     private final String VISION_TRIGGER_KEY = "vision-enabled";
-    public final static String VISION_VALUES_KEY = "vision-values";
+    
+    public final static String VISION_VALUES_BASE_KEY = "vision-values-";
+    public final static String[] VISION_SUB_KEY = new String[] {"angle", "distance"};
 
     private final String VISION_MIN_HSV_BASE_KEY = "vision-min-";
     private final String VISION_MAX_HSV_BASE_KEY = "vision-max-";
     private final String[] VISION_HSV_SUB_KEY = new String[] {"h", "s", "v"};
     
-    private final String VISION_SHAPE_BASE_KEY = "vision-shape-"; // labeled as point#-x
-    private final String[] VISION_SHAPE_SUB_KEY = new String[] {"x", "y", "z"};
-
     private final String VISION_HEALTH_KEY = "vision-health";
 
     private double angle;
@@ -33,8 +34,8 @@ public class VisionSubsystemBase extends MustangSubsystemBase {
     /**
      * Used to create a mustangCoprocessor object based on the key of the table that returns the values from vision processing
      */
-    public VisionSubsystemBase(double[] minHSV, double[] maxHSV, double[] ds, int PCMModulePort, int visionLEDPCMPort) {
-        cameraLEDs = new Solenoid(PCMModulePort, visionLEDPCMPort);
+    public VisionSubsystemBase(double[] minHSV, double[] maxHSV, int PCMModulePort, int visionLEDPCMPort, VisionShapePointList shapePointList) {
+        cameraLEDs = PCMModulePort == -1 ? null : new Solenoid(PCMModulePort, visionLEDPCMPort);
         SmartDashboard.putBoolean("LEDs on", false);
         
         for(int i = 0; i < VISION_HSV_SUB_KEY.length; i++) {
@@ -42,11 +43,19 @@ public class VisionSubsystemBase extends MustangSubsystemBase {
             SmartDashboard.putNumber(VISION_MAX_HSV_BASE_KEY + VISION_HSV_SUB_KEY[i], maxHSV[i]);
         }
 
-        for(int i = 0; i < ds.length; i++) {
-            SmartDashboard.putNumber(VISION_SHAPE_BASE_KEY + i + VISION_SHAPE_SUB_KEY[0], -1);
-            SmartDashboard.putNumber(VISION_SHAPE_BASE_KEY + i + VISION_SHAPE_SUB_KEY[1], -1);
-            SmartDashboard.putNumber(VISION_SHAPE_BASE_KEY + i + VISION_SHAPE_SUB_KEY[2],  -1);
-        }
+        // for(int i = 0; i < ds.length; i++) {
+        //     SmartDashboard.putNumber(VISION_SHAPE_BASE_KEY + i + VISION_SHAPE_SUB_KEY[0], -1);
+        //     SmartDashboard.putNumber(VISION_SHAPE_BASE_KEY + i + VISION_SHAPE_SUB_KEY[1], -1);
+        //     SmartDashboard.putNumber(VISION_SHAPE_BASE_KEY + i + VISION_SHAPE_SUB_KEY[2],  -1);
+        // }
+
+    }
+
+    /**
+     * Used to create a mustangCoprocessor object based on the key of the table that returns the values from vision processing
+     */
+    public VisionSubsystemBase(double[] minHSV, double[] maxHSV, VisionShapePointList shapePointList) {
+        this(minHSV, maxHSV, -1, -1, shapePointList);
 
     }
 
@@ -61,17 +70,20 @@ public class VisionSubsystemBase extends MustangSubsystemBase {
      * Used to trigger the vision system to run and get new values
      */
     public void getLatestVisionData() {
-        clearLastValues();
-        Double[] values = SmartDashboard.getNumberArray(VISION_VALUES_KEY, new Double[] {-1.0,-1.0});
-        angle = values[0];
-        distance = values[1];
+        // Double[] values = SmartDashboard.getNumberArray(VISION_VALUES_KEY, new Double[] {-1.0,-1.0});
+        // angle = values[0];
+        // distance = values[1];
+        angle = SmartDashboard.getNumber(VISION_VALUES_BASE_KEY + VISION_SUB_KEY[0], -1);
+        distance = SmartDashboard.getNumber(VISION_VALUES_BASE_KEY + VISION_SUB_KEY[1], -1);
     }
 
     /**
      * Used to clear last values present on the table
      */
     public void clearLastValues(){
-        SmartDashboard.putNumberArray(VISION_VALUES_KEY, new Double[] {-1.0,-1.0});
+        for(int i = 0; i < VISION_SUB_KEY.length; i++) {
+            SmartDashboard.putNumber(VISION_VALUES_BASE_KEY + VISION_SUB_KEY[i], -1);
+        }
     }
 
     /**
@@ -104,21 +116,27 @@ public class VisionSubsystemBase extends MustangSubsystemBase {
      * Used to turn on the bright green leds for vision
      */
     public void turnOnLEDs() {
-        cameraLEDs.set(true);
+        if(cameraLEDs != null){
+            cameraLEDs.set(true);
+        }
     }
 
     /**
      * Used to turn off the bright green leds for vision
      */
     public void turnOffLEDs() {
-        cameraLEDs.set(false);
+        if(cameraLEDs != null){
+            cameraLEDs.set(false);
+        }
     }
 
     /**
      * Used to test the leds for vision
      */
     public void testLEDS() {
-        cameraLEDs.set(SmartDashboard.getBoolean("LEDs on", true));
+        if(cameraLEDs != null){
+            cameraLEDs.set(SmartDashboard.getBoolean("LEDs on", true));
+        }
     }
 
     @Override
@@ -142,6 +160,46 @@ public class VisionSubsystemBase extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() { 
 
+    }
+
+    public static class VisionShapePoint{
+
+        double x, y, z;
+        int pointNum;
+
+        String entryName = "vision-shapepoint-";
+
+        public VisionShapePoint(double x, double y, double z, int pointNum){
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.pointNum = pointNum;
+        }
+
+        public void pushToSmartDashboard(){
+            SmartDashboard.putNumber(entryName + pointNum + "-X", x);
+            SmartDashboard.putNumber(entryName + pointNum + "-Y", y);
+            SmartDashboard.putNumber(entryName + pointNum + "-Z", z);
+        }
+
+        public String getPointName(){
+            return entryName + pointNum;
+        }
+    }
+
+    public static class VisionShapePointList{
+
+        ArrayList<String> shapePointNames = new ArrayList<String>();
+
+        public VisionShapePointList(VisionShapePoint... shapePoints){
+            for(VisionShapePoint shapePoint : shapePoints){
+                shapePointNames.add(shapePoint.getPointName());
+                shapePoint.pushToSmartDashboard();
+            }
+            String[] array = new String[shapePointNames.size()];
+            array = shapePointNames.toArray(array);
+            SmartDashboard.putStringArray("vision-shapepoints", array);        
+        }
     }
 
 }

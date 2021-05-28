@@ -172,7 +172,6 @@ public class MustangScheduler {
 
     public void scheduleOrCancel (CommandBase command) {
     	if (RobotContainer.getDriverController().getRightJoystickButton() == true) {
-            Logger.consoleLog("Hello from scheduleorcancel");
     		scheduler.schedule(command);
         }
     }

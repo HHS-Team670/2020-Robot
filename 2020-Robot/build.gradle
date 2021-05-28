@@ -5,9 +5,6 @@ plugins {
 
 repositories {
     mavenCentral()
-    flatDir {
-       dirs 'libs'
-   }
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
