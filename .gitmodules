@@ -1,6 +1,0 @@
-[submodule "2020-Robot/src/main/java/frc/team670/MustangLib"]
-	path = 2020-Robot/src/main/java/frc/team670/MustangLib
-	url = https://github.com/HHS-Team670/MustangLib
-[submodule "MustangLib"]
-	path = MustangLib
-	url = https://github.com/HHS-Team670/MustangLib
