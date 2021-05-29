@@ -9,6 +9,8 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.paths.Path;
 import frc.team670.paths.twentytwentyone.Center2Line;
+import frc.team670.paths.twentytwentyone.Left2Line;
+import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.EmptyRevolver;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.StopIntake;
@@ -30,18 +32,18 @@ import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 
 /**
- * Autonomous routine starting by shooting 3 balls from center, go to switch, intake 2
+ * Autonomous routine starting by shooting 3 balls depending on start position (left or center), go to switch, intake 2
  * front of robot starts in line with initiation line
  * for 2021 field
  * @author elisevbp
  */
-public class ShootThenCenter2Line extends SequentialCommandGroup implements MustangCommand {
+public class ShootThen2Line extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     // private DriveBase driveBase;
     private Path trajectory;
     
-    public ShootThenCenter2Line(DriveBase driveBase, Intake intake, Conveyor conveyor, 
+    public ShootThen2Line(StartPosition startPosition, DriveBase driveBase, Intake intake, Conveyor conveyor, 
     Indexer indexer, Turret turret, Shooter shooter) {
         
         //TODO: check if there needs to be a center turret? or it is automatically straight forward
@@ -56,7 +58,12 @@ public class ShootThenCenter2Line extends SequentialCommandGroup implements Must
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(turret, HealthState.GREEN);
-        this.trajectory = new Center2Line(driveBase);
+        if (startPosition == StartPosition.LEFT) {
+            trajectory = new Left2Line(driveBase);
+            turretAng = RobotConstants.leftTurretAng;
+        }
+        if (startPosition == StartPosition.CENTER)
+            trajectory = new Center2Line(driveBase);
 
         driveBase.resetOdometry(trajectory.getStartingPose());
 

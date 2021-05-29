@@ -17,6 +17,7 @@ import frc.team670.paths.twentytwentyone.CenterThroughTrench;
 import frc.team670.paths.twentytwentyone.RightThroughTrench_GODSPEED2021;
 import frc.team670.paths.twentytwentyone.TrenchTo2BallLine;
 import frc.team670.paths.twentytwentyone.TrenchTo3BallLine_GODSPEED2021;
+import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.EmptyRevolver;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.StopIntake;
@@ -49,7 +50,7 @@ public class CenterTrenchLoop2Line extends SequentialCommandGroup implements Mus
     private DriveBase driveBase;
     private Path trajectory1, trajectory2;
     
-    public CenterTrenchLoop2Line(DriveBase driveBase, Intake intake, Conveyor conveyor, 
+    public CenterTrenchLoop2Line(StartPosition startPosition, DriveBase driveBase, Intake intake, Conveyor conveyor, 
     Indexer indexer, Turret turret, Shooter shooter) {
         
         double turretAng = RobotConstants.rightTurretAng;

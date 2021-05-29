@@ -9,6 +9,8 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.paths.Path;
 import frc.team670.paths.twentytwentyone.Center3Line;
+import frc.team670.paths.twentytwentyone.Left3Line;
+import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.EmptyRevolver;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.StopIntake;
@@ -35,13 +37,13 @@ import frc.team670.robot.subsystems.Turret;
  * for 2021 field
  * @author elisevbp
  */
-public class ShootThenCenter3Line extends SequentialCommandGroup implements MustangCommand {
+public class ShootThen3Line extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     // private DriveBase driveBase;
     private Path trajectory;
     
-    public ShootThenCenter3Line(DriveBase driveBase, Intake intake, Conveyor conveyor, 
+    public ShootThen3Line(StartPosition startPosition, DriveBase driveBase, Intake intake, Conveyor conveyor, 
     Indexer indexer, Turret turret, Shooter shooter) {
         
         //TODO: check if there needs to be a center turret? or it is automatically straight forward
@@ -56,7 +58,12 @@ public class ShootThenCenter3Line extends SequentialCommandGroup implements Must
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(turret, HealthState.GREEN);
-        this.trajectory = new Center3Line(driveBase);
+        if (startPosition == StartPosition.LEFT) {
+            trajectory = new Left3Line(driveBase);
+            turretAng = RobotConstants.leftTurretAng;
+         }
+        if (startPosition == StartPosition.CENTER)
+            trajectory = new Center3Line(driveBase);
 
         driveBase.resetOdometry(trajectory.getStartingPose());
 
