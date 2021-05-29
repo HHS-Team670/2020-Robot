@@ -9,38 +9,32 @@ package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team670.robot.subsystems.Conveyor;
-import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.robot.subsystems.Shooter;
-import frc.team670.robot.subsystems.Intake;
-import frc.team670.mustanglib.subsystems.LEDSubsystem;
-import frc.team670.robot.subsystems.Indexer;
-import frc.team670.robot.subsystems.Turret;
-import frc.team670.robot.subsystems.Vision;
-import frc.team670.robot.subsystems.Climber;
-
+import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.MustangScheduler;
-import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToGenerator2BallSide;
-import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToGenerator3BallMid;
-import frc.team670.robot.commands.auton.baseline.ShootThenForward;
-import frc.team670.robot.commands.auton.twentytwentyone.RightTrenchLoop3Line_GODSPEED;
+import frc.team670.mustanglib.subsystems.LEDSubsystem;
+import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.AutoSelector;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
+import frc.team670.robot.commands.auton.twentytwentyone.TrenchLoop3Line;
 // import frc.team670.robot.commands.auton.ShootFromAngleThenTimeDrive;
 // import frc.team670.robot.commands.auton.ToTrenchRunAndShoot;
 // import frc.team670.robot.commands.auton.baseline.ShootThenBack;
 import frc.team670.robot.commands.turret.ZeroTurret;
-import frc.team670.mustanglib.utils.Logger;
-import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.paths.right.Right3BS;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotMap;
-import frc.team670.mustanglib.RobotContainerBase;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
+import frc.team670.robot.subsystems.Climber;
+import frc.team670.robot.subsystems.Conveyor;
+import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Indexer;
+import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Turret;
+import frc.team670.robot.subsystems.Vision;
 
 public class RobotContainer extends RobotContainerBase{
 
@@ -94,7 +88,7 @@ public class RobotContainer extends RobotContainerBase{
    */
   public MustangCommand getAutonomousCommand() {
     // MustangCommand autonCoxmmand = autoSelector.getSelectedRoutine();
-    MustangCommand autonCommand = new RightTrenchLoop3Line_GODSPEED(driveBase, intake, conveyor, indexer, turret, shooter);
+    MustangCommand autonCommand = new TrenchLoop3Line(StartPosition.RIGHT, driveBase, intake, conveyor, indexer, turret, shooter);
     // Logger.consoleLog("autonCommand: %s", autonCommand);
     //MustangCommand autonCommand = new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, vision);
     return autonCommand;
