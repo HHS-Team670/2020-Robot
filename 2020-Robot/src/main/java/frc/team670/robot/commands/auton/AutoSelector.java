@@ -14,7 +14,6 @@ import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.commands.auton.baseline.*;
 import frc.team670.robot.commands.auton.twentytwentyone.*;
 import frc.team670.robot.commands.auton.generator.*;
-import frc.team670.robot.commands.auton.twentytwentyone.RightTrenchLoop3Line_GODSPEED;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
@@ -239,7 +238,7 @@ public class AutoSelector {
           switch(result) {
 
             case RIGHT_SHOOT_3_GET_3_SHOOT_3_GET_3_GODSPEED:
-              return new RightTrenchLoop3Line_GODSPEED(driveBase, intake, conveyor, indexer, turret, shooter);
+              return new TrenchLoop3Line(StartPosition.RIGHT, driveBase, intake, conveyor, indexer, turret, shooter);
 
             case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_LEFT:
               return new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);

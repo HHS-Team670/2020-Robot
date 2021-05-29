@@ -13,8 +13,11 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.paths.Path;
+import frc.team670.paths.twentytwentyone.CenterThroughTrench;
 import frc.team670.paths.twentytwentyone.RightThroughTrench_GODSPEED2021;
+import frc.team670.paths.twentytwentyone.TrenchTo2BallLine;
 import frc.team670.paths.twentytwentyone.TrenchTo3BallLine_GODSPEED2021;
+import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.EmptyRevolver;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.StopIntake;
@@ -36,18 +39,18 @@ import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 
 /**
- * Autonomous routine starting by shooting 3 balls from right, go to trench, intake 3, and shoot again, 
+ * Autonomous routine starting by shooting 3 balls from start position (right or center), go to trench, intake 3, and shoot again, 
  * then go to switch and intake 3 more
  * for 2021 field
- * @author meganchoy, elisevbp, tarini
+ * @author tarini
  */
-public class RightTrenchLoop3Line_GODSPEED extends SequentialCommandGroup implements MustangCommand {
+public class TrenchLoop3Line extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private DriveBase driveBase;
     private Path trajectory1, trajectory2;
     
-    public RightTrenchLoop3Line_GODSPEED(DriveBase driveBase, Intake intake, Conveyor conveyor, 
+    public TrenchLoop3Line(StartPosition startPosition, DriveBase driveBase, Intake intake, Conveyor conveyor, 
     Indexer indexer, Turret turret, Shooter shooter) {
         
         double turretAng = RobotConstants.rightTurretAng;
@@ -61,13 +64,16 @@ public class RightTrenchLoop3Line_GODSPEED extends SequentialCommandGroup implem
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(turret, HealthState.GREEN);
-        // this.trajectory = new RightShoot3Get3Shoot3Get3_GODSPEED(driveBase);
-        this.trajectory1 = new RightThroughTrench_GODSPEED2021(driveBase);
+        if (startPosition == StartPosition.RIGHT) {
+            trajectory1 = new RightThroughTrench_GODSPEED2021(driveBase);
+            turretAng = RobotConstants.leftTurretAng;
+        }
+        if (startPosition == StartPosition.CENTER)
+            trajectory1 = new CenterThroughTrench(driveBase);
         this.trajectory2 = new TrenchTo3BallLine_GODSPEED2021(driveBase);
 
         //TODO: reset to trajectory 1
         driveBase.resetOdometry(trajectory1.getStartingPose());
-        //Logger.consoleLog("running godspeed from right");
 
         addCommands(
 
