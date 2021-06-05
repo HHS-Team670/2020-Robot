@@ -21,8 +21,8 @@ public class Center3Line extends Path{
                 super(
                         List.of(
                                 new Pose2d(5.724, 4.513, Rotation2d.fromDegrees(0)),
-                                new Pose2d(5.698, 4.487, Rotation2d.fromDegrees(21.3)),
-                                new Pose2d(7.103, 5.033, Rotation2d.fromDegrees(21.3))
+                                new Pose2d(5.698, 4.487, Rotation2d.fromDegrees(-21.3)),
+                                new Pose2d(7.103, 5.033, Rotation2d.fromDegrees(-21.3))
                         ), 
                 driveBase);
         }
