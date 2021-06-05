@@ -8,6 +8,7 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.paths.Path;
+import frc.team670.paths.left.LeftStraightThenBack;
 import frc.team670.paths.twentytwentyone.Center3Line;
 import frc.team670.paths.twentytwentyone.Left3Line;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
@@ -59,18 +60,22 @@ public class ShootThen3Line extends SequentialCommandGroup implements MustangCom
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(turret, HealthState.GREEN);
         if (startPosition == StartPosition.LEFT) {
-            trajectory = new Left3Line(driveBase);
+            // trajectory = new Left3Line(driveBase);
+            trajectory = new LeftStraightThenBack(driveBase);
             turretAng = RobotConstants.leftTurretAng;
          }
-        if (startPosition == StartPosition.CENTER)
+        if (startPosition == StartPosition.CENTER) {
             trajectory = new Center3Line(driveBase);
+            turretAng = -12.5;
+        }
+
 
         driveBase.resetOdometry(trajectory.getStartingPose());
 
         addCommands(
             //shoot all balls from baseline
             new StartShooterByDistance(shooter, driveBase),
-            new RotateToAngle(turret, turretAng),
+            // new RotateToAngle(turret, turretAng),
             new Shoot(shooter),
             new EmptyRevolver(indexer),
 
