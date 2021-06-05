@@ -20,7 +20,7 @@ public class Left2Line extends Path{
                 super(
                         List.of(
                                 new Pose2d(3.953, -3.915, Rotation2d.fromDegrees(0)),
-                                new Pose2d(7.03, -4.038, Rotation2d.fromDegrees(21.3))
+                                new Pose2d(6.8, -4.038, Rotation2d.fromDegrees(21.3))
                         ), 
                 driveBase);
         }

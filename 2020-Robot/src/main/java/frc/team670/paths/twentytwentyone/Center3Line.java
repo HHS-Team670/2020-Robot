@@ -20,9 +20,16 @@ public class Center3Line extends Path{
         public Center3Line(DriveBase driveBase) {
                 super(
                         List.of(
-                                new Pose2d(2.473, -2.4, Rotation2d.fromDegrees(0)),
-                                new Pose2d(5.736, -3.655, Rotation2d.fromDegrees(-21.3)),
-                                new Pose2d(6.577, -3.333, Rotation2d.fromDegrees(-21.3))
+
+                                //starts facing -90 deg
+                                new Pose2d(3.09, -2.628, Rotation2d.fromDegrees(0)),
+                                new Pose2d(4.635, -3.717, Rotation2d.fromDegrees(-23.28)),
+                                new Pose2d(6.577, -3.333, Rotation2d.fromDegrees(21.3))
+
+                                //new Pose2d(5.736, -3.655, Rotation2d.fromDegrees(21.3)),
+                                //TODO: tune 2nd waypoint to optimize turns 
+                                // new Pose2d(4.4, -3.457, Rotation2d.fromDegrees(-62.3)),
+                                // new Pose2d(6.577, -3.333, Rotation2d.fromDegrees(21.3))
                         ), 
                 driveBase);
         }

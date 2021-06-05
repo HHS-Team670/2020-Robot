@@ -19,11 +19,18 @@ public class Center2Line extends Path{
         public Center2Line(DriveBase driveBase) {
                 super(
                         List.of(
-                                new Pose2d(2.473, -2.4, Rotation2d.fromDegrees(0)),
 
+                                //starts facing -90 deg
+                                new Pose2d(3.09, -2.628, Rotation2d.fromDegrees(0)),
                                 //TODO: same degree as Center3Line so if the angle for Center3Line is modifying change this too! 
-                                new Pose2d(5.872, -4.434, Rotation2d.fromDegrees(-21.3)),
-                                new Pose2d(6.849, -4.063, Rotation2d.fromDegrees(-21.3))
+                                new Pose2d(4.932, -4.286, Rotation2d.fromDegrees(76.12)),
+                                new Pose2d(6.849, -4063, Rotation2d.fromDegrees(111.3))
+                                
+
+                                //new Pose2d(2.473, -2.4, Rotation2d.fromDegrees(0)),
+                                //new Pose2d(5.872, -4.434, Rotation2d.fromDegrees(21.3)),
+                                //new Pose2d(6.849, -4.063, Rotation2d.fromDegrees(21.3))
+
                         ), 
                 driveBase);
         }

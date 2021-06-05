@@ -60,8 +60,8 @@ public class ShootThen3Line extends SequentialCommandGroup implements MustangCom
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(turret, HealthState.GREEN);
         if (startPosition == StartPosition.LEFT) {
-            // trajectory = new Left3Line(driveBase);
-            trajectory = new LeftStraightThenBack(driveBase);
+            trajectory = new Left3Line(driveBase);
+            //trajectory = new LeftStraightThenBack(driveBase);
             turretAng = RobotConstants.leftTurretAng;
          }
         if (startPosition == StartPosition.CENTER) {
@@ -74,17 +74,17 @@ public class ShootThen3Line extends SequentialCommandGroup implements MustangCom
 
         addCommands(
             //shoot all balls from baseline
-            new StartShooterByDistance(shooter, driveBase),
-            // new RotateToAngle(turret, turretAng),
-            new Shoot(shooter),
-            new EmptyRevolver(indexer),
+            // new StartShooterByDistance(shooter, driveBase),
+            // // new RotateToAngle(turret, turretAng),
+            // new Shoot(shooter),
+            // new EmptyRevolver(indexer),
 
             //TODO: see if shooter needs to be stopped while traversing and not shooting
 
             //from initiation line to 3 balls in line under switch
             new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory, driveBase),
-                new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(5.2)       
+                getTrajectoryFollowerCommand(trajectory, driveBase)
+                //new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(5.2)       
             )
         );
     }

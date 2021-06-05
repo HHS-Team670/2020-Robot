@@ -69,17 +69,17 @@ public class ShootThen2Line extends SequentialCommandGroup implements MustangCom
 
         addCommands(
             //shoot all balls from baseline
-            new StartShooterByDistance(shooter, driveBase),
-            new RotateToAngle(turret, turretAng),
-            new Shoot(shooter),
-            new EmptyRevolver(indexer),
+            // new StartShooterByDistance(shooter, driveBase),
+            // new RotateToAngle(turret, turretAng),
+            // new Shoot(shooter),
+            // new EmptyRevolver(indexer),
 
             //TODO: see if shooter needs to be stopped while traversing and not shooting
 
-            //from initiation line to 3 balls in line under switch
+            //from initiation line to 2 balls in line under switch
             new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory, driveBase),
-                new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(5.2)       
+                getTrajectoryFollowerCommand(trajectory, driveBase)
+                //new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(5.2)       
             )
         );
     }
