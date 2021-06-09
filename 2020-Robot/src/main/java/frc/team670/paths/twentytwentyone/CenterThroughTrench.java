@@ -22,7 +22,7 @@ public class CenterThroughTrench extends Path{
                         List.of(
                                 //starting from center, turns through trench
 
-                                new Pose2d(3.944, -4.513, Rotation2d.fromDegrees(0)),
+                                new Pose2d(3.944, -2.628, Rotation2d.fromDegrees(0)),
                                 new Pose2d(5.41, -0.706, Rotation2d.fromDegrees(0)), 
                                 new Pose2d(7.666, -0.706, Rotation2d.fromDegrees(0))
                         ), 

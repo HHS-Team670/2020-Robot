@@ -19,7 +19,7 @@ public class Left3Line extends Path{
         public Left3Line(DriveBase driveBase) {
                 super(
                         List.of(
-                                new Pose2d(3.953, -3.915, Rotation2d.fromDegrees(0)),
+                                new Pose2d(3.201, -3.717, Rotation2d.fromDegrees(0)),
                                 new Pose2d(6.671, -3.242, Rotation2d.fromDegrees(21.3))
                         ), 
                 driveBase);

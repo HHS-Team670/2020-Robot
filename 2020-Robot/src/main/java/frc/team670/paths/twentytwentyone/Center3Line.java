@@ -20,8 +20,6 @@ public class Center3Line extends Path{
         public Center3Line(DriveBase driveBase) {
                 super(
                         List.of(
-
-                                //starts facing -90 deg
                                 new Pose2d(3.09, -2.628, Rotation2d.fromDegrees(0)),
                                 new Pose2d(4.635, -3.717, Rotation2d.fromDegrees(-23.28)),
                                 new Pose2d(6.577, -3.333, Rotation2d.fromDegrees(21.3))
