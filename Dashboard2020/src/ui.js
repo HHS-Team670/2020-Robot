@@ -49,6 +49,31 @@ NetworkTables.addKeyListener('/SmartDashboard/vision-frame-updated', (key, value
     }
 });
 
+// updates speed
+NetworkTables.addKeyListener('/SmartDashboard/vision-values', (key, value) => {
+    if (value == true) {
+        document.getElementById('speed').src = document.getElementById('speed').src;
+        NetworkTables.putValue('speed-updated', false);
+    }
+});
+
+// updates angle
+NetworkTables.addKeyListener('/SmartDashboard/vision-values', (key, value) => {
+    if (value == true) {
+        
+        document.getElementById('angle').src = document.getElementById('angle').src;
+        NetworkTables.putValue('angle-updated', false);
+    }
+});
+
+// updates distance
+NetworkTables.addKeyListener('/SmartDashboard/vision-values', (key, value) => {
+    if (value == true) {
+        document.getElementById('distance').src = document.getElementById('distance').src;
+        NetworkTables.putValue('vision-values', false);
+    }
+});
+
 // updates status lights for driveBase
 NetworkTables.addKeyListener('/SmartDashboard/DriveBase', (key, value) => {
     var statusLights = document.getElementById('status-lights-subsystems');
@@ -177,9 +202,9 @@ NetworkTables.addKeyListener('/Vision/vision-data', (key, value) => {
     }
 });
 
-// document.getElementById("").onclick = function() {
-//   sendAuton();
-// };
+document.getElementById("").onclick = function() {
+  sendAuton();
+};
 
 // listens for keystrokes from the external keypad and passes the corresponding values over networktables
 var keys = [];
