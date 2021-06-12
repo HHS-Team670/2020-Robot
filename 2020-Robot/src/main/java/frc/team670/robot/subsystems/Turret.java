@@ -12,6 +12,9 @@ import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.subsystems.SparkMaxRotatingSubsystem;
 
+import frc.team670.robot.commands.turret.AutoRotate;
+import frc.team670.robot.commands.turret.ManualControlAndAutoRotate;
+
 
 public class Turret extends SparkMaxRotatingSubsystem {
 
@@ -31,6 +34,9 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     public String kEnable;
     public String kDisable;
+
+    private DriveBase driveBase;
+    private Vision vision;
 
     /**
      * Constants for the turret, including PIDF and SmartMotion values.
@@ -125,8 +131,10 @@ public class Turret extends SparkMaxRotatingSubsystem {
     public static final Config turretConfig = new Config();
     private final double DEGREES_PER_MOTOR_ROTATION = 360 / turretConfig.getRotatorGearRatio();
 
-    public Turret() {
+    public Turret(DriveBase driveBase, Vision vision) {
         super(turretConfig);
+        this.driveBase = driveBase;
+        this.vision = vision;
         rotator.setInverted(true);
         forwardLimit = rotator.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
         reverseLimit = rotator.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
@@ -225,8 +233,10 @@ public class Turret extends SparkMaxRotatingSubsystem {
     }
 
     public void initDefaultCommand() {
-        MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret(this));
-        Logger.consoleLog("Turret defaulted to joystick");
+        MustangScheduler.getInstance().setDefaultCommand(this, new ManualControlAndAutoRotate(this, vision, driveBase));
+        Logger.consoleLog("Turret defaulted to joystick and autorotate");
+        // MustangScheduler.getInstance().setDefaultCommand(this, new JoystickTurret(this));
+        // Logger.consoleLog("Turret defaulted to joystick");
     }
 
     @Override

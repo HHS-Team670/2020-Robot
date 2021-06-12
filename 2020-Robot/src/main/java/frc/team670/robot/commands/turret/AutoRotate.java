@@ -20,8 +20,6 @@ import frc.team670.mustanglib.utils.Logger;
  * with vision or from robot heading/pose, the point is to keep it roughly
  * tracking
  * 
- * Bonus points for being written on a plane
- * 
  * @author ctychen
  */
 public class AutoRotate extends CommandBase implements MustangCommand {
@@ -47,7 +45,11 @@ public class AutoRotate extends CommandBase implements MustangCommand {
     }
 
     @Override
-    public void execute() {
+    public void execute(){
+        executeAutoRotate();
+    }
+
+    public void executeAutoRotate() {
         double angleToTarget = turret.getCurrentAngleInDegrees();
         double currentX = driveBase.getPose().getTranslation().getX();
         double currentY = driveBase.getPose().getTranslation().getY();
