@@ -11,7 +11,7 @@ import frc.team670.paths.Path;
 import frc.team670.paths.twentytwentyone.Center2Line;
 import frc.team670.paths.twentytwentyone.Center5Diagonal;
 import frc.team670.paths.twentytwentyone.Left2Line;
-import frc.team670.paths.twentytwentyone.Left5Diagonal;
+import frc.team670.paths.twentytwentyone.TightLeft5Diagonal;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.EmptyRevolver;
 import frc.team670.robot.commands.intake.DeployIntake;
@@ -38,15 +38,16 @@ import frc.team670.robot.subsystems.Turret;
  * then go to switch at an angle from left or right side, attempt to intake all 5 in best case scenario
  * front of robot starts in line with initiation line
  * for 2021 field
+ * tight angle means robot enters switch from same quadrant that it exists from (top left quadrant)
  * @author elisevbp
  */
-public class ShootThen5Diagonal extends SequentialCommandGroup implements MustangCommand {
+public class TightShootThen5Diagonal extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     // private DriveBase driveBase;
     private Path trajectory;
     
-    public ShootThen5Diagonal(StartPosition startPosition, DriveBase driveBase, Intake intake, Conveyor conveyor, 
+    public TightShootThen5Diagonal(StartPosition startPosition, DriveBase driveBase, Intake intake, Conveyor conveyor, 
     Indexer indexer, Turret turret, Shooter shooter) {
         
         //TODO: check if there needs to be a center turret? or it is automatically straight forward
@@ -62,11 +63,11 @@ public class ShootThen5Diagonal extends SequentialCommandGroup implements Mustan
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(turret, HealthState.GREEN);
         if (startPosition == StartPosition.LEFT) {
-            trajectory = new Left5Diagonal(driveBase);
+            trajectory = new TightLeft5Diagonal(driveBase);
             turretAng = RobotConstants.leftTurretAng;
         }
         if (startPosition == StartPosition.CENTER)
-            trajectory = new Center5Diagonal(driveBase);
+            trajectory = new Center5Diagonal(driveBase); //TODO: CHANGE THIS TO TIGHT EQUIVALENT!!
 
         driveBase.resetOdometry(trajectory.getStartingPose());
 
