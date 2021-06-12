@@ -66,7 +66,7 @@ public class ShootThen5Diagonal extends SequentialCommandGroup implements Mustan
             turretAng = RobotConstants.leftTurretAng;
         }
         if (startPosition == StartPosition.CENTER)
-            trajectory = new Center5Diagonal(driveBase);
+            trajectory = new Center5Diagonal(driveBase); //TODO: CHANGE THIS TO TIGHT EQUIVALENT!!
 
         driveBase.resetOdometry(trajectory.getStartingPose());
 
