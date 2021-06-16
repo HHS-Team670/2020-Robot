@@ -20,8 +20,6 @@ import frc.team670.mustanglib.utils.Logger;
  * with vision or from robot heading/pose, the point is to keep it roughly
  * tracking
  * 
- * Bonus points for being written on a plane
- * 
  * @author ctychen
  */
 public class AutoRotate extends CommandBase implements MustangCommand {
@@ -47,13 +45,21 @@ public class AutoRotate extends CommandBase implements MustangCommand {
     }
 
     @Override
-    public void execute() {
+    public void execute(){
+        executeAutoRotate();
+    }
+
+    public void executeAutoRotate() {
         double angleToTarget = turret.getCurrentAngleInDegrees();
+        Logger.consoleLog("angleToTarget: ", angleToTarget);
         double currentX = driveBase.getPose().getTranslation().getX();
+        Logger.consoleLog("currentX: ", currentX);
         double currentY = driveBase.getPose().getTranslation().getY();
+        Logger.consoleLog("currentY: ", currentY);
         // // Angle from known position on field to center of outer goal/vision target
         double drivebasePosToGoalAngle = Math.toDegrees(
                 Math.atan((currentX - FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS) / currentY));
+        Logger.consoleLog("drivebasePosToGoalAngle: ", drivebasePosToGoalAngle);
         double heading = driveBase.getHeading();
         // Deal with coordinate system, drivebase and turret
         if (heading > 0) {
@@ -63,6 +69,7 @@ public class AutoRotate extends CommandBase implements MustangCommand {
         // zero degrees = pointing straight forwards, then +180 clockwise, -180 counterclockwise
         angleToTarget = (-1.0 * drivebasePosToGoalAngle) - heading;
         turret.setSystemTargetAngleInDegrees(-angleToTarget);
+        Logger.consoleLog("angleToTarget: ", angleToTarget);
     }
 
     /**
