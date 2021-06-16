@@ -20,7 +20,7 @@ public class Center5Diagonal extends Path{
                 super(
                         List.of(
                                 // wider ending turn
-                                new Pose2d(3.09, -2.628, Rotation2d.fromDegrees(0)),
+                                new Pose2d(3.944, -2.628, Rotation2d.fromDegrees(0)),
                                 // new Pose2d(5.662, -2.158, Rotation2d.fromDegrees(-5.03)),
                                 // new Pose2d(6.849, -2.604, Rotation2d.fromDegrees(-39.46)), // experiment between wider or tighter turn
                                 new Pose2d(6.268, -2.826, Rotation2d.fromDegrees(-53.88)), // experiment between wider or tighter turn
@@ -30,9 +30,9 @@ public class Center5Diagonal extends Path{
 
                                 // tighter ending turn
                                 /*
-                                new Pose2d(3.09, -2.628, Rotation2d.fromDegrees(0)),
+                                new Pose2d(3.944, -2.628, Rotation2d.fromDegrees(0)),
                                 new Pose2d(5.662, -2.158, Rotation2d.fromDegrees(-5.03)),
-                                new Pose2d(6.874, -2.851, Rotation2d.fromDegrees(-65.28)), // experiment between wider or tighter turn
+                                new Pose2d(6.367, -2.888, Rotation2d.fromDegrees(-65.28)), // experiment between wider or tighter turn
                                 new Pose2d(6.033, -4.335, Rotation2d.fromDegrees(-159.174)) // experiment with ending point (wider or tighter turn)
                                 */
                         ), 
