@@ -49,30 +49,16 @@ NetworkTables.addKeyListener('/SmartDashboard/vision-frame-updated', (key, value
     }
 });
 
-// updates speed
-NetworkTables.addKeyListener('/SmartDashboard/vision-values', (key, value) => {
-    if (value == true) {
-        document.getElementById('speed').src = document.getElementById('speed').src;
-        NetworkTables.putValue('speed-updated', false);
-    }
+// updates robot sped
+NetworkTables.addKeyListener('/SmartDashboard/expectedSpeed', (key, value) => {
+    document.getElementById('speed').textContent = 'Speed: ' + value;
 });
 
-// updates angle
-NetworkTables.addKeyListener('/SmartDashboard/vision-values', (key, value) => {
-    if (value == true) {
-        
-        document.getElementById('angle').src = document.getElementById('angle').src;
-        NetworkTables.putValue('angle-updated', false);
-    }
-});
-
-// updates distance
-NetworkTables.addKeyListener('/SmartDashboard/vision-values', (key, value) => {
-    if (value == true) {
-        document.getElementById('distance').src = document.getElementById('distance').src;
-        NetworkTables.putValue('vision-values', false);
-    }
-});
+// updates robot angle and direction
+    NetworkTables.addKeyListener('/SmartDashboard/vision_values', (key, value) => {
+        document.getElementById('distance').textContent = 'Distance: ' + value[0];
+        document.getElementById('angle').textContent = 'Angle: ' + value[2];
+    });
 
 // updates status lights for driveBase
 NetworkTables.addKeyListener('/SmartDashboard/DriveBase', (key, value) => {
