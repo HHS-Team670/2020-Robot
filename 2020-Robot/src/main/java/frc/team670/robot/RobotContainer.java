@@ -93,7 +93,8 @@ public class RobotContainer extends RobotContainerBase{
   public MustangCommand getAutonomousCommand() {
     // MustangCommand autonCoxmmand = autoSelector.getSelectedRoutine();
     // MustangCommand autonCommand = new TrenchLoop3Line(StartPosition.RIGHT, driveBase, intake, conveyor, indexer, turret, shooter);
-    MustangCommand autonCommand = new ShootThen5Diagonal(StartPosition.CENTER, driveBase, intake, conveyor, indexer, turret, shooter);
+    // MustangCommand autonCommand = new ShootThen5Diagonal(StartPosition.CENTER, driveBase, intake, conveyor, indexer, turret, shooter);
+    MustangCommand autonCommand = new TrenchLoop3Line(StartPosition.RIGHT, driveBase, intake, conveyor, indexer, turret, shooter);
 
     // Logger.consoleLog("autonCommand: %s", autonCommand);
     //MustangCommand autonCommand = new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, vision);
@@ -120,6 +121,7 @@ public class RobotContainer extends RobotContainerBase{
     indexer.stopUpdraw();
     indexer.reset();
     indexer.setRotatorMode(false); // indexer to brake mode
+    indexer.stopIntaking();
     driveBase.resetOdometry(new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS, 
     FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
     zeroSubsystemPositions();

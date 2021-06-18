@@ -22,7 +22,7 @@ public class TrenchTo3BallLine_GODSPEED2021 extends Path{
                 super(
 
                         List.of(
-                                new Pose2d(7.666, -0.706, Rotation2d.fromDegrees(0)),
+                                new Pose2d(7.8, -0.706, Rotation2d.fromDegrees(0)),
                                 new Pose2d(7.985, -2.804, Rotation2d.fromDegrees(-159.174)),
                                 new Pose2d(6.453, -3.441, Rotation2d.fromDegrees(-159.174))
                         ), 

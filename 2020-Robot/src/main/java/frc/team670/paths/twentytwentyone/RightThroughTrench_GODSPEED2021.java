@@ -24,7 +24,7 @@ public class RightThroughTrench_GODSPEED2021 extends Path{
 
                                 new Pose2d(3.944, -0.706, Rotation2d.fromDegrees(0)),
                                 new Pose2d(6.5, -0.706, Rotation2d.fromDegrees(0)),
-                                new Pose2d(7.666, -0.706, Rotation2d.fromDegrees(0))
+                                new Pose2d(7.8, -0.706, Rotation2d.fromDegrees(0))
                         ), 
                 driveBase);
                 //Logger.consoleLog("running godspeed part 1");

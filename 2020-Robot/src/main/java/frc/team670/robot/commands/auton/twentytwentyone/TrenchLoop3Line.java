@@ -87,8 +87,8 @@ public class TrenchLoop3Line extends SequentialCommandGroup implements MustangCo
 
             //from initiation line to end of trench w 3 balls intaked
             new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory1, driveBase)
-                //new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(5.2)       
+                getTrajectoryFollowerCommand(trajectory1, driveBase),
+                new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(3.2)       
             ),
             
             //shoot from color wheel, 
@@ -100,8 +100,8 @@ public class TrenchLoop3Line extends SequentialCommandGroup implements MustangCo
             //new EmptyRevolver(indexer),
 
             new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory2, driveBase)
-                //new IntakeBallToIndexer(intake, conveyor, indexer)       
+                getTrajectoryFollowerCommand(trajectory2, driveBase),
+                new IntakeBallToIndexer(intake, conveyor, indexer)       
             )
             
         );

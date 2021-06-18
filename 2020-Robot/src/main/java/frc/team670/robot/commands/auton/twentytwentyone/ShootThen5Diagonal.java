@@ -70,6 +70,7 @@ public class ShootThen5Diagonal extends SequentialCommandGroup implements Mustan
 
         driveBase.resetOdometry(trajectory.getStartingPose());
 
+        
         addCommands(
             //shoot all balls from baseline
             // new StartShooterByDistance(shooter, driveBase),
@@ -81,8 +82,8 @@ public class ShootThen5Diagonal extends SequentialCommandGroup implements Mustan
 
             //from initiation line to 5 balls in diagonal under switch
             new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory, driveBase)
-                //new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(5.2)       
+                getTrajectoryFollowerCommand(trajectory, driveBase),
+                new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(5.2)       
             )
         );
     }

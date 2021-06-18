@@ -24,7 +24,7 @@ public class CenterThroughTrench extends Path{
 
                                 new Pose2d(3.944, -2.628, Rotation2d.fromDegrees(0)),
                                 new Pose2d(5.41, -0.706, Rotation2d.fromDegrees(0)), 
-                                new Pose2d(7.666, -0.706, Rotation2d.fromDegrees(0))
+                                new Pose2d(7.8, -0.706, Rotation2d.fromDegrees(0))
                         ), 
                 driveBase);
                 //Logger.consoleLog("running godspeed part 1");
