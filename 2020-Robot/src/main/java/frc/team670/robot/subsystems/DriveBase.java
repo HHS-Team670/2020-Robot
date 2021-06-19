@@ -57,7 +57,7 @@ public class DriveBase extends TankDriveBase {
   private List<SparkMAXLite> leftControllers, rightControllers;
   private List<SparkMAXLite> allMotors = new ArrayList<SparkMAXLite>();;
 
-  private AHRS navXMicro;
+  private NavX navXMicro;
   private DifferentialDriveOdometry m_odometry;
 
   private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
@@ -107,8 +107,8 @@ public class DriveBase extends TankDriveBase {
     super.setMotorControllers(new SpeedController[] {left1, left2}, new SpeedController[] {right1, right2}, false, false, .1, true);
 
     // initialized NavX and sets Odometry
-    // navXMicro = new NavX(RobotMap.NAVX_PORT);
-    AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
+    navXMicro = new NavX(RobotMap.NAVX_PORT);
+    // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
         new Pose2d(0, 0, new Rotation2d()));
 

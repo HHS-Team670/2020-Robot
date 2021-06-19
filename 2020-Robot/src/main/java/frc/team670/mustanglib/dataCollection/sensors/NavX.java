@@ -178,6 +178,10 @@ public class NavX {
         return mAHRS.getRoll();
     }
 
+    public boolean isConnected(){
+        return mAHRS.isConnected();
+    }
+
     public class ZeroableNavX_Yaw_PIDSource implements PIDSource {
 
         private PIDSourceType type;
