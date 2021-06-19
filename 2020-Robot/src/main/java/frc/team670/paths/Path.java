@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.DriveBase;
 
@@ -27,24 +28,30 @@ public class Path {
 
     //TODO this only gets the left voltage constraint, make it get both left and right
     private static final DifferentialDriveVoltageConstraint AUTO_VOLTAGE_CONSTRAINT = getLeftAutoVoltageConstraint();
-    private static final TrajectoryConfig CONFIG = getConfig();
+    //private static final TrajectoryConfig CONFIG = getConfig();
     private Trajectory trajectory;
     private DriveBase driveBase;
     private List<Pose2d> waypointsList;
 
+    public Path(List<Pose2d> waypoints, DriveBase driveBase) {
+        this.driveBase = driveBase;
+        this.waypointsList = waypoints;
+        trajectoryFromWaypoints(waypoints, RobotConstants.kAutoPathConstraints);
+    }
+    
     /**
      * Used to create a path object based on a list of way points and the drivebase
      * @param waypoints a list of waypoints
      * @param driveBase the drivebase which has to follow the path
      */
-    public Path(List<Pose2d> waypoints, DriveBase driveBase) {
+    public Path(List<Pose2d> waypoints, DriveBase driveBase, DifferentialDriveKinematicsConstraint kAutoPathConstraints) {
         this.driveBase = driveBase;
         this.waypointsList = waypoints;
-        trajectoryFromWaypoints(waypoints);
+        trajectoryFromWaypoints(waypoints, kAutoPathConstraints);
     }
 
-    private void trajectoryFromWaypoints(List<Pose2d> waypoints){
-        this.trajectory = TrajectoryGenerator.generateTrajectory(waypoints, CONFIG);
+    private void trajectoryFromWaypoints(List<Pose2d> waypoints, DifferentialDriveKinematicsConstraint kAutoPathConstraints){
+        this.trajectory = TrajectoryGenerator.generateTrajectory(waypoints, getConfig(kAutoPathConstraints));
     }
 
     /**
@@ -83,13 +90,13 @@ public class Path {
                 RobotConstants.kDriveKinematics, 10);
     }
 
-    private static TrajectoryConfig getConfig() {
+    private static TrajectoryConfig getConfig(DifferentialDriveKinematicsConstraint kAutoPathConstraints) {
         return new TrajectoryConfig(RobotConstants.kMaxSpeedMetersPerSecond,
                 RobotConstants.kMaxAccelerationMetersPerSecondSquared)
                         // Add kinematics to ensure max speed is actually obeyed
                         .setKinematics(RobotConstants.kDriveKinematics)
                         // Apply the voltage constraint
-                        .addConstraint(RobotConstants.kAutoPathConstraints).addConstraint(AUTO_VOLTAGE_CONSTRAINT);
+                        .addConstraint(kAutoPathConstraints).addConstraint(AUTO_VOLTAGE_CONSTRAINT);
     }
 
     /**

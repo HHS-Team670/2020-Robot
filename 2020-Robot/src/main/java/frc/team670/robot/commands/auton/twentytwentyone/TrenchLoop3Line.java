@@ -14,9 +14,11 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.paths.Path;
 import frc.team670.paths.twentytwentyone.CenterThroughTrench;
-import frc.team670.paths.twentytwentyone.RightThroughTrench_GODSPEED2021;
+import frc.team670.paths.twentytwentyone.RightThroughTrench_GODSPEED2021Pt1;
+import frc.team670.paths.twentytwentyone.RightThroughTrench_GODSPEED2021Pt2;
 import frc.team670.paths.twentytwentyone.TrenchTo2BallLine;
-import frc.team670.paths.twentytwentyone.TrenchTo3BallLine_GODSPEED2021;
+import frc.team670.paths.twentytwentyone.TrenchTo3BallLine_GODSPEED2021pt1;
+import frc.team670.paths.twentytwentyone.TrenchTo3BallLine_GODSPEED2021pt2;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.EmptyRevolver;
 import frc.team670.robot.commands.intake.DeployIntake;
@@ -48,7 +50,7 @@ public class TrenchLoop3Line extends SequentialCommandGroup implements MustangCo
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private DriveBase driveBase;
-    private Path trajectory1, trajectory2;
+    private Path trajectory1, trajectory2, trajectory3, trajectory4;
     
     public TrenchLoop3Line(StartPosition startPosition, DriveBase driveBase, Intake intake, Conveyor conveyor, 
     Indexer indexer, Turret turret, Shooter shooter) {
@@ -65,7 +67,7 @@ public class TrenchLoop3Line extends SequentialCommandGroup implements MustangCo
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(turret, HealthState.GREEN);
         if (startPosition == StartPosition.RIGHT) {
-            trajectory1 = new RightThroughTrench_GODSPEED2021(driveBase);
+            trajectory1 = new RightThroughTrench_GODSPEED2021Pt1(driveBase);
             turretAng = RobotConstants.rightTurretAng;
         }
         if (startPosition == StartPosition.CENTER)

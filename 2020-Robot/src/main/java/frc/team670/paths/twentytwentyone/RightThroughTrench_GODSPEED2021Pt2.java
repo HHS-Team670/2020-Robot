@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.mustanglib.utils.Logger;
+import frc.team670.robot.constants.RobotConstants;
 
 /**
  * first part of godspeed trajectory
@@ -31,7 +32,7 @@ public class RightThroughTrench_GODSPEED2021Pt2 extends Path{
                                 new Pose2d(7.8, -0.706, Rotation2d.fromDegrees(0))
 
                         ), 
-                driveBase);
+                driveBase, RobotConstants.kAutoPathConstraintsIntaking);
                 //Logger.consoleLog("running godspeed part 1");
         }
 }
