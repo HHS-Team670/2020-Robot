@@ -132,7 +132,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
 
         public double getMaxVelocity() {
-            return 2100; // assuming 1 indexer rotation per second
+            // 2100
+            return 4000; // assuming 1 indexer rotation per second
         }
 
         public double getMinVelocity() {
@@ -140,7 +141,8 @@ public class Indexer extends SparkMaxRotatingSubsystem {
         }
 
         public double getMaxAcceleration() {
-            return 2100;
+            // 2100
+            return 4000;
         }
 
         public double getAllowedError() {
