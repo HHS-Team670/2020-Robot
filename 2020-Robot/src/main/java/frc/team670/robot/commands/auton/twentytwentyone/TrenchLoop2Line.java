@@ -14,9 +14,11 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.paths.Path;
 import frc.team670.paths.twentytwentyone.CenterThroughTrench;
-import frc.team670.paths.twentytwentyone.RightThroughTrench_GODSPEED2021;
+import frc.team670.paths.twentytwentyone.RightThroughTrench_GODSPEED2021Pt1;
+import frc.team670.paths.twentytwentyone.RightThroughTrench_GODSPEED2021Pt2;
 import frc.team670.paths.twentytwentyone.TrenchTo2BallLine;
-import frc.team670.paths.twentytwentyone.TrenchTo3BallLine_GODSPEED2021;
+import frc.team670.paths.twentytwentyone.TrenchTo3BallLine_GODSPEED2021pt1;
+import frc.team670.paths.twentytwentyone.TrenchTo3BallLine_GODSPEED2021pt2;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.EmptyRevolver;
 import frc.team670.robot.commands.intake.DeployIntake;
@@ -48,7 +50,7 @@ public class TrenchLoop2Line extends SequentialCommandGroup implements MustangCo
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private DriveBase driveBase;
-    private Path trajectory1, trajectory2;
+    private Path trajectory1, trajectory2, trajectory3;
     
     public TrenchLoop2Line(StartPosition startPosition, DriveBase driveBase, Intake intake, Conveyor conveyor, 
     Indexer indexer, Turret turret, Shooter shooter) {
@@ -65,18 +67,20 @@ public class TrenchLoop2Line extends SequentialCommandGroup implements MustangCo
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(turret, HealthState.GREEN);
         if (startPosition == StartPosition.RIGHT) {
-            trajectory1 = new RightThroughTrench_GODSPEED2021(driveBase);
+            trajectory1 = new RightThroughTrench_GODSPEED2021Pt1(driveBase);
+            trajectory2 = new RightThroughTrench_GODSPEED2021Pt2(driveBase);
             turretAng = RobotConstants.rightTurretAng;
         }
         if (startPosition == StartPosition.CENTER)
             trajectory1 = new CenterThroughTrench(driveBase);
 
-        this.trajectory2 = new TrenchTo2BallLine(driveBase);
+        this.trajectory3 = new TrenchTo2BallLine(driveBase);
 
         //TODO: reset to trajectory 1
         driveBase.resetOdometry(trajectory1.getStartingPose());
 
-        addCommands(
+        if (startPosition == StartPosition.RIGHT) {
+            addCommands(
 
             //shoot all balls from baseline
             // new StartShooterByDistance(shooter, driveBase),
@@ -86,10 +90,13 @@ public class TrenchLoop2Line extends SequentialCommandGroup implements MustangCo
 
             //TODO: see if shooter needs to be stopped while traversing and not shooting
 
-            //from initiation line to end of trench w 3 balls intaked
+            //from initiation line to start of trench
+            getTrajectoryFollowerCommand(trajectory1, driveBase),
+
+            //from start of trench to end of trench w 3 balls intaked
             new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory1, driveBase)
-                //new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(5.2)       
+                getTrajectoryFollowerCommand(trajectory2, driveBase),
+                new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(5.2)       
             ),
             
             //shoot from color wheel, 
@@ -101,12 +108,46 @@ public class TrenchLoop2Line extends SequentialCommandGroup implements MustangCo
             //new EmptyRevolver(indexer),
 
             new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory2, driveBase)
-                //new IntakeBallToIndexer(intake, conveyor, indexer)       
+                getTrajectoryFollowerCommand(trajectory3, driveBase),
+                new IntakeBallToIndexer(intake, conveyor, indexer)       
+            )
+            
+            );
+        }
+        
+        if (startPosition == StartPosition.CENTER) {
+            addCommands(
+
+            //shoot all balls from baseline
+            // new StartShooterByDistance(shooter, driveBase),
+            // new RotateToAngle(turret, turretAng),
+            // new Shoot(shooter),
+            // new EmptyRevolver(indexer),
+
+            //TODO: see if shooter needs to be stopped while traversing and not shooting
+
+            //from initation line to end of trench w 3 balls intaked
+            new ParallelCommandGroup(
+                getTrajectoryFollowerCommand(trajectory1, driveBase),
+                new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(5.2)       
+            ),
+            
+            //shoot from color wheel, 
+            //TODO: find new turretAng 
+            // turretAng = ...;
+            // new StartShooterByDistance(shooter, driveBase),
+            // new RotateToAngle(turret, turretAng),
+            // new Shoot(shooter),
+            //new EmptyRevolver(indexer),
+
+            new ParallelCommandGroup(
+                getTrajectoryFollowerCommand(trajectory3, driveBase),
+                new IntakeBallToIndexer(intake, conveyor, indexer)       
             )
             
         );
 
+        }
     }
 
     @Override
