@@ -55,7 +55,7 @@ NetworkTables.addKeyListener('/SmartDashboard/expectedSpeed', (key, value) => {
 });
 
 // updates robot angle and direction
-    NetworkTables.addKeyListener('/SmartDashboard/vision_values', (key, value) => {
+    NetworkTables.addKeyListener('/SmartDashboard/vision-values-', (key, value) => {
         document.getElementById('distance').textContent = 'Distance: ' + value[0];
         document.getElementById('angle').textContent = 'Angle: ' + value[2];
     });
