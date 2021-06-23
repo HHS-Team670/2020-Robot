@@ -73,8 +73,8 @@ public class TrenchLoop3Line extends SequentialCommandGroup implements MustangCo
         }
         if (startPosition == StartPosition.CENTER)
             trajectory1 = new CenterThroughTrench(driveBase);
-        this.trajectory3 = new TrenchTo3BallLine_GODSPEED2021pt1(driveBase);
-        this.trajectory4 = new TrenchTo3BallLine_GODSPEED2021pt2(driveBase);
+        // this.trajectory3 = new TrenchTo3BallLine_GODSPEED2021pt1(driveBase);
+        // this.trajectory4 = new TrenchTo3BallLine_GODSPEED2021pt2(driveBase);
 
         //TODO: reset to trajectory 1
         driveBase.resetOdometry(trajectory1.getStartingPose());
@@ -90,13 +90,13 @@ public class TrenchLoop3Line extends SequentialCommandGroup implements MustangCo
             //TODO: see if shooter needs to be stopped while traversing and not shooting
 
             //from initiation line to start of trench
-            getTrajectoryFollowerCommand(trajectory1, driveBase),
-
-            //from start of trench to end of trench w 3 balls intaked
             new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory2, driveBase),
-                new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(3.2)       
+                getTrajectoryFollowerCommand(trajectory1, driveBase)
+                // new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(3.2) 
             ),
+
+            //from start of trench to end of trench w 3 balls intake
+            getTrajectoryFollowerCommand(trajectory2, driveBase)
             
             //shoot from color wheel, 
             //TODO: find new turretAng 
@@ -106,49 +106,49 @@ public class TrenchLoop3Line extends SequentialCommandGroup implements MustangCo
             // new Shoot(shooter),
             //new EmptyRevolver(indexer),
 
-            getTrajectoryFollowerCommand(trajectory3, driveBase),
+            // getTrajectoryFollowerCommand(trajectory3, driveBase),
 
-            new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory4, driveBase),
-                new IntakeBallToIndexer(intake, conveyor, indexer)       
-            )
+            // new ParallelCommandGroup(
+            //     getTrajectoryFollowerCommand(trajectory4, driveBase),
+            //     new IntakeBallToIndexer(intake, conveyor, indexer)       
+            // )
             
         );
         }
 
-        if (startPosition == StartPosition.CENTER) {
-            addCommands(
-            //shoot all balls from baseline
-            // new StartShooterByDistance(shooter, driveBase),
-            // new RotateToAngle(turret, turretAng),
-            // new Shoot(shooter),
-            // new EmptyRevolver(indexer),
+        // if (startPosition == StartPosition.CENTER) {
+        //     addCommands(
+        //     //shoot all balls from baseline
+        //     // new StartShooterByDistance(shooter, driveBase),
+        //     // new RotateToAngle(turret, turretAng),
+        //     // new Shoot(shooter),
+        //     // new EmptyRevolver(indexer),
 
-            //TODO: see if shooter needs to be stopped while traversing and not shooting
+        //     //TODO: see if shooter needs to be stopped while traversing and not shooting
 
-            //from initiation line to end of trench w 3 balls intaked
-            new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory1, driveBase),
-                new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(3.2)       
-            ),
+        //     //from initiation line to end of trench w 3 balls intaked
+        //     new ParallelCommandGroup(
+        //         getTrajectoryFollowerCommand(trajectory1, driveBase),
+        //         new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(3.2)       
+        //     ),
             
-            //shoot from color wheel, 
-            //TODO: find new turretAng 
-            // turretAng = ...;
-            // new StartShooterByDistance(shooter, driveBase),
-            // new RotateToAngle(turret, turretAng),
-            // new Shoot(shooter),
-            //new EmptyRevolver(indexer),
+        //     //shoot from color wheel, 
+        //     //TODO: find new turretAng 
+        //     // turretAng = ...;
+        //     // new StartShooterByDistance(shooter, driveBase),
+        //     // new RotateToAngle(turret, turretAng),
+        //     // new Shoot(shooter),
+        //     //new EmptyRevolver(indexer),
 
-            getTrajectoryFollowerCommand(trajectory3, driveBase),
+        //     getTrajectoryFollowerCommand(trajectory3, driveBase),
 
-            new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory4, driveBase),
-                new IntakeBallToIndexer(intake, conveyor, indexer)       
-            )
+        //     new ParallelCommandGroup(
+        //         getTrajectoryFollowerCommand(trajectory4, driveBase),
+        //         new IntakeBallToIndexer(intake, conveyor, indexer)       
+        //     )
             
-        );
-        }
+        // );
+        // }
 
     }
 

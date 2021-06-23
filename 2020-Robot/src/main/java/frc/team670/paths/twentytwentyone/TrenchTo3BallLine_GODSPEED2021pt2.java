@@ -26,6 +26,6 @@ public class TrenchTo3BallLine_GODSPEED2021pt2 extends Path{
                                 new Pose2d(7.985, -2.804, Rotation2d.fromDegrees(-159.174)),
                                 new Pose2d(6.453, -3.441, Rotation2d.fromDegrees(-159.174))
                         ), 
-                driveBase, RobotConstants.kAutoPathConstraintsIntaking);
+                driveBase, RobotConstants.kAutoPathConstraintsIntaking, RobotConstants.kMaxSpeedMetersPerSecond, RobotConstants.kMaxAccelerationMetersPerSecondSquared);
         }
 }
