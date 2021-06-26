@@ -73,8 +73,8 @@ public class TrenchLoop3Line extends SequentialCommandGroup implements MustangCo
         }
         if (startPosition == StartPosition.CENTER)
             trajectory1 = new CenterThroughTrench(driveBase);
-        // this.trajectory3 = new TrenchTo3BallLine_GODSPEED2021pt1(driveBase);
-        // this.trajectory4 = new TrenchTo3BallLine_GODSPEED2021pt2(driveBase);
+        this.trajectory3 = new TrenchTo3BallLine_GODSPEED2021pt1(driveBase);
+        this.trajectory4 = new TrenchTo3BallLine_GODSPEED2021pt2(driveBase);
 
         //TODO: reset to trajectory 1
         driveBase.resetOdometry(trajectory1.getStartingPose());
@@ -91,12 +91,12 @@ public class TrenchLoop3Line extends SequentialCommandGroup implements MustangCo
 
             //from initiation line to start of trench
             new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory1, driveBase)
-                // new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(3.2) 
+                getTrajectoryFollowerCommand(trajectory1, driveBase),
+                new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(2)
             ),
 
             //from start of trench to end of trench w 3 balls intake
-            getTrajectoryFollowerCommand(trajectory2, driveBase)
+            getTrajectoryFollowerCommand(trajectory2, driveBase),
             
             //shoot from color wheel, 
             //TODO: find new turretAng 
@@ -106,12 +106,12 @@ public class TrenchLoop3Line extends SequentialCommandGroup implements MustangCo
             // new Shoot(shooter),
             //new EmptyRevolver(indexer),
 
-            // getTrajectoryFollowerCommand(trajectory3, driveBase),
+            getTrajectoryFollowerCommand(trajectory3, driveBase),
 
-            // new ParallelCommandGroup(
-            //     getTrajectoryFollowerCommand(trajectory4, driveBase),
-            //     new IntakeBallToIndexer(intake, conveyor, indexer)       
-            // )
+            new ParallelCommandGroup(
+                getTrajectoryFollowerCommand(trajectory4, driveBase)
+                // new IntakeBallToIndexer(intake, conveyor, indexer)       
+            )
             
         );
         }

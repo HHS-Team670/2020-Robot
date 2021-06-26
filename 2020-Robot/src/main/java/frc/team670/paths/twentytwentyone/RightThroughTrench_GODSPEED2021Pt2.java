@@ -32,7 +32,7 @@ public class RightThroughTrench_GODSPEED2021Pt2 extends Path{
                                 new Pose2d(7.8, -0.706, Rotation2d.fromDegrees(0))
 
                         ), 
-                driveBase, RobotConstants.kAutoPathConstraintsIntaking, RobotConstants.kMaxSpeedMetersPerSecond, RobotConstants.kMaxAccelerationMetersPerSecondSquared, RobotConstants.endVelocityMetersPerSecond);
+                driveBase, RobotConstants.kAutoPathConstraintsIntaking, RobotConstants.kMaxSpeedMetersPerSecond, RobotConstants.kMaxAccelerationMetersPerSecondSquared, RobotConstants.endVelocityMetersPerSecond2);
                 //Logger.consoleLog("running godspeed part 1");
         }
 }

@@ -20,9 +20,15 @@ public class Center3Line extends Path{
         public Center3Line(DriveBase driveBase) {
                 super(
                         List.of(
-                                new Pose2d(3.09, -2.628, Rotation2d.fromDegrees(0)),
-                                new Pose2d(4.635, -3.717, Rotation2d.fromDegrees(-23.28)),
-                                new Pose2d(6.577, -3.333, Rotation2d.fromDegrees(21.3))
+                                // new Pose2d(3.09, -2.628, Rotation2d.fromDegrees(0)),
+                                // new Pose2d(4.635, -3.717, Rotation2d.fromDegrees(-23.28)),
+                                // new Pose2d(6.577, -3.333, Rotation2d.fromDegrees(21.3))
+
+                                //Starting position: line up angle of the robot to the generator and in front of the three ball line, 
+                                // move back straight until initiation line. 
+                                // Path: just goes straight forward to collect the three balls in line
+                                new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+                                new Pose2d(3.7, 0, Rotation2d.fromDegrees(0))
 
                                 //new Pose2d(5.736, -3.655, Rotation2d.fromDegrees(21.3)),
                                 //TODO: tune 2nd waypoint to optimize turns 

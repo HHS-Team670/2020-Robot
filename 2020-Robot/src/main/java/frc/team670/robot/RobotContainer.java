@@ -94,7 +94,7 @@ public class RobotContainer extends RobotContainerBase{
     // MustangCommand autonCoxmmand = autoSelector.getSelectedRoutine();
     // MustangCommand autonCommand = new TrenchLoop3Line(StartPosition.RIGHT, driveBase, intake, conveyor, indexer, turret, shooter);
     // MustangCommand autonCommand = new ShootThen5Diagonal(StartPosition.CENTER, driveBase, intake, conveyor, indexer, turret, shooter);
-    MustangCommand autonCommand = new TrenchLoop3Line(StartPosition.RIGHT, driveBase, intake, conveyor, indexer, turret, shooter);
+    MustangCommand autonCommand = new ShootThen3Line(StartPosition.CENTER, driveBase, intake, conveyor, indexer, turret, shooter);
 
     // Logger.consoleLog("autonCommand: %s", autonCommand);
     //MustangCommand autonCommand = new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, vision);

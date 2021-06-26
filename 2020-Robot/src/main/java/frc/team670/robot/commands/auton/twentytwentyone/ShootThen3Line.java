@@ -83,8 +83,8 @@ public class ShootThen3Line extends SequentialCommandGroup implements MustangCom
 
             //from initiation line to 3 balls in line under switch
             new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory, driveBase)
-                //new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(5.2)       
+                getTrajectoryFollowerCommand(trajectory, driveBase),
+                new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(5.2)       
             )
         );
     }
