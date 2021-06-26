@@ -6,6 +6,8 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.constants.RobotConstants;
+
 
 /**
  * 2021 field
@@ -19,9 +21,15 @@ public class Left3Line extends Path{
         public Left3Line(DriveBase driveBase) {
                 super(
                         List.of(
+                                //Starting position: line up angle of the robot to the generator and in front of the three ball line, 
+                                // move back straight until initiation line. 
+                                // Path: just goes straight forward to collect the three balls in line
+                                // new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+                                // new Pose2d(3.7, 0, Rotation2d.fromDegrees(0))
+
                                 new Pose2d(3.201, -3.717, Rotation2d.fromDegrees(0)),
                                 new Pose2d(6.671, -3.242, Rotation2d.fromDegrees(21.3))
                         ), 
-                driveBase);
+                driveBase, RobotConstants.kAutoPathConstraintsCenter3Line, RobotConstants.kMaxSpeedMetersPerSecond3, RobotConstants.kMaxAccelerationMetersPerSecondSquared3, RobotConstants.endVelocityMetersPerSecond);
         }
 }

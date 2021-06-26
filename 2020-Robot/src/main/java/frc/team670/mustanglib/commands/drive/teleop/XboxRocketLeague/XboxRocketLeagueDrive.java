@@ -48,6 +48,7 @@ public class XboxRocketLeagueDrive extends CommandBase implements MustangCommand
     // by -1 to reverse that because we want right trigger to correspond to forward.
     double speed = -1 * (controller.getLeftTriggerAxis()
         - controller.getRightTriggerAxis());
+    SmartDashboard.putNumber("Right Power", controller.getRightTriggerAxis());
     double steer = controller.getLeftStickX();
 
     // Decides whether or not to smooth the Steering and Trigger. Smoothing helps

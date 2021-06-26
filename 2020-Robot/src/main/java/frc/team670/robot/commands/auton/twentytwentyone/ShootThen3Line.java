@@ -31,6 +31,8 @@ import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
+import frc.team670.mustanglib.commands.drive.straight.TimedDrive;
+
 
 /**
  * Autonomous routine starting by shooting 3 balls from center, go to switch, intake 3
@@ -75,7 +77,7 @@ public class ShootThen3Line extends SequentialCommandGroup implements MustangCom
         addCommands(
             //shoot all balls from baseline
             // new StartShooterByDistance(shooter, driveBase),
-            // // new RotateToAngle(turret, turretAng),
+            new RotateToAngle(turret, turretAng),
             // new Shoot(shooter),
             // new EmptyRevolver(indexer),
 
@@ -83,8 +85,9 @@ public class ShootThen3Line extends SequentialCommandGroup implements MustangCom
 
             //from initiation line to 3 balls in line under switch
             new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory, driveBase),
-                new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(5.2)       
+                // new TimedDrive(3, 0.6, driveBase)
+                // getTrajectoryFollowerCommand(trajectory, driveBase),
+                // new IntakeBallToIndexer(intake, conveyor, indexer)       
             )
         );
     }

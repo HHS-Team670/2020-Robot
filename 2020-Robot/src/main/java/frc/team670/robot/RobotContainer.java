@@ -94,7 +94,7 @@ public class RobotContainer extends RobotContainerBase{
     // MustangCommand autonCoxmmand = autoSelector.getSelectedRoutine();
     // MustangCommand autonCommand = new TrenchLoop3Line(StartPosition.RIGHT, driveBase, intake, conveyor, indexer, turret, shooter);
     // MustangCommand autonCommand = new ShootThen5Diagonal(StartPosition.CENTER, driveBase, intake, conveyor, indexer, turret, shooter);
-    MustangCommand autonCommand = new ShootThen3Line(StartPosition.CENTER, driveBase, intake, conveyor, indexer, turret, shooter);
+    MustangCommand autonCommand = new ShootThen3Line(StartPosition.LEFT, driveBase, intake, conveyor, indexer, turret, shooter);
 
     // Logger.consoleLog("autonCommand: %s", autonCommand);
     //MustangCommand autonCommand = new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, vision);
@@ -132,6 +132,10 @@ public class RobotContainer extends RobotContainerBase{
     }
     turret.initDefaultCommand();
     vision.turnOnLEDs();
+    SmartDashboard.getNumber("Turret Angle", 0);
+    SmartDashboard.getNumber("Left M Velocity Ticks", 0);
+    SmartDashboard.getNumber("Right M Velocity Ticks", 0);
+    
   }
 
   public void disabled(){
@@ -162,6 +166,8 @@ public class RobotContainer extends RobotContainerBase{
 
   public void periodic() {
     SmartDashboard.putNumber("heading", driveBase.getHeading());
+    SmartDashboard.putNumber("Turret Angle", turret.getCurrentAngleInDegrees());
+    driveBase.sendEncoderDataToDashboard();
     fancyLights.periodic();
   }
 

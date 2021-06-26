@@ -72,6 +72,9 @@ public class RobotConstants extends RobotConstantsBase{
     public static final double kMaxAccelerationMetersPerSecondSquared2 = 1;// 1; //0.305;
     public static final double endVelocityMetersPerSecond2 = 0.5;
 
+    public static final double kMaxSpeedMetersPerSecond3 = 0.6;// 1; //0.305;
+    public static final double kMaxAccelerationMetersPerSecondSquared3 = 0.6;// 1; //0.305;
+
 
     public static final DifferentialDriveKinematicsConstraint kAutoPathConstraintsIntaking = new DifferentialDriveKinematicsConstraint(
             kDriveKinematics, kMaxSpeedMetersPerSecond);
@@ -79,8 +82,11 @@ public class RobotConstants extends RobotConstantsBase{
     public static final DifferentialDriveKinematicsConstraint kAutoPathConstraints = new DifferentialDriveKinematicsConstraint(
             kDriveKinematics, kMaxSpeedMetersPerSecond2);
 
+    public static final DifferentialDriveKinematicsConstraint kAutoPathConstraintsCenter3Line = new DifferentialDriveKinematicsConstraint(
+        kDriveKinematics, kMaxSpeedMetersPerSecond3);
+
     //The turret angles depending on the robot start position
-    public static final double leftTurretAng = 0;
+    public static final double leftTurretAng = 33;
     public static final double rightTurretAng = -25;
 
     // Reasonable baseline values for a RAMSETE follower in units of meters and
