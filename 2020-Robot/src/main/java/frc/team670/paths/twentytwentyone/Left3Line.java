@@ -27,7 +27,7 @@ public class Left3Line extends Path{
                                 // new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
                                 // new Pose2d(3.7, 0, Rotation2d.fromDegrees(0))
 
-                                new Pose2d(3.201, -3.717, Rotation2d.fromDegrees(0)),
+                                new Pose2d(3.201, -4.42, Rotation2d.fromDegrees(0)),
                                 new Pose2d(6.671, -3.242, Rotation2d.fromDegrees(21.3))
                         ), 
                 driveBase, RobotConstants.kAutoPathConstraintsCenter3Line, RobotConstants.kMaxSpeedMetersPerSecond3, RobotConstants.kMaxAccelerationMetersPerSecondSquared3, RobotConstants.endVelocityMetersPerSecond);
