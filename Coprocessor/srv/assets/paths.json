@@ -1,0 +1,59 @@
+[
+    {
+      "name": "RightTrenchLoop3Line_GODSPEED",
+      "start_position": "Right",
+      "end_position": "3 Ball Line",
+      "through_trench": true,
+      "id": 1
+    },
+    {
+      "name": "RightTrenchLoop2Line",
+      "start_position": "Right",
+      "end_position": "2 Ball Line",
+      "through_trench": true,
+      "id": 2
+    },
+    {
+      "name": "CenterTrenchLoop3Line_GODSPEED",
+      "start_position": "Center",
+      "end_position": "3 Ball Line",
+      "through_trench": true,
+      "id": 3
+    },
+    {
+      "name": "CenterTrenchLoop2Line_GODSPEED",
+      "start_position": "Center",
+      "end_position": "2 Ball Line",
+      "through_trench": true,
+      "id": 4
+    },
+    {
+      "name": "Center3Line",
+      "start_position": "Center",
+      "end_position": "3 Ball Line",
+      "through_trench": false,
+      "id": 5
+    },
+    {
+      "name": "Center2Line",
+      "start_position": "Center",
+      "end_position": "2 Ball Line",
+      "through_trench": false,
+      "id": 6
+    },
+    {
+      "name": "Left3Line",
+      "start_position": "Left",
+      "end_position": "3 Ball Line",
+      "through_trench": false,
+      "id": 7
+    },
+    {
+      "name": "Left2Line",
+      "start_position": "Left",
+      "end_position": "2 Ball Line",
+      "through_trench": false,
+      "id": 8
+    }
+  ]
+  

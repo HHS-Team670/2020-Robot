@@ -8,10 +8,16 @@
 from flask import Flask, render_template
 import os
 
+from flask.helpers import send_file, send_from_directory
+
 PEOPLE_FOLDER = os.path.join('static', 'picture')
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = PEOPLE_FOLDER
+
+@app.route('/paths')
+def send_paths():
+    return send_from_directory("assets", "paths.json")
 
 @app.route('/')
 @app.route('/index')
