@@ -1,8 +1,44 @@
 var date = new Date();
 var PopupClass = require('js-popup');
+var fs = require('fs');
+
+var paths;
 
 document.getElementById('big-warning').style.display = "none";
 // document.getElementById('auton-chooser').style.display = "none";
+
+
+
+function buildAutonChooser() {
+    // get paths
+    fetch("http://10.6.70.26:5800/paths").then((result) => {
+        result.json().then((pathres) => {
+            paths = pathres;
+            let startPositions = [];
+            let endPositions = [];
+
+            let startPositionsSelection = document.getElementById("start_position");
+            let endPositionsSelection = document.getElementById("end_position");
+
+            if (paths) {
+                for (let path of paths) {
+                if (startPositions.indexOf(path.start_position) < 0) {
+                    startPositions.push(path.start_position);
+                    let option = new Option(path.start_position, path.start_position);
+                    startPositionsSelection.appendChild(option);
+                }
+                if (endPositions.indexOf(path.end_position) < 0) {
+                    endPositions.push(path.end_position);
+                    let option = new Option(path.end_position, path.end_position);
+                    endPositionsSelection.appendChild(option);
+                }
+                }
+            }
+            console.log(startPositions);
+            console.log(endPositions);
+        }).catch((err) => {console.log(err)});
+    });
+}
 
 // initial camera settings
 var driveReversed = false;
@@ -21,6 +57,12 @@ NetworkTables.addKeyListener('/SmartDashboard/robot-state', (key, value) => {
     }
 });
 
+NetworkTables.addKeyListener('/SmartDashboard/paths', (_, value) => {
+    if(value) {
+        console.log(value);
+    }
+});
+
 // listens for warnings
 NetworkTables.addKeyListener('/SmartDashboard/warnings', (key, value) => {
     document.getElementById('big-warning').style.display = "inline";
@@ -30,9 +72,9 @@ NetworkTables.addKeyListener('/SmartDashboard/warnings', (key, value) => {
     var timeSinceWarningFlashed = Date.getTime();
 });
 
-NetworkTables.addGlobalListener((key, value) => {
-    console.log(key + ": " + value);
-})
+// NetworkTables.addGlobalListener((key, value) => {
+//     console.log(key + ": " + value);
+// })
 
 // updates status lights for driveBase
 NetworkTables.addKeyListener('/SmartDashboard/Balls', (key, value) => {
@@ -289,14 +331,17 @@ function getAutonFromMap() {
 
 
 
-    switch (document.querySelector('input[name="start-position"]:checked').value) {
-        case "Left":
-            return getLocation(0, document.querySelector('input[name="location"]:checked').value)
-        case "Center":
-            return getLocation(1, document.querySelector('input[name="location"]:checked').value)
-        case "Right":
-            return getLocation(2, document.querySelector('input[name="location"]:checked').value)
-    }
+    // console.log(document.querySelector('input[name="start-position"]:checked').value)
+    // switch (document.querySelector('input[name="start-position"]:checked').value) {
+    //     case "Left":
+    //         return getLocation(0, document.querySelector('input[name="location"]:checked').value)
+    //     case "Center":
+    //         return getLocation(1, document.querySelector('input[name="location"]:checked').value)
+    //     case "Right":
+    //         return getLocation(2, document.querySelector('input[name="location"]:checked').value)
+    // }
+
+    // console.log(document.getElementById("position").value);
 }
 
 function getLocation(offset, value) {
@@ -311,8 +356,27 @@ function getLocation(offset, value) {
     return -1;
 }
 
-function sendAuton() {
-    var autonCommand = getAutonFromMap();
-    console.log(autonCommand);
-    NetworkTables.putValue('/SmartDashboard/auton-chooser', autonCommand);
+
+function sendAuton()  {
+    let selectedStartPosition = document.getElementById('start_position').value;
+    let selectedEndPosition = document.getElementById('end_position').value;
+    let selectedThroughTrench = document.getElementById("through_trench").checked;
+
+    let matchingPath;
+    paths.forEach(element => {
+        if(element.start_position == selectedStartPosition && element.end_position == selectedEndPosition && element.through_trench == selectedThroughTrench) {
+            console.log("Match found " + element.id)
+            console.table(element);
+            matchingPath = element;
+        }
+    });
+    if(matchingPath) {
+        console.log(`Found match ${matchingPath.name}: ${matchingPath.id}`)
+        NetworkTables.putValue('/SmartDashboard/auton-chooser', matchingPath.id);
+    } else {
+        alert("Error: There is no path that matches the contrtains given! Try adjusting your path config")
+    }
+    
 }
+
+buildAutonChooser();

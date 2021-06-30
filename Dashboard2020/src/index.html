@@ -101,7 +101,7 @@
       <circle cx="45%" cy="95%" r="5%"/>
     </svg> -->
     <div id="robot-diagram">
-        <iframe id="vision-frame" src=" http://10.6.70.26:5802 " style="width: 50%; height: 75%; " align="right"></iframe>
+        <iframe id="vision-frame" src="http://10.6.70.26:5800" style="width: 50%; height: 75%; " align="right"></iframe>
     </div>
 
     <svg id="current-text" width="400" height="60">
@@ -111,41 +111,11 @@
   </svg>
 
     <div id="auton-chooser">
-        <rect x="0%" y="0%" width="100%" height="100%" style="stroke:rgb(0,200,0)" />
-        <form id="auto-chooser">
-            <fieldset id="position">
-                <input style="margin:5px;" type="radio" name="start-position" value="Left" />
-                <label for="start-position-left">Left</label>
-                <input style="margin:5px;" type="radio" name="start-position" value="Center" />
-                <label for="start-position-center">Center</label>
-                <input style="margin:5px;" type="radio" name="start-position" value="Right" />
-                <label for="start-position-right">Right</label>
-            </fieldset>
-            <fieldset>
-                <input style="margin:5px;" type="radio" name="location" value="Generator 2" />
-                <label for="Generator-2">Generator 2</label>
-                <input style="margin:5px;" type="radio" name="location" value="Generator 3" />
-                <label for="Generator-3">Generator 3</label>
-                <input style="margin:5px;" type="radio" name="location" value="Trench" />
-                <label for="Trench">Trench</label>
-            </fieldset>
-            <fieldset id="path">
-
-                <input style="margin:5px;" type="radio" id="shoot-then-back" value="EmptyToBack"> Shoot Then Back</input>
-
-            </fieldset>
-            <fieldset id="path2">
-
-                <input style="margin:5px;" type="radio" id="shoot-then-trench" value="Trench"> Shoot Then Trench</input>
-
-            </fieldset>
-            <fieldset id="path3">
-
-                <input style="margin:5px;" type="radio" id="shoot-then-forward" value="EmptyToFront"> Shoot Then Forward</input>
-
-            </fieldset>
-        </form>
-        <button style="margin-bottom:10px;" id="confirm-button" onclick="sendAuton();">OK</button>
+        <!-- <rect x="0%" y="0%" width="100%" height="100%" style="stroke:rgb(0,200,0)" /> -->
+        <select name="start_position" id="start_position"></select>
+        <select name="end_position" id="end_position"></select>
+        <label for="through_trench"><input type="checkbox" name="through_trench" id="through_trench"> Go through Trench </label>
+        <button style="margin-bottom: 100px;" id="confirm-button" onclick="sendAuton();">OK</button>
     </div>
 
     <script src="networktables/networktables.js"></script>

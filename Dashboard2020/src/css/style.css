@@ -204,11 +204,18 @@ body.login #login {
     /* transform: rotate(180deg); */
 }
 #auton-chooser {
-    position: relative;
     transform: translate(10vw, 60vh);
     width: 40vw;
     height: 30vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
 }
+
+option {
+    margin: 0;
+}
+
 #start-holding {
     position: absolute;
 }
@@ -228,8 +235,9 @@ body.login #login {
     width:400px;
 }
 #confirm-button {
-    position: absolute;
-    transform: translate(0, 170px);
+    /* position: absolute; */
+    /* transform: translate(0, 180px); */
+    margin-top: 5%;
     width:400px;
 }
 
@@ -275,4 +283,10 @@ body.login #login {
     width: 30vw;
     /*height: 8vh; */
     transform: translate(10vw, 90vh);
+}
+
+#auto-chooser {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
