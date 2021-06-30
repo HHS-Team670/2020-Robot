@@ -1,10 +1,20 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2020.2.2"
+    id 'org.hidetake.ssh' version '2.10.1'
 }
 
 repositories {
     mavenCentral()
+}
+
+remotes {
+  pi {
+    role 'rpi'
+    host = '10.6.70.26'
+    user = 'pi'
+    password = PI_PASSWORD
+  }
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -72,4 +82,14 @@ dependencies {
 jar {
     from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
     manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
+}
+
+task deployPaths {
+    doLast {
+    ssh.run {
+      session(remotes.pi) {
+        put from: project.file("assets/paths.json"), into: '/home/pi/srv/assets'
+      }
+    }
+  }
 }

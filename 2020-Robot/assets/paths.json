@@ -54,6 +54,21 @@
       "end_position": "2 Ball Line",
       "through_trench": false,
       "id": 8
+    },
+    {
+      "name": "CenterDiagonal",
+      "start_position": "Center",
+      "end_position": "Diagonal(5 ball)",
+      "through_trench": false,
+      "id": 9
+    },
+    {
+
+      "name": "RightDiagonal",
+      "start_position": "Right",
+      "end_position": "Diagonal(5 ball)",
+      "through_trench": false,
+      "id": 10
     }
   ]
   
