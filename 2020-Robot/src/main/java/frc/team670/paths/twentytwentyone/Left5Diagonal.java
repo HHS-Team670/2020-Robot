@@ -31,7 +31,7 @@ public class Left5Diagonal extends Path{
                                 //wide equivalent
                                 //wide bc enters switch from bottom left quadrant and exists from top left quadrant
 
-                                new Pose2d(3.944, -3.915, Rotation2d.fromDegrees(0)),
+                                new Pose2d(3.201, -4.036, Rotation2d.fromDegrees(0)),
                                 new Pose2d(5.787, -6.141, Rotation2d.fromDegrees(0)),
                                 new Pose2d(6.715, -5.564, Rotation2d.fromDegrees(55.567)),
                                 new Pose2d(6.492, -2.575, Rotation2d.fromDegrees(-87.583))
