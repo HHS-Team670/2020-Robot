@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.utils.Logger;
+import frc.team670.paths.twentytwentyone.RightThroughTrench_GODSPEED2021Pt1;
 import frc.team670.robot.commands.auton.baseline.*;
 import frc.team670.robot.commands.auton.twentytwentyone.*;
 import frc.team670.robot.commands.auton.generator.*;
@@ -103,26 +104,35 @@ public class AutoSelector {
 
 
         //baseline
-        SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_LEFT(0),        
-        SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_CENTER(1),
-        SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_RIGHT(2),
+        // SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_LEFT(0),        
+        // SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_CENTER(1),
+        // SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_RIGHT(2),
 
-        SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_LEFT(3),
-        SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_CENTER(4),
-        SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_RIGHT(5),
+        // SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_LEFT(3),
+        // SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_CENTER(4),
+        // SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_RIGHT(5),
 
-        SHOOT_FROM_BASELINE_THEN_TO_TRENCH_LEFT(6),
-        SHOOT_FROM_BASELINE_THEN_TO_TRENCH_CENTER(7),
-        SHOOT_FROM_BASELINE_THEN_TO_TRENCH_RIGHT(8),
+        // SHOOT_FROM_BASELINE_THEN_TO_TRENCH_LEFT(6),
+        // SHOOT_FROM_BASELINE_THEN_TO_TRENCH_CENTER(7),
+        // SHOOT_FROM_BASELINE_THEN_TO_TRENCH_RIGHT(8),
 
-        SHOOT_THEN_BACK(9),
+        // SHOOT_THEN_BACK(9),
 
-        //generator
-        GENERATOR_2_BALL_SIDE_TO_TRENCH_THEN_SHOOT(10),
-        GENERATOR_3_BALL_MID_TO_GENERATOR_2_BALL_MID_THEN_SHOOT(11),
+        // //generator
+        // GENERATOR_2_BALL_SIDE_TO_TRENCH_THEN_SHOOT(10),
+        // GENERATOR_3_BALL_MID_TO_GENERATOR_2_BALL_MID_THEN_SHOOT(11),
 
-        //2021
-        RIGHT_SHOOT_3_GET_3_SHOOT_3_GET_3_GODSPEED(12),
+        // 2021 paths
+        RightTrenchLoop3Line_GODSPEED(1),
+        RightTrenchLoop2Line(2),
+        CenterTrenchLoop3Line_GODSPEED(3),
+        CenterTrenchLoop2Line_GODSPEED(4),
+        Center3Line(5),
+        Center2Line(6),
+        Left3Line(7),
+        Left2Line(8),
+        CenterDiagonal(9),
+        RightDiagonal(10),
 
         UNKNOWN(-1);
 
@@ -237,36 +247,39 @@ public class AutoSelector {
 
           switch(result) {
 
-            case RIGHT_SHOOT_3_GET_3_SHOOT_3_GET_3_GODSPEED:
+            case RightTrenchLoop3Line_GODSPEED:
               return new TrenchLoop3Line(StartPosition.RIGHT, driveBase, intake, conveyor, indexer, turret, shooter);
+            case RightTrenchLoop2Line:
+              return new TrenchLoop2Line(StartPosition.RIGHT, driveBase, intake, conveyor, indexer, turret, shooter);
+            case CenterTrenchLoop3Line_GODSPEED:
+              return new TrenchLoop3Line(StartPosition.CENTER, driveBase, intake, conveyor, indexer, turret, shooter);
+            case CenterTrenchLoop2Line_GODSPEED:
+              return new TrenchLoop2Line(StartPosition.CENTER, driveBase, intake, conveyor, indexer, turret, shooter);
 
-            case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_LEFT:
-              return new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_CENTER:
-              return new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_RIGHT:
-              return new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+            case Center3Line:
+              return new ShootThen3Line(StartPosition.CENTER, driveBase, intake, conveyor, indexer, turret, shooter);
+            case Center2Line:
+              return new ShootThen2Line(StartPosition.CENTER, driveBase, intake, conveyor, indexer, turret, shooter);
+            case Left3Line:
+              return new ShootThen3Line(StartPosition.LEFT, driveBase, intake, conveyor, indexer, turret, shooter);
+            case Left2Line:
+              return new ShootThen2Line(StartPosition.LEFT, driveBase, intake, conveyor, indexer, turret, shooter);
 
-            case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_LEFT:
-              return new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_CENTER:
-              return new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_RIGHT:
-              return new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-
-            case SHOOT_FROM_BASELINE_THEN_TO_TRENCH_LEFT:
-              return new ShootFromBaseLineThenToTrench(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            case SHOOT_FROM_BASELINE_THEN_TO_TRENCH_CENTER:
-              return new ShootFromBaseLineThenToTrench(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            case SHOOT_FROM_BASELINE_THEN_TO_TRENCH_RIGHT:
-              return new ShootFromBaseLineThenToTrench(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+            case CenterDiagonal:
+              return new ShootThen5Diagonal(StartPosition.CENTER, driveBase, intake, conveyor, indexer, turret, shooter);
+            case RightDiagonal:
+              return new ShootThen5Diagonal(StartPosition.RIGHT, driveBase, intake, conveyor, indexer, turret, shooter);
+            // case SHOOT_FROM_BASELINE_THEN_TO_TRENCH_CENTER:
+            //   return new ShootFromBaseLineThenToTrench(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+            // case SHOOT_FROM_BASELINE_THEN_TO_TRENCH_RIGHT:
+            //   return new ShootFromBaseLineThenToTrench(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
               
-            case SHOOT_THEN_BACK:
-              return new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            case GENERATOR_2_BALL_SIDE_TO_TRENCH_THEN_SHOOT:
-              return new Generator2BallSideToTrenchThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            case GENERATOR_3_BALL_MID_TO_GENERATOR_2_BALL_MID_THEN_SHOOT:
-              return new Generator3BallMidToGenerator2BallMidThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+            // case SHOOT_THEN_BACK:
+            //   return new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+            // case GENERATOR_2_BALL_SIDE_TO_TRENCH_THEN_SHOOT:
+            //   return new Generator2BallSideToTrenchThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+            // case GENERATOR_3_BALL_MID_TO_GENERATOR_2_BALL_MID_THEN_SHOOT:
+            //   return new Generator3BallMidToGenerator2BallMidThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
             default:
               return new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
           }
