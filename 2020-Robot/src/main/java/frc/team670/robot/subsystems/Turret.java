@@ -78,11 +78,11 @@ public class Turret extends SparkMaxRotatingSubsystem {
             return -1;
         }
 
-        public double getMaxVelocity() {
+        public double getMaxRotatorRPM() {
             return 200; // TODO: probably needs to be adjusted
         }
 
-        public double getMinVelocity() {
+        public double getMinRotatorRPM() {
             return 0;
         }
 
