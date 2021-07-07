@@ -13,6 +13,7 @@ import frc.team670.paths.twentytwentyone.Center3Line;
 import frc.team670.paths.twentytwentyone.Left3Line;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.EmptyRevolver;
+import frc.team670.robot.commands.indexer.RotateToIntakePosition;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.StopIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
@@ -77,10 +78,16 @@ public class ShootThen3Line extends SequentialCommandGroup implements MustangCom
         addCommands(
             //shoot all balls from baseline
             // new StartShooterByDistance(shooter, driveBase),
-            new RotateToAngle(turret, turretAng),
-            // new Shoot(shooter),
-            // new EmptyRevolver(indexer),
+            new SetRPMTarget(2600, shooter),
+            new StartShooter(shooter),
+            new RotateToAngle(turret, turretAng), //TODO on left, doesn't rotate all the way to leftTurretAng
+           
+            new ParallelCommandGroup(
+                new Shoot(shooter),
+                new EmptyRevolver(indexer)
+            ),
 
+            new RotateToIntakePosition(indexer),
             //TODO: see if shooter needs to be stopped while traversing and not shooting
 
             //from initiation line to 3 balls in line under switch

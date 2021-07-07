@@ -19,12 +19,12 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     // Turret pointing straight forward is 180 degrees
     private static final double TURRET_MIN_DEGREES = -240; // all the way back
-    private static final double TURRET_MAX_DEGREES = 33; //12 // from front, past straight forward
+    private static final double TURRET_MAX_DEGREES = 32; //12 // from front, past straight forward
 
     private static final double LIMIT_SWITCH_DEGREES = 12;
 
     private static final double SOFT_MINIMUM_DEGREES = TURRET_MIN_DEGREES + 3;
-    private static final double SOFT_MAXIMUM_DEGREES = 33;
+    private static final double SOFT_MAXIMUM_DEGREES = 32;
 
     private CANDigitalInput forwardLimit;
     private CANDigitalInput reverseLimit;
@@ -98,7 +98,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public boolean enableSoftLimits() {
-            return true;
+            return false;
         }
 
         public float[] setSoftLimits() {

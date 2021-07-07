@@ -46,6 +46,7 @@ public class EmptyRevolver extends CommandBase implements MustangCommand {
     public void execute() {
         indexer.updraw(false);
         if (indexer.updrawIsUpToSpeed() && !indexerSpun) {
+            Logger.consoleLog("spinning revolver");
             indexer.spinRevolver();   
             indexerSpun = true;         
         }

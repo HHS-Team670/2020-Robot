@@ -28,8 +28,8 @@ public class Left3Line extends Path{
                                 // new Pose2d(3.7, 0, Rotation2d.fromDegrees(0))
 
                                 new Pose2d(3.201, -4.036, Rotation2d.fromDegrees(0)), //side of the robot is 139 inches from the trench edge of the field
-                                new Pose2d(5.18, -3.505, Rotation2d.fromDegrees(21.3)),
-                                new Pose2d(6.589, -3.023, Rotation2d.fromDegrees(21.3))
+                                new Pose2d(5.18, -3.505, Rotation2d.fromDegrees(27)),
+                                new Pose2d(6.501, -2.887, Rotation2d.fromDegrees(27))
                         ), 
                 driveBase, RobotConstants.kAutoPathConstraintsLeft3Line, RobotConstants.kMaxSpeedMetersPerSecond3, RobotConstants.kMaxAccelerationMetersPerSecondSquared3, RobotConstants.endVelocityMetersPerSecond);
         }
