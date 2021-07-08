@@ -12,18 +12,18 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
 
 /**
- * Sends all balls to the shooter. Use when the indexer is full and you want to
- * empty it fast.
+ * Sends all balls to the shooter. Sends one, waits, sends another, waits, and then sends 3 fast (for auton)
  */
-public class SendAllBalls extends SequentialCommandGroup implements MustangCommand {
+public class Send3BallsWait extends SequentialCommandGroup implements MustangCommand {
 
     private Indexer indexer;
+    private double waitSeconds = 0.3;
 
-    public SendAllBalls(Indexer indexer) {
+    public Send3BallsWait(Indexer indexer) {
         addRequirements(indexer);
         this.indexer = indexer;
-        addCommands(new StageOneBallToShoot(indexer), new SendOneBallToShoot(indexer), new StageOneBallToShoot(indexer),
-                new SendOneBallToShoot(indexer), new StageOneBallToShoot(indexer), new SendOneBallToShoot(indexer),
+        addCommands(new StageOneBallToShoot(indexer), new SendOneBallToShoot(indexer), new WaitCommand(waitSeconds), new StageOneBallToShoot(indexer),
+                new SendOneBallToShoot(indexer), new WaitCommand(waitSeconds), new StageOneBallToShoot(indexer), new SendOneBallToShoot(indexer),
                 new StageOneBallToShoot(indexer), new SendOneBallToShoot(indexer), new StageOneBallToShoot(indexer),
                 new SendOneBallToShoot(indexer));
     }

@@ -108,9 +108,10 @@ public class RobotContainer extends RobotContainerBase{
     // 3 balls, in set positions, preloaded for auto
     indexer.setChamberStatesForMatchInit();
     indexer.setRotatorMode(false); // indexer to brake mode
-    if (!turret.hasZeroed()) { // only zero indexer if needed
-      MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
-    }
+    MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
+    // if (!turret.hasZeroed()) { // only zero indexer if needed
+    //   MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
+    // }
     //  m_autonomousCommand = getAutonomousCommand();
     //  if (m_autonomousCommand != null) {
     //    MustangScheduler.getInstance().schedule(m_autonomousCommand);

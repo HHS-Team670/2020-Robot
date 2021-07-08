@@ -64,13 +64,13 @@ public class RobotConstants extends RobotConstantsBase{
     public static final double kMaxSpeedInchesPerSecond = 12;
     public static final double kMaxAccelerationInchesPerSecondSquared = 12;
 
-    public static final double kMaxSpeedMetersPerSecond = 0.3;// 1; //0.305;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 0.3;// 1; //0.305;
+    public static final double kMaxSpeedMetersPerSecond = 0.4;// 1; //0.305;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 0.4;// 1; //0.305;
     public static final double endVelocityMetersPerSecond = 0;
 
     public static final double kMaxSpeedMetersPerSecond2 = 1;// 1; //0.305;
     public static final double kMaxAccelerationMetersPerSecondSquared2 = 1;// 1; //0.305;
-    public static final double endVelocityMetersPerSecond2 = 0.3;
+    public static final double endVelocityMetersPerSecond2 = 0.4;
 
     public static final double kMaxSpeedMetersPerSecond3 = 0.6;// 1; //0.305;
     public static final double kMaxAccelerationMetersPerSecondSquared3 = 0.6;// 1; //0.305;
@@ -88,7 +88,7 @@ public class RobotConstants extends RobotConstantsBase{
     //The turret angles depending on the robot start position
     public static final double leftTurretAng = 31; 
     public static final double rightTurretAng = -25;    
-    public static final double trenchTurretAng = -14;
+    public static final double trenchTurretAng = -15;
 
     // Reasonable baseline values for a RAMSETE follower in units of meters and
     // seconds

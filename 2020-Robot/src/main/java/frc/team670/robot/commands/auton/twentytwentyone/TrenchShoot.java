@@ -22,7 +22,10 @@ import frc.team670.paths.twentytwentyone.TrenchTo3BallLine_GODSPEED2021pt2;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.EmptyRevolver;
 import frc.team670.robot.commands.indexer.RotateToIntakePosition;
+import frc.team670.robot.commands.indexer.RotateToNextChamber;
+import frc.team670.robot.commands.indexer.Send3BallsWait;
 import frc.team670.robot.commands.indexer.SendAllBalls;
+import frc.team670.robot.commands.indexer.ToggleUpdraw;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.StopIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
@@ -31,6 +34,7 @@ import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.shooter.StopShooter;
+import frc.team670.robot.commands.shooter.StopUpdraw;
 import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.RotateToHome;
 import frc.team670.robot.constants.FieldConstants;
@@ -83,23 +87,25 @@ public class TrenchShoot extends SequentialCommandGroup implements MustangComman
         if (startPosition == StartPosition.RIGHT) {
             addCommands(
             //shoot all balls from baseline
-            // new StartShooterByDistance(shooter, driveBase),
-            // new RotateToAngle(turret, turretAng),
-            // new Shoot(shooter),
-            // new EmptyRevolver(indexer),
-            // new RotateToIntakePosition(indexer),
+            new StartShooterByDistance(shooter, driveBase),
+            new RotateToAngle(turret, turretAng),
+            new Shoot(shooter),
+            new SendAllBalls(indexer),
+            new RotateToNextChamber(indexer, true),
             // //TODO: see if shooter needs to be stopped while traversing and not shooting
 
-            // //from initiation line to start of trench
-            // new ParallelCommandGroup(
-            //     getTrajectoryFollowerCommand(trajectory1, driveBase),
-            //     new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(3)
-            // ),
-            // //from start of trench to end of trench w 3 balls intake
-            // new ParallelCommandGroup(
-            //     new RotateToIntakePosition(indexer),
-            //     getTrajectoryFollowerCommand(trajectory2, driveBase)
-            // ),
+            //from initiation line to start of trench
+            new ParallelCommandGroup(
+                getTrajectoryFollowerCommand(trajectory1, driveBase),
+                new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(2)
+            ),
+            new StopUpdraw(indexer),
+
+            // from start of trench to end of trench w 3 balls intake
+            new ParallelCommandGroup(
+                // new RotateToIntakePosition(indexer),
+                getTrajectoryFollowerCommand(trajectory2, driveBase)
+            ),
             
             //shoot from color wheel, 
             //TODO: find new turretAng 
@@ -109,7 +115,7 @@ public class TrenchShoot extends SequentialCommandGroup implements MustangComman
             new StartShooter(shooter),
             new RotateToAngle(turret, trenchTurretAng),
             new Shoot(shooter),
-            new SendAllBalls(indexer)
+            new Send3BallsWait(indexer)
             //new EmptyRevolver(indexer)
             
         );
@@ -154,8 +160,6 @@ public class TrenchShoot extends SequentialCommandGroup implements MustangComman
     @Override
     public void initialize() {
         super.initialize();
-        // // Front faces away from wall, heading is 180
-        // driveBase.resetOdometry(new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(0)));
     }
 
     @Override
