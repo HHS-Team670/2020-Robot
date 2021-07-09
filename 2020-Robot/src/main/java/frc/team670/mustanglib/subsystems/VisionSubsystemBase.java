@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangNotifications;
+import frc.team670.robot.commands.vision.PhotonVision;
 
 /**
  * Stores values off of NetworkTables for easy retrieval and gives them
@@ -14,6 +15,7 @@ import frc.team670.mustanglib.utils.MustangNotifications;
 public class VisionSubsystemBase extends MustangSubsystemBase {
 
     private Solenoid cameraLEDs;
+    private PhotonVision photonvision;
 
     private final String VISION_TRIGGER_KEY = "vision-enabled";
     public final static String VISION_VALUES_KEY = "vision-values";
@@ -34,6 +36,7 @@ public class VisionSubsystemBase extends MustangSubsystemBase {
      * Used to create a mustangCoprocessor object based on the key of the table that returns the values from vision processing
      */
     public VisionSubsystemBase(double[] minHSV, double[] maxHSV, double[] ds, int PCMModulePort, int visionLEDPCMPort) {
+        photonvision = new PhotonVision();
         cameraLEDs = new Solenoid(PCMModulePort, visionLEDPCMPort);
         SmartDashboard.putBoolean("LEDs on", false);
         
@@ -62,10 +65,12 @@ public class VisionSubsystemBase extends MustangSubsystemBase {
      */
     public void getLatestVisionData() {
         clearLastValues();
-        Double[] values = SmartDashboard.getNumberArray(VISION_VALUES_KEY, new Double[] {-1.0,-1.0});
+        // Double[] values = SmartDashboard.getNumberArray(VISION_VALUES_KEY, new Double[] {-1.0,-1.0});
+        double[] values = photonvision.getVisionValues();
         angle = values[0];
         distance = values[1];
     }
+
 
     /**
      * Used to clear last values present on the table
