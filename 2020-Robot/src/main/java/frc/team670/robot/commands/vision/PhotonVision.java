@@ -25,11 +25,13 @@ public class PhotonVision {
             var result = camera.getLatestResult();
             if (result.hasTargets()) {
                 // First calculate range
-                double range =
-                    PhotonUtils.calculateDistanceToTargetMeters(
+                double range = PhotonUtils.calculateDistanceToTargetMeters(
                             CAMERA_HEIGHT_METERS,
                             TARGET_HEIGHT_METERS,
                             CAMERA_PITCH_RADIANS,
                             Units.degreesToRadians(result.getBestTarget().getPitch()));
+            }
+        }
+
     }
 }
