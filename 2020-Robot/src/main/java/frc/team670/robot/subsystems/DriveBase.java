@@ -9,7 +9,7 @@ package frc.team670.robot.subsystems;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import javax.management.timer.Timer;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANError;
@@ -22,10 +22,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
-import edu.wpi.first.wpilibj.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Units;
-import edu.wpi.first.wpiutil.math.VecBuilder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
@@ -45,6 +42,8 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.subsystems.drivebase.TankDriveBase;
 import edu.wpi.first.wpilibj.SpeedController;
 
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
 /**
  * Represents a tank drive base.
  * 
@@ -52,6 +51,7 @@ import edu.wpi.first.wpilibj.SpeedController;
  */
 public class DriveBase extends TankDriveBase {
 
+  private PhotonCamera camera;
   private SparkMAXLite left1, left2, right1, right2;
   private CANEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
 
@@ -70,6 +70,7 @@ public class DriveBase extends TankDriveBase {
   private int againstBarCount = 0;
 
   public DriveBase(MustangController mustangController) {
+    camera = new PhotonCamera("photonvision");
     mController = mustangController;
 
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
@@ -372,9 +373,25 @@ public class DriveBase extends TankDriveBase {
   @Override
   public void mustangPeriodic() {
     // Update the odometry in the periodic block
-    //m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
-    poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
-    //poseEstimator.addVisionMeasurements();
+    poseEstimator.update(Rotation2d.fromDegrees(getHeading()), 
+      left1Encoder.getPosition(), right1Encoder.getPosition());
+    Object res = camera.getLatestResult();
+    Pose2d pose = getVisionPose(res);
+    double imageCaptureTime = getVisionCaptureTime(res);
+    poseEstimator.addVisionMeasurement(pose, imageCaptureTime);
+  }
+
+  public Pose2d getVisionPose(Object res) {
+    if (res.hasTargets()) {
+        Transform2d camToTargetTrans = res.getBestTarget().getCameraToTarget();
+        Pose2d camPose = Constants.kFarTargetPose.transformBy(camToTargetTrans.inverse()); //TODO get target pose
+        // return camPose.transformBy(Constants.kCameraToRobot);
+        return camPose;
+    }
+  }
+
+  public double getVisionCaptureTime(Object res) {
+    return Timer.getFPGATimestamp() - res.getLatencyMillis();
   }
 
   /**
