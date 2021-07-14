@@ -1,3 +1,5 @@
 [submodule "2020-Robot/src/main/java/frc/team670/mustanglib"]
 	path = 2020-Robot/src/main/java/frc/team670/mustanglib
 	url = https://github.com/HHS-Team670/MustangLib
+	ignore = untracked
+
