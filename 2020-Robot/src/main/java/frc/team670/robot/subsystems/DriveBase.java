@@ -9,7 +9,7 @@ package frc.team670.robot.subsystems;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.management.timer.Timer;
+import edu.wpi.first.wpilibj.Timer;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANError;
@@ -17,12 +17,16 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.wpiutil.math.VecBuilder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.RamseteController;
@@ -43,6 +47,8 @@ import frc.team670.mustanglib.subsystems.drivebase.TankDriveBase;
 import edu.wpi.first.wpilibj.SpeedController;
 
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPipelineResult;
+
 import org.photonvision.PhotonUtils;
 /**
  * Represents a tank drive base.
@@ -373,15 +379,15 @@ public class DriveBase extends TankDriveBase {
   @Override
   public void mustangPeriodic() {
     // Update the odometry in the periodic block
-    poseEstimator.update(Rotation2d.fromDegrees(getHeading()), 
+    poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(),
       left1Encoder.getPosition(), right1Encoder.getPosition());
-    Object res = camera.getLatestResult();
+    PhotonPipelineResult res = camera.getLatestResult();
     Pose2d pose = getVisionPose(res);
     double imageCaptureTime = getVisionCaptureTime(res);
     poseEstimator.addVisionMeasurement(pose, imageCaptureTime);
   }
 
-  public Pose2d getVisionPose(Object res) {
+  public Pose2d getVisionPose(PhotonPipelineResult res) {
     if (res.hasTargets()) {
         Transform2d camToTargetTrans = res.getBestTarget().getCameraToTarget();
         Pose2d camPose = Constants.kFarTargetPose.transformBy(camToTargetTrans.inverse()); //TODO get target pose
@@ -390,7 +396,7 @@ public class DriveBase extends TankDriveBase {
     }
   }
 
-  public double getVisionCaptureTime(Object res) {
+  public double getVisionCaptureTime(PhotonPipelineResult res) {
     return Timer.getFPGATimestamp() - res.getLatencyMillis();
   }
 
