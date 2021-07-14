@@ -19,6 +19,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
@@ -74,6 +75,13 @@ public class DriveBase extends TankDriveBase {
 
   private static final double CURRENT_WHEN_AGAINST_BAR = 5; // : FinTODOd this
   private int againstBarCount = 0;
+
+  public static final double kFarTgtXPos = Units.feetToMeters(54);
+  public static final double kFarTgtYPos =
+          Units.feetToMeters(27 / 2) - Units.inchesToMeters(43.75) - Units.inchesToMeters(48.0 / 2.0);
+  public static final Pose2d kFarTargetPose =
+          new Pose2d(new Translation2d(kFarTgtXPos, kFarTgtYPos), new Rotation2d(0.0));
+
 
   public DriveBase(MustangController mustangController) {
     camera = new PhotonCamera("photonvision");
@@ -380,20 +388,20 @@ public class DriveBase extends TankDriveBase {
   public void mustangPeriodic() {
     // Update the odometry in the periodic block
     poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(),
-      left1Encoder.getPosition(), right1Encoder.getPosition());
+    left1Encoder.getPosition(), right1Encoder.getPosition());
     PhotonPipelineResult res = camera.getLatestResult();
-    Pose2d pose = getVisionPose(res);
-    double imageCaptureTime = getVisionCaptureTime(res);
-    poseEstimator.addVisionMeasurement(pose, imageCaptureTime);
+    if (res.hasTargets()) {
+      Pose2d pose = getVisionPose(res);
+      double imageCaptureTime = getVisionCaptureTime(res);
+      poseEstimator.addVisionMeasurement(pose, imageCaptureTime);
+    }
   }
 
   public Pose2d getVisionPose(PhotonPipelineResult res) {
-    if (res.hasTargets()) {
-        Transform2d camToTargetTrans = res.getBestTarget().getCameraToTarget();
-        Pose2d camPose = Constants.kFarTargetPose.transformBy(camToTargetTrans.inverse()); //TODO get target pose
-        // return camPose.transformBy(Constants.kCameraToRobot);
-        return camPose;
-    }
+    Transform2d camToTargetTrans = res.getBestTarget().getCameraToTarget();
+    Pose2d camPose = kFarTargetPose.transformBy(camToTargetTrans.inverse()); //TODO get target pose
+    // return camPose.transformBy(Constants.kCameraToRobot);
+    return camPose;
   }
 
   public double getVisionCaptureTime(PhotonPipelineResult res) {
