@@ -64,8 +64,8 @@ public class RobotConstants extends RobotConstantsBase{
     public static final double kMaxSpeedInchesPerSecond = 12;
     public static final double kMaxAccelerationInchesPerSecondSquared = 12;
 
-    public static final double kMaxSpeedMetersPerSecond = 0.4;// 1; //0.305;
-    public static final double kMaxAccelerationMetersPerSecondSquared = 0.4;// 1; //0.305;
+    public static final double kMaxSpeedMetersPerSecond = 0.5;// 1; //0.305;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 0.5;// 1; //0.305;
     public static final double endVelocityMetersPerSecond = 0;
 
     public static final double kMaxSpeedMetersPerSecond2 = 1;// 1; //0.305;
@@ -76,18 +76,22 @@ public class RobotConstants extends RobotConstantsBase{
     public static final double kMaxAccelerationMetersPerSecondSquared3 = 0.6;// 1; //0.305;
 
 
+
     public static final DifferentialDriveKinematicsConstraint kAutoPathConstraintsIntaking = new DifferentialDriveKinematicsConstraint(
             kDriveKinematics, kMaxSpeedMetersPerSecond);
 
     public static final DifferentialDriveKinematicsConstraint kAutoPathConstraints = new DifferentialDriveKinematicsConstraint(
             kDriveKinematics, kMaxSpeedMetersPerSecond2);
 
-    public static final DifferentialDriveKinematicsConstraint kAutoPathConstraintsLeft3Line = new DifferentialDriveKinematicsConstraint(
+    public static final DifferentialDriveKinematicsConstraint kAutoPathConstraintsCenter3Line = new DifferentialDriveKinematicsConstraint(
+        kDriveKinematics, kMaxSpeedMetersPerSecond3);
+        
+        public static final DifferentialDriveKinematicsConstraint kAutoPathConstraintsLeft3Line = new DifferentialDriveKinematicsConstraint(
         kDriveKinematics, kMaxSpeedMetersPerSecond3);
 
     //The turret angles depending on the robot start position
-    public static final double leftTurretAng = 31; 
-    public static final double rightTurretAng = -25;    
+    public static final double leftTurretAng = 33;
+    public static final double rightTurretAng = -28;
     public static final double trenchTurretAng = -15;
 
     // Reasonable baseline values for a RAMSETE follower in units of meters and
