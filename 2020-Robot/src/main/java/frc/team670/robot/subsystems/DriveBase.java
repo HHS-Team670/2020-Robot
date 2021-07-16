@@ -395,6 +395,7 @@ public class DriveBase extends TankDriveBase {
       double imageCaptureTime = getVisionCaptureTime(res);
       poseEstimator.addVisionMeasurement(pose, imageCaptureTime);
     }
+    Logger.consoleLog("estimated pose: " + poseEstimator.getEstimatedPosition());
   }
 
   public Pose2d getVisionPose(PhotonPipelineResult res) {
