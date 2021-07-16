@@ -391,17 +391,22 @@ public class DriveBase extends TankDriveBase {
     left1Encoder.getPosition(), right1Encoder.getPosition());
     PhotonPipelineResult res = camera.getLatestResult();
     if (res.hasTargets()) {
+      
       Pose2d pose = getVisionPose(res);
       double imageCaptureTime = getVisionCaptureTime(res);
       poseEstimator.addVisionMeasurement(pose, imageCaptureTime);
     }
-    Logger.consoleLog("estimated pose: " + poseEstimator.getEstimatedPosition());
+    SmartDashboard.putNumber("Estimated X", poseEstimator.getEstimatedPosition().getX());
+    SmartDashboard.putNumber("Estimated Y", poseEstimator.getEstimatedPosition().getY());
+    //Logger.consoleLog("estimated pose: " + poseEstimator.getEstimatedPosition());
   }
 
   public Pose2d getVisionPose(PhotonPipelineResult res) {
     Transform2d camToTargetTrans = res.getBestTarget().getCameraToTarget();
     Pose2d camPose = kFarTargetPose.transformBy(camToTargetTrans.inverse()); //TODO get target pose
     // return camPose.transformBy(Constants.kCameraToRobot);
+    SmartDashboard.putNumber("Vision X", camPose.getX());
+    SmartDashboard.putNumber("Vision Y", camPose.getY());
     return camPose;
   }
 
