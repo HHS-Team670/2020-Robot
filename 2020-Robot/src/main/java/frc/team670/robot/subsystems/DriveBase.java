@@ -84,7 +84,7 @@ public class DriveBase extends TankDriveBase {
 
 
   public DriveBase(MustangController mustangController) {
-    camera = new PhotonCamera("photonvision");
+    camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
     mController = mustangController;
 
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
