@@ -76,11 +76,15 @@ public class DriveBase extends TankDriveBase {
   private static final double CURRENT_WHEN_AGAINST_BAR = 5; // : FinTODOd this
   private int againstBarCount = 0;
 
-  public static final double kFarTgtXPos = Units.feetToMeters(54);
+  //TODO find correct values
+  public static final double kFarTgtXPos = Units.feetToMeters(54); // 16.4592 meters
   public static final double kFarTgtYPos =
           Units.feetToMeters(27 / 2) - Units.inchesToMeters(43.75) - Units.inchesToMeters(48.0 / 2.0);
+  // ~ 2.4 meters
+  
+  //Target pose on the field
   public static final Pose2d kFarTargetPose =
-          new Pose2d(new Translation2d(kFarTgtXPos, kFarTgtYPos), new Rotation2d(0.0));
+  new Pose2d(new Translation2d(kFarTgtXPos, kFarTgtYPos), new Rotation2d(0.0));
 
 
   public DriveBase(MustangController mustangController) {
