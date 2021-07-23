@@ -3,7 +3,9 @@ package frc.team670.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANEncoder;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -17,10 +19,13 @@ import frc.team670.mustanglib.subsystems.SparkMaxRotatingSubsystem;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.functions.MathUtils;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
+import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.TalonSRXFactory;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
-
+import frc.team670.mustanglib.utils.MustangNotifications;
+import java.util.List;
+import java.util.ArrayList;
 /**
  * Represents the ball indexer subsystem, which tracks and stores up to 5 balls.
  * 
@@ -31,13 +36,15 @@ public class NewIndexer extends MustangSubsystemBase {
     private Conveyor conveyor;
     private List<SparkMAXLite> controllers;
     private SparkMAXLite frontMotor, backMotor;
+    private CANEncoder frontEncoder, backEncoder;
     private TalonSRX updraw;
 
     private TimeOfFlightSensor entranceSensor; //conveyor to indexer sensor (also chamber state 0)
-    private TimeOfFlightSensor indexerSensorChamber1;
-    private TimeOfFlightSensor indexerSensorChamber2;
-    private TimeOfFlightSensor indexerSensorChamber3;
+    // private TimeOfFlightSensor indexerSensorChamber1;
+    // private TimeOfFlightSensor indexerSensorChamber2;
+    // private TimeOfFlightSensor indexerSensorChamber3;
     private TimeOfFlightSensor exitSensor; //indexer to updraw sensor
+    private List<TimeOfFlightSensor> sensors = new ArrayList<TimeOfFlightSensor>();
     
     private DutyCycleEncoder revolverAbsoluteEncoder;
     //private Solenoid conveyorToIndexerPusher;
@@ -70,6 +77,7 @@ public class NewIndexer extends MustangSubsystemBase {
     private static final double ABSOLUTE_ENCODER_POSITION_AT_REVOLVER_ZERO = 0.6799; // From 2/17
 
     private double UPDRAW_SPEED = 0.9;
+    private double INTAKE_SPEED = 0.5; //TODO: find this
 
     private int isUpdrawingCount = 0;
 
@@ -88,8 +96,6 @@ public class NewIndexer extends MustangSubsystemBase {
     private static final int CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES = 0; // Intaking position for chamber 0
 
     private static Timer timer;
-
-    private int totalNumbBalls;
 
     private enum IntakingState {
         IN, MAYBE_IN, NOT_IN;
@@ -193,6 +199,8 @@ public class NewIndexer extends MustangSubsystemBase {
 
         frontMotor = controllers.get(0);
         backMotor = controllers.get(1);
+        frontEncoder = frontMotor.getEncoder();
+        backEncoder = backMotor.getEncoder();
 
         this.conveyor = conveyor;
 
@@ -200,15 +208,21 @@ public class NewIndexer extends MustangSubsystemBase {
         this.updraw = TalonSRXFactory.buildFactoryTalonSRX(RobotMap.UPDRAW_SPINNER, false);
 
         this.entranceSensor = new TimeOfFlightSensor(RobotMap.INDEXER_ToF_SENSOR_PORT);
+        this.exitSensor = new TimeOfFlightSensor(RobotMap.INDEXER_ToF_SENSOR_PORT);
+
         //TODO: MAP THESE SENSORS
-        // this.indexerSensorChamber1 = 
-        // this.indexerSensorChamber2 =
-        // this.indexerSensorChamber3 = 
-        // this.exitSensor = 
+        sensors.set(0, entranceSensor); //intake to indexer
+        sensors.set(1, new TimeOfFlightSensor(null)); //chamber 1  
+        sensors.set(2, new TimeOfFlightSensor(null)); //chamber 2
+        sensors.set(3, new TimeOfFlightSensor(null)); //chamber 3
+        sensors.set(4, exitSensor); //exit sensor (indexer to updraw)
+
         this.revolverAbsoluteEncoder = new DutyCycleEncoder(RobotMap.INDEXER_DIO_ENCODER_PORT);
 
         // this.conveyorToIndexerPusher = pusher;
         // this.pusherDeployed = false;
+
+        
 
         chamberStates = new boolean[4];
 
@@ -234,15 +248,15 @@ public class NewIndexer extends MustangSubsystemBase {
         gameData.forceSetNumber(totalNumOfBalls());
     }
 
-    // /**
-    //  * At the beginning of autonomous, we preload the indexer with 3 balls. 
-    //  * All three are in the indexer, ready to shoot
-    //  */
-    // public void setChamberStatesForMatchInit(){
-    //     chamberStates[1] = true;
-    //     chamberStates[2] = true;
-    //     chamberStates[3] = true;
-    // }
+    /**
+     * At the beginning of autonomous, we preload the indexer with 3 balls. 
+     * All three are in the indexer, ready to shoot
+     */
+    public void setChamberStatesForMatchInit(){
+        chamberStates[1] = true;
+        chamberStates[2] = true;
+        chamberStates[3] = true;
+    }
 
     /**
      * Sets properties to either default or whatever was last recorded, so if we restart/are interrupted we can start back
@@ -265,14 +279,13 @@ public class NewIndexer extends MustangSubsystemBase {
     // }
 
     public int totalNumOfBalls() {
-        return totalNumbBalls;
-        // int totalNumBalls = 0;
-        // for (boolean c : chamberStates) {
-        //     if (c) {
-        //         totalNumBalls++;
-        //     }
-        // }
-        // return totalNumBalls;
+        int totalNumBalls = 0;
+        for (boolean c : chamberStates) {
+            if (c) {
+                totalNumBalls++;
+            }
+        }
+        return totalNumBalls;
     }
 
     /**
@@ -298,12 +311,20 @@ public class NewIndexer extends MustangSubsystemBase {
         
     }
 
-    // /**
-    //  * Sets the indexer to move to the next chamber.
-    //  */
-    // public void rotateToNextChamber() {
-    //     setSystemTargetAngleInDegrees(((getBottomChamber() + 1) % 5) * INDEXER_DEGREES_PER_CHAMBER);
-    // }
+    /**
+     * Sets the indexer to move the balls up one chamber.
+     */
+    public void nextChamber() {
+
+        int topChamber = getTopChamber();
+        int nextTopChamber = topChamber + 1;
+        if (topChamber != 4) {
+            frontMotor.setPercentOutput(INTAKE_SPEED);
+            backMotor.setPercentOutput(INTAKE_SPEED);
+        } else {
+            Logger.consoleLog("Already have 4 balls in indexer, cannot go to next chamber");
+        }
+    }
 
     // /**
     //  * Sets the indexer to move to the previous chamber.
@@ -440,40 +461,14 @@ public class NewIndexer extends MustangSubsystemBase {
     //     setSystemMotionTarget(getMotorRotationsFromAngle(currentAngle + finDiff));
     // }
 
-    // private int getTopChamber() {
-    //     double pos = getPosition() % 1.0;
-    //     if (pos < 0) {
-    //         pos++;
-    //     }
+    private int getTopChamber() {
+        for (int i = 4; i >= 0; i--) {
+            if (chamberStates[i]) 
+                return i;
+        }
 
-    //     // 0.2 - 0.4: 1
-    //     // 0.4 - 0.6: 0
-    //     // 0.6 - 0.8: 4
-    //     // 0.8-1.0: 3
-    //     // 0.0 - 0.2: 2
-
-    //     return (7 - (int) (pos / 0.2)) % 5;
-
-    //     /*
-    //      * What the expression above does is equivalent to all these if statements
-    //      * below: 
-    //      * if (0.2 <= pos && 0.4 > pos) {
-    //      *  return 1; 
-    //      * } 
-    //      * if (0.4 <= pos && 0.6 > pos) { 
-    //      * return 0; 
-    //      * } 
-    //      * if (0.6 <= pos && 0.8 > pos) { 
-    //      * return 4; 
-    //      * } 
-    //      * if (0.8 <= pos && 1.0 > pos) { 
-    //      * return 3; 
-    //      * } 
-    //      * if (0.0 <= pos && 0.2 > pos) { 
-    //      * return 2; 
-    //      * }
-    //      */
-    // }
+        return 0;
+    }
 
     // private int getBottomChamber() {
 
@@ -566,8 +561,16 @@ public class NewIndexer extends MustangSubsystemBase {
         // return IntakingState.NOT_IN;
     }
 
-    public double getSpeed() {
-        return rotator.get();
+    // public double getSpeed() {
+    //     return rotator.get();
+    // }
+
+    public double getFrontMotorSpeed(){
+        return frontMotor.getEncoder().getVelocity();
+    }
+
+    public double getBackMotorSpeed(){
+        return backMotor.getEncoder().getVelocity();
     }
 
     public double getAbsoluteEncoderRotations() {
@@ -599,46 +602,55 @@ public class NewIndexer extends MustangSubsystemBase {
         CANError frontError = frontMotor.getLastError();
         CANError backError = backMotor.getLastError();
 
-        boolean isFrontError = isSparkMaxErrored(frontError);
-        boolean isBackError = isSparkMaxErrored(backError);
+        boolean isFrontError = isSparkMaxErrored(frontMotor);
+        boolean isBackError = isSparkMaxErrored(backMotor);
         // boolean isRotatorError = isSparkMaxErrored(rotator);
         boolean isUpdrawError = isPhoenixControllerErrored(updraw);
         if (isUpdrawError || indexerIsJammed || isFrontError) {
             return HealthState.RED;
-            MustangNotifications.reportError("RED Errors: front: %s, back: %s", frontError, backError,
-            right1Error, right2Error);
+            MustangNotifications.reportError("RED Errors: front: %s, back: %s", frontError, backError,);
         }
         // if the ToF sensor breaks but nothing else,
         // the next option would be manual control -- not a fatal issue
-        if (indexerIntakeSensor == null || !indexerIntakeSensor.isHealthy() || isBackError) {
-            return HealthState.YELLOW;
+    //     private TimeOfFlightSensor entranceSensor; //conveyor to indexer sensor (also chamber state 0)
+    // private TimeOfFlightSensor indexerSensorChamber1;
+    // private TimeOfFlightSensor indexerSensorChamber2;
+    // private TimeOfFlightSensor indexerSensorChamber3;
+    // private TimeOfFlightSensor exitSensor; //indexer to updraw sensor
+        for (int i = 0; i < sensors.size(); i++) {
+            if (sensors.get(i) == null || !sensors.get(i).isHealthy() || isBackError) {
+                return HealthState.YELLOW;
+            }
         }
+        // if (indexerIntakeSensor == null || !indexerIntakeSensor.isHealthy() || isBackError) {
+        //     return HealthState.YELLOW;
+        // }
         return HealthState.GREEN;
     }
 
-    @Override
     public void moveByPercentOutput(double output) {
-        rotator.set(output);
+        // rotator.set(output);
+        frontMotor.set(output);
+        backMotor.set(output);
     }
 
-    /**
-     * @return the angle the indexer is currently turned to, between 0 and 360
-     */
-    @Override
-    public double getCurrentAngleInDegrees() {
-        // find how many rotations the motor has moved compared to the number needed for
-        // 1 full rotation
-        // then finds what angle that is
-        double degrees = (((getUnadjustedPosition() % this.ROTATOR_GEAR_RATIO) / this.ROTATOR_GEAR_RATIO) * 360);
-        return degrees;
-    }
+    // /**
+    //  * @return the angle the indexer is currently turned to, between 0 and 360
+    //  */
+    // public double getCurrentAngleInDegrees() {
+    //     // find how many rotations the motor has moved compared to the number needed for
+    //     // 1 full rotation
+    //     // then finds what angle that is
+    //     double degrees = (((getUnadjustedPosition() % this.ROTATOR_GEAR_RATIO) / this.ROTATOR_GEAR_RATIO) * 360);
+    //     return degrees;
+    // }
 
     /**
      * 
      * @return whether the rotator current has been 
      */
-    public boolean isJammed() {
-        double indexerCurrent = rotator.getOutputCurrent();
+    public boolean frontMotorJammed() {
+        double indexerCurrent = frontMotor.getOutputCurrent();
         if (indexerCurrent > 0.2) {
             if (indexerCurrent >= INDEXER_PEAK_CURRENT) {
                 exceededCurrentLimitCount++;
@@ -715,7 +727,7 @@ public class NewIndexer extends MustangSubsystemBase {
         }
         if (updrawingMode && !isUpdrawing()) { // We were updrawing but no current spike is detected anymore
             updrawingMode = false;
-            chamberStates[getTopChamber()] = false;
+            chamberStates[3] = false;
         }
         if (isIntaking && intakeBall()) {
             unjamMode = false;
@@ -727,13 +739,15 @@ public class NewIndexer extends MustangSubsystemBase {
 
     public void stopIntaking() {
         isIntaking = false;
+        // frontMotor.set(0);
+        // backMotor.set(0);
         // if(hasReachedTargetPosition()){
         //     deployPusher(true); No pusher anymore
         // }
     }
 
     public boolean isShootingChamberEmpty() {
-        return !chamberStates[getTopChamber()];
+        return chamberStates[3] == false;
     }
 
     /**
