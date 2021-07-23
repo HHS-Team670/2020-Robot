@@ -98,6 +98,9 @@ public class NewIndexer extends MustangSubsystemBase {
 
     private static Timer timer;
 
+    private int topChamber;
+    private boolean running;
+
     private enum IntakingState {
         IN, MAYBE_IN, NOT_IN;
     }
@@ -325,15 +328,22 @@ public class NewIndexer extends MustangSubsystemBase {
      */
     public void nextChamber() {
 
-        int topChamber = getTopChamber();
-        int nextTopChamber = topChamber + 1;
-        if (topChamber != 4) {
-            frontMotor.set(INDEXER_SPEED);
-            backMotor.set(INDEXER_SPEED);
-            
-        } else {
-            Logger.consoleLog("Already have 4 balls in indexer, cannot go to next chamber");
+        topChamber = getTopChamber();
+        if (!running) {
+            move();
         }
+    }
+
+    public void move() {
+        frontMotor.set(INDEXER_SPEED);
+        backMotor.set(INDEXER_SPEED);
+        running = true;
+    }
+
+    public void stop() {
+        frontMotor.stopMotor();
+        backMotor.stopMotor();
+        running = false;
     }
 
     // /**
@@ -731,7 +741,10 @@ public class NewIndexer extends MustangSubsystemBase {
         //     isIntaking = true;
         // }
 
-
+        if (running && (topChamber + 1 == getTopChamber())) {
+            stop();
+            running = false;
+        } 
         // Use current to check if a ball has successfully left the indexer through the
         // updraw. If so, marks the top chamber as empty
         if (isUpdrawing()) {
