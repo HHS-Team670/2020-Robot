@@ -58,7 +58,8 @@ public class NewIndexer extends MustangSubsystemBase {
     private int TOF_BALL_IN_MIN_RANGE = 20; // from testing 2/16
     private int TOF_BALL_IN_MAX_RANGE = 50; // from testing 2/16
     private int TOF_DISTANCE_FOR_PUSH = 110; // from testing 2/19
-
+    private int INDEXXER_WIDTH = 8; // in inches
+    
     private boolean[] chamberStates;
     private double updrawCurrent;
     private double updrawPreviousCurrent;
@@ -77,7 +78,7 @@ public class NewIndexer extends MustangSubsystemBase {
     private static final double ABSOLUTE_ENCODER_POSITION_AT_REVOLVER_ZERO = 0.6799; // From 2/17
 
     private double UPDRAW_SPEED = 0.9;
-    private double INTAKE_SPEED = 0.5; //TODO: find this
+    private double INDEXER_SPEED = 0.5; //TODO: find this
 
     private int isUpdrawingCount = 0;
 
@@ -295,8 +296,9 @@ public class NewIndexer extends MustangSubsystemBase {
         for (int i = 0; i < sensors.size(); i++) {
             if (sensors.get(i).getDistance() < INDEXER_WIDTH) { //TODO make indexer width constant
                 chamberStates[i] = true;
+                latestSensor = i + 1;
             } else {
-                
+                chamberStates[i] = false;
             }
         }
         // if (isIntaking){
@@ -326,8 +328,9 @@ public class NewIndexer extends MustangSubsystemBase {
         int topChamber = getTopChamber();
         int nextTopChamber = topChamber + 1;
         if (topChamber != 4) {
-            frontMotor.setPercentOutput(INTAKE_SPEED);
-            backMotor.setPercentOutput(INTAKE_SPEED);
+            frontMotor.set(INDEXER_SPEED);
+            backMotor.set(INDEXER_SPEED);
+            
         } else {
             Logger.consoleLog("Already have 4 balls in indexer, cannot go to next chamber");
         }
@@ -742,7 +745,7 @@ public class NewIndexer extends MustangSubsystemBase {
             unjamMode = false;
             rotateToNextEmptyChamber();
         }
-
+        intakeBall();
         pushGameDataToDashboard();
     }
 
