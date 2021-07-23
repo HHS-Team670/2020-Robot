@@ -291,7 +291,14 @@ public class NewIndexer extends MustangSubsystemBase {
     /**
      * Updates the states of the chambers after intaking a ball
      */
-    public boolean intakeBall() {
+    public boolean intakeBall() { // change to 'updateChamberStates?'
+        for (int i = 0; i < sensors.size(); i++) {
+            if (sensors.get(i).getDistance() < INDEXER_WIDTH) { //TODO make indexer width constant
+                chamberStates[i] = true;
+            } else {
+                
+            }
+        }
         // if (isIntaking){
         //     IntakingState intakingState = ballIn();
         //     if (intakingState == IntakingState.MAYBE_IN){
@@ -467,9 +474,11 @@ public class NewIndexer extends MustangSubsystemBase {
                 return i;
         }
 
-        return 0;
+        return -1; //no balls in
     }
 
+
+    private 
     // private int getBottomChamber() {
 
     //     double pos = getPosition() % 1.0;
@@ -566,11 +575,11 @@ public class NewIndexer extends MustangSubsystemBase {
     // }
 
     public double getFrontMotorSpeed(){
-        return frontMotor.getEncoder().getVelocity();
+        return frontEncoder.getVelocity();
     }
 
     public double getBackMotorSpeed(){
-        return backMotor.getEncoder().getVelocity();
+        return backEncoder.getVelocity();
     }
 
     public double getAbsoluteEncoderRotations() {
