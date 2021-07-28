@@ -83,7 +83,7 @@ public class RobotContainer extends RobotContainerBase{
   }
 
   public void robotInit() {
-
+    driveBase.resetOdometry(new Pose2d(3.8, -2.4, Rotation2d.fromDegrees(0)));
   }
 
   /**
@@ -124,8 +124,9 @@ public class RobotContainer extends RobotContainerBase{
     indexer.reset();
     indexer.setRotatorMode(false); // indexer to brake mode
     indexer.stopIntaking();
-    driveBase.resetOdometry(new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS, 
-    FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
+    // driveBase.resetOdometry(new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS, 
+    // FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
+    driveBase.resetOdometry(new Pose2d(3.8, -2.4, Rotation2d.fromDegrees(0)));
     zeroSubsystemPositions();
     driveBase.setTeleopRampRate();
     driveBase.initDefaultCommand();
