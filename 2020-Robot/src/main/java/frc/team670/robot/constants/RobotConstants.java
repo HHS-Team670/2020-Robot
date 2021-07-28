@@ -32,6 +32,7 @@ public class RobotConstants extends RobotConstantsBase{
     public static final double DRIVEBASE_METERS_PER_ROTATION = (1 / DRIVEBASE_GEAR_RATIO) * DRIVE_BASE_WHEEL_DIAMETER
             * Math.PI * 0.0254;
 
+    public static final double INDEXER_WIDTH = 203.2; // in mm
     // Talon PID Constants
     public static final int kTimeoutMs = 0;
 

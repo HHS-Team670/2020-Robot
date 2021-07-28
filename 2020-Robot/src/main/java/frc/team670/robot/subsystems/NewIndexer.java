@@ -21,6 +21,7 @@ import frc.team670.mustanglib.utils.functions.MathUtils;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.TalonSRXFactory;
+import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.MustangNotifications;
@@ -40,9 +41,9 @@ public class NewIndexer extends MustangSubsystemBase {
     private TalonSRX updraw;
 
     private TimeOfFlightSensor entranceSensor; //conveyor to indexer sensor (also chamber state 0)
-    // private TimeOfFlightSensor indexerSensorChamber1;
-    // private TimeOfFlightSensor indexerSensorChamber2;
-    // private TimeOfFlightSensor indexerSensorChamber3;
+    private TimeOfFlightSensor indexerSensorChamber1;
+    private TimeOfFlightSensor indexerSensorChamber2;
+    private TimeOfFlightSensor indexerSensorChamber3;
     private TimeOfFlightSensor exitSensor; //indexer to updraw sensor
     private List<TimeOfFlightSensor> sensors = new ArrayList<TimeOfFlightSensor>();
     
@@ -73,7 +74,7 @@ public class NewIndexer extends MustangSubsystemBase {
     private static final double INDEXER_PEAK_CURRENT = 8; // TODO: find this
 
     private boolean updrawingMode;
-    private boolean isIntaking = false;
+    // private boolean isIntaking = false;
 
     private static final double ABSOLUTE_ENCODER_POSITION_AT_REVOLVER_ZERO = 0.6799; // From 2/17
 
@@ -211,14 +212,17 @@ public class NewIndexer extends MustangSubsystemBase {
         // Updraw should be inverted
         this.updraw = TalonSRXFactory.buildFactoryTalonSRX(RobotMap.UPDRAW_SPINNER, false);
 
-        this.entranceSensor = new TimeOfFlightSensor(RobotMap.INDEXER_ToF_SENSOR_PORT);
-        this.exitSensor = new TimeOfFlightSensor(RobotMap.INDEXER_ToF_SENSOR_PORT);
+        entranceSensor = new TimeOfFlightSensor(RobotMap.INDEXER_ToF_SENSOR_1_PORT);
+        indexerSensorChamber1 = new TimeOfFlightSensor(RobotMap.INDEXER_ToF_SENSOR_2_PORT);
+        indexerSensorChamber2 = new TimeOfFlightSensor(RobotMap.INDEXER_ToF_SENSOR_3_PORT);
+        indexerSensorChamber3 = new TimeOfFlightSensor(RobotMap.INDEXER_ToF_SENSOR_4_PORT);
+        exitSensor = new TimeOfFlightSensor(RobotMap.INDEXER_ToF_SENSOR_5_PORT);
 
         //TODO: MAP THESE SENSORS
         sensors.set(0, entranceSensor); //intake to indexer
-        sensors.set(1, new TimeOfFlightSensor(null)); //chamber 1  
-        sensors.set(2, new TimeOfFlightSensor(null)); //chamber 2
-        sensors.set(3, new TimeOfFlightSensor(null)); //chamber 3
+        sensors.set(1, indexerSensorChamber1); //chamber 1  
+        sensors.set(2, indexerSensorChamber2); //chamber 2
+        sensors.set(3, indexerSensorChamber3); //chamber 3
         sensors.set(4, exitSensor); //exit sensor (indexer to updraw)
 
         this.revolverAbsoluteEncoder = new DutyCycleEncoder(RobotMap.INDEXER_DIO_ENCODER_PORT);
@@ -239,7 +243,7 @@ public class NewIndexer extends MustangSubsystemBase {
         updraw.configVoltageCompSaturation(12); // "full output" will now scale to 12 Volts
         updraw.enableVoltageCompensation(true);
 
-        reset();
+        //reset();
 
         timer = new Timer();
         timer.start();
@@ -257,6 +261,7 @@ public class NewIndexer extends MustangSubsystemBase {
      * All three are in the indexer, ready to shoot
      */
     public void setChamberStatesForMatchInit(){
+        chamberStates[0] = false;
         chamberStates[1] = true;
         chamberStates[2] = true;
         chamberStates[3] = true;
@@ -265,10 +270,10 @@ public class NewIndexer extends MustangSubsystemBase {
     /**
      * Sets properties to either default or whatever was last recorded, so if we restart/are interrupted we can start back
      */
-    public void reset(){
-        // this.pusherDeployed = conveyorToIndexerPusher.get();
-        this.isIntaking = false;
-    }
+    // public void reset(){
+    //     // this.pusherDeployed = conveyorToIndexerPusher.get();
+    //     this.isIntaking = false;
+    // }
 
     // public void deployPusher(boolean toPush) {
     //     this.pusherDeployed = toPush;
@@ -295,11 +300,11 @@ public class NewIndexer extends MustangSubsystemBase {
     /**
      * Updates the states of the chambers after intaking a ball
      */
-    public boolean intakeBall() { // change to 'updateChamberStates?'
+    public void intakeBall() { // change to 'updateChamberStates?'
         for (int i = 0; i < sensors.size(); i++) {
-            if (sensors.get(i).getDistance() < INDEXER_WIDTH) { //TODO make indexer width constant
+            if (sensors.get(i).getDistance() < RobotConstants.INDEXER_WIDTH) { //TODO make indexer width constant
                 chamberStates[i] = true;
-                latestSensor = i + 1;
+                // latestSensor = i + 1;
             } else {
                 chamberStates[i] = false;
             }
@@ -329,21 +334,25 @@ public class NewIndexer extends MustangSubsystemBase {
     public void nextChamber() {
 
         topChamber = getTopChamber();
-        if (!running) {
+        while ((topChamber != 4) && (topChamber != getTopChamber() - 1)) {
             move();
         }
+        stop();
+        // if (!running) {
+        //     move();
+        // }
     }
 
     public void move() {
         frontMotor.set(INDEXER_SPEED);
         backMotor.set(INDEXER_SPEED);
-        running = true;
+        // running = true;
     }
 
     public void stop() {
         frontMotor.stopMotor();
         backMotor.stopMotor();
-        running = false;
+        // running = false;
     }
 
     // /**
@@ -382,10 +391,10 @@ public class NewIndexer extends MustangSubsystemBase {
      * Prepares the indexer for intaking by starting the ToF sensor and moving the
      * indexer in position to intake
      */
-    public void prepareToIntake() {
-        isIntaking = true;
-        // rotateToNextEmptyChamber();
-    }
+    // public void prepareToIntake() {
+    //     isIntaking = true;
+    //     // rotateToNextEmptyChamber();
+    // }
 
     /**
      * Prepares the indexer to uptake a ball for shooting by rotating to the shoot
@@ -566,6 +575,7 @@ public class NewIndexer extends MustangSubsystemBase {
      *         bottom chamber)
      */
     public IntakingState ballIn() {
+        
         // int range = indexerIntakeSensor.getDistance();
         // // We shouldn't be detecting "intaked" if the chamber is already full before,
         // // or if we just saw an arm move by
@@ -603,19 +613,19 @@ public class NewIndexer extends MustangSubsystemBase {
      * Sets the rotator encoder's reference position to the constant obtained from
      * the absolute encoder corresponding to that position.
      */
-    public void setEncoderPositionFromAbsolute() {
-        clearSetpoint();
-        rotator_encoder.setPosition(
-                (getAbsoluteEncoderRotations() - ABSOLUTE_ENCODER_POSITION_AT_REVOLVER_ZERO) * this.ROTATOR_GEAR_RATIO);
-        Logger.consoleLog("Encoder position set: %s", rotator_encoder.getPosition());
-    }
+    // public void setEncoderPositionFromAbsolute() {
+    //     clearSetpoint();
+    //     rotator_encoder.setPosition(
+    //             (getAbsoluteEncoderRotations() - ABSOLUTE_ENCODER_POSITION_AT_REVOLVER_ZERO) * this.ROTATOR_GEAR_RATIO);
+    //     Logger.consoleLog("Encoder position set: %s", rotator_encoder.getPosition());
+    // }
 
     /**
      * @return the position, in number of rotations of the indexer
      */
-    public double getPosition() {
-        return rotator_encoder.getPosition() / ROTATOR_GEAR_RATIO;
-    }
+    // public double getPosition() {
+    //     return rotator_encoder.getPosition() / ROTATOR_GEAR_RATIO;
+    // }
 
     @Override
     public HealthState checkHealth() {
@@ -741,10 +751,10 @@ public class NewIndexer extends MustangSubsystemBase {
         //     isIntaking = true;
         // }
 
-        if (running && (topChamber + 1 == getTopChamber())) {
-            stop();
-            running = false;
-        } 
+        // if (running && (topChamber + 1 == getTopChamber())) {
+        //     stop();
+        //     running = false;
+        // } 
         // Use current to check if a ball has successfully left the indexer through the
         // updraw. If so, marks the top chamber as empty
         if (isUpdrawing()) {
@@ -754,22 +764,22 @@ public class NewIndexer extends MustangSubsystemBase {
             updrawingMode = false;
             chamberStates[3] = false;
         }
-        if (isIntaking && intakeBall()) {
-            unjamMode = false;
-            rotateToNextEmptyChamber();
-        }
+        // if (isIntaking && intakeBall()) {
+        //     unjamMode = false;
+        //     rotateToNextEmptyChamber();
+        // }
         intakeBall();
         pushGameDataToDashboard();
     }
 
-    public void stopIntaking() {
-        isIntaking = false;
-        // frontMotor.set(0);
-        // backMotor.set(0);
-        // if(hasReachedTargetPosition()){
-        //     deployPusher(true); No pusher anymore
-        // }
-    }
+    // public void stopIntaking() {
+    //     isIntaking = false;
+    //     // frontMotor.set(0);
+    //     // backMotor.set(0);
+    //     // if(hasReachedTargetPosition()){
+    //     //     deployPusher(true); No pusher anymore
+    //     // }
+    // }
 
     public boolean isShootingChamberEmpty() {
         return chamberStates[3] == false;
@@ -778,15 +788,14 @@ public class NewIndexer extends MustangSubsystemBase {
     /**
      * @param true to set indexer to coast mode, false to set it to brake mode
      */
-    public void setRotatorMode(boolean coast){
-        if (coast){
-            rotator.setIdleMode(IdleMode.kCoast);
-        } else {
-            rotator.setIdleMode(IdleMode.kBrake);
-        }
-    }
+    // public void setRotatorMode(boolean coast){
+    //     if (coast){
+    //         rotator.setIdleMode(IdleMode.kCoast);
+    //     } else {
+    //         rotator.setIdleMode(IdleMode.kBrake);
+    //     }
+    // }
 
-    @Override
     public boolean getTimeout() {
         // TODO Auto-generated method stub
         return false;
