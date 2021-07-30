@@ -131,8 +131,8 @@ public class DriveBase extends TankDriveBase {
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
         new Pose2d(0, 0, new Rotation2d()));
     poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()), 
-      new Pose2d(0, 0, new Rotation2d()), 
-      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // TODO: find correct values
+        new Pose2d(0, 0, new Rotation2d()), 
+          VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // TODO: find correct values
           VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), // TODO: find correct values
           VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); // TODO: find correct values
 
@@ -421,8 +421,8 @@ public class DriveBase extends TankDriveBase {
     SmartDashboard.putNumber("From target y: ", camToTargetTrans.getY());
 
     Pose2d camPose = kFarTargetPose.transformBy(camToTargetTrans.inverse()); //TODO get target pose
-    return camPose.transformBy(RobotConstants.camPose);
-    // return camPose;
+    // return camPose.transformBy(RobotConstants.camPose);
+    return camPose;
   }
 
   public double getVisionCaptureTime(PhotonPipelineResult res) {
