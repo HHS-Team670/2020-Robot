@@ -68,6 +68,7 @@ public class DriveBase extends TankDriveBase {
   private List<SparkMAXLite> allMotors = new ArrayList<SparkMAXLite>();;
 
   private NavX navXMicro;
+
   private DifferentialDriveOdometry m_odometry;
   private DifferentialDrivePoseEstimator poseEstimator;
 
@@ -132,9 +133,9 @@ public class DriveBase extends TankDriveBase {
         new Pose2d(0, 0, new Rotation2d()));
     poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()), 
         new Pose2d(0, 0, new Rotation2d()), 
-          VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // TODO: find correct values
-          VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), // TODO: find correct values
-          VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); // TODO: find correct values
+        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // TODO: find correct values
+        VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), // TODO: find correct values
+        VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); // TODO: find correct values
 
   }
 
@@ -392,41 +393,44 @@ public class DriveBase extends TankDriveBase {
     SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
     SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
 
-    SmartDashboard.putNumber("Encoder Estimated X", m_odometry.getPoseMeters().getX());
-    SmartDashboard.putNumber("Encoder Estimated Y", m_odometry.getPoseMeters().getY());
-
-    SmartDashboard.putNumber("LeftEncoder Distance", left1Encoder.getPosition() * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER / 39.37);
-    SmartDashboard.putNumber("RightEncoder Distance", right1Encoder.getPosition() * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER / 39.37);
+    SmartDashboard.putNumber("Encoder X", m_odometry.getPoseMeters().getX());
+    SmartDashboard.putNumber("Encoder Y", m_odometry.getPoseMeters().getY());
 
     PhotonPipelineResult res = camera.getLatestResult();
     Pose2d pose = new Pose2d();
+
     if (res.hasTargets()) {
       Logger.consoleWarning("Got targets!");
+
       pose = getVisionPose(res);
-      double imageCaptureTime = getVisionCaptureTime(res);
-      poseEstimator.addVisionMeasurement(pose, imageCaptureTime);
       SmartDashboard.putNumber("Vision X", pose.getX());
       SmartDashboard.putNumber("Vision Y", pose.getY());
+
+      double imageCaptureTime = getVisionCaptureTime(res);
+      poseEstimator.addVisionMeasurement(pose, imageCaptureTime);
+      SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
+      SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
+
     } else {
       Logger.consoleError("Did not find targets!");
     }
-    SmartDashboard.putNumber("Estimated X", poseEstimator.getEstimatedPosition().getX());
-    SmartDashboard.putNumber("Estimated Y", poseEstimator.getEstimatedPosition().getY());
     //Logger.consoleLog("estimated pose: " + poseEstimator.getEstimatedPosition());
   }
 
   public Pose2d getVisionPose(PhotonPipelineResult res) {
-    Transform2d camToTargetTrans = res.getBestTarget().getCameraToTarget(); //TODO: find how to transform the pose by the starting pose
-    SmartDashboard.putNumber("From target x: ", camToTargetTrans.getX());
-    SmartDashboard.putNumber("From target y: ", camToTargetTrans.getY());
-
-    // Pose2d camPose = kFarTargetPose.transformBy(camToTargetTrans.inverse()); //TODO get target pose
+    Transform2d camToTargetTrans = res.getBestTarget().getCameraToTarget();
+    SmartDashboard.putNumber("PhotonVision X", camToTargetTrans.getX());
+    SmartDashboard.putNumber("PhotonVision Y", camToTargetTrans.getY());
     
-    camToTargetTrans.transformBy(new Transform2d(new Translation2d(0, -2.4), Rotation2d.fromDegrees(0)));
-    // Transform by the location of the target on the field since the assumed location is not at 0,0
+    /* Transform by the location of the target on the field
+      TODO: find how to transform the pose by the starting pose */
+    // Pose2d camPose = kFarTargetPose.transformBy(camToTargetTrans.inverse());
+    // camPose.transformBy(new Transform2d(new Translation2d(0, -2.4), Rotation2d.fromDegrees(0)));
+    Pose2d startingPose = new Pose2d(3.8, -2.4, Rotation2d.fromDegrees(0)); //TODO: change this to a constant
+    startingPose.transformBy(camToTargetTrans);
     
-    // return camPose.transformBy(RobotConstants.camPose);
-    return camToTargetTrans;
+    // return camToTargetTrans;
+    return startingPose;
   } 
 
   public double getVisionCaptureTime(PhotonPipelineResult res) {
