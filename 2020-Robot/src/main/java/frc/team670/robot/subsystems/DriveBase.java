@@ -68,7 +68,7 @@ public class DriveBase extends TankDriveBase {
   private List<SparkMAXLite> allMotors = new ArrayList<SparkMAXLite>();;
 
   private NavX navXMicro;
-  private DifferentialDriveOdometry m_odometry;
+  //private DifferentialDriveOdometry m_odometry;
   private DifferentialDrivePoseEstimator poseEstimator;
 
   private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
@@ -128,8 +128,8 @@ public class DriveBase extends TankDriveBase {
     // initialized NavX and sets Odometry
     navXMicro = new NavX(RobotMap.NAVX_PORT);
     // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
-    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(0, 0, new Rotation2d()));
+    // m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
+    //     new Pose2d(0, 0, new Rotation2d()));
     poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()), 
       new Pose2d(0, 0, new Rotation2d()), 
       VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // TODO: find correct values
@@ -389,26 +389,12 @@ public class DriveBase extends TankDriveBase {
     // Update the odometry in the periodic block
     poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(),
     left1Encoder.getPosition(), right1Encoder.getPosition());
-    SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
-    SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
-
-    SmartDashboard.putNumber("Encoder Estimated X", m_odometry.getPoseMeters().getX());
-    SmartDashboard.putNumber("Encoder Estimated Y", m_odometry.getPoseMeters().getY());
-
-    SmartDashboard.putNumber("LeftEncoder Distance", left1Encoder.getPosition() * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER / 39.37);
-    SmartDashboard.putNumber("RightEncoder Distance", right1Encoder.getPosition() * RobotConstants.DRIVE_BASE_WHEEL_DIAMETER / 39.37);
-
     PhotonPipelineResult res = camera.getLatestResult();
-    Pose2d pose = new Pose2d();
     if (res.hasTargets()) {
-      Logger.consoleWarning("Got targets!");
-      pose = getVisionPose(res);
+      
+      Pose2d pose = getVisionPose(res);
       double imageCaptureTime = getVisionCaptureTime(res);
       poseEstimator.addVisionMeasurement(pose, imageCaptureTime);
-      SmartDashboard.putNumber("Vision X", pose.getX());
-      SmartDashboard.putNumber("Vision Y", pose.getY());
-    } else {
-      Logger.consoleError("Did not find targets!");
     }
     SmartDashboard.putNumber("Estimated X", poseEstimator.getEstimatedPosition().getX());
     SmartDashboard.putNumber("Estimated Y", poseEstimator.getEstimatedPosition().getY());
@@ -417,12 +403,11 @@ public class DriveBase extends TankDriveBase {
 
   public Pose2d getVisionPose(PhotonPipelineResult res) {
     Transform2d camToTargetTrans = res.getBestTarget().getCameraToTarget();
-    SmartDashboard.putNumber("From target x: ", camToTargetTrans.getX());
-    SmartDashboard.putNumber("From target y: ", camToTargetTrans.getY());
-
     Pose2d camPose = kFarTargetPose.transformBy(camToTargetTrans.inverse()); //TODO get target pose
-    return camPose.transformBy(RobotConstants.camPose);
-    // return camPose;
+    // return camPose.transformBy(Constants.kCameraToRobot);
+    SmartDashboard.putNumber("Vision X", camPose.getX());
+    SmartDashboard.putNumber("Vision Y", camPose.getY());
+    return camPose;
   }
 
   public double getVisionCaptureTime(PhotonPipelineResult res) {
@@ -435,12 +420,8 @@ public class DriveBase extends TankDriveBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    // return m_odometry.getPoseMeters();
+    //return m_odometry.getPoseMeters();
     return poseEstimator.getEstimatedPosition();
-  }
-
-  public Pose2d getOdometryPose() {
-    return m_odometry.getPoseMeters();
   }
 
   /**
@@ -450,7 +431,7 @@ public class DriveBase extends TankDriveBase {
    */
   public void resetOdometry(Pose2d pose) {
     zeroHeading();
-    m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+    //m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
     poseEstimator.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
     CANError lE = left1Encoder.setPosition(0);
     CANError rE = right1Encoder.setPosition(0);
@@ -473,8 +454,8 @@ public class DriveBase extends TankDriveBase {
     zeroHeading();
     left1Encoder.setPosition(0);
     right1Encoder.setPosition(0);
-    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(0, 0, new Rotation2d()));
+    //m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
+        //new Pose2d(0, 0, new Rotation2d()));
     poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()), 
       new Pose2d(0, 0, new Rotation2d()), 
       VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // TODO: find correct values

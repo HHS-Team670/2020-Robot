@@ -34,11 +34,7 @@ public class ToggleShooter extends InstantCommand implements MustangCommand {
             // );
             // double targetRPM = shooter.getTargetRPMForDistance(distanceToTarget);
             // shooter.setVelocityTarget(targetRPM);
-
-            // removed for testing
-            // shooter.setRampRate(true);
-            // shooter.run();
-            new StartShooterByDistance(shooter, driveBase);
+            shooter.setRampRate(true);
             shooter.run();
         } else {
             shooter.stop();
