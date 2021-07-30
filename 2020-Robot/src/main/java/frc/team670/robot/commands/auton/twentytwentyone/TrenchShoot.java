@@ -87,35 +87,35 @@ public class TrenchShoot extends SequentialCommandGroup implements MustangComman
         if (startPosition == StartPosition.RIGHT) {
             addCommands(
             //shoot all balls from baseline
-            new StartShooterByDistance(shooter, driveBase),
-            new RotateToAngle(turret, turretAng),
-            new Shoot(shooter),
-            new SendAllBalls(indexer),
-            new RotateToNextChamber(indexer, true),
+            // new StartShooterByDistance(shooter, driveBase),
+            // new RotateToAngle(turret, turretAng),
+            // new Shoot(shooter),
+            // new SendAllBalls(indexer),
+            // new RotateToNextChamber(indexer, true),
             // //TODO: see if shooter needs to be stopped while traversing and not shooting
 
             //from initiation line to start of trench
-            new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory1, driveBase),
-                new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(2)
-            ),
-            new StopUpdraw(indexer),
+             new ParallelCommandGroup(
+                 getTrajectoryFollowerCommand(trajectory1, driveBase)
+            //     new IntakeBallToIndexer(intake, conveyor, indexer).withTimeout(2)
+             )
+            // new StopUpdraw(indexer),
 
             // from start of trench to end of trench w 3 balls intake
-            new ParallelCommandGroup(
-                // new RotateToIntakePosition(indexer),
-                getTrajectoryFollowerCommand(trajectory2, driveBase)
-            ),
+            // new ParallelCommandGroup(
+            //     // new RotateToIntakePosition(indexer),
+            //     getTrajectoryFollowerCommand(trajectory2, driveBase)
+            //),
             
             //shoot from color wheel, 
             //TODO: find new turretAng 
             
             //new StartShooterByDistance(shooter, driveBase),
-            new SetRPMTarget(2750, shooter),
-            new StartShooter(shooter),
-            new RotateToAngle(turret, trenchTurretAng),
-            new Shoot(shooter),
-            new Send3BallsWait(indexer)
+            // new SetRPMTarget(2750, shooter),
+            // new StartShooter(shooter),
+            // new RotateToAngle(turret, trenchTurretAng),
+            // new Shoot(shooter),
+            // new Send3BallsWait(indexer)
             //new EmptyRevolver(indexer)
             
         );
