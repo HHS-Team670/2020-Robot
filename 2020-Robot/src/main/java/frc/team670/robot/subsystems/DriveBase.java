@@ -84,7 +84,7 @@ public class DriveBase extends TankDriveBase {
 
 
   public DriveBase(MustangController mustangController) {
-    camera = new PhotonCamera("photonvision");
+    camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
     mController = mustangController;
 
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
@@ -416,14 +416,18 @@ public class DriveBase extends TankDriveBase {
   }
 
   public Pose2d getVisionPose(PhotonPipelineResult res) {
-    Transform2d camToTargetTrans = res.getBestTarget().getCameraToTarget();
+    Transform2d camToTargetTrans = res.getBestTarget().getCameraToTarget(); //TODO: find how to transform the pose by the starting pose
     SmartDashboard.putNumber("From target x: ", camToTargetTrans.getX());
     SmartDashboard.putNumber("From target y: ", camToTargetTrans.getY());
 
-    Pose2d camPose = kFarTargetPose.transformBy(camToTargetTrans.inverse()); //TODO get target pose
+    // Pose2d camPose = kFarTargetPose.transformBy(camToTargetTrans.inverse()); //TODO get target pose
+    
+    camToTargetTrans.transformBy(new Transform2d(new Translation2d(0, -2.4), Rotation2d.fromDegrees(0)));
+    // Transform by the location of the target on the field since the assumed location is not at 0,0
+    
     // return camPose.transformBy(RobotConstants.camPose);
-    return camPose;
-  }
+    return camToTargetTrans;
+  } 
 
   public double getVisionCaptureTime(PhotonPipelineResult res) {
     return Timer.getFPGATimestamp() - res.getLatencyMillis();
