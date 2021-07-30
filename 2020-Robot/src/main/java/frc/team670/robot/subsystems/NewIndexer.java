@@ -3,9 +3,10 @@ package frc.team670.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.revrobotics.CANError;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANError;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 /**
  * Represents the ball indexer subsystem, which tracks and stores up to 5 balls.
  * 
- * @author ctychen, eddieli, ruchidixit
+ * @author pallavidas, aadityaraj
  */
 public class NewIndexer extends MustangSubsystemBase {
 
@@ -59,17 +60,18 @@ public class NewIndexer extends MustangSubsystemBase {
     private int TOF_BALL_IN_MIN_RANGE = 20; // from testing 2/16
     private int TOF_BALL_IN_MAX_RANGE = 50; // from testing 2/16
     private int TOF_DISTANCE_FOR_PUSH = 110; // from testing 2/19
-    private int INDEXXER_WIDTH = 8; // in inches
     
     private boolean[] chamberStates;
     private double updrawCurrent;
     private double updrawPreviousCurrent;
 
-    private int exceededCurrentLimitCount = 0;
+    private int frontExceededCurrentLimitCount = 0;
+    private int backExceededCurrentLimitCount = 0;
     private int countToPush = 0;
     private boolean unjamMode = false;
     private boolean indexerIsJammed = false;
     private Long updrawStartTime;
+    private int frontSpeed, backSpeed;
 
     private static final double INDEXER_PEAK_CURRENT = 8; // TODO: find this
 
@@ -91,111 +93,109 @@ public class NewIndexer extends MustangSubsystemBase {
     private static final int UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT = 9; 
     private static final int UPDRAW_PEAK_CURRENT_LIMIT = 15;
 
-    private static final double INDEXER_DEGREES_PER_CHAMBER = 72;
+    // private static final double INDEXER_DEGREES_PER_CHAMBER = 72;
 
-    // Bottom (intake position) is 0, for chamber 0.
-    private static final int CHAMBER_0_AT_TOP_POS_IN_DEGREES = 180; // Shooting position for chamber 0
-    private static final int CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES = 0; // Intaking position for chamber 0
+    // // Bottom (intake position) is 0, for chamber 0.
+    // private static final int CHAMBER_0_AT_TOP_POS_IN_DEGREES = 180; // Shooting position for chamber 0
+    // private static final int CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES = 0; // Intaking position for chamber 0
 
-    private static Timer timer;
+    // private static Timer timer;
 
-    private int topChamber;
-    private boolean running;
 
-    private enum IntakingState {
-        IN, MAYBE_IN, NOT_IN;
-    }
+    // private enum IntakingState {
+    //     IN, MAYBE_IN, NOT_IN;
+    // }
 
     /**
      * PID and SmartMotion constants for the indexer rotator go here.
      */
-    public static class Config extends SparkMaxRotatingSubsystem.Config {
+    // public static class Config extends SparkMaxRotatingSubsystem.Config {
 
-        public int getDeviceID() {
-            return RobotMap.INDEXER_ROTATOR;
-        }
+    //     public int getDeviceID() {
+    //         return RobotMap.INDEXER_ROTATOR;
+    //     }
 
-        public int getSlot() {
-            return 0;
-        }
+    //     public int getSlot() {
+    //         return 0;
+    //     }
 
-        public MotorConfig.Motor_Type getMotorType() {
-            return MotorConfig.Motor_Type.NEO_550;
-        }
+    //     public MotorConfig.Motor_Type getMotorType() {
+    //         return MotorConfig.Motor_Type.NEO_550;
+    //     }
 
-        public double getP() {
-            return 0.00001; // Good enough for 2/16
-        }
+    //     public double getP() {
+    //         return 0.00001; // Good enough for 2/16
+    //     }
 
-        public double getI() {
-            return 0;
-        }
+    //     public double getI() {
+    //         return 0;
+    //     }
 
-        public double getD() {
-            return 0;
-        }
+    //     public double getD() {
+    //         return 0;
+    //     }
 
-        public double getFF() { // Good enough for 2/16
-            return 0.0001 * 3; // Gearing was adjusted
-        }
+    //     public double getFF() { // Good enough for 2/16
+    //         return 0.0001 * 3; // Gearing was adjusted
+    //     }
 
-        public double getIz() {
-            return 0;
-        }
+    //     public double getIz() {
+    //         return 0;
+    //     }
 
-        public double getMaxOutput() {
-            return 1;
-        }
+    //     public double getMaxOutput() {
+    //         return 1;
+    //     }
 
-        public double getMinOutput() {
-            return -1;
-        }
+    //     public double getMinOutput() {
+    //         return -1;
+    //     }
 
-        public double getMaxRotatorRPM() {
-            return 2100; // assuming 1 indexer rotation per second
-        }
+    //     public double getMaxRotatorRPM() {
+    //         return 2100; // assuming 1 indexer rotation per second
+    //     }
 
-        public double getMinRotatorRPM() {
-            return 0;
-        }
+    //     public double getMinRotatorRPM() {
+    //         return 0;
+    //     }
 
-        public double getMaxAcceleration() {
-            return 2100;
-        }
+    //     public double getMaxAcceleration() {
+    //         return 2100;
+    //     }
 
-        public double getAllowedError() {
-            // return 0.0243;
-            // 0.25 degree minimum from count / 360 deg per rotation
-            return (0.25 / 360) * getRotatorGearRatio();
-        }
+    //     public double getAllowedError() {
+    //         // return 0.0243;
+    //         // 0.25 degree minimum from count / 360 deg per rotation
+    //         return (0.25 / 360) * getRotatorGearRatio();
+    //     }
 
-        public boolean enableSoftLimits() {
-            return false;
-        }
+    //     public boolean enableSoftLimits() {
+    //         return false;
+    //     }
 
-        public float[] setSoftLimits() {
-            return null;
-        }
+    //     public float[] setSoftLimits() {
+    //         return null;
+    //     }
 
-        public int getContinuousCurrent() {
-            return 3;
-        }
+    //     public int getContinuousCurrent() {
+    //         return 3;
+    //     }
 
-        public int getPeakCurrent() {
-            return 6;
-        }
+    //     public int getPeakCurrent() {
+    //         return 6;
+    //     }
 
-        public double getRotatorGearRatio() {
-            return 150; // gearing 100 * 1.5 from belt. Changed to this from 35 gearing on 2/18.
-        }
+    //     public double getRotatorGearRatio() {
+    //         return 150; // gearing 100 * 1.5 from belt. Changed to this from 35 gearing on 2/18.
+    //     }
 
-        public IdleMode setRotatorIdleMode() {
-            return IdleMode.kCoast;
-        }
+    //     public IdleMode setRotatorIdleMode() {
+    //         return IdleMode.kCoast;
+    //     }
 
-    }
+    // }
 
-    public static final Config INDEXER_CONFIG = new Config();
+    // public static final Config INDEXER_CONFIG = new Config();
 
     public NewIndexer(Conveyor conveyor) {
         super();
@@ -245,8 +245,8 @@ public class NewIndexer extends MustangSubsystemBase {
 
         //reset();
 
-        timer = new Timer();
-        timer.start();
+        // timer = new Timer();
+        // timer.start();
     }
 
     private void pushGameDataToDashboard(){
@@ -297,12 +297,21 @@ public class NewIndexer extends MustangSubsystemBase {
         return totalNumBalls;
     }
 
+    // public void updateBottomChamber() {
+    //     if (sensors.get(0) > IntakingState.NOT_IN) {
+    //         chamberStates[0] = false;
+    //     } else {
+            
+    //     }
+    //     chamberStates[0] = (sensors.get(0) < IntakingState.IN);
+    // }
+
     /**
-     * Updates the states of the chambers after intaking a ball
+     * Updates the states of the chambers
      */
-    public void intakeBall() { // change to 'updateChamberStates?'
+    public void updateChamberStates() { // change to 'updateChamberStates?'
         for (int i = 0; i < sensors.size(); i++) {
-            if (sensors.get(i).getDistance() < RobotConstants.INDEXER_WIDTH) { //TODO make indexer width constant
+            if (sensors.get(i).getDistance() < RobotConstants.SENSOR_TO_BALL) { //TODO make distance to orange belt constant
                 chamberStates[i] = true;
                 // latestSensor = i + 1;
             } else {
@@ -333,19 +342,27 @@ public class NewIndexer extends MustangSubsystemBase {
      */
     public void nextChamber() {
 
-        topChamber = getTopChamber();
+        int topChamber = getTopChamber();
         while ((topChamber != 4) && (topChamber != getTopChamber() - 1)) {
             move();
+            double frontRotations = frontEncoder.getPosition();
+            double backRotations = backEncoder.getPosition();
+            if(Math.abs(frontRotations-backRotations)<2) {
+                return;
+            }
+            else if (frontRotations>backRotations) {
+                frontSpeed-=0.01;
+            }
+            else if (frontRotations<backRotations) {
+                backSpeed-=0.01;
+            }
         }
         stop();
-        // if (!running) {
-        //     move();
-        // }
     }
 
     public void move() {
-        frontMotor.set(INDEXER_SPEED);
-        backMotor.set(INDEXER_SPEED);
+        frontMotor.set(frontSpeed);
+        backMotor.set(backSpeed);
         // running = true;
     }
 
@@ -353,6 +370,14 @@ public class NewIndexer extends MustangSubsystemBase {
         frontMotor.stopMotor();
         backMotor.stopMotor();
         // running = false;
+    }
+
+    public boolean isFrontRunning() {
+        return (frontMotor.get() > 0);
+    }
+
+    public boolean isBackRunning() {
+        return (backMotor.get() > 0);
     }
 
     // /**
@@ -500,7 +525,7 @@ public class NewIndexer extends MustangSubsystemBase {
     }
 
 
-    private 
+    // private 
     // private int getBottomChamber() {
 
     //     double pos = getPosition() % 1.0;
@@ -574,8 +599,8 @@ public class NewIndexer extends MustangSubsystemBase {
      * @return whether a ball has been fully intaked (i.e. is all the way in the
      *         bottom chamber)
      */
-    public IntakingState ballIn() {
-        
+    // public boolean ballIn() { // should be intaking state or boolean?
+    //     return chamberStates[0];
         // int range = indexerIntakeSensor.getDistance();
         // // We shouldn't be detecting "intaked" if the chamber is already full before,
         // // or if we just saw an arm move by
@@ -591,7 +616,7 @@ public class NewIndexer extends MustangSubsystemBase {
         //     }
         // }
         // return IntakingState.NOT_IN;
-    }
+    // }
 
     // public double getSpeed() {
     //     return rotator.get();
@@ -639,8 +664,8 @@ public class NewIndexer extends MustangSubsystemBase {
         // boolean isRotatorError = isSparkMaxErrored(rotator);
         boolean isUpdrawError = isPhoenixControllerErrored(updraw);
         if (isUpdrawError || indexerIsJammed || isFrontError) {
+            MustangNotifications.reportError("RED Errors: front: %s, back: %s", frontError, backError);
             return HealthState.RED;
-            MustangNotifications.reportError("RED Errors: front: %s, back: %s", frontError, backError,);
         }
         // if the ToF sensor breaks but nothing else,
         // the next option would be manual control -- not a fatal issue
@@ -681,22 +706,41 @@ public class NewIndexer extends MustangSubsystemBase {
      * 
      * @return whether the rotator current has been 
      */
+
     public boolean frontMotorJammed() {
         double indexerCurrent = frontMotor.getOutputCurrent();
         if (indexerCurrent > 0.2) {
             if (indexerCurrent >= INDEXER_PEAK_CURRENT) {
-                exceededCurrentLimitCount++;
+                frontExceededCurrentLimitCount++;
             } else {
-                Logger.consoleLog("Jammed false. current was lower than peak current");
-                exceededCurrentLimitCount = 0;
+                Logger.consoleLog("Front motor not jammed. current was lower than peak current");
+                frontExceededCurrentLimitCount = 0;
             }
-            if (exceededCurrentLimitCount >= 4) { // 4 consecutive readings higher than peak
-                Logger.consoleLog("Jammed true");
+            if (frontExceededCurrentLimitCount >= 4) { // 4 consecutive readings higher than peak
+                Logger.consoleError("Front motor jammed");
                 return true;
             }
         }
         return false;
     }
+
+    public boolean backMotorJammed() {
+        double indexerCurrent = backMotor.getOutputCurrent();
+        if (indexerCurrent > 0.2) {
+            if (indexerCurrent >= INDEXER_PEAK_CURRENT) {
+                backExceededCurrentLimitCount++;
+            } else {
+                Logger.consoleLog("Back motor not jammed. current was lower than peak current");
+                backExceededCurrentLimitCount = 0;
+            }
+            if (backExceededCurrentLimitCount >= 4) { // 4 consecutive readings higher than peak
+                Logger.consoleLog("Back motor jammed");
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public boolean isUpdrawing(){
         double updrawCurrent = updraw.getSupplyCurrent();
@@ -768,7 +812,7 @@ public class NewIndexer extends MustangSubsystemBase {
         //     unjamMode = false;
         //     rotateToNextEmptyChamber();
         // }
-        intakeBall();
+        updateChamberStates();
         pushGameDataToDashboard();
     }
 
@@ -781,9 +825,47 @@ public class NewIndexer extends MustangSubsystemBase {
     //     // }
     // }
 
-    public boolean isShootingChamberEmpty() {
-        return chamberStates[3] == false;
+    // public boolean isShootingChamberEmpty() {
+    //     return !chamberStates[3];
+    // }
+
+    public boolean isChamberFull(int chamber) {
+        return chamberStates[chamber];
     }
+
+    public int getGapChamber() {
+        for (int i = 1; i < chamberStates.length-1; i++) {
+            if (!chamberStates[i]) {
+                if (chamberStates[i-1] && chamberStates[i+1]) {
+                    return i;
+                } 
+            }
+        }
+        return -1;
+    }
+
+    public boolean bothMotorsJammed() {
+        return (frontMotorJammed() && backMotorJammed());
+    }
+
+    public SparkMAXLite getFrontMotor() {
+        return frontMotor;
+    }
+
+    public SparkMAXLite getBackMotor() {
+        return backMotor;
+    }
+
+    public boolean[] getChamberStates() {
+        return chamberStates;
+    }
+
+    public TimeOfFlightSensor getSensor(int sensor) {
+        return sensors.get(sensor);
+    }
+
+    
+    
 
     /**
      * @param true to set indexer to coast mode, false to set it to brake mode
