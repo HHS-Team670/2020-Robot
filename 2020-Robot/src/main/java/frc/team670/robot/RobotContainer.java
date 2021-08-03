@@ -126,7 +126,7 @@ public class RobotContainer extends RobotContainerBase{
     indexer.stopIntaking();
     // driveBase.resetOdometry(new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS, 
     // FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
-    driveBase.resetOdometry(new Pose2d(3.556, -2.4, Rotation2d.fromDegrees(0)));
+    driveBase.resetOdometry(new Pose2d(3.8, -2.4, Rotation2d.fromDegrees(0)));
     // The Pose2D is from the center of the robot, including the bupper, the robot is barely touching the tape (from the front)
     zeroSubsystemPositions();
     driveBase.setTeleopRampRate();
@@ -143,7 +143,7 @@ public class RobotContainer extends RobotContainerBase{
   public void disabled(){
     indexer.setRotatorMode(true); // indexer to coast mode
     vision.turnOffLEDs();
-    driveBase.initCoastMode();
+    driveBase.initBrakeMode();
   }
 
   public static Joystick getOperatorController() {

@@ -132,7 +132,7 @@ public class DriveBase extends TankDriveBase {
     m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
         new Pose2d(0, 0, new Rotation2d()));
     poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()), 
-        new Pose2d(0, 0, new Rotation2d()), 
+        new Pose2d(3.8, -2.4, new Rotation2d()), // TODO: change this to be a constant with the starting position
         VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // TODO: find correct values
         VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), // TODO: find correct values
         VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); // TODO: find correct values
@@ -385,36 +385,44 @@ public class DriveBase extends TankDriveBase {
     SmartDashboard.putNumber("Right S Velocity Ticks", right2Encoder.getVelocity());
   }
 
+  
+  private int count = 0;
   @Override
   public void mustangPeriodic() {
     // Update the odometry in the periodic block
-    poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(),
-    left1Encoder.getPosition(), right1Encoder.getPosition());
-    SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
-    SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
-
-    SmartDashboard.putNumber("Encoder X", m_odometry.getPoseMeters().getX());
-    SmartDashboard.putNumber("Encoder Y", m_odometry.getPoseMeters().getY());
-
-    PhotonPipelineResult res = camera.getLatestResult();
-    Pose2d pose = new Pose2d();
-
-    if (res.hasTargets()) {
-      Logger.consoleWarning("Got targets!");
-
-      pose = getVisionPose(res);
-      SmartDashboard.putNumber("Vision X", pose.getX());
-      SmartDashboard.putNumber("Vision Y", pose.getY());
-
-      double imageCaptureTime = getVisionCaptureTime(res);
-      poseEstimator.addVisionMeasurement(pose, imageCaptureTime);
+    m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
+    
+    if(count%100 == 0) {
+      poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(),
+        left1Encoder.getPosition(), right1Encoder.getPosition());
       SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
       SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
 
-    } else {
-      Logger.consoleError("Did not find targets!");
+      SmartDashboard.putNumber("Encoder X", m_odometry.getPoseMeters().getX());
+      SmartDashboard.putNumber("Encoder Y", m_odometry.getPoseMeters().getY());
+    
+      PhotonPipelineResult res = camera.getLatestResult();
+      // count = 0;
+      Pose2d pose = new Pose2d();
+
+      if (res.hasTargets()) {
+        Logger.consoleWarning("Got targets!");
+
+        pose = getVisionPose(res);
+        SmartDashboard.putNumber("FinalVision X", pose.getX());
+        SmartDashboard.putNumber("FinalVision Y", pose.getY());
+
+        double imageCaptureTime = getVisionCaptureTime(res);
+        poseEstimator.addVisionMeasurement(pose, imageCaptureTime);
+        SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
+        SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
+
+      } else {
+        Logger.consoleError("Did not find targets!");
+      }
+      //Logger.consoleLog("estimated pose: " + poseEstimator.getEstimatedPosition());}
     }
-    //Logger.consoleLog("estimated pose: " + poseEstimator.getEstimatedPosition());
+    count++;
   }
 
   public Pose2d getVisionPose(PhotonPipelineResult res) {
@@ -424,13 +432,14 @@ public class DriveBase extends TankDriveBase {
     
     /* Transform by the location of the target on the field
       TODO: find how to transform the pose by the starting pose */
-    // Pose2d camPose = kFarTargetPose.transformBy(camToTargetTrans.inverse());
+    // Pose2d camPose = kFarTargetPose.transformBy(caimToTargetTrans.nverse());
     // camPose.transformBy(new Transform2d(new Translation2d(0, -2.4), Rotation2d.fromDegrees(0)));
-    Pose2d startingPose = new Pose2d(3.8, -2.4, Rotation2d.fromDegrees(0)); //TODO: change this to a constant
-    startingPose.transformBy(camToTargetTrans);
+    Pose2d startingPose = new Pose2d(0, -2.4, Rotation2d.fromDegrees(0)); //TODO: change this to a constant, this specific pose is for testing only
+    Pose2d targetOffset = startingPose.transformBy(camToTargetTrans);
+    Pose2d cameraOffset = targetOffset.transformBy(new Transform2d( new Translation2d(0.23, 0), Rotation2d.fromDegrees(0)));
     
     // return camToTargetTrans;
-    return startingPose;
+    return cameraOffset;
   } 
 
   public double getVisionCaptureTime(PhotonPipelineResult res) {
