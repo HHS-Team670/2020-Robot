@@ -34,15 +34,15 @@ import frc.team670.robot.constants.RobotMap;
 public class Indexer extends MustangSubsystemBase {
 
     private Conveyor conveyor;
-    private List<SparkMAXLite> controllers;
+    //private List<SparkMAXLite> controllers; 
     // private SparkMAXLite frontMotor, backMotor;
     private CANSparkMax frontMotor, backMotor;
-    private CANEncoder frontEncoder, backEncoder;
-    private TalonSRX updraw;
+    //private CANEncoder frontEncoder, backEncoder;
+    private TalonSRX updraw; //motor
 
     private List<BallSensor> sensors = new ArrayList<BallSensor>();
 
-    private DutyCycleEncoder revolverAbsoluteEncoder;
+    //private DutyCycleEncoder revolverAbsoluteEncoder;
     // private Solenoid conveyorToIndexerPusher;
 
     // private boolean pusherDeployed;
@@ -51,15 +51,17 @@ public class Indexer extends MustangSubsystemBase {
      * Ranges (in mm) from the TOF sensor for which we know the ball was fully
      * intaked into the bottom chamber.
      */
-    private int TOF_BALL_IN_MIN_RANGE = 20; // from testing 2/16
-    private int TOF_BALL_IN_MAX_RANGE = 50; // from testing 2/16
-    private int TOF_DISTANCE_FOR_PUSH = 110; // from testing 2/19
+    // private int TOF_BALL_IN_MIN_RANGE = 20; // from testing 2/16
+    // private int TOF_BALL_IN_MAX_RANGE = 50; // from testing 2/16
+    // private int TOF_DISTANCE_FOR_PUSH = 110; // from testing 2/19
 
     private boolean[] chamberStates;
-    private List<Boolean> chamberStatesList;
+    //TODO for below: should not be arraylist bc then you don't know where the balls are if there are <3 in the indexer
+    //j use array, remove chamberStatesList
+    private List<Boolean> chamberStatesList; 
 
-    private double updrawCurrent;
-    private double updrawPreviousCurrent;
+    private double updrawCurrent; //electrical current
+    // private double updrawPreviousCurrent;
 
     private int frontExceededCurrentLimitCount = 0;
     private int backExceededCurrentLimitCount = 0;
@@ -102,7 +104,7 @@ public class Indexer extends MustangSubsystemBase {
         frontEncoder = frontMotor.getEncoder();
         backEncoder = backMotor.getEncoder();
         frontSpeed = INDEXER_SPEED;
-        backSpeed = INDEXER_SPEED * -1;
+        backSpeed = INDEXER_SPEED * -1; //clockwise vs counterclockwise
         this.conveyor = conveyor;
 
         // Updraw should be inverted
@@ -123,7 +125,7 @@ public class Indexer extends MustangSubsystemBase {
 
         chamberStates = new boolean[4];
 
-        updraw.setNeutralMode(NeutralMode.Coast);
+        updraw.setNeutralMode(NeutralMode.Coast); //free, nothing holding instead of brake
 
         updraw.configContinuousCurrentLimit(UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT);
         updraw.configPeakCurrentLimit(UPDRAW_PEAK_CURRENT_LIMIT);
@@ -148,6 +150,7 @@ public class Indexer extends MustangSubsystemBase {
      * three are in the indexer, ready to shoot
      */
     public void setChamberStatesForMatchInit() {
+        //chamberStatesList.add(true); //would be this 3x, but array instead
         // chamberStates[0] = false;
         // chamberStates[1] = true;
         // chamberStates[2] = true;
@@ -170,19 +173,22 @@ public class Indexer extends MustangSubsystemBase {
         // if (!chamberStates && (sensors.get(0).getDistance() == 12.7)) {
         //     totalNumBalls++;
         // }
-        if (sensors.get(0).isBallDetected() && chamberStatesList.size() < 5){
+        if (chamberStates[0] && (sensors.get(0).isBallDetected())) {
             totalNumBalls++;
-            chamberStatesList.add(true);
         }
+        // if (sensors.get(0).isBallDetected() && chamberStatesList.size() < 5){
+        //     totalNumBalls++;
+        //     chamberStatesList.add(true);
+        // }
     }
 
-    public void checkBallExit() {
+    public void checkBallExit() { //TODO: 
         if (chamberStates[3] && (sensors.get(0).isBallDetected())) {
             totalNumBalls--;
         }
-        if (chamberStatesList.size() == 3 && (sensors.get(0).isBallDetected())) {
-            totalNumBalls--;
-        }
+        // if (chamberStatesList.size() == 3 && (sensors.get(0).isBallDetected())) {
+        //     totalNumBalls--;
+        // }
     }
 
     public int totalNumBalls() {
@@ -198,12 +204,14 @@ public class Indexer extends MustangSubsystemBase {
      */
     public void updateChamberStates() { // change to 'updateChamberStates?'
         for (int i = 0; i < sensors.size(); i++) {
-            if (sensors.get(i).getDistance() < RobotConstants.SENSOR_TO_BALL) { // TODO make distance to orange belt constant
-                chamberStates[i] = true;
-                // latestSensor = i + 1;
-            } else {
-                chamberStates[i] = false;
-            }
+            chamberStates[i] = sensors.get(i).isBallDetected();
+            
+            // if (sensors.get(i).getDistance() < RobotConstants.SENSOR_TO_BALL) { // TODO make distance to orange belt constant
+            //     chamberStates[i] = true;
+            //     // latestSensor = i + 1;
+            // } else {
+            //     chamberStates[i] = false;
+            // }
         }
     }
 
@@ -226,21 +234,21 @@ public class Indexer extends MustangSubsystemBase {
     }
 
     public boolean isFrontRunning() {
-        return (frontMotor.get() > 0);
+        return frontMotor.get() > 0;
     }
 
     public boolean isBackRunning() {
-        return (backMotor.get() > 0);
+        return backMotor.get() > 0;
     }
 
-    public void toggleUpdraw() {
-        double c = updraw.getMotorOutputPercent();
-        if (MathUtils.doublesEqual(c, 0.0, 0.1)) {
-            updraw(false);
-        } else {
-            stopUpdraw();
-        }
-    }
+    // public void toggleUpdraw() {
+    //     double c = updraw.getMotorOutputPercent();
+    //     if (MathUtils.doublesEqual(c, 0.0, 0.1)) {
+    //         updraw(false);
+    //     } else {
+    //         stopUpdraw();
+    //     }
+    // }
 
     /**
      * Run the uptake, emptying the top chamber of the indexer
@@ -251,11 +259,13 @@ public class Indexer extends MustangSubsystemBase {
         if (updrawStartTime == null) {
             updrawStartTime = System.currentTimeMillis();
         }
-        if (reversed) {
-            updraw.set(ControlMode.PercentOutput, -0.8 * UPDRAW_SPEED);
-        } else {
-            updraw.set(ControlMode.PercentOutput, UPDRAW_SPEED);
-        }
+        // if (reversed) {
+        //     updraw.set(ControlMode.PercentOutput, -0.8 * UPDRAW_SPEED);
+        // } else {
+        //     updraw.set(ControlMode.PercentOutput, UPDRAW_SPEED);
+        // }
+
+        updraw.set(ControlMode.PercentOutput, reversed ? -0.8 * UPDRAW_SPEED : UPDRAW_SPEED);
     }
 
     public void stopUpdraw() {
@@ -274,15 +284,12 @@ public class Indexer extends MustangSubsystemBase {
         if (updrawStartTime == null) {
             return MathUtils.doublesEqual(c, UPDRAW_SPEED, 0.05);
         }
-        if (System.currentTimeMillis() >= updrawStartTime + 500) {
-            return true;
-        }
-        return false;
+        return System.currentTimeMillis() >= updrawStartTime + 500;
 
     }
 
     public int getTopChamber() {
-        for (int i = 4; i >= 0; i--) {
+        for (int i = 4; i >= 0; i--) { //TODO: shouldn't it be i = 3 instead of 4?
             if (chamberStates[i])
                 return i;
         }
@@ -455,9 +462,7 @@ public class Indexer extends MustangSubsystemBase {
         setSpeed((SmartDashboard.getNumber("Front Motor Speed", 0.0)),
                 (SmartDashboard.getNumber("Back Motor Speed", 0.0)));
 
-        if (isUpdrawing()) {
-            updrawingMode = true;
-        }
+        updrawingMode = isUpdrawing();
         if (updrawingMode && !isUpdrawing()) { // We were updrawing but no current spike is detected anymore
             updrawingMode = false;
             chamberStates[3] = false;
@@ -486,7 +491,7 @@ public class Indexer extends MustangSubsystemBase {
     }
 
     public boolean motorJammed() {
-        return (frontMotorJammed() || backMotorJammed());
+        return frontMotorJammed() || backMotorJammed();
     }
 
     public CANSparkMax getFrontMotor() {
