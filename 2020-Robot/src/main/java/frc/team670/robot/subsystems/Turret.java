@@ -2,15 +2,15 @@ package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 
 import frc.team670.mustanglib.commands.MustangScheduler;
-import frc.team670.robot.commands.joystickControls.JoystickTurret;
-import frc.team670.robot.constants.RobotMap;
+import frc.team670.mustanglib.subsystems.SparkMaxRotatingSubsystem;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
-import frc.team670.mustanglib.subsystems.SparkMaxRotatingSubsystem;
+import frc.team670.robot.commands.joystickControls.JoystickTurret;
+import frc.team670.robot.constants.RobotMap;
 
 
 public class Turret extends SparkMaxRotatingSubsystem {
@@ -118,6 +118,18 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
         public double getRotatorGearRatio() {
             return 76.611;
+        }
+
+        @Override
+        public double getMaxVelocity() {
+            // TODO Auto-generated method stub
+            return 0;
+        }
+
+        @Override
+        public double getMinVelocity() {
+            // TODO Auto-generated method stub
+            return 0;
         }
 
     }

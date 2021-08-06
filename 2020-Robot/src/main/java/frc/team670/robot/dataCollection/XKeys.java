@@ -15,7 +15,6 @@ import edu.wpi.first.networktables.NetworkTableType;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.robot.commands.climb.ExtendClimber;
 import frc.team670.robot.commands.climb.Climb;
-import frc.team670.robot.commands.indexer.RotateToIntakePosition;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
@@ -150,8 +149,8 @@ public class XKeys {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            if (s == xkeysCommands.INDEXER_INTAKE)
-                indexerAtIntake();
+            //if (s == xkeysCommands.INDEXER_INTAKE)
+                // indexerAtIntake();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-climber", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
@@ -238,9 +237,9 @@ public class XKeys {
         MustangScheduler.getInstance().schedule(new GetVisionData(coprocessor, drivebase));
     }
 
-    private void indexerAtIntake() {
-        MustangScheduler.getInstance().schedule(new RotateToIntakePosition(indexer));
-    }
+    // private void indexerAtIntake() {
+    //     MustangScheduler.getInstance().schedule(new RotateToIntakePosition(indexer));
+    // }
 
     private void cancelAllCommands() {
         MustangScheduler.getInstance().schedule(new CancelAllCommands());

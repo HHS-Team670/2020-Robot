@@ -37,7 +37,8 @@ public class RobotMap {
   public static final int CONVEYOR_ROLLER = 8;
 
   // Indexer and Updraw
-  public static final int INDEXER_ROTATOR = 9;
+  public static final int FRONT_MOTOR = 25;
+  public static final int BACK_MOTOR = 26;
   public static final int UPDRAW_SPINNER = 10;
 
   // Climber
