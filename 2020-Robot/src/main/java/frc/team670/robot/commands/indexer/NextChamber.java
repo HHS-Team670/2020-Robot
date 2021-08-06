@@ -19,26 +19,21 @@ public class NextChamber extends CommandBase implements MustangCommand {
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private int topChamber;
 
-    // private boolean isForward;
-
     public NextChamber(Indexer indexer) {
-        // this.isForward = isForward;
         this.indexer = indexer;
         addRequirements(indexer);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-        healthReqs.put(indexer, HealthState.YELLOW); // This can work without ToF
+        healthReqs.put(indexer, HealthState.YELLOW); // Implement without ToF if sensor(s) down
     }
 
     @Override
     public void initialize() {
-        topChamber = indexer.getTopChamber();  
+        topChamber = indexer.getTopChamber();
     }
 
     @Override
     public void execute() {
-        // if (!indexer.isChamberFull(3)) {
-            indexer.run();
-        // }
+        indexer.run();
     }
 
     @Override
@@ -54,7 +49,7 @@ public class NextChamber extends CommandBase implements MustangCommand {
     }
 
     public void end() {
-        indexer.stop();
+        indexer.stopMotors();
     }
 
     @Override

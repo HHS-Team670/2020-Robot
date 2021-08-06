@@ -6,14 +6,14 @@ import frc.team670.robot.constants.RobotConstants;
 
 public class BallSensor extends TimeOfFlightSensor {
 
-    final static int treshold = 10;
+    final static int threshold = 5; // in mm
 
     public BallSensor(Port port) {
         super(port);
     }
 
     public boolean isBallDetected() {
-        return Math.abs(RobotConstants.SENSOR_TO_BALL - super.getDistance()) <= treshold;
+        return Math.abs(RobotConstants.SENSOR_TO_BALL - super.getDistance()) <= threshold;
     }
 
 }

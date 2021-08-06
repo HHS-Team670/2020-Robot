@@ -11,7 +11,7 @@ import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.subsystems.Indexer;
 
 /**
- * Rotates the indexer by 1 chamber over
+ * Shoots one ball from the indexer
  */
 public class ShootBall extends CommandBase implements MustangCommand {
 
@@ -33,11 +33,10 @@ public class ShootBall extends CommandBase implements MustangCommand {
     public void initialize() {
         Logger.consoleLog("Preparing to shoot one ball");
         indexer.updraw(false);
-        totalNumBalls = indexer.totalNumBalls();
-        // bottomChamber = indexer.getBottomChamber();
+        totalNumBalls = indexer.getTotalNumBalls();
     }
 
-    @Override 
+    @Override
     public void execute() {
         if (indexer.updrawIsUpToSpeed()) {
             indexer.run();
@@ -48,16 +47,16 @@ public class ShootBall extends CommandBase implements MustangCommand {
     public boolean isFinished() {
         if (!indexer.ballInChamber(3)) {
             Logger.consoleLog("Cannot run this command when ball is not in shooting chamber.");
-            return true;
+            return false;
         }
         // return indexer.hasReachedTargetPosition();
         // return bottomChamber == indexer.getBottomChamber() - 1 || indexer.totalNumBalls() == 0;
-        return (totalNumBalls == indexer.totalNumBalls() - 1);
+        return totalNumBalls == indexer.getTotalNumBalls() - 1;
     }
 
     public void end() {
         indexer.stopUpdraw();
-        indexer.stop();
+        indexer.stopMotors();
     }
 
     @Override

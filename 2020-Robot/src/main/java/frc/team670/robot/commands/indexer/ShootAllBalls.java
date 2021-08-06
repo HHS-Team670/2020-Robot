@@ -1,4 +1,4 @@
-package frc.team670.robot.commands.indexer;
+package frc.team670.robot.commands.indexer; 
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +24,8 @@ public class ShootAllBalls extends CommandBase implements MustangCommand {
         this.indexer = indexer;
         addRequirements(indexer);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
-        healthReqs.put(indexer, HealthState.GREEN);
+        healthReqs.put(indexer, HealthState.YELLOW); // can work if all but the exit sensor is down
+        // can keep moving motors until the sensor doesn't sense anymore balls, or rotate until u know that 3 ball've been shot
     }
 
     /**
@@ -41,8 +42,9 @@ public class ShootAllBalls extends CommandBase implements MustangCommand {
      */
     @Override
     public void execute() {
-        if (indexer.updrawIsUpToSpeed())
+        if (indexer.updrawIsUpToSpeed()) {
             indexer.run();
+        }
     }
 
     /**
@@ -51,14 +53,14 @@ public class ShootAllBalls extends CommandBase implements MustangCommand {
      */
     @Override
     public boolean isFinished() {
-        return indexer.totalNumBalls() == 0;
+        return indexer.getTotalNumBalls() == 0;
     }
 
     @Override
     public void end(boolean interrupted) {
         Logger.consoleLog("Indexer system emptied");
         indexer.stopUpdraw();
-        indexer.stop();
+        indexer.stopMotors();
     }
 
     @Override

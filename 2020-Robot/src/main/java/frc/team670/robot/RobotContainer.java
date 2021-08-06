@@ -8,35 +8,26 @@
 package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-
-import frc.team670.robot.subsystems.Conveyor;
-import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.robot.subsystems.Shooter;
-import frc.team670.robot.subsystems.Intake;
-import frc.team670.mustanglib.subsystems.LEDSubsystem;
-import frc.team670.robot.subsystems.Indexer;
-import frc.team670.robot.subsystems.Turret;
-import frc.team670.robot.subsystems.Vision;
-import frc.team670.robot.subsystems.Climber;
-
+import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.MustangScheduler;
-import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToGenerator2BallSide;
-import frc.team670.robot.commands.auton.AutoSelector;
-import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
-// import frc.team670.robot.commands.auton.ShootFromAngleThenTimeDrive;
-// import frc.team670.robot.commands.auton.ToTrenchRunAndShoot;
-// import frc.team670.robot.commands.auton.baseline.ShootThenBack;
-import frc.team670.robot.commands.turret.ZeroTurret;
+import frc.team670.mustanglib.subsystems.LEDSubsystem;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.robot.commands.auton.AutoSelector;
+import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotMap;
-import frc.team670.mustanglib.RobotContainerBase;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
+import frc.team670.robot.subsystems.Conveyor;
+import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Indexer;
+import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Turret;
+import frc.team670.robot.subsystems.Vision;
 
 public class RobotContainer extends RobotContainerBase {
 
@@ -51,10 +42,10 @@ public class RobotContainer extends RobotContainerBase {
   private static Indexer indexer = new Indexer(conveyor);
   private static Turret turret = new Turret();
   private static Shooter shooter = new Shooter();
-  // private static Climber climber = new Climber(indexserPusherClimberDeploy);
-  private static LEDSubsystem fancyLights = new LEDSubsystem(RobotMap.LEFT_SIDE_LEDS_PWM, 150);
-
+  // private static Climber climber = new Climber(); // TODO: find solenoid
   private static Vision vision = new Vision();
+
+  private static LEDSubsystem fancyLights = new LEDSubsystem(RobotMap.LEFT_SIDE_LEDS_PWM, 150);
 
   private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
       vision);
@@ -64,21 +55,9 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
-    addSubsystem(driveBase, intake, conveyor, indexer, turret, shooter, climber, vision);
-    oi.configureButtonBindings(driveBase, intake, conveyor, indexer, turret, shooter, climber, vision);
+    addSubsystem(driveBase, intake, conveyor, indexer, turret, shooter, null, vision); //climber, vision);
+    oi.configureButtonBindings(driveBase, intake, conveyor, indexer, turret, shooter, null, vision); //climber, vision);
   }
-
-  /**
-   * Resets subsystem points of reference. Rotates the indexer to its zero
-   * position.
-   */
-  // public static void zeroSubsystemPositions() {
-  // indexer.setEncoderPositionFromAbsolute();
-  // }
-
-  // public static void clearSubsystemSetpoints(){
-  // indexer.clearSetpoint();
-  // }
 
   public void robotInit() {
 
@@ -112,11 +91,9 @@ public class RobotContainer extends RobotContainerBase {
   public void teleopInit() {
     shooter.stop();
     indexer.stopUpdraw();
-    // indexer.reset();
-    // indexer.setRotatorMode(false); // indexer to brake mode
+    indexer.stopMotors();
     driveBase.resetOdometry(new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS,
         FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
-    // zeroSubsystemPositions();
     driveBase.setTeleopRampRate();
     driveBase.initDefaultCommand();
     if (!turret.hasZeroed()) {
@@ -127,7 +104,6 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void disabled() {
-    // indexer.setRotatorMode(true); // indexer to coast mode
     vision.turnOffLEDs();
   }
 

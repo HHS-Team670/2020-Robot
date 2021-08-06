@@ -9,20 +9,23 @@ package frc.team670.robot.dataCollection;
 
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.commands.MustangScheduler;
-import frc.team670.robot.commands.climb.ExtendClimber;
+import frc.team670.mustanglib.utils.Logger;
+import frc.team670.mustanglib.utils.MustangNotifications;
+import frc.team670.robot.commands.CancelAllCommands;
 import frc.team670.robot.commands.climb.Climb;
+import frc.team670.robot.commands.climb.ExtendClimber;
+import frc.team670.robot.commands.indexer.ShootAllBalls;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
-import frc.team670.robot.commands.routines.ShootAllBalls;
-import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.vision.GetVisionData;
+import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
@@ -30,11 +33,6 @@ import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.Vision;
-import frc.team670.robot.subsystems.Climber;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team670.robot.commands.CancelAllCommands;
-import frc.team670.mustanglib.utils.Logger;
-import frc.team670.mustanglib.utils.MustangNotifications;
 
 /**
  * Listens on network tables to keys sent over by the XKeys keyboard and calls
@@ -68,7 +66,7 @@ public class XKeys {
         public static final double INCREASE_SHOOTER_RPM = 8;
         public static final double DECREASE_SHOOTER_RPM = 9;
 
-        public static final double INDEXER_INTAKE = 10;
+        // public static final double INDEXER_INTAKE = 10;
 
         public static final double EXTEND_CLIMBER = 12;
         public static final double RETRACT_CLIMBER = 13;
@@ -214,7 +212,7 @@ public class XKeys {
     }
 
     private void shootAll() {
-        MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer, shooter, drivebase));
+        MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer));
     }
 
     private void toggleIntake() {
@@ -229,9 +227,9 @@ public class XKeys {
         MustangScheduler.getInstance().schedule(new RunIntake(true, intake));
     }
 
-    private void autoPickupBall() {
-        MustangScheduler.getInstance().schedule(new IntakeBallToIndexer(intake, conveyor, indexer));
-    }
+    // private void autoPickupBall() {
+    //     MustangScheduler.getInstance().schedule(new IntakeBallToIndexer(intake, conveyor, indexer));
+    // }
 
     private void visionAlign() {
         MustangScheduler.getInstance().schedule(new GetVisionData(coprocessor, drivebase));
