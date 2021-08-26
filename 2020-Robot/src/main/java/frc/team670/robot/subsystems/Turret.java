@@ -120,16 +120,14 @@ public class Turret extends SparkMaxRotatingSubsystem {
             return 76.611;
         }
 
-        @Override
         public double getMaxVelocity() {
             // TODO Auto-generated method stub
-            return 0;
+            return 0.0;
         }
 
-        @Override
         public double getMinVelocity() {
             // TODO Auto-generated method stub
-            return 0;
+            return 0.0;
         }
 
     }

@@ -8,24 +8,19 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
-import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.mustanglib.commands.drive.straight.TimedDrive;
-import frc.team670.robot.commands.indexer.EmptyRevolver;
-import frc.team670.robot.commands.indexer.SendAllBalls;
-import frc.team670.robot.commands.indexer.StageOneBallToShoot;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.commands.indexer.ShootAllBalls;
+import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooter;
-import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.RotateToHome;
-import frc.team670.robot.commands.turret.ZeroTurret;
-import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Intake;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 
@@ -65,7 +60,7 @@ public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implemen
                 ),
                 new Shoot(shooter), 
                     // new StageOneBallToShoot(indexer),
-                new EmptyRevolver(indexer),
+                new ShootAllBalls(indexer),
 
                 new WaitCommand(waitTime), // Delay moving after shot if needed
 

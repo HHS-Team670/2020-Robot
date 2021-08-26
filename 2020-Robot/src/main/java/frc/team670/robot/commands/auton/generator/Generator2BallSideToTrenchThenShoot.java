@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.paths.Generator3BallMidToGenerator2BallSidePath;
 import frc.team670.paths.Path;
 import frc.team670.mustanglib.commands.MustangCommand;
-import frc.team670.robot.commands.indexer.SendAllBalls;
+import frc.team670.robot.commands.indexer.ShootAllBalls;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.turret.RotateTurret;
 import frc.team670.robot.subsystems.Conveyor;
@@ -70,7 +70,7 @@ public class Generator2BallSideToTrenchThenShoot extends SequentialCommandGroup 
           new Shoot(shooter), 
           new RotateTurret(turret, driveBase, coprocessor)
           ),
-        new SendAllBalls(indexer));
+        new ShootAllBalls(indexer));
   }
 
   @Override

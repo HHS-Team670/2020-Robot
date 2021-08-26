@@ -20,6 +20,7 @@ import frc.team670.mustanglib.utils.MustangNotifications;
 import frc.team670.mustanglib.utils.functions.MathUtils;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
+import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.motorcontroller.TalonSRXFactory;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -45,7 +46,7 @@ public class Indexer extends MustangSubsystemBase {
     private int backExceededCurrentLimitCount = 0;
 
     private Long updrawStartTime;
-    private double frontSpeed, backSpeed;
+    private double frontSpeed, backSpeed, updrawSpeed;
 
     private static final double INDEXER_PEAK_CURRENT = 8; // TODO: find this; test for new indexer
 
@@ -97,8 +98,9 @@ public class Indexer extends MustangSubsystemBase {
         updraw.configVoltageCompSaturation(12); // "full output" will now scale to 12 Volts
         updraw.enableVoltageCompensation(true);
 
-        SmartDashboard.putNumber("Front Motor Speed", 0.0); // for testing
-        SmartDashboard.putNumber("Back Motor Speed", 0.0); // for testing
+        SmartDashboard.putNumber("Front Motor Speed", 0.0);
+        SmartDashboard.putNumber("Back Motor Speed", 0.0);
+        SmartDashboard.putNumber("Updraw Speed", 0.0);
     }
 
     private void pushGameDataToDashboard() {
@@ -140,15 +142,21 @@ public class Indexer extends MustangSubsystemBase {
         }
     }
 
-    public void setSpeed(double frontSpeed, double backSpeed) {
+    public void setSpeed(double frontSpeed, double backSpeed, double updrawSpeed) {
         this.frontSpeed = frontSpeed;
         this.backSpeed = backSpeed;
+        this.updrawSpeed = updrawSpeed;
         run();
     }
 
     public void run() {
         frontMotor.set(frontSpeed);
         backMotor.set(backSpeed);
+        updraw.set(ControlMode.PercentOutput, updrawSpeed);
+    }
+
+    public void setUpdrawSpeed(double updrawSpeed) {
+        this.updrawSpeed = updrawSpeed;
     }
 
     public void stopMotors() {
@@ -195,8 +203,8 @@ public class Indexer extends MustangSubsystemBase {
         CANError frontError = frontMotor.getLastError();
         CANError backError = backMotor.getLastError();
 
-        boolean isFrontError = isSparkMaxErrored(frontMotor);
-        boolean isBackError = isSparkMaxErrored(backMotor);
+        boolean isFrontError = isSparkMaxErrored((SparkMAXLite) frontMotor);
+        boolean isBackError = isSparkMaxErrored((SparkMAXLite) backMotor);
         // boolean isRotatorError = isSparkMaxErrored(rotator);
         boolean isUpdrawError = isPhoenixControllerErrored(updraw);
         if (isUpdrawError || motorJammed() || isFrontError || isBackError) {
@@ -275,7 +283,7 @@ public class Indexer extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() {
         setSpeed((SmartDashboard.getNumber("Front Motor Speed", 0.0)),
-                (SmartDashboard.getNumber("Back Motor Speed", 0.0)));
+                (SmartDashboard.getNumber("Back Motor Speed", 0.0)), SmartDashboard.getNumber("Updraw Speed", 0.0));
 
         updrawingMode = isUpdrawing();
         if (updrawingMode && !isUpdrawing()) { // We were updrawing but no current spike is detected anymore
