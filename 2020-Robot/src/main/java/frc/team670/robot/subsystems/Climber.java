@@ -59,7 +59,7 @@ public class Climber extends MustangSubsystemBase {
         motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR, Motor_Type.NEO);
         motor.setIdleMode(IdleMode.kCoast);
         motor.setInverted(true);
-        this.deployer = deployer;
+        //this.deployer = deployer;
         controller = motor.getPIDController();
         motor.enableSoftLimit(SoftLimitDirection.kForward, true);
         motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
@@ -96,7 +96,7 @@ public class Climber extends MustangSubsystemBase {
     }
 
     public void hookOnBar() {
-        if (isHooked() && !onBar) {
+        if (isHooked() && !onBar || deployer == null) {
             setPower(0);
             onBar = true;
         }
@@ -152,7 +152,7 @@ public class Climber extends MustangSubsystemBase {
 
     @Override
     public HealthState checkHealth() {
-        if (isSparkMaxErrored(motor) || deployer == null) {
+        if (isSparkMaxErrored(motor)) {
             return HealthState.RED;
         }
         return HealthState.GREEN;

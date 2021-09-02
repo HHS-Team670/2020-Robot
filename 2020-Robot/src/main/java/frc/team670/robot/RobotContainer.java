@@ -8,6 +8,7 @@
 package frc.team670.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import frc.team670.mustanglib.RobotContainerBase;
@@ -21,6 +22,7 @@ import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.OI;
 import frc.team670.robot.constants.RobotMap;
+import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
@@ -33,8 +35,8 @@ public class RobotContainer extends RobotContainerBase {
 
   private static OI oi = new OI();
 
-  // private static Solenoid indexerPusherClimberDeploy = new
-  // Solenoid(RobotMap.PCMODULE, RobotMap.INDEXER_PUSHER_CLIMBER_DEPLOY);
+  private static Solenoid indexerPusherClimberDeploy = new
+  Solenoid(RobotMap.PCMODULE, RobotMap.INDEXER_PUSHER_CLIMBER_DEPLOY);
 
   private static DriveBase driveBase = new DriveBase(getDriverController());
   private static Intake intake = new Intake();
@@ -42,7 +44,7 @@ public class RobotContainer extends RobotContainerBase {
   private static Indexer indexer = new Indexer(conveyor);
   private static Turret turret = new Turret();
   private static Shooter shooter = new Shooter();
-  // private static Climber climber = new Climber(); // TODO: find solenoid
+  private static Climber climber = new Climber(indexerPusherClimberDeploy); // TODO: find solenoid
   private static Vision vision = new Vision();
 
   private static LEDSubsystem fancyLights = new LEDSubsystem(RobotMap.LEFT_SIDE_LEDS_PWM, 150);
@@ -55,8 +57,8 @@ public class RobotContainer extends RobotContainerBase {
    */
   public RobotContainer() {
     super();
-    addSubsystem(driveBase, intake, conveyor, indexer, turret, shooter, null, vision); //climber, vision);
-    oi.configureButtonBindings(driveBase, intake, conveyor, indexer, turret, shooter, null, vision); //climber, vision);
+    addSubsystem(driveBase, intake, conveyor, indexer, turret, shooter, climber, vision); //climber, vision);
+    oi.configureButtonBindings(driveBase, intake, conveyor, indexer, turret, shooter, climber, vision); //climber, vision);
   }
 
   public void robotInit() {
@@ -125,7 +127,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public static MustangController getDriverController() {
-    return getDriverController();
+    return oi.getDriverController();
   }
 
   public void periodic() {
