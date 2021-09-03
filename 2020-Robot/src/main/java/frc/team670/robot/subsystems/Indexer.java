@@ -77,15 +77,15 @@ public class Indexer extends MustangSubsystemBase {
         // Updraw should be inverted
         this.updraw = TalonSRXFactory.buildFactoryTalonSRX(RobotMap.UPDRAW_SPINNER, false);
 
-        BallSensor entranceSensor = new BallSensor(RobotMap.INDEXER_ToF_SENSOR_1_PORT);
-        BallSensor indexerSensorChamber1 = new BallSensor(RobotMap.INDEXER_ToF_SENSOR_2_PORT);
-        BallSensor indexerSensorChamber2 = new BallSensor(RobotMap.INDEXER_ToF_SENSOR_3_PORT);
-        BallSensor exitSensor = new BallSensor(RobotMap.INDEXER_ToF_SENSOR_4_PORT);
+        // BallSensor entranceSensor = new BallSensor(RobotMap.INDEXER_ToF_SENSOR_1_PORT);
+        // BallSensor indexerSensorChamber1 = new BallSensor(RobotMap.INDEXER_ToF_SENSOR_2_PORT);
+        // BallSensor indexerSensorChamber2 = new BallSensor(RobotMap.INDEXER_ToF_SENSOR_3_PORT);
+        // BallSensor exitSensor = new BallSensor(RobotMap.INDEXER_ToF_SENSOR_4_PORT);
 
-        sensors.add(entranceSensor); // intake to indexer
-        sensors.add(indexerSensorChamber1); // chamber 1
-        sensors.add(indexerSensorChamber2); // chamber 2
-        sensors.add(exitSensor); // exit sensor (indexer to updraw)
+        // sensors.add(entranceSensor); // intake to indexer
+        // sensors.add(indexerSensorChamber1); // chamber 1
+        // sensors.add(indexerSensorChamber2); // chamber 2
+        // sensors.add(exitSensor); // exit sensor (indexer to updraw)
 
         chamberStates = new boolean[4];
 
@@ -285,15 +285,15 @@ public class Indexer extends MustangSubsystemBase {
         setSpeed((SmartDashboard.getNumber("Front Motor Speed", 0.0)),
                 (SmartDashboard.getNumber("Back Motor Speed", 0.0)), SmartDashboard.getNumber("Updraw Speed", 0.0));
 
-        updrawingMode = isUpdrawing();
-        if (updrawingMode && !isUpdrawing()) { // We were updrawing but no current spike is detected anymore
-            updrawingMode = false;
-            chamberStates[3] = false;
-        }
-        checkBallEntry();
-        checkBallExit();
-        updateChamberStates();
-        pushGameDataToDashboard();
+        // updrawingMode = isUpdrawing();
+        // if (updrawingMode && !isUpdrawing()) { // We were updrawing but no current spike is detected anymore
+        //     updrawingMode = false;
+        //     chamberStates[3] = false;
+        // }
+        // checkBallEntry();
+        // checkBallExit();
+        // updateChamberStates();
+        // pushGameDataToDashboard();
     }
 
     public boolean isChamberFull(int chamber) {

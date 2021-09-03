@@ -20,8 +20,8 @@ public class ReverseIntakeConveyor extends ParallelCommandGroup implements Musta
         this.intake = intake;
         this.conveyor = conveyor;
         addCommands(
-            new RunIntake(true, intake),
-            new RunConveyor(true, conveyor)
+            new RunIntake(false, intake),
+            new RunConveyor(false, conveyor)
         );
     }
 
