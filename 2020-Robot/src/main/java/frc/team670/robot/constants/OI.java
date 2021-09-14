@@ -39,11 +39,12 @@ public class OI extends OIBase{
   private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), 1);
   private static JoystickButton runIntakeOut = new JoystickButton(getOperatorController(), 5);
   private static JoystickButton runIntakeIn = new JoystickButton(getOperatorController(), 3);
-  private static JoystickButton toggleUpdraw = new JoystickButton(getOperatorController(), 2);
+  // private static JoystickButton toggleUpdraw = new JoystickButton(getOperatorController(), 2);
   private static JoystickButton toggleShooter = new JoystickButton(getOperatorController(), 6);
   private static JoystickButton extendClimb = new JoystickButton(getOperatorController(), 11);
   private static JoystickButton retractClimb = new JoystickButton(getOperatorController(), 12);
   private static JoystickButton zeroTurret = new JoystickButton(getOperatorController(), 8);
+  private static JoystickButton intakeBallToIndexer = new IntakeBallToIndexer(getOperatorController(), 2);
   // private static JoystickButton nextChamber = new JoystickButton(getOperatorController(), 2); // TODO: figure number
   
   //xbox buttons
@@ -99,6 +100,7 @@ public class OI extends OIBase{
     extendClimb.whenPressed(new ExtendClimber(climber));
     retractClimb.whenPressed(new Climb(climber));
     zeroTurret.whenPressed(new RotateToAngle(turret, 0));
+    intakeBallToIndexer.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
 
     xboxVision.whenPressed(new GetLatestDataAndAlignTurret(turret, drivebase, vision));
     xboxIncreaseSpeed.whenPressed(new SetRPMAdjuster(100, shooter));

@@ -26,9 +26,7 @@ public class DeployIntake extends InstantCommand implements MustangCommand {
         addRequirements(intake);
     }
 
-    public void initialize() {
-
-    }
+    public void initialize() {}
 
     public void execute(){
         intake.deploy(isDeploy);
