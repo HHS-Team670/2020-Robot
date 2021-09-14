@@ -10,18 +10,18 @@ import frc.team670.robot.subsystems.Intake;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 
-public class ReverseIntakeConveyor extends ParallelCommandGroup implements MustangCommand {
+public class RunIntakeConveyor extends ParallelCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Intake intake;
     private Conveyor conveyor;
 
-    public ReverseIntakeConveyor(Intake intake, Conveyor conveyor){
+    public RunIntakeConveyor(Intake intake, Conveyor conveyor, boolean isReversed){
         this.intake = intake;
         this.conveyor = conveyor;
         addCommands(
-            new RunIntake(false, intake),
-            new RunConveyor(false, conveyor)
+            new RunIntake(isReversed, intake),
+            new RunConveyor(isReversed, conveyor)
         );
     }
 

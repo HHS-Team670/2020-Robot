@@ -48,12 +48,10 @@ public class Indexer extends MustangSubsystemBase {
     private Long updrawStartTime;
     private double frontSpeed, backSpeed, updrawSpeed;
 
-    private static final double INDEXER_PEAK_CURRENT = 8; // TODO: find this; test for new indexer
-
     private boolean updrawingMode;
 
-    private double UPDRAW_SPEED = 0.9;
-    private double INDEXER_SPEED = 0.5; // TODO: find this
+    private double UPDRAW_SPEED = -0.9;
+    private double INDEXER_SPEED = 0.9;
 
     private int isUpdrawingCount = 0;
     private int totalNumBalls;
@@ -71,7 +69,7 @@ public class Indexer extends MustangSubsystemBase {
         frontEncoder = frontMotor.getEncoder();
         backEncoder = backMotor.getEncoder();
         frontSpeed = INDEXER_SPEED;
-        backSpeed = INDEXER_SPEED * -1; // clockwise vs counterclockwise
+        backSpeed = -1 * INDEXER_SPEED; // clockwise vs counterclockwise
         this.conveyor = conveyor;
 
         // Updraw should be inverted
@@ -164,6 +162,15 @@ public class Indexer extends MustangSubsystemBase {
         backMotor.stopMotor();
     }
 
+    public void toggleUpdraw() {
+        double c = updraw.getMotorOutputPercent();
+        if (MathUtils.doublesEqual(c, 0.0, 0.1)) {
+            updraw(false);
+        } else {
+            stopUpdraw();
+        }
+    }
+
     /**
      * Run the uptake, emptying the top chamber of the indexer
      * 
@@ -197,7 +204,7 @@ public class Indexer extends MustangSubsystemBase {
     }
 
     @Override
-    public HealthState checkHealth() { // TODO: checkhealth should stop motors from running if red
+    public HealthState checkHealth() { 
         //if either the rotator or updraw breaks, we can't use the indexer anymore.
         //Same deal if the indexer is jammed (but that's recoverable).
         CANError frontError = frontMotor.getLastError();
@@ -207,7 +214,7 @@ public class Indexer extends MustangSubsystemBase {
         boolean isBackError = isSparkMaxErrored((SparkMAXLite) backMotor);
         // boolean isRotatorError = isSparkMaxErrored(rotator);
         boolean isUpdrawError = isPhoenixControllerErrored(updraw);
-        if (isUpdrawError || motorJammed() || isFrontError || isBackError) {
+        if (isUpdrawError || isFrontError || isBackError) {
             MustangNotifications.reportError("RED Errors: front: %s, back: %s", frontError, backError);
             return HealthState.RED; 
         }
@@ -226,44 +233,6 @@ public class Indexer extends MustangSubsystemBase {
         backMotor.set(output);
     }
 
-    /**
-     * 
-     * @return whether the rotator current has been
-     */
-
-    public boolean frontMotorJammed() {
-        double indexerCurrent = frontMotor.getOutputCurrent();
-        if (indexerCurrent > 0.2) {
-            if (indexerCurrent >= INDEXER_PEAK_CURRENT) {
-                frontExceededCurrentLimitCount++;
-            } else {
-                Logger.consoleLog("Front motor not jammed. current was lower than peak current");
-                frontExceededCurrentLimitCount = 0;
-            }
-            if (frontExceededCurrentLimitCount >= 4) { // 4 consecutive readings higher than peak
-                Logger.consoleError("Front motor jammed");
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean backMotorJammed() {
-        double indexerCurrent = backMotor.getOutputCurrent();
-        if (indexerCurrent > 0.2) {
-            if (indexerCurrent >= INDEXER_PEAK_CURRENT) {
-                backExceededCurrentLimitCount++;
-            } else {
-                Logger.consoleLog("Back motor not jammed. current was lower than peak current");
-                backExceededCurrentLimitCount = 0;
-            }
-            if (backExceededCurrentLimitCount >= 4) { // 4 consecutive readings higher than peak
-                Logger.consoleLog("Back motor jammed");
-                return true;
-            }
-        }
-        return false;
-    }
 
     public boolean isUpdrawing() {
         double updrawCurrent = updraw.getSupplyCurrent();
@@ -351,10 +320,6 @@ public class Indexer extends MustangSubsystemBase {
 
     public double getBackMotorSpeed() {
         return backEncoder.getVelocity();
-    }
-
-    public boolean motorJammed() {
-        return frontMotorJammed() || backMotorJammed();
     }
 
     public CANSparkMax getFrontMotor() {

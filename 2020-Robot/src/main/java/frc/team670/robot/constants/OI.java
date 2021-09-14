@@ -11,7 +11,8 @@ import frc.team670.robot.commands.climb.Climb;
 import frc.team670.robot.commands.climb.ExtendClimber;
 import frc.team670.robot.commands.indexer.ShootAllBalls;
 import frc.team670.robot.commands.indexer.ShootBall;
-import frc.team670.robot.commands.intake.ReverseIntakeConveyor;
+import frc.team670.robot.commands.indexer.ToggleUpdraw;
+import frc.team670.robot.commands.intake.RunIntakeConveyor;
 import frc.team670.robot.commands.intake.ToggleIntake;
 import frc.team670.robot.commands.shooter.SetRPMAdjuster;
 import frc.team670.robot.commands.shooter.ToggleShooter;
@@ -37,6 +38,8 @@ public class OI extends OIBase{
   //operator buttons
   private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), 1);
   private static JoystickButton runIntakeOut = new JoystickButton(getOperatorController(), 5);
+  private static JoystickButton runIntakeIn = new JoystickButton(getOperatorController(), 3);
+  private static JoystickButton toggleUpdraw = new JoystickButton(getOperatorController(), 2);
   private static JoystickButton toggleShooter = new JoystickButton(getOperatorController(), 6);
   private static JoystickButton extendClimb = new JoystickButton(getOperatorController(), 11);
   private static JoystickButton retractClimb = new JoystickButton(getOperatorController(), 12);
@@ -89,7 +92,9 @@ public class OI extends OIBase{
     Vision vision = (Vision)subsystemBases[7];
 
     toggleIntake.whenPressed(new ToggleIntake(intake));
-    runIntakeOut.toggleWhenPressed((new ReverseIntakeConveyor(intake, conveyor)));
+    runIntakeIn.toggleWhenPressed((new RunIntakeConveyor(intake, conveyor, false)));
+    runIntakeOut.toggleWhenPressed((new RunIntakeConveyor(intake, conveyor, true)));
+    toggleUpdraw.toggleWhenPressed(new ToggleUpdraw(indexer));
     toggleShooter.toggleWhenPressed(new ToggleShooter(shooter, drivebase));
     extendClimb.whenPressed(new ExtendClimber(climber));
     retractClimb.whenPressed(new Climb(climber));
