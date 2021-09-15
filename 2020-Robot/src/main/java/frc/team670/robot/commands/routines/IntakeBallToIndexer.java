@@ -5,16 +5,15 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.team670.robot.commands.intake.DeployIntake;
-import frc.team670.robot.commands.intake.RunConveyor;
-import frc.team670.robot.commands.intake.RunIntake;
-import frc.team670.robot.subsystems.Indexer;
-import frc.team670.robot.subsystems.Conveyor;
-import frc.team670.robot.subsystems.Intake;
+import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.mustanglib.commands.MustangCommand;
-import frc.team670.robot.commands.indexer.RotateToIntakePosition;
+import frc.team670.robot.commands.indexer.RunIndexer;
+import frc.team670.robot.commands.intake.DeployIntake;
+import frc.team670.robot.commands.intake.RunIntake;
+import frc.team670.robot.subsystems.Conveyor;
+import frc.team670.robot.subsystems.Indexer;
+import frc.team670.robot.subsystems.Intake;
 
 public class IntakeBallToIndexer extends SequentialCommandGroup implements MustangCommand {
 
@@ -32,7 +31,7 @@ public class IntakeBallToIndexer extends SequentialCommandGroup implements Musta
         addCommands(
             new ParallelCommandGroup(
                 new RunIntake(false, intake), 
-                new RunIndexer(false, conveyor)
+                new RunIndexer(indexer)
             )
         );
     }

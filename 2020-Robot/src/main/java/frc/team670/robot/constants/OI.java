@@ -14,6 +14,7 @@ import frc.team670.robot.commands.indexer.ShootBall;
 import frc.team670.robot.commands.indexer.ToggleUpdraw;
 import frc.team670.robot.commands.intake.RunIntakeConveyor;
 import frc.team670.robot.commands.intake.ToggleIntake;
+import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 import frc.team670.robot.commands.shooter.SetRPMAdjuster;
 import frc.team670.robot.commands.shooter.ToggleShooter;
 import frc.team670.robot.commands.turret.GetLatestDataAndAlignTurret;
@@ -39,12 +40,12 @@ public class OI extends OIBase{
   private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), 1);
   private static JoystickButton runIntakeOut = new JoystickButton(getOperatorController(), 5);
   private static JoystickButton runIntakeIn = new JoystickButton(getOperatorController(), 3);
-  // private static JoystickButton toggleUpdraw = new JoystickButton(getOperatorController(), 2);
+  private static JoystickButton toggleUpdraw = new JoystickButton(getOperatorController(), 4);
   private static JoystickButton toggleShooter = new JoystickButton(getOperatorController(), 6);
   private static JoystickButton extendClimb = new JoystickButton(getOperatorController(), 11);
   private static JoystickButton retractClimb = new JoystickButton(getOperatorController(), 12);
   private static JoystickButton zeroTurret = new JoystickButton(getOperatorController(), 8);
-  private static JoystickButton intakeBallToIndexer = new IntakeBallToIndexer(getOperatorController(), 2);
+  private static JoystickButton intakeBallToIndexer = new JoystickButton(getOperatorController(), 2);
   // private static JoystickButton nextChamber = new JoystickButton(getOperatorController(), 2); // TODO: figure number
   
   //xbox buttons
@@ -113,5 +114,4 @@ public class OI extends OIBase{
 
     xkeys = new XKeys(drivebase, intake, conveyor, indexer, shooter, climber, turret, vision);
   }
-
 }
