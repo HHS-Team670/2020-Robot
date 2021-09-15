@@ -7,6 +7,7 @@
 
 package frc.team670.robot;
 
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -14,6 +15,8 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.MustangScheduler;
+import frc.team670.mustanglib.dataCollection.sensors.Multiplexer;
+import frc.team670.mustanglib.dataCollection.sensors.TimeOfFlightSensor;
 import frc.team670.mustanglib.subsystems.LEDSubsystem;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
@@ -51,6 +54,9 @@ public class RobotContainer extends RobotContainerBase {
 
   private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
       vision);
+
+  private static TimeOfFlightSensor tof = new TimeOfFlightSensor(I2C.Port.kOnboard);
+  private static Multiplexer multiplexer = new Multiplexer();
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -131,6 +137,8 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
+    multiplexer.select(0);
+    Logger.consoleLog(Integer.toString(tof.getDistance()));
     fancyLights.periodic();
   }
 
