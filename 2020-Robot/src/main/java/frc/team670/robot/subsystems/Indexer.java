@@ -60,6 +60,7 @@ public class Indexer extends MustangSubsystemBase {
     // touches
     private static final int UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT = 9;
     private static final int UPDRAW_PEAK_CURRENT_LIMIT = 15;
+    public BallSensor entranceSensor;
 
     public Indexer(Conveyor conveyor) {
         super();
@@ -75,7 +76,7 @@ public class Indexer extends MustangSubsystemBase {
         // Updraw should be inverted
         this.updraw = TalonSRXFactory.buildFactoryTalonSRX(RobotMap.UPDRAW_SPINNER, false);
 
-        // BallSensor entranceSensor = new BallSensor(RobotMap.INDEXER_ToF_SENSOR_1_PORT);
+        entranceSensor = new BallSensor(RobotMap.INDEXER_ToF_SENSOR_1_PORT);
         // BallSensor indexerSensorChamber1 = new BallSensor(RobotMap.INDEXER_ToF_SENSOR_2_PORT);
         // BallSensor indexerSensorChamber2 = new BallSensor(RobotMap.INDEXER_ToF_SENSOR_3_PORT);
         // BallSensor exitSensor = new BallSensor(RobotMap.INDEXER_ToF_SENSOR_4_PORT);

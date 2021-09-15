@@ -18,7 +18,7 @@ import frc.team670.mustanglib.utils.MustangNotifications;
 import frc.team670.robot.commands.CancelAllCommands;
 import frc.team670.robot.commands.climb.Climb;
 import frc.team670.robot.commands.climb.ExtendClimber;
-import frc.team670.robot.commands.indexer.ShootAllBalls;
+// import frc.team670.robot.commands.indexer.s;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.shooter.Shoot;
@@ -213,7 +213,7 @@ public class XKeys {
     }
 
     private void shootAll() {
-        MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer));
+        // MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer));
     }
 
     private void toggleIntake() {
@@ -229,7 +229,7 @@ public class XKeys {
     }
 
     private void autoPickupBall() {
-        MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer));
+        // MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer));
     }
 
     private void visionAlign() {

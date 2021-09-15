@@ -132,6 +132,7 @@ public class RobotContainer extends RobotContainerBase {
 
   public void periodic() {
     fancyLights.periodic();
+    Logger.consoleLog("Indexer Dis: %d", indexer.entranceSensor.getDistance());
   }
 
 }
