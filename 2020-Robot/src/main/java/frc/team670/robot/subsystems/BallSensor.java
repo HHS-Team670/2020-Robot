@@ -8,8 +8,8 @@ public class BallSensor extends TimeOfFlightSensor {
 
     final static int threshold = 5; // in mm
 
-    public BallSensor(Port port) {
-        super(port, true, 0);
+    public BallSensor(Port port, int sensorAddress) {
+        super(port, true, sensorAddress);
     }
 
     public boolean isBallDetected() {
