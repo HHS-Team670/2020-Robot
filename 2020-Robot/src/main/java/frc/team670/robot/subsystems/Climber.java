@@ -57,9 +57,9 @@ public class Climber extends MustangSubsystemBase {
 
     public Climber(Solenoid deployer) {
         motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR, Motor_Type.NEO);
-        motor.setIdleMode(IdleMode.kCoast);
+        motor.setIdleMode(IdleMode.kBrake);
         motor.setInverted(true);
-        //this.deployer = deployer;
+        this.deployer = deployer;
         controller = motor.getPIDController();
         motor.enableSoftLimit(SoftLimitDirection.kForward, true);
         motor.enableSoftLimit(SoftLimitDirection.kReverse, true);

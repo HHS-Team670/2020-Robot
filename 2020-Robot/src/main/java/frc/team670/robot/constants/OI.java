@@ -9,9 +9,9 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.climb.Climb;
 import frc.team670.robot.commands.climb.ExtendClimber;
-import frc.team670.robot.commands.indexer.ShootAllBalls;
-import frc.team670.robot.commands.indexer.ShootBall;
-import frc.team670.robot.commands.indexer.ToggleUpdraw;
+// import frc.team670.robot.commands.indexer.ShootAllBalls;
+// import frc.team670.robot.commands.indexer.ShootBall;
+// import frc.team670.robot.commands.indexer.ToggleUpdraw;
 import frc.team670.robot.commands.intake.RunIntakeConveyor;
 import frc.team670.robot.commands.intake.ToggleIntake;
 import frc.team670.robot.commands.routines.IntakeBallToIndexer;
@@ -96,7 +96,7 @@ public class OI extends OIBase{
     toggleIntake.whenPressed(new ToggleIntake(intake));
     runIntakeIn.toggleWhenPressed((new RunIntakeConveyor(intake, conveyor, false)));
     runIntakeOut.toggleWhenPressed((new RunIntakeConveyor(intake, conveyor, true)));
-    toggleUpdraw.toggleWhenPressed(new ToggleUpdraw(indexer));
+    // toggleUpdraw.toggleWhenPressed(new ToggleUpdraw(indexer));
     toggleShooter.toggleWhenPressed(new ToggleShooter(shooter, drivebase));
     extendClimb.whenPressed(new ExtendClimber(climber));
     retractClimb.whenPressed(new Climb(climber));
@@ -109,8 +109,8 @@ public class OI extends OIBase{
     xboxLowerClimber.whenPressed(new Climb(climber));
     xboxRaiseClimber.whenPressed(new ExtendClimber(climber));
     toggleReverseDrive.whenPressed(new FlipDriveDirection());
-    shootBall.whenPressed(new ShootBall(indexer));
-    shootAllBalls.whenPressed(new ShootAllBalls(indexer));
+    // shootBall.whenPressed(new ShootBall(indexer));
+    // shootAllBalls.whenPressed(new ShootAllBalls(indexer));
 
     xkeys = new XKeys(drivebase, intake, conveyor, indexer, shooter, climber, turret, vision);
   }

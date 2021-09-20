@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.commands.indexer.RunIndexer;
+// import frc.team670.robot.commands.indexer.RunIndexer;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.subsystems.Conveyor;
@@ -30,8 +30,8 @@ public class IntakeBallToIndexer extends SequentialCommandGroup implements Musta
         }
         addCommands(
             new ParallelCommandGroup(
-                new RunIntake(false, intake), 
-                new RunIndexer(indexer)
+                new RunIntake(false, intake)
+                // new RunIndexer(indexer)
             )
         );
     }

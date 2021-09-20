@@ -56,12 +56,8 @@ public class RobotMap {
   // SENSORS
 
   // Indexer sensors
-  public static final int INDEXER_DIO_ENCODER_PORT = 0;
-  public static final I2C.Port INDEXER_ToF_SENSOR_1_PORT = I2C.Port.kOnboard;
-  public static final I2C.Port INDEXER_ToF_SENSOR_2_PORT = I2C.Port.kOnboard;
-  public static final I2C.Port INDEXER_ToF_SENSOR_3_PORT = I2C.Port.kOnboard;
-  public static final I2C.Port INDEXER_ToF_SENSOR_4_PORT = I2C.Port.kOnboard;
-  public static final I2C.Port INDEXER_ToF_SENSOR_5_PORT = I2C.Port.kOnboard;
+  public static final I2C.Port INDEXER_MUL_PORT = I2C.Port.kOnboard;
+
 
   // LEDs (connected on RoboRIO PWM)
   public static final int LEFT_SIDE_LEDS_PWM = 0;
