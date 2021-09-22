@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.MustangScheduler;
+import frc.team670.mustanglib.dataCollection.sensors.Multiplexer;
 import frc.team670.mustanglib.subsystems.LEDSubsystem;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
@@ -35,13 +36,16 @@ public class RobotContainer extends RobotContainerBase {
 
   private static OI oi = new OI();
 
+  int i = 0;
+
   private static Solenoid indexerPusherClimberDeploy = new
   Solenoid(RobotMap.PCMODULE, RobotMap.INDEXER_PUSHER_CLIMBER_DEPLOY);
 
   private static DriveBase driveBase = new DriveBase(getDriverController());
   private static Intake intake = new Intake();
-  private static Conveyor conveyor = new Conveyor();
-  private static Indexer indexer = new Indexer(conveyor);
+  private static Multiplexer multiplexer = new Multiplexer(RobotMap.INDEXER_MUL_PORT);
+  private static Conveyor conveyor = new Conveyor(multiplexer);
+  private static Indexer indexer = new Indexer(multiplexer, conveyor);
   private static Turret turret = new Turret();
   private static Shooter shooter = new Shooter();
   private static Climber climber = new Climber(indexerPusherClimberDeploy); // TODO: find solenoid
@@ -79,7 +83,7 @@ public class RobotContainer extends RobotContainerBase {
   public void autonomousInit() {
     // indexer.reset();
     // 3 balls, in set positions, preloaded for auto
-    indexer.setChamberStatesForMatchInit();
+    // indexer.setChamberStatesForMatchInit();
     // indexer.setRotatorMode(false); // indexer to brake mode
     if (!turret.hasZeroed()) { // only zero indexer if needed
       MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
@@ -132,6 +136,13 @@ public class RobotContainer extends RobotContainerBase {
 
   public void periodic() {
     fancyLights.periodic();
+    if(i==5){
+      Logger.consoleLog("Sensor0: %s Sensor1: %s Sensor2: %s", multiplexer.getSensors().get(0).getDistance(), multiplexer.getSensors().get(1).getDistance(), multiplexer.getSensors().get(2).getDistance());
+      i=0;
+    }
+    i++;
+
+
     // Logger.consoleLog("Indexer Dis Entrance: %d, Chamber 1: %d", indexer.entranceSensor.getDistance(), indexer.indexerSensorChamber1.getDistance());
 
   }

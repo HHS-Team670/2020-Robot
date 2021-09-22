@@ -41,7 +41,6 @@ public class Indexer extends MustangSubsystemBase {
     private CANSparkMax frontMotor, backMotor;
     private CANEncoder frontEncoder, backEncoder;
     private TalonSRX updraw; // motor
-    private List<TimeOfFlightSensor> sensors = new ArrayList<TimeOfFlightSensor>();
 
     private boolean[] chamberStates;
 
@@ -49,7 +48,6 @@ public class Indexer extends MustangSubsystemBase {
     private int backExceededCurrentLimitCount = 0;
 
     private Long updrawStartTime;
-    private double frontSpeed, backSpeed, updrawSpeed;
 
     private boolean updrawingMode;
 
@@ -64,37 +62,29 @@ public class Indexer extends MustangSubsystemBase {
     private static final int UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT = 9;
     private static final int UPDRAW_PEAK_CURRENT_LIMIT = 15;
     
-    private TimeOfFlightSensor entranceSensor, chamber1Sensor, chamber2Sensor, chamber3Sensor;
+    private TimeOfFlightSensor chamber0Sensor, chamber1Sensor, chamber2Sensor;
 
     private Multiplexer multiplexer;
 
-    public Indexer(Conveyor conveyor) {
+    public Indexer(Multiplexer multiplexer, Conveyor conveyor) {
         super();
 
         frontMotor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.FRONT_MOTOR, Motor_Type.NEO_550);
         backMotor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.BACK_MOTOR, Motor_Type.NEO_550);
         frontEncoder = frontMotor.getEncoder();
         backEncoder = backMotor.getEncoder();
-        frontSpeed = INDEXER_SPEED;
-        backSpeed = -1 * INDEXER_SPEED; // clockwise vs counterclockwise
         this.conveyor = conveyor;
 
         // Updraw should be inverted
         this.updraw = TalonSRXFactory.buildFactoryTalonSRX(RobotMap.UPDRAW_SPINNER, false);
 
-        multiplexer = new Multiplexer(RobotMap.INDEXER_MUL_PORT);
+        this.multiplexer = multiplexer;
         
-        entranceSensor = new TimeOfFlightSensor(RobotMap.INDEXER_MUL_PORT, 0, 20);
+        chamber0Sensor = new TimeOfFlightSensor(RobotMap.INDEXER_MUL_PORT, 0, 20);
         chamber1Sensor = new TimeOfFlightSensor(RobotMap.INDEXER_MUL_PORT, 1, 20);
         chamber2Sensor = new TimeOfFlightSensor(RobotMap.INDEXER_MUL_PORT, 2, 20);
-        chamber3Sensor = new TimeOfFlightSensor(RobotMap.INDEXER_MUL_PORT, 3, 20);
 
-        multiplexer.attachSensor(entranceSensor, chamber1Sensor, chamber2Sensor, chamber3Sensor);
-
-        // sensors.add(entranceSensor); // intake to indexer
-        // sensors.add(indexerSensorChamber1); // chamber 1
-        // sensors.add(indexerSensorChamber2); // chamber 2
-        // sensors.add(exitSensor); // exit sensor (indexer to updraw)
+        multiplexer.attachSensor(chamber0Sensor, chamber1Sensor, chamber2Sensor);
 
         chamberStates = new boolean[4];
 
@@ -106,10 +96,6 @@ public class Indexer extends MustangSubsystemBase {
 
         updraw.configVoltageCompSaturation(12); // "full output" will now scale to 12 Volts
         updraw.enableVoltageCompensation(true);
-
-        SmartDashboard.putNumber("Front Motor Speed", 0.0);
-        SmartDashboard.putNumber("Back Motor Speed", 0.0);
-        SmartDashboard.putNumber("Updraw Speed", 0.0);
     }
 
     private void pushGameDataToDashboard() {
@@ -120,52 +106,30 @@ public class Indexer extends MustangSubsystemBase {
     }
 
     /**
-     * At the beginning of autonomous, we preload the indexer with 3 balls. All
-     * three are in the indexer, ready to shoot
-     */
-    public void setChamberStatesForMatchInit() {
-        chamberStates[0] = false;
-        chamberStates[1] = true;
-        chamberStates[2] = true;
-        chamberStates[3] = true;
-    }
-
-    /**
      * Updates the states of the chambers
      */
     public void updateChamberStates() {
-        for (int i = 0; i < sensors.size(); i++) {
-            chamberStates[i] = sensors.get(i).isObjectWithinThreshold();
+        for (int i = 0; i < multiplexer.getSensors().size(); i++) {
+            chamberStates[i] = multiplexer.getSensors().get(i).isObjectWithinThreshold();
         }
     }
 
     public void checkBallEntry() {
-        if (!chamberStates[0] && sensors.get(0).isObjectWithinThreshold()) {
+        if (!chamberStates[0] && multiplexer.getSensors().get(0).isObjectWithinThreshold()) {
             totalNumBalls++;
         }
     }
 
     public void checkBallExit() {
-        if (chamberStates[3] && !sensors.get(3).isObjectWithinThreshold()) {
+        if (chamberStates[3] && !multiplexer.getSensors().get(3).isObjectWithinThreshold()) {
             totalNumBalls--;
         }
     }
 
-    public void setSpeed(double frontSpeed, double backSpeed, double updrawSpeed) {
-        this.frontSpeed = frontSpeed;
-        this.backSpeed = backSpeed;
-        this.updrawSpeed = updrawSpeed;
-        run();
-    }
-
     public void run() {
-        frontMotor.set(frontSpeed);
-        backMotor.set(backSpeed);
-        updraw.set(ControlMode.PercentOutput, updrawSpeed);
-    }
-
-    public void setUpdrawSpeed(double updrawSpeed) {
-        this.updrawSpeed = updrawSpeed;
+        frontMotor.set(INDEXER_SPEED);
+        backMotor.set(-1 * INDEXER_SPEED);
+        updraw.set(ControlMode.PercentOutput, UPDRAW_SPEED);
     }
 
     public void stopMotors() {
@@ -231,8 +195,8 @@ public class Indexer extends MustangSubsystemBase {
         }
         // if the ToF sensor, (BallSensor) breaks but nothing else,
         // the next option would be manual control -- not a fatal issue
-        for (int i = 0; i < sensors.size(); i++) {
-            if (sensors.get(i) == null || !sensors.get(i).isHealthy()) {
+        for (int i = 0; i < multiplexer.getSensors().size(); i++) {
+            if (multiplexer.getSensors().get(i) == null || !multiplexer.getSensors().get(i).isHealthy()) {
                 return HealthState.YELLOW;
             }
         }
@@ -262,14 +226,12 @@ public class Indexer extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        setSpeed((SmartDashboard.getNumber("Front Motor Speed", 0.0)),
-                (SmartDashboard.getNumber("Back Motor Speed", 0.0)), SmartDashboard.getNumber("Updraw Speed", 0.0));
-        int i = 0;
-        for(TimeOfFlightSensor sensor : multiplexer.getSensors()){
-            Logger.consoleLog("Sensor%s Distance: %s", i, sensor.getDistance());
-            i++;
-        }
-        i = 0;
+    //     int i = 0;
+    // if(i==5){
+    //   Logger.consoleLog("Sensor0: %s Sensor1: %s Sensor2: %s", multiplexer.getSensors().get(0).getDistance(), multiplexer.getSensors().get(1).getDistance(), multiplexer.getSensors().get(2).getDistance());
+    //   i=0;
+    // }
+    // i++;
         // updrawingMode = isUpdrawing();
         // if (updrawingMode && !isUpdrawing()) { // We were updrawing but no current spike is detected anymore
         //     updrawingMode = false;
@@ -286,18 +248,7 @@ public class Indexer extends MustangSubsystemBase {
     }
 
     public boolean ballInChamber(int chamber) {
-        return sensors.get(chamber).getDistance() < RobotConstants.INDEXER_WIDTH;
-    }
-
-    public int getGapChamber() {
-        for (int i = 1; i < chamberStates.length - 1; i++) {
-            if (!chamberStates[i]) {
-                if (chamberStates[i - 1] && chamberStates[i + 1]) {
-                    return i;
-                }
-            }
-        }
-        return -1;
+        return multiplexer.getSensors().get(chamber).getDistance() < RobotConstants.INDEXER_WIDTH;
     }
 
     public boolean isFrontRunning() {
@@ -306,24 +257,6 @@ public class Indexer extends MustangSubsystemBase {
 
     public boolean isBackRunning() {
         return backMotor.get() != 0;
-    }
-
-    public int getTopChamber() {
-        for (int i = 3; i >= 0; i--) {
-            if (chamberStates[i])
-                return i;
-        }
-
-        return -1; // no balls in
-    }
-
-    public int getBottomChamber() {
-        for (int i = 0; i <= 3; i++) {
-            if (chamberStates[i])
-                return i;
-        }
-
-        return -1; // no balls in
     }
 
     public int getTotalNumBalls() {
@@ -351,11 +284,6 @@ public class Indexer extends MustangSubsystemBase {
     }
 
     public TimeOfFlightSensor getSensor(int sensor) {
-        return sensors.get(sensor);
-    }
-
-    public boolean getTimeout() {
-        // TODO: write smth for this
-        return false;
+        return multiplexer.getSensors().get(sensor);
     }
 }

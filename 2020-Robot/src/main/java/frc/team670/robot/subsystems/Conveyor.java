@@ -2,6 +2,8 @@ package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANError;
 
+import frc.team670.mustanglib.dataCollection.sensors.Multiplexer;
+import frc.team670.mustanglib.dataCollection.sensors.TimeOfFlightSensor;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
@@ -14,8 +16,15 @@ public class Conveyor extends MustangSubsystemBase {
 
     private double CONVEYOR_SPEED = 0.75; // % output from testing 2/16.
 
-    public Conveyor() {
+    private TimeOfFlightSensor entranceSensor;
+    
+    private Multiplexer multiplexer;
+
+    public Conveyor(Multiplexer multiplexer) {
         // Conveyor motor should not be inverted
+        this.multiplexer = multiplexer;
+        // entranceSensor = new TimeOfFlightSensor(RobotMap.INDEXER_MUL_PORT, 0, 20);
+        // multiplexer.attachSensor(entranceSensor);
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CONVEYOR_ROLLER, Motor_Type.NEO_550);
     }
 
@@ -30,16 +39,6 @@ public class Conveyor extends MustangSubsystemBase {
             roller.set(CONVEYOR_SPEED);
         }
     }
-
-    // public void setRunTimed(double speed, double timeSecs) {
-    //     Timer timer = new Timer();
-    //     timer.start();
-    //     if (timer.hasElapsed(timeSecs)) {
-    //         roller.set(speed);
-    //     }
-    //     timer.stop();
-    //     stop();
-    // }
 
     public void stop() {
         roller.set(0);
