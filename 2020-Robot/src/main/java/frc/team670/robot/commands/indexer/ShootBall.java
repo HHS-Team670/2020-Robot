@@ -39,7 +39,7 @@ public class ShootBall extends CommandBase implements MustangCommand {
     @Override
     public void execute() {
         if (indexer.updrawIsUpToSpeed()) {
-            indexer.run();
+            indexer.run(true);
         }
     }
 
@@ -56,7 +56,7 @@ public class ShootBall extends CommandBase implements MustangCommand {
 
     public void end() {
         indexer.stopUpdraw();
-        indexer.stopMotors();
+        indexer.stop();
     }
 
     @Override

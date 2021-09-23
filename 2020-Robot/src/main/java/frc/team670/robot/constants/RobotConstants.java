@@ -33,7 +33,8 @@ public class RobotConstants extends RobotConstantsBase{
             * Math.PI * 0.0254;
 
     public static final double INDEXER_WIDTH = 203.2; // in mm
-    public static final double SENSOR_TO_BALL = 12.7; // the distance from ToF sensor to middle of the ball, in mm
+    public static final double SENSOR_TO_BALL = 127; // the distance from ToF sensor to middle of the ball, in mm
+    public static final double MIN_BALL_DETECTED_WIDTH = 30;
 
     // Talon PID Constants
     public static final int kTimeoutMs = 0;

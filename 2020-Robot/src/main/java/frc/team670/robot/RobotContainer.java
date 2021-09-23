@@ -97,7 +97,7 @@ public class RobotContainer extends RobotContainerBase {
   public void teleopInit() {
     shooter.stop();
     indexer.stopUpdraw();
-    indexer.stopMotors();
+    indexer.stop();
     driveBase.resetOdometry(new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS,
         FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
     driveBase.setTeleopRampRate();

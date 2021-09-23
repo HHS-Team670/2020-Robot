@@ -9,6 +9,7 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.climb.Climb;
 import frc.team670.robot.commands.climb.ExtendClimber;
+import frc.team670.robot.commands.intake.AutoIntake;
 // import frc.team670.robot.commands.indexer.ShootAllBalls;
 // import frc.team670.robot.commands.indexer.ShootBall;
 // import frc.team670.robot.commands.indexer.ToggleUpdraw;
@@ -46,6 +47,7 @@ public class OI extends OIBase{
   private static JoystickButton retractClimb = new JoystickButton(getOperatorController(), 12);
   private static JoystickButton zeroTurret = new JoystickButton(getOperatorController(), 8);
   private static JoystickButton intakeBallToIndexer = new JoystickButton(getOperatorController(), 2);
+  private static JoystickButton autoIntake = new JoystickButton(getOperatorController(), 7);
   // private static JoystickButton nextChamber = new JoystickButton(getOperatorController(), 2); // TODO: figure number
   
   //xbox buttons
@@ -102,6 +104,7 @@ public class OI extends OIBase{
     retractClimb.whenPressed(new Climb(climber));
     zeroTurret.whenPressed(new RotateToAngle(turret, 0));
     intakeBallToIndexer.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
+    autoIntake.whenPressed(new AutoIntake(intake, conveyor, indexer));
 
     xboxVision.whenPressed(new GetLatestDataAndAlignTurret(turret, drivebase, vision));
     xboxIncreaseSpeed.whenPressed(new SetRPMAdjuster(100, shooter));

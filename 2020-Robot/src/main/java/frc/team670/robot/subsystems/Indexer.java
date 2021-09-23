@@ -126,13 +126,15 @@ public class Indexer extends MustangSubsystemBase {
         }
     }
 
-    public void run() {
+    public void run(boolean isOuttake) {
         frontMotor.set(INDEXER_SPEED);
         backMotor.set(-1 * INDEXER_SPEED);
-        updraw.set(ControlMode.PercentOutput, UPDRAW_SPEED);
+        if(isOuttake){
+            updraw.set(ControlMode.PercentOutput, UPDRAW_SPEED);
+        }
     }
 
-    public void stopMotors() {
+    public void stop() {
         frontMotor.stopMotor();
         backMotor.stopMotor();
     }
@@ -224,6 +226,43 @@ public class Indexer extends MustangSubsystemBase {
         return false;
     }
 
+    public void index(){
+        if(conveyor.isBallInConveyor()){
+            if(!isChamberFull(0) && !isChamberFull(1) && !isChamberFull(2)){
+                if(isChamberFull(0)){
+                    conveyor.stop();
+                }
+                else{
+                    conveyor.run(false);
+                }
+            }
+            if(isChamberFull(0) && !isChamberFull(1) && !isChamberFull(2)){
+                if(isChamberFull(1)){
+                    stop();
+                    conveyor.stop();
+                }
+                else{
+                    run(false);
+                    conveyor.run(false);
+                }
+            }
+            if(isChamberFull(0) && isChamberFull(1) && !isChamberFull(2)){
+                if(isChamberFull(2)){
+                    stop();
+                    conveyor.stop();
+                }
+                else{
+                    run(false);
+                    conveyor.run(false);
+                }
+            }
+            if(isChamberFull(0) && isChamberFull(1) && isChamberFull(2)){
+                stop();
+                conveyor.stop();
+            }
+        }    
+    }
+
     @Override
     public void mustangPeriodic() {
     //     int i = 0;
@@ -239,7 +278,8 @@ public class Indexer extends MustangSubsystemBase {
         // }
         // checkBallEntry();
         // checkBallExit();
-        // updateChamberStates();
+        updateChamberStates();
+        index();
         // pushGameDataToDashboard();
     }
 
@@ -248,7 +288,7 @@ public class Indexer extends MustangSubsystemBase {
     }
 
     public boolean ballInChamber(int chamber) {
-        return multiplexer.getSensors().get(chamber).getDistance() < RobotConstants.INDEXER_WIDTH;
+        return multiplexer.getSensors().get(chamber).getDistance() < RobotConstants.MIN_BALL_DETECTED_WIDTH;
     }
 
     public boolean isFrontRunning() {
