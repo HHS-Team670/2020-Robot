@@ -97,7 +97,7 @@ public class Climber extends MustangSubsystemBase {
 
     public void hookOnBar() {
         if (isHooked() && !onBar) {
-            setPower(0);
+            //setPower(0); commented out as if set to 0, climber will not hold its position
             onBar = true;
         }
 
