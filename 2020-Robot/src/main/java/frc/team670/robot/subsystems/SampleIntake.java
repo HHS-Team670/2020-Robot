@@ -10,25 +10,27 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 
-/*
- * @author Khicken
-*/
-public class IntakeMINIBOTS extends MustangSubsystemBase {
+
+/* This is a practice activity to test your knowledge. 
+    Try to refrain from referring to the actual Intake class in 2020 Robot.
+    Also note that the acceleration is not actually part of the Intake, 
+    since it wouldn't be ideal. It is just extra coding practice.
+*/   
+public class SampleIntake extends MustangSubsystemBase {
 
     private SparkMAXLite roller;
     private Compressor compressor;
     private Solenoid deployer;
-    private boolean isDeployed = false; //TODO: true for testing, change this
+    private boolean isDeployed = false;
 
-    private double INTAKE_ROLLER_SPEED = 1.0; // From testing 2/16
+    private double speed = 1.0; 
     private double INTAKE_PEAK_CURRENT = 35; // Testing
     private int exceededCurrentLimitCount = 0;
 
     private double ACCELERATE_SPEED = 0.05;
-    private boolean isAccelerating;
+    private boolean isAccelerating = false;
 
-    public IntakeMINIBOTS() {
-        // Intake roller should be inverted
+    public SampleIntake() {
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.INTAKE_ROLLER, Motor_Type.NEO_550);
         roller.setInverted(true);
         roller.setOpenLoopRampRate(1.0);
@@ -52,16 +54,19 @@ public class IntakeMINIBOTS extends MustangSubsystemBase {
         return isDeployed;
     }
 
-    public void roll(boolean reversed) {
-        //TODO set roller speed based on 'reversed'
-        //TODO If intake isAccelerating, change the speed accordingly (use roller.get)
-        //HINT: use INTAKE_ROLLER_SPEED for if not accelerating
-        //HINT: ACCELERATION_SPEED is always positive, intake won't deccelerate
-    }
 
+    //TODO set whether the roller should accelerate or not
     public void setAccelerate(boolean accel){
         isAccelerating = accel;
     }
+
+
+    public void roll(boolean reversed) {
+        //TODO set roller speed based on 'reversed' parameter
+        //HINT: use default INTAKE_ROLLER_SPEED if not accelerating
+    }
+
+    
 
     public boolean isJammed(){
         double intakeCurrent = roller.getOutputCurrent();
@@ -106,7 +111,10 @@ public class IntakeMINIBOTS extends MustangSubsystemBase {
     }
 
     @Override
-    public void mustangPeriodic() {
+    public void mustangPeriodic() { // <-- called repeatedly
+        // TODO increase the roller's speed if it isAccelerating
+        //HINT: Remember to account for constraints in roller speed
+        //HINT: use ACCELERATION_SPEED
     }
 
 }
