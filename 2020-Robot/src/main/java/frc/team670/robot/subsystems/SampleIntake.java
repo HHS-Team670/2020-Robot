@@ -63,7 +63,7 @@ public class SampleIntake extends MustangSubsystemBase {
 
     public void roll(boolean reversed) {
         //TODO set roller speed based on 'reversed' parameter
-        //HINT: use default INTAKE_ROLLER_SPEED if not accelerating
+        //HINT: use default speed if not accelerating
     }
 
     
