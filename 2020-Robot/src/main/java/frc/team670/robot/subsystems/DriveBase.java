@@ -132,8 +132,8 @@ public class DriveBase extends TankDriveBase {
     // initialized NavX and sets Odometry
     navXMicro = new NavX(RobotMap.NAVX_PORT);
     // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
-    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(0, 0, new Rotation2d()));
+    // m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
+    //     new Pose2d(0, 0, new Rotation2d()));
     poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()), 
         new Pose2d(3.8, -2.4, new Rotation2d()), // TODO: change this to be a constant with the starting position
         VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // TODO: find correct values
@@ -395,7 +395,7 @@ public class DriveBase extends TankDriveBase {
 
     long startTime = System.currentTimeMillis();
     // Update the odometry in the periodic block
-    m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
+    // m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
     
     // if(count%100 == 0) {
       poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(),
@@ -403,15 +403,15 @@ public class DriveBase extends TankDriveBase {
       SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
       SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
 
-      SmartDashboard.putNumber("Encoder X", m_odometry.getPoseMeters().getX());
-      SmartDashboard.putNumber("Encoder Y", m_odometry.getPoseMeters().getY());
+      // SmartDashboard.putNumber("Encoder X", m_odometry.getPoseMeters().getX());
+      // SmartDashboard.putNumber("Encoder Y", m_odometry.getPoseMeters().getY());
     
       PhotonPipelineResult res = camera.getLatestResult();
       // count = 0;
       Pose2d pose = new Pose2d();
 
       if (res.hasTargets()) {
-        Logger.consoleWarning("Got targets!");
+        // Logger.consoleWarning("Got targets!");
 
         pose = getVisionPose(res);
         SmartDashboard.putNumber("FinalVision X", pose.getX());
@@ -464,9 +464,9 @@ public class DriveBase extends TankDriveBase {
     return poseEstimator.getEstimatedPosition();
   }
 
-  public Pose2d getOdometryPose() {
-    return m_odometry.getPoseMeters();
-  }
+  // public Pose2d getOdometryPose() {
+  //   return m_odometry.getPoseMeters();
+  // }
 
   /**
    * Resets the odometry to the specified pose.
@@ -475,7 +475,7 @@ public class DriveBase extends TankDriveBase {
    */
   public void resetOdometry(Pose2d pose) {
     zeroHeading();
-    m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+    // m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
     poseEstimator.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
     CANError lE = left1Encoder.setPosition(0);
     CANError rE = right1Encoder.setPosition(0);
@@ -498,8 +498,8 @@ public class DriveBase extends TankDriveBase {
     zeroHeading();
     left1Encoder.setPosition(0);
     right1Encoder.setPosition(0);
-    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(0, 0, new Rotation2d()));
+    // m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
+    //     new Pose2d(0, 0, new Rotation2d()));
     poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()), 
       new Pose2d(0, 0, new Rotation2d()), 
       VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // TODO: find correct values
