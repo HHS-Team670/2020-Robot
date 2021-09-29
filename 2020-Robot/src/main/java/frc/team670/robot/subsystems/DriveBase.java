@@ -423,7 +423,7 @@ public class DriveBase extends TankDriveBase {
         SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
 
       } else {
-        Logger.consoleError("Did not find targets!");
+        // Logger.consoleError("Did not find targets!");
       }
       //Logger.consoleLog("estimated pose: " + poseEstimator.getEstimatedPosition());}
     // }
