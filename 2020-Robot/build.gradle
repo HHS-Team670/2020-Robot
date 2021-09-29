@@ -13,7 +13,7 @@ remotes {
     role 'rpi'
     host = '10.6.70.26'
     user = 'pi'
-    password = PI_PASSWORD
+    password = 'hhs670'
   }
 }
 
