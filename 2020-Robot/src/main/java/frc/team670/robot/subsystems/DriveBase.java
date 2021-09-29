@@ -83,6 +83,9 @@ public class DriveBase extends TankDriveBase {
   public static final Pose2d kFarTargetPose =
           new Pose2d(new Translation2d(kFarTgtXPos, kFarTgtYPos), new Rotation2d(0.0));
 
+  public static final Pose2d TARGET_POSE = new Pose2d(0, -2.4, Rotation2d.fromDegrees(0));
+  public static final Pose2d CAMERA_OFFSET = TARGET_POSE.transformBy(new Transform2d( new Translation2d(0.23, 0), Rotation2d.fromDegrees(0)));
+
 
   public DriveBase(MustangController mustangController) {
     camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
@@ -435,15 +438,16 @@ public class DriveBase extends TankDriveBase {
     SmartDashboard.putNumber("PhotonVision Y", camToTargetTrans.getY());
     
     /* Transform by the location of the target on the field
-      TODO: find how to transform the pose by the starting pose */
+      find how to transform the pose by the starting pose */
     // Pose2d camPose = kFarTargetPose.transformBy(caimToTargetTrans.nverse());
     // camPose.transformBy(new Transform2d(new Translation2d(0, -2.4), Rotation2d.fromDegrees(0)));
-    Pose2d startingPose = new Pose2d(0, -2.4, Rotation2d.fromDegrees(0)); //TODO: change this to a constant, this specific pose is for testing only
-    Pose2d targetOffset = startingPose.transformBy(camToTargetTrans);
-    Pose2d cameraOffset = targetOffset.transformBy(new Transform2d( new Translation2d(0.23, 0), Rotation2d.fromDegrees(0)));
+    // Pose2d startingPose = new Pose2d(0, -2.4, Rotation2d.fromDegrees(0)); //TODO: change this to a constant, this specific pose is for testing only
+    Pose2d targetOffset = TARGET_POSE.transformBy(camToTargetTrans);
+    // Pose2d cameraOffset = targetOffset.transformBy(new Transform2d( new Translation2d(0.23, 0), Rotation2d.fromDegrees(0)));
     
     // return camToTargetTrans;
-    return cameraOffset;
+    // return cameraOffset;
+    return targetOffset;
   } 
 
   public double getVisionCaptureTime(PhotonPipelineResult res) {
