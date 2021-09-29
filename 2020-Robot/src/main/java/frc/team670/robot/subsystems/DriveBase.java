@@ -389,10 +389,12 @@ public class DriveBase extends TankDriveBase {
   private int count = 0;
   @Override
   public void mustangPeriodic() {
+
+    long startTime = System.currentTimeMillis();
     // Update the odometry in the periodic block
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
     
-    if(count%100 == 0) {
+    // if(count%100 == 0) {
       poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(),
         left1Encoder.getPosition(), right1Encoder.getPosition());
       SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
@@ -421,8 +423,10 @@ public class DriveBase extends TankDriveBase {
         Logger.consoleError("Did not find targets!");
       }
       //Logger.consoleLog("estimated pose: " + poseEstimator.getEstimatedPosition());}
-    }
-    count++;
+    // }
+    // count++;
+    Logger.consoleLog("Dif in Time: %s", System.currentTimeMillis() - startTime);
+    System.currentTimeMillis();
   }
 
   public Pose2d getVisionPose(PhotonPipelineResult res) {
