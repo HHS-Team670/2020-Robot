@@ -9,48 +9,42 @@ package frc.team670.robot.subsystems;
 
 import java.util.ArrayList;
 import java.util.List;
-import edu.wpi.first.wpilibj.Timer;
-import com.kauailabs.navx.frc.AHRS;
+
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
+
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import edu.wpi.first.wpiutil.math.VecBuilder;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import frc.team670.mustanglib.commands.MustangScheduler;
-import frc.team670.mustanglib.commands.drive.teleop.XboxTankDrive;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
-import frc.team670.robot.constants.RobotConstants;
-import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
+import frc.team670.mustanglib.subsystems.drivebase.TankDriveBase;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.MustangNotifications;
+import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
-import frc.team670.mustanglib.subsystems.drivebase.TankDriveBase;
-import edu.wpi.first.wpilibj.SpeedController;
-
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPipelineResult;
-
-import org.photonvision.PhotonUtils;
+import frc.team670.robot.constants.RobotConstants;
+import frc.team670.robot.constants.RobotMap;
 /**
  * Represents a tank drive base.
  * 
