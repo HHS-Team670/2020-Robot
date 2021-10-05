@@ -2,7 +2,7 @@ package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANError;
 
-import frc.team670.mustanglib.dataCollection.sensors.Multiplexer;
+//import frc.team670.mustanglib.dataCollection.sensors.Multiplexer;
 import frc.team670.mustanglib.dataCollection.sensors.TimeOfFlightSensor;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -19,13 +19,13 @@ public class Conveyor extends MustangSubsystemBase {
 
     private TimeOfFlightSensor entranceSensor;
     
-    private Multiplexer multiplexer;
+    //private Multiplexer multiplexer;
 
-    public Conveyor(Multiplexer multiplexer) {
+    public Conveyor() {
         // Conveyor motor should not be inverted
-        this.multiplexer = multiplexer;
-        entranceSensor = new TimeOfFlightSensor(RobotMap.INDEXER_MUL_PORT, 0, 20);
-        multiplexer.attachSensor(entranceSensor);
+        // this.multiplexer = multiplexer;
+        // entranceSensor = new TimeOfFlightSensor(RobotMap.INDEXER_MUL_PORT, 0, 20);
+        // multiplexer.attachSensor(entranceSensor);
         roller = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CONVEYOR_ROLLER, Motor_Type.NEO_550);
     }
 
@@ -46,7 +46,8 @@ public class Conveyor extends MustangSubsystemBase {
     }
 
     public boolean isBallInConveyor(){
-        return multiplexer.getSensors().get(0).getDistance() < RobotConstants.MIN_BALL_DETECTED_WIDTH;
+        // return multiplexer.getSensors().get(0).getDistance() < RobotConstants.MIN_BALL_DETECTED_WIDTH;
+        return false;
     }
 
     @Override

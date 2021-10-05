@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.MustangScheduler;
-import frc.team670.mustanglib.dataCollection.sensors.Multiplexer;
+// import frc.team670.mustanglib.dataCollection.sensors.Multiplexer;
 import frc.team670.mustanglib.subsystems.LEDSubsystem;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
@@ -43,9 +43,9 @@ public class RobotContainer extends RobotContainerBase {
 
   private static DriveBase driveBase = new DriveBase(getDriverController());
   private static Intake intake = new Intake();
-  private static Multiplexer multiplexer = new Multiplexer(RobotMap.INDEXER_MUL_PORT);
-  private static Conveyor conveyor = new Conveyor(multiplexer);
-  private static Indexer indexer = new Indexer(multiplexer, conveyor);
+  // private static Multiplexer multiplexer = new Multiplexer(RobotMap.INDEXER_MUL_PORT);
+  private static Conveyor conveyor = new Conveyor();
+  private static Indexer indexer = new Indexer(conveyor);
   private static Turret turret = new Turret();
   private static Shooter shooter = new Shooter();
   private static Climber climber = new Climber(indexerPusherClimberDeploy); // TODO: find solenoid
@@ -137,7 +137,7 @@ public class RobotContainer extends RobotContainerBase {
   public void periodic() {
     fancyLights.periodic();
     if(i==5){
-      Logger.consoleLog("Sensor0: %s Sensor1: %s Sensor2: %s", multiplexer.getSensors().get(0).getDistance(), multiplexer.getSensors().get(1).getDistance(), multiplexer.getSensors().get(2).getDistance());
+      // Logger.consoleLog("Sensor0: %s Sensor1: %s Sensor2: %s", multiplexer.getSensors().get(0).getDistance(), multiplexer.getSensors().get(1).getDistance(), multiplexer.getSensors().get(2).getDistance());
       i=0;
     }
     i++;
