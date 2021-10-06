@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import frc.team670.mustanglib.dataCollection.sensors.Multiplexer;
 import frc.team670.mustanglib.dataCollection.sensors.TimeOfFlightSensor;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangNotifications;
 import frc.team670.mustanglib.utils.functions.MathUtils;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -277,7 +278,10 @@ public class Indexer extends MustangSubsystemBase {
         // checkBallEntry();
         // checkBallExit();
         updateChamberStates();
-        SmartDashboard.putString("Serial Port Reading: ", new String(serialport.read(100)));
+        String reading = serialport.readString();
+        if(reading.length() > 0){
+            Logger.consoleLog("Serial Port Reading: %s", reading);
+        }
         index();
         // pushGameDataToDashboard();
     }
