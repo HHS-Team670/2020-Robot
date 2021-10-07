@@ -22,6 +22,7 @@ import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.motorcontroller.TalonSRXFactory;
+import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
 /**
@@ -39,13 +40,12 @@ public class Indexer extends MustangSubsystemBase {
     private TalonSRX updraw; // motor
 
     private boolean[] chamberStates;
+    private int[] sensorVals;
 
     private int frontExceededCurrentLimitCount = 0;
     private int backExceededCurrentLimitCount = 0;
 
     private Long updrawStartTime;
-
-    private boolean updrawingMode;
 
     private double UPDRAW_SPEED = -0.9;
     private double INDEXER_SPEED = 0.9;
@@ -59,8 +59,6 @@ public class Indexer extends MustangSubsystemBase {
     private static final int UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT = 9;
     private static final int UPDRAW_PEAK_CURRENT_LIMIT = 15;
     
-    private TimeOfFlightSensor chamber0Sensor, chamber1Sensor, chamber2Sensor;
-
     // private Multiplexer multiplexer;
 
     public Indexer(Conveyor conveyor) {
@@ -74,14 +72,6 @@ public class Indexer extends MustangSubsystemBase {
 
         // Updraw should be inverted
         this.updraw = TalonSRXFactory.buildFactoryTalonSRX(RobotMap.UPDRAW_SPINNER, false);
-
-        // this.multiplexer = multiplexer;
-        
-        // chamber0Sensor = new TimeOfFlightSensor(RobotMap.INDEXER_MUL_PORT, 0, 20);
-        // chamber1Sensor = new TimeOfFlightSensor(RobotMap.INDEXER_MUL_PORT, 1, 20);
-        // chamber2Sensor = new TimeOfFlightSensor(RobotMap.INDEXER_MUL_PORT, 2, 20);
-
-        //multiplexer.attachSensor(chamber0Sensor, chamber1Sensor, chamber2Sensor);
 
         chamberStates = new boolean[4];
 
@@ -104,25 +94,16 @@ public class Indexer extends MustangSubsystemBase {
         gameData.forceSetNumber(totalNumBalls);
     }
 
-    /**
-     * Updates the states of the chambers
-     */
     public void updateChamberStates() {
-        // for (int i = 0; i < multiplexer.getSensors().size(); i++) {
-        //     chamberStates[i] = multiplexer.getSensors().get(i).isObjectWithinThreshold();
-        // }
-    }
-
-    public void checkBallEntry() {
-        // if (!chamberStates[0] && multiplexer.getSensors().get(0).isObjectWithinThreshold()) {
-        //     totalNumBalls++;
-        // }
+        for (int i = 0; i < sensorVals.length; i++) {
+            chamberStates[i] = sensorVals[i] < 20;
+        }
     }
 
     public void checkBallExit() {
-        // if (chamberStates[3] && !multiplexer.getSensors().get(3).isObjectWithinThreshold()) {
-        //     totalNumBalls--;
-        // }
+        if (chamberStates[3] && !(sensorVals[3] < 20)) {
+            totalNumBalls--;
+        }
     }
 
     public void run(boolean isOuttake) {
@@ -277,13 +258,22 @@ public class Indexer extends MustangSubsystemBase {
         // }
         // checkBallEntry();
         // checkBallExit();
-        updateChamberStates();
         String reading = serialport.readString();
         if(reading.length() > 0){
+            serialParser(reading);
             Logger.consoleLog("Serial Port Reading: %s", reading);
         }
+        updateChamberStates();
         index();
         // pushGameDataToDashboard();
+    }
+
+    private void serialParser(String original) { // sd#.value   (from 0 to 255) (# is 0-3)
+        String[] sensorData = original.split("\n");
+        for (String x : sensorData){
+            String[] sensinfo = x.split(".");
+            sensorVals[Integer.parseInt(sensinfo[0])] = Integer.parseInt(sensinfo[1]);
+        }
     }
 
     public boolean isChamberFull(int chamber) {
@@ -291,8 +281,7 @@ public class Indexer extends MustangSubsystemBase {
     }
 
     public boolean ballInChamber(int chamber) {
-        // return multiplexer.getSensors().get(chamber).getDistance() < RobotConstants.MIN_BALL_DETECTED_WIDTH;
-        return false;
+        return sensorVals[chamber] < RobotConstants.MIN_BALL_DETECTED_WIDTH;
     }
 
     public boolean isFrontRunning() {
@@ -326,8 +315,4 @@ public class Indexer extends MustangSubsystemBase {
     public boolean[] getChamberStates() {
         return chamberStates;
     }
-
-    // public TimeOfFlightSensor getSensor(int sensor) {
-    //     return multiplexer.getSensors().get(sensor);
-    // }
 }
