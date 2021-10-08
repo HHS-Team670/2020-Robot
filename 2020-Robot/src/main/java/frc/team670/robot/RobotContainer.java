@@ -102,9 +102,9 @@ public class RobotContainer extends RobotContainerBase {
         FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
     driveBase.setTeleopRampRate();
     driveBase.initDefaultCommand();
-    if (!turret.hasZeroed()) {
-      MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
-    }
+    // if (!turret.hasZeroed()) {
+    //   MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
+    // }
     turret.initDefaultCommand();
     vision.turnOnLEDs();
   }
@@ -114,7 +114,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public static Joystick getOperatorController() {
-    return getOperatorController();
+    return OI.getOperatorController();
   }
 
   public static void rumbleDriverController() {

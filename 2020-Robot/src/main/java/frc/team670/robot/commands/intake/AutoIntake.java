@@ -55,9 +55,9 @@ public class AutoIntake extends CommandBase implements MustangCommand {
 		} else {
 			intake.roll(reversed);
 		}
-		if(conveyor.isBallInConveyor()){
-			conveyor.stop();
-		}
+		// if(conveyor.isBallInConveyor()){
+		// 	conveyor.stop();
+		// }
 	}
 
 	@Override

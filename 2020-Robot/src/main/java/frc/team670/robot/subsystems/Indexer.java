@@ -38,7 +38,7 @@ public class Indexer extends MustangSubsystemBase {
     private TalonSRX updraw; // motor
 
     private boolean[] chamberStates;
-    public int[] sensorVals;
+    public int[] sensorVals = {255, 255, 255, 255};
 
     private int frontExceededCurrentLimitCount = 0;
     private int backExceededCurrentLimitCount = 0;
@@ -49,8 +49,10 @@ public class Indexer extends MustangSubsystemBase {
 
     private Long updrawStartTime;
 
-    private double UPDRAW_SPEED = -0.4;
-    private double INDEXER_SPEED = 0.4;
+    private int chamberToCheck = -1;
+
+    private double UPDRAW_SPEED = -0.9;
+    private double INDEXER_SPEED = 0.35;
 
     private int isUpdrawingCount = 0;
     private int totalNumBalls = 0;
@@ -79,7 +81,6 @@ public class Indexer extends MustangSubsystemBase {
         this.updraw = TalonSRXFactory.buildFactoryTalonSRX(RobotMap.UPDRAW_SPINNER, false);
 
         chamberStates = new boolean[4];
-        sensorVals = new int[4];
 
 
         updraw.setNeutralMode(NeutralMode.Coast); // free, nothing holding instead of brake
@@ -98,18 +99,12 @@ public class Indexer extends MustangSubsystemBase {
         NetworkTableInstance instance = NetworkTableInstance.getDefault();
         NetworkTable table = instance.getTable("/SmartDashboard");
         NetworkTableEntry gameData = table.getEntry("Balls");
-        gameData.forceSetNumber(totalNumBalls);
+        // gameData.forceSetNumber(totalNumBalls);
     }
 
     public void updateChamberStates() {
         for (int i = 0; i < sensorVals.length; i++) {
-            chamberStates[i] = sensorVals[i] < 20;
-        }
-    }
-
-    public void checkBallExit() {
-        if (chamberStates[3] && !(sensorVals[3] < 20)) {
-            totalNumBalls--;
+            chamberStates[i] = sensorVals[i] < RobotConstants.MIN_BALL_DETECTED_WIDTH_INDEXER;
         }
     }
 
@@ -214,21 +209,29 @@ public class Indexer extends MustangSubsystemBase {
     }
 
     public void index(){
-        // Logger.consoleLog("Chamber1: %s Chamber2: %s Chamber3: %s ", isChamberFull(0), isChamberFull(1), isChamberFull(2));
-        if(conveyor.isBallInConveyor()){
+        // Logger.consoleLog("Chamber0: %s Chamber1: %s Chamber2: %s", sensorVals[0], sensorVals[1], sensorVals[2]);
+        // Logger.consoleLog("Total balls: %s", chamberToCheck);
+        if(!isChamberFull(2) && conveyor.isBallInConveyor() && chamberToCheck==-1){
             run(false);
             conveyor.run(false);
-            if(!isSameBall){
-                totalNumBalls++;
-                isSameBall = true;
+            if(isChamberFull(1)){
+                chamberToCheck = 2;
             }
+            else if (isChamberFull(0)){
+                chamberToCheck = 1;
+            }
+            else{
+                chamberToCheck = 0;
+            }
+            
         }
-        else{
-            isSameBall = false;
+        if(isChamberFull(2) && conveyor.isBallInConveyor()){
+            conveyor.stop();
         }
-        if(totalNumBalls > 0){
-            if(isChamberFull(totalNumBalls-1)){
+        if(chamberToCheck != -1){
+            if(isChamberFull(chamberToCheck)){
                 stop();
+                chamberToCheck = -1;
             }
         }
     }
@@ -285,7 +288,7 @@ public class Indexer extends MustangSubsystemBase {
     }
 
     public boolean ballInChamber(int chamber) {
-        return sensorVals[chamber] < RobotConstants.MIN_BALL_DETECTED_WIDTH;
+        return sensorVals[chamber] < RobotConstants.MIN_BALL_DETECTED_WIDTH_INDEXER;
     }
 
     public boolean isFrontRunning() {

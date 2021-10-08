@@ -53,7 +53,8 @@ public class RunIndexer extends CommandBase implements MustangCommand {
      */
     @Override
     public boolean isFinished() {
-        return indexer.getTotalNumBalls() == 0;
+        // return indexer.getTotalNumBalls() == 0;
+        return false; //TODO ALL sensors shoould be empty
     }
 
     @Override

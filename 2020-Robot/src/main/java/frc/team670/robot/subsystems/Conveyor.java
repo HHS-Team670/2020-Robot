@@ -16,7 +16,7 @@ public class Conveyor extends MustangSubsystemBase {
 
     private SparkMAXLite roller;
 
-    private double CONVEYOR_SPEED = 0.45; // % output from testing 2/16.
+    private double CONVEYOR_SPEED = 0.4; // % output from testing 2/16.
 
     private TimeOfFlightSensor entranceSensor;
     
@@ -47,7 +47,7 @@ public class Conveyor extends MustangSubsystemBase {
     }
 
     public boolean isBallInConveyor(){
-        return RobotContainer.indexer.sensorVals[3] < RobotConstants.MIN_BALL_DETECTED_WIDTH;
+        return RobotContainer.indexer.sensorVals[3] < RobotConstants.MIN_BALL_DETECTED_WIDTH_TUNNEL;
         // return false;
     }
 

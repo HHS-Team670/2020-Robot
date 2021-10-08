@@ -9,6 +9,7 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.climb.Climb;
 import frc.team670.robot.commands.climb.ExtendClimber;
+import frc.team670.robot.commands.indexer.RunIndexer;
 import frc.team670.robot.commands.intake.AutoIntake;
 // import frc.team670.robot.commands.indexer.ShootAllBalls;
 // import frc.team670.robot.commands.indexer.ShootBall;
@@ -103,7 +104,8 @@ public class OI extends OIBase{
     extendClimb.whenPressed(new ExtendClimber(climber));
     retractClimb.whenPressed(new Climb(climber));
     zeroTurret.whenPressed(new RotateToAngle(turret, 0));
-    intakeBallToIndexer.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
+    // intakeBallToIndexer.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
+    intakeBallToIndexer.whenPressed(new RunIndexer(indexer));
     autoIntake.whenPressed(new AutoIntake(intake, conveyor, indexer));
 
     xboxVision.whenPressed(new GetLatestDataAndAlignTurret(turret, drivebase, vision));
