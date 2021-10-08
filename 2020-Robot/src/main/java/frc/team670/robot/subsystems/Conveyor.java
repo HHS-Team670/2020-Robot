@@ -8,6 +8,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.robot.RobotContainer;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
@@ -15,7 +16,7 @@ public class Conveyor extends MustangSubsystemBase {
 
     private SparkMAXLite roller;
 
-    private double CONVEYOR_SPEED = 0.75; // % output from testing 2/16.
+    private double CONVEYOR_SPEED = 0.45; // % output from testing 2/16.
 
     private TimeOfFlightSensor entranceSensor;
     
@@ -46,8 +47,8 @@ public class Conveyor extends MustangSubsystemBase {
     }
 
     public boolean isBallInConveyor(){
-        // return multiplexer.getSensors().get(0).getDistance() < RobotConstants.MIN_BALL_DETECTED_WIDTH;
-        return false;
+        return RobotContainer.indexer.sensorVals[3] < RobotConstants.MIN_BALL_DETECTED_WIDTH;
+        // return false;
     }
 
     @Override

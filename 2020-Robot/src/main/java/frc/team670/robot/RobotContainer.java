@@ -45,7 +45,7 @@ public class RobotContainer extends RobotContainerBase {
   private static Intake intake = new Intake();
   // private static Multiplexer multiplexer = new Multiplexer(RobotMap.INDEXER_MUL_PORT);
   private static Conveyor conveyor = new Conveyor();
-  private static Indexer indexer = new Indexer(conveyor);
+  public static Indexer indexer = new Indexer(conveyor);
   private static Turret turret = new Turret();
   private static Shooter shooter = new Shooter();
   private static Climber climber = new Climber(indexerPusherClimberDeploy); // TODO: find solenoid
