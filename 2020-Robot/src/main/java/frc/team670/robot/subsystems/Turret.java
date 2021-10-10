@@ -19,7 +19,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     // Turret pointing straight forward is 180 degrees
     private static final double TURRET_MIN_DEGREES = -240; // all the way back
-    private static final double TURRET_MAX_DEGREES = 12; // from front, past straight forward
+    private static final double TURRET_MAX_DEGREES = 18; // from front, past straight forward
 
     private static final double SOFT_MINIMUM_DEGREES = TURRET_MIN_DEGREES + 3;
     private static final double SOFT_MAXIMUM_DEGREES = 0;
@@ -166,6 +166,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     @Override
     public void mustangPeriodic() {
         // TODO Auto-generated method stub
+        // Logger.consoleLog("Forward: %s Backward %s", isForwardLimitSwitchTripped(), isReverseLimitSwitchTripped());
 
     }
 

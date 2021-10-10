@@ -18,8 +18,8 @@ public class RobotMap {
   public static final int SPARK_RIGHT_MOTOR_2 = 23;
 
   // NavX
-  public final static Port NAVX_PORT = SerialPort.Port.kUSB2;
-  public final static Port ARDUINO_PORT = SerialPort.Port.kUSB1;
+  public final static Port NAVX_PORT = SerialPort.Port.kUSB1;
+  public final static Port ARDUINO_PORT = SerialPort.Port.kUSB2;
 
   // Shooter
   public final static int SHOOTER_MAIN = 11;

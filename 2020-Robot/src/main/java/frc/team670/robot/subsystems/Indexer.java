@@ -234,7 +234,7 @@ public class Indexer extends MustangSubsystemBase {
         updateSensorVals();
         updateChamberStates();
         index();
-        // pushGameDataToDashboard();
+        pushGameDataToDashboard();
     }
 
     private void logSensorVals() {
@@ -261,7 +261,7 @@ public class Indexer extends MustangSubsystemBase {
                             serialport.reset();
                         }
                     }
-                    logSensorVals();
+                    // logSensorVals();
                 }
             } catch (Exception e) {
                 // TODO: handle exception
