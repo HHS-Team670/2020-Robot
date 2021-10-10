@@ -91,12 +91,12 @@ public class OI extends OIBase{
     Vision vision = (Vision)subsystemBases[7];
 
     toggleIntake.whenPressed(new ToggleIntake(intake));
-    runIntakeIn.toggleWhenPressed((new RunIntakeConveyor(intake, conveyor, false)));
-    runIntakeOut.toggleWhenPressed((new RunIntakeConveyor(intake, conveyor, true)));
+    runIntakeIn.toggleWhenPressed((new RunIntakeConveyor(intake, conveyor, indexer, false)));
+    runIntakeOut.toggleWhenPressed((new RunIntakeConveyor(intake, conveyor, indexer, true)));
     toggleShooter.toggleWhenPressed(new ToggleShooter(shooter, drivebase));
     extendClimb.whenPressed(new ExtendClimber(climber));
     retractClimb.whenPressed(new Climb(climber));
-    autoOuttake.whenPressed(new ShootAllBalls(indexer, shooter, drivebase));
+    autoOuttake.whenPressed(new ShootAllBalls(indexer, conveyor, shooter, drivebase));
     runIndexer.whenPressed(new RunIndexer(indexer));
     autoIntake.whenPressed(new AutoIndex(intake, conveyor, indexer));
 

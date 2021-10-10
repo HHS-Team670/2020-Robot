@@ -37,7 +37,7 @@ public class Indexer extends MustangSubsystemBase {
     private TalonSRX updraw; // motor
 
     private boolean[] chamberStates;
-    public int[] sensorVals = {350, 350, 350, 350};
+    public int[] sensorVals = { 350, 350, 350, 350 };
 
     private Long updrawStartTime;
 
@@ -54,7 +54,7 @@ public class Indexer extends MustangSubsystemBase {
     // touches
     private static final int UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT = 9;
     private static final int UPDRAW_PEAK_CURRENT_LIMIT = 15;
-    
+
     public Indexer(Conveyor conveyor) {
         super();
 
@@ -81,7 +81,7 @@ public class Indexer extends MustangSubsystemBase {
         updraw.configVoltageCompSaturation(12); // "full output" will now scale to 12 Volts
         updraw.enableVoltageCompensation(true);
 
-        serialport = new SerialPort(9600, RobotMap.ARDUINO_PORT);
+        serialport = null; // new SerialPort(9600, SerialPort.Port.kUSB1);
     }
 
     private void pushGameDataToDashboard() {
@@ -95,14 +95,15 @@ public class Indexer extends MustangSubsystemBase {
         totalNumBalls = 0;
         for (int i = 0; i < sensorVals.length; i++) {
             chamberStates[i] = sensorVals[i] < RobotConstants.MIN_BALL_DETECTED_WIDTH_INDEXER;
-            if(chamberStates[i]) totalNumBalls++;
+            if (chamberStates[i])
+                totalNumBalls++;
         }
     }
 
     public void run(boolean isOuttake) {
         frontMotor.set(INDEXER_SPEED);
         backMotor.set(-1 * INDEXER_SPEED);
-        if(isOuttake){
+        if (isOuttake) {
             updraw.set(ControlMode.PercentOutput, UPDRAW_SPEED);
         }
     }
@@ -144,7 +145,7 @@ public class Indexer extends MustangSubsystemBase {
      *         updraw-ing
      */
     public boolean updrawIsUpToSpeed() {
-        double c = updraw.getMotorOutputPercent(); // We can't tell if it's actually up to speed, 
+        double c = updraw.getMotorOutputPercent(); // We can't tell if it's actually up to speed,
                                                    // but we're going off of "is it running"
         if (updrawStartTime == null) {
             return MathUtils.doublesEqual(c, UPDRAW_SPEED, 0.05);
@@ -154,9 +155,9 @@ public class Indexer extends MustangSubsystemBase {
     }
 
     @Override
-    public HealthState checkHealth() { 
-        //if either the rotator or updraw breaks, we can't use the indexer anymore.
-        //Same deal if the indexer is jammed (but that's recoverable).
+    public HealthState checkHealth() {
+        // if either the rotator or updraw breaks, we can't use the indexer anymore.
+        // Same deal if the indexer is jammed (but that's recoverable).
         CANError frontError = frontMotor.getLastError();
         CANError backError = backMotor.getLastError();
 
@@ -166,7 +167,7 @@ public class Indexer extends MustangSubsystemBase {
         boolean isUpdrawError = isPhoenixControllerErrored(updraw);
         if (isUpdrawError || isFrontError || isBackError) {
             MustangNotifications.reportError("RED Errors: front: %s, back: %s", frontError, backError);
-            return HealthState.RED; 
+            return HealthState.RED;
         }
         // if the ToF sensor, (BallSensor) breaks but nothing else,
         // the next option would be manual control -- not a fatal issue
@@ -184,7 +185,6 @@ public class Indexer extends MustangSubsystemBase {
         backMotor.set(output);
     }
 
-
     public boolean isUpdrawing() {
         double updrawCurrent = updraw.getSupplyCurrent();
         if (updrawCurrent > 0.2) {
@@ -200,33 +200,32 @@ public class Indexer extends MustangSubsystemBase {
         return false;
     }
 
-    public void index(){
-        if(!isChamberFull(2) && isBallInConveyor() && chamberToCheck==-1){
+    public void index() {
+        if (!isChamberFull(2) && isBallInConveyor() && chamberToCheck == -1) {
             run(false);
             conveyor.run(false);
-            if(isChamberFull(1)){
+            if (isChamberFull(1)) {
                 chamberToCheck = 2;
-            }
-            else if (isChamberFull(0)){
+            } else if (isChamberFull(0)) {
                 chamberToCheck = 1;
-            }
-            else{
+            } else {
                 chamberToCheck = 0;
             }
-            
+
         }
-        if(isChamberFull(2) && isBallInConveyor()){
+        if (isChamberFull(2) && isBallInConveyor()) {
+
             conveyor.stop();
         }
-        if(chamberToCheck != -1){
-            if(isChamberFull(chamberToCheck)){
+        if (chamberToCheck != -1) {
+            if (isChamberFull(chamberToCheck)) {
                 stop();
                 chamberToCheck = -1;
             }
         }
     }
 
-    public void reset(){
+    public void reset() {
         chamberToCheck = -1;
     }
 
@@ -238,38 +237,55 @@ public class Indexer extends MustangSubsystemBase {
         // pushGameDataToDashboard();
     }
 
-    private void logSensorVals(){
+    private void logSensorVals() {
         Logger.consoleLog("0: %s, 1: %s, 2: %s, 3: %s", sensorVals[0], sensorVals[1], sensorVals[2], sensorVals[3]);
         Logger.consoleLog("Chamber to check: %s", chamberToCheck);
         Logger.consoleLog("Total balls: %s", getTotalNumBalls());
     }
 
-    private void updateSensorVals(){
-        String reading = serialport.readString();
-        if(reading.length() > 0){
-            serialParser(reading);
-            logSensorVals();
+    private void updateSensorVals() {
+        if (serialport == null) {
+            try {
+                serialport = new SerialPort(9600, SerialPort.Port.kUSB1);
+            } catch (Exception e) {
+                Logger.consoleError(e.getMessage());
+            }
+        }
+        if (serialport != null) {
+            try {
+                String reading = serialport.readString();
+                if (reading.length() > 0) {
+                    serialParser(reading);
+                    for (int i = 0; i < sensorVals.length; i++) {
+                        if (sensorVals[i] >= 300) {
+                            serialport.reset();
+                        }
+                    }
+                    logSensorVals();
+                }
+            } catch (Exception e) {
+                // TODO: handle exception
+            }
         }
     }
 
-    private void serialParser(String original) { // sd#.value   (from 0 to 255) (# is 0-3)
-        try{
+    private void serialParser(String original) { // sd#.value (from 0 to 255) (# is 0-3)
+        try {
             String[] sensorData = original.split("\n");
-            for (String x : sensorData){
-                if(x.length()>0){
+            for (String x : sensorData) {
+                if (x.length() > 0) {
                     String[] sensinfo = x.trim().split("\\.");
-                    if(sensinfo.length == 2){
+                    if (sensinfo.length == 2) {
                         sensorVals[Integer.parseInt(sensinfo[0])] = Integer.parseInt(sensinfo[1]);
                     }
                 }
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             Logger.consoleError(e.getMessage());
         }
     }
 
-    public boolean isBallInConveyor(){
+    public boolean isBallInConveyor() {
         return sensorVals[3] < RobotConstants.MIN_BALL_DETECTED_WIDTH_TUNNEL;
     }
 

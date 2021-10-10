@@ -5,35 +5,38 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.indexer.RunIndexer;
-import frc.team670.robot.commands.shooter.StartShooter;
+import frc.team670.robot.commands.intake.RunConveyor;
 import frc.team670.robot.commands.shooter.StartShooterByDistance;
+import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.robot.subsystems.Shooter;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 
 public class ShootAllBalls extends SequentialCommandGroup implements MustangCommand {
 
     private Indexer indexer;
+    private Conveyor conveyor;
     private Shooter shooter;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public ShootAllBalls(Indexer indexer, Shooter shooter, DriveBase driveBase){
+    public ShootAllBalls(Indexer indexer, Conveyor conveyor, Shooter shooter, DriveBase driveBase){
         this.indexer = indexer;
         this.shooter = shooter;
+        this.conveyor = conveyor;
         addRequirements(indexer);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
-
         addCommands(
             new StartShooterByDistance(shooter, driveBase),
-            new RunIndexer(indexer)
-        );
+            new ParallelCommandGroup(
+                new RunIndexer(indexer),
+                new RunConveyor(false, conveyor, indexer))
+            );
     }
 
     /**
@@ -43,6 +46,8 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
     public void end(boolean interrupted) {
         shooter.stop();
         indexer.stopUpdraw();
+        conveyor.stop();
+
     }
 
     @Override
