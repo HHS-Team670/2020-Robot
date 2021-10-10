@@ -1,4 +1,4 @@
-package frc.team670.robot.commands.intake;
+package frc.team670.robot.commands.routines;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ import frc.team670.robot.subsystems.Intake;
 /**
  *
  */
-public class AutoIntake extends CommandBase implements MustangCommand {
+public class AutoIndex extends CommandBase implements MustangCommand {
 
 	Map<MustangSubsystemBase, HealthState> healthReqs;
 	private boolean reversed;
@@ -28,7 +28,7 @@ public class AutoIntake extends CommandBase implements MustangCommand {
 	 * @param reversed true to run the intake in reverse (out), false to run it
 	 *                 normally (in)
 	 */
-	public AutoIntake(Intake intake, Conveyor conveyor, Indexer indexer) {
+	public AutoIndex(Intake intake, Conveyor conveyor, Indexer indexer) {
 		this.intake = intake;
         this.conveyor = conveyor;
 		this.indexer = indexer;
@@ -55,15 +55,19 @@ public class AutoIntake extends CommandBase implements MustangCommand {
 		} else {
 			intake.roll(reversed);
 		}
-		// if(conveyor.isBallInConveyor()){
-		// 	conveyor.stop();
-		// }
 	}
 
 	@Override
 	public boolean isFinished(){
-		return indexer.ballInChamber(2);
+		return indexer.getTotalNumBalls() == 4;
 	}
+
+	@Override
+	public void end(boolean interrupted){
+		intake.stop();
+		intake.deploy(false);
+		conveyor.stop();
+	} 
 
 	public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
 		return healthReqs;

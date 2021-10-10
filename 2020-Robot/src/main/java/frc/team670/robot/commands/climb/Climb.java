@@ -35,7 +35,6 @@ public class Climb extends CommandBase implements MustangCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climber.setExtending(false);
     climber.setPower(0);
   }
 

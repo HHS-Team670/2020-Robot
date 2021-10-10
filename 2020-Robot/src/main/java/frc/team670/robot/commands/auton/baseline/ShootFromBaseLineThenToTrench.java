@@ -20,7 +20,7 @@ import frc.team670.paths.center.CenterToTrench;
 import frc.team670.paths.left.LeftToTrench;
 import frc.team670.paths.right.RightToTrench;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
-import frc.team670.robot.commands.indexer.ShootAllBalls;
+import frc.team670.robot.commands.indexer.RunIndexer;
 import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.turret.RotateTurret;
 import frc.team670.robot.subsystems.Conveyor;
@@ -85,10 +85,10 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
                 
                 new RotateTurret(turret, driveBase, coprocessor),
                 // Roll intake out and shoot
-                new ShootAllBalls(indexer),
+                new RunIndexer(indexer),
                 
                 new ParallelCommandGroup(
-                    new ShootAllBalls(indexer),
+                    new RunIndexer(indexer),
                     getTrajectoryFollowerCommand(trajectory, driveBase)
                 )
         );

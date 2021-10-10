@@ -43,7 +43,6 @@ public class ExtendClimber extends CommandBase implements MustangCommand {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    climber.setExtending(true);
     climber.climb(MAX_EXTENDING_HEIGHT_CM);
   }
 
@@ -51,7 +50,6 @@ public class ExtendClimber extends CommandBase implements MustangCommand {
   @Override
   public void end(boolean interrupted) {
     climber.setPower(0);
-    climber.setExtending(false);
   }
 
   // Returns true when the command should end.

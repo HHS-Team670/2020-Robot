@@ -3,6 +3,8 @@ package frc.team670.robot.commands.indexer;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.hal.HALUtil;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -11,14 +13,16 @@ import frc.team670.mustanglib.utils.Logger;
 import frc.team670.robot.subsystems.Indexer;
 
 /**
- * Runs the indexer (no sensor, plain control)
+ * Empties the revolver by running motors backward 3 chambers
  * 
- * @author lakshbhambhani
+ * @author palldas
  */
 public class RunIndexer extends CommandBase implements MustangCommand {
 
     private Indexer indexer;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
+
+    private long microSecondsSinceZeroBalls = -1;
 
     public RunIndexer(Indexer indexer) {
         this.indexer = indexer;
@@ -35,6 +39,7 @@ public class RunIndexer extends CommandBase implements MustangCommand {
     public void initialize() {
         Logger.consoleLog("Preparing to empty indexer");
         indexer.updraw(false);
+        microSecondsSinceZeroBalls = -1;
     }
 
     /**
@@ -53,8 +58,14 @@ public class RunIndexer extends CommandBase implements MustangCommand {
      */
     @Override
     public boolean isFinished() {
-        // return indexer.getTotalNumBalls() == 0;
-        return false; //TODO ALL sensors shoould be empty
+        if(indexer.getTotalNumBalls() == 0 && microSecondsSinceZeroBalls == -1){
+            microSecondsSinceZeroBalls =  RobotController.getFPGATime();
+        }
+        if(microSecondsSinceZeroBalls != -1 && RobotController.getFPGATime() - microSecondsSinceZeroBalls >= 500000){
+            microSecondsSinceZeroBalls = -1;
+            return true;
+        }
+        return false;
     }
 
     @Override

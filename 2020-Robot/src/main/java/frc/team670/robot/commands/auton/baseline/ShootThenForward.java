@@ -10,7 +10,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.paths.Path;
 import frc.team670.paths.left.LeftThenForward;
-import frc.team670.robot.commands.indexer.ShootAllBalls;
+import frc.team670.robot.commands.indexer.RunIndexer;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.shooter.StopShooter;
@@ -67,7 +67,7 @@ public class ShootThenForward extends SequentialCommandGroup implements MustangC
                 // Get shooter up to speed and aim
                     new StartShooterByDistance(shooter, driveBase), 
                     new Shoot(shooter), 
-                    new ShootAllBalls(indexer),
+                    new RunIndexer(indexer),
                     new ParallelCommandGroup(  
                         new StopShooter(shooter),
                         getTrajectoryFollowerCommand(trajectory, driveBase)

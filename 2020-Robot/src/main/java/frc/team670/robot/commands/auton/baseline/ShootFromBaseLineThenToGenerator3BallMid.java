@@ -20,7 +20,7 @@ import frc.team670.paths.center.Center3BS;
 import frc.team670.paths.left.Left3BS;
 import frc.team670.paths.right.Right3BS;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
-import frc.team670.robot.commands.indexer.ShootAllBalls;
+import frc.team670.robot.commands.indexer.RunIndexer;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.turret.RotateTurret;
@@ -88,13 +88,13 @@ public class ShootFromBaseLineThenToGenerator3BallMid extends SequentialCommandG
               new RotateTurret(turret, driveBase, coprocessor),
               
               new ParallelCommandGroup (
-              new ShootAllBalls(indexer), 
+              new RunIndexer(indexer), 
               new Shoot(shooter)        
             ),
             
               new ParallelCommandGroup (
               getTrajectoryFollowerCommand(trajectory, driveBase),
-              new ShootAllBalls(indexer)       
+              new RunIndexer(indexer)       
             )
           );
         }

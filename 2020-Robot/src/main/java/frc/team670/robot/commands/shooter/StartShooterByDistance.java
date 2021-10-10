@@ -17,7 +17,6 @@ public class StartShooterByDistance extends CommandBase implements MustangComman
     private Shooter shooter;
     private DriveBase driveBase;
     private double targetRPM;
-    private double distanceToTarget;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
     public StartShooterByDistance(Shooter shooter, DriveBase driveBase){

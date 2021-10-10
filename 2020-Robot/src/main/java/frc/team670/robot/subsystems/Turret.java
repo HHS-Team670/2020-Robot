@@ -150,7 +150,6 @@ public class Turret extends SparkMaxRotatingSubsystem {
             return HealthState.RED;
         }
         return HealthState.GREEN;
-        // return HealthState.RED;
     }
 
     public boolean hasZeroed() {

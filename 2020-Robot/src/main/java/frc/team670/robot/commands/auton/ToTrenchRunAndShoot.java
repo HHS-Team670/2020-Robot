@@ -11,7 +11,7 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.drive.straight.TimedDrive;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.commands.indexer.ShootAllBalls;
+import frc.team670.robot.commands.indexer.RunIndexer;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.shooter.SetRPMTarget;
 import frc.team670.robot.commands.shooter.Shoot;
@@ -61,7 +61,7 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
                     new RotateToAngle(turret, initAng) // turret angle for shooting when starting on baseline to right
                 ),
                 new Shoot(shooter), 
-                new ShootAllBalls(indexer),
+                new RunIndexer(indexer),
 
                 // Going to trench to pick up balls, shooter can still be running
                 new DeployIntake(true, intake),
@@ -70,13 +70,13 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
                     new SetRPMTarget(2850, shooter)
                 ),
                 new ParallelCommandGroup(
-                    new ShootAllBalls(indexer).withTimeout(5.2),
+                    new RunIndexer(indexer).withTimeout(5.2),
                     new TimedDrive(4.2, 0.12, driveBase),
                     new RotateToAngle(turret, FROM_TRENCH_TURRET_ANGLE)
                 ),
                 new StartShooter(shooter),
                 new Shoot(shooter),
-                new ShootAllBalls(indexer),
+                new RunIndexer(indexer),
                 new StopShooter(shooter)
         );
 

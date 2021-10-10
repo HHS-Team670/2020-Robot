@@ -19,7 +19,6 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.functions.MathUtils;
 import frc.team670.mustanglib.utils.math.interpolable.InterpolatingDouble;
 import frc.team670.mustanglib.utils.math.interpolable.InterpolatingTreeMap;
-import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -159,7 +158,7 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public double getDefaultRPM(){
-    return this.DEFAULT_SPEED;
+    return DEFAULT_SPEED;
   }
 
   /**

@@ -13,7 +13,7 @@ import frc.team670.paths.center.Center2BS;
 import frc.team670.paths.left.Left2BS;
 import frc.team670.paths.right.Right2BS;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
-import frc.team670.robot.commands.indexer.ShootAllBalls;
+import frc.team670.robot.commands.indexer.RunIndexer;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.turret.RotateToAngle;
@@ -83,10 +83,10 @@ public class ShootFromBaseLineThenToGenerator2BallSide extends SequentialCommand
                         // new RotateTurret(turret, driveBase, coprocessor),
                         new RotateToAngle(turret, turretAng),
                         new Shoot(shooter),
-                        new ShootAllBalls(indexer),
+                        new RunIndexer(indexer),
                         new ParallelCommandGroup (
                                 getTrajectoryFollowerCommand(trajectory, driveBase),
-                                new ShootAllBalls(indexer)       
+                                new RunIndexer(indexer)       
                         )
                 );
         }

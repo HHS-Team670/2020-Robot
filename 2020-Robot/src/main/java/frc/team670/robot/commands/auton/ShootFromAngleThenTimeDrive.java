@@ -11,7 +11,7 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.drive.straight.TimedDrive;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.commands.indexer.ShootAllBalls;
+import frc.team670.robot.commands.indexer.RunIndexer;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
@@ -60,7 +60,7 @@ public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implemen
                 ),
                 new Shoot(shooter), 
                     // new StageOneBallToShoot(indexer),
-                new ShootAllBalls(indexer),
+                new RunIndexer(indexer),
 
                 new WaitCommand(waitTime), // Delay moving after shot if needed
 
