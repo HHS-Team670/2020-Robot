@@ -112,10 +112,10 @@ public class RobotContainer extends RobotContainerBase{
     // if (!turret.hasZeroed()) { // only zero indexer if needed
     //   MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
     // }
-    //  m_autonomousCommand = getAutonomousCommand();
-    //  if (m_autonomousCommand != null) {
-    //    MustangScheduler.getInstance().schedule(m_autonomousCommand);
-    //  }
+     m_autonomousCommand = getAutonomousCommand();
+     if (m_autonomousCommand != null) {
+       MustangScheduler.getInstance().schedule(m_autonomousCommand);
+     }
   }
 
   public void teleopInit() {
