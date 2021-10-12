@@ -30,6 +30,7 @@ public class AutoIndex extends CommandBase implements MustangCommand {
 	 */
 	public AutoIndex(Intake intake, Conveyor conveyor, Indexer indexer) {
 		this.intake = intake;
+		
         this.conveyor = conveyor;
 		this.indexer = indexer;
 		healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
