@@ -362,6 +362,7 @@ public class DriveBase extends TankDriveBase {
   public void mustangPeriodic() {
     // Update the odometry in the periodic block
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
+    SmartDashboard.putString("Drivebase Health State", getHealth(true).name());
   }
 
   /**

@@ -212,6 +212,7 @@ public class Shooter extends MustangSubsystemBase {
 
   @Override
   public void mustangPeriodic() {
+    SmartDashboard.putString("Shooter Health State", getHealth(true).name());
     // if (isShooting()){
     //   ballHasBeenShot = false;
     // } else if (!ballHasBeenShot && !isShooting()) {

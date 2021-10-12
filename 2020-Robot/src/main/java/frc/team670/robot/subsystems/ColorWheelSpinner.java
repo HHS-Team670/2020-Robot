@@ -1,6 +1,7 @@
 package frc.team670.robot.subsystems;
 
 import frc.team670.robot.constants.RobotMap;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.dataCollection.sensors.ColorMatcher;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
@@ -49,5 +50,6 @@ public class ColorWheelSpinner extends MustangSubsystemBase {
     }
 
     public void mustangPeriodic(){
+        SmartDashboard.putString("Color Wheel Spinner Health State", getHealth(true).name());
     }
 }

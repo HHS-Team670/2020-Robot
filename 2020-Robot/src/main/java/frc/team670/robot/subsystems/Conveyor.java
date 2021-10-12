@@ -2,6 +2,7 @@ package frc.team670.robot.subsystems;
 
 import com.revrobotics.CANError;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import frc.team670.mustanglib.dataCollection.sensors.Multiplexer;
 import frc.team670.mustanglib.dataCollection.sensors.TimeOfFlightSensor;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -60,7 +61,7 @@ public class Conveyor extends MustangSubsystemBase {
     @Override
     public void mustangPeriodic() {
         // TODO Auto-generated method stub
-
+        SmartDashboard.putString("Conveyor Health State", getHealth(true).name());
     }
 
 }

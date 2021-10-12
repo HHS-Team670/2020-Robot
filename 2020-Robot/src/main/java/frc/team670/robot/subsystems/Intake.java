@@ -101,6 +101,7 @@ public class Intake extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
+        SmartDashboard.putString("Intake Health State", getHealth(true).name());
     }
 
 }

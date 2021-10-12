@@ -283,6 +283,7 @@ public class Indexer extends MustangSubsystemBase {
             Logger.consoleLog("Serial Port Reading: %s", reading);
         }
         index();
+        SmartDashboard.putString("Indexer Health State", getHealth(true).name());
         // pushGameDataToDashboard();
     }
 
