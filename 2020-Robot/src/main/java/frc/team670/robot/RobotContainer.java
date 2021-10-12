@@ -16,6 +16,9 @@ import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.AutoSelector;
+import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
+import frc.team670.robot.commands.auton.baseline.ShootThenForward;
+import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToTrench;
 import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.OI;
@@ -27,6 +30,7 @@ import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.Vision;
+
 
 public class RobotContainer extends RobotContainerBase {
 
@@ -67,7 +71,10 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    MustangCommand autonCommand = autoSelector.getSelectedRoutine();
+    // MustangCommand autonCommand = autoSelector.getSelectedRoutine();
+    // MustangCommand autonCommand = new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, vision);
+    MustangCommand autonCommand = new ShootFromBaseLineThenToTrench(StartPosition.RIGHT, driveBase, intake, conveyor,
+    shooter, indexer, turret, vision);
     Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
   }

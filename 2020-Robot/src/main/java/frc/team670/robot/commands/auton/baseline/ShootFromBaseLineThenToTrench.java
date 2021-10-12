@@ -21,6 +21,7 @@ import frc.team670.paths.left.LeftToTrench;
 import frc.team670.paths.right.RightToTrench;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.indexer.RunIndexer;
+import frc.team670.robot.commands.routines.AutoIndex;
 import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.turret.RotateTurret;
 import frc.team670.robot.subsystems.Conveyor;
@@ -88,7 +89,7 @@ public class ShootFromBaseLineThenToTrench extends SequentialCommandGroup implem
                 new RunIndexer(indexer),
                 
                 new ParallelCommandGroup(
-                    new RunIndexer(indexer),
+                    new AutoIndex(intake, conveyor, indexer),
                     getTrajectoryFollowerCommand(trajectory, driveBase)
                 )
         );
