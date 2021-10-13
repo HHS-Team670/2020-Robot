@@ -19,7 +19,7 @@ import frc.team670.paths.Path;
 import frc.team670.paths.center.CenterToTrench;
 import frc.team670.paths.left.LeftToTrench;
 import frc.team670.paths.right.RightToTrench;
-import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
+import frc.team670.robot.commands.auton.AutoSelector.StartPosition  ;
 import frc.team670.robot.commands.indexer.RunIndexer;
 import frc.team670.robot.commands.routines.AutoIndex;
 import frc.team670.robot.commands.shooter.StartShooterByDistance;
