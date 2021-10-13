@@ -23,6 +23,7 @@ public class AutoIndex extends CommandBase implements MustangCommand {
 	private Indexer indexer;
     private Conveyor conveyor;
 	private int countWasJammed;
+	private int targetBalls; 
 
 	/**
 	 * @param reversed true to run the intake in reverse (out), false to run it
@@ -30,7 +31,19 @@ public class AutoIndex extends CommandBase implements MustangCommand {
 	 */
 	public AutoIndex(Intake intake, Conveyor conveyor, Indexer indexer) {
 		this.intake = intake;
-		
+		targetBalls = 4;
+        this.conveyor = conveyor;
+		this.indexer = indexer;
+		healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
+		healthReqs.put(intake, HealthState.YELLOW);
+        healthReqs.put(conveyor, HealthState.YELLOW);
+		addRequirements(intake, conveyor);
+		countWasJammed = 0;
+	}
+
+	public AutoIndex(Intake intake, Conveyor conveyor, Indexer indexer, int targetBalls) {
+		this.intake = intake;
+		this.targetBalls = targetBalls;
         this.conveyor = conveyor;
 		this.indexer = indexer;
 		healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -60,7 +73,7 @@ public class AutoIndex extends CommandBase implements MustangCommand {
 
 	@Override
 	public boolean isFinished(){
-		return indexer.getTotalNumBalls() == 4;
+		return indexer.getTotalNumBalls() == targetBalls;
 	}
 
 	@Override
