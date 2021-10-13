@@ -216,7 +216,7 @@ public class Shooter extends MustangSubsystemBase {
     // } else if (!ballHasBeenShot && !isShooting()) {
     //   ballHasBeenShot = true;
     // }
-    // SmartDashboard.putNumber("Stage 2 speed", mainController.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Stage 2 speed", mainController.getEncoder().getVelocity());
   }
 
   public boolean isShooting() {

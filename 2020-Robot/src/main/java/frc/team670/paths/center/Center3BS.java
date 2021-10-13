@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import frc.team670.paths.Path;
 import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.constants.RobotConstants;
 
 /**
  * Trajectory starting on the line closest to your score port (robot facing towards your own driverstation)

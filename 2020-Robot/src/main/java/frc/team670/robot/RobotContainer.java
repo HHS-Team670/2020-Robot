@@ -22,6 +22,30 @@ import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToTrench;
 import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.OI;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team670.mustanglib.RobotContainerBase;
+import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangScheduler;
+import frc.team670.mustanglib.subsystems.LEDSubsystem;
+import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.robot.commands.auton.AutoSelector;
+import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
+import frc.team670.robot.commands.auton.twentytwentyone.ShootThen5Diagonal;
+import frc.team670.robot.commands.auton.twentytwentyone.ShootThen3Line;
+import frc.team670.robot.commands.auton.twentytwentyone.ShootThen2Line;
+import frc.team670.robot.commands.auton.twentytwentyone.TrenchLoop3Line;
+import frc.team670.robot.commands.auton.twentytwentyone.TrenchShoot;
+import frc.team670.robot.commands.auton.twentytwentyone.TrenchLoop2Line;
+// import frc.team670.robot.commands.auton.ShootFromAngleThenTimeDrive;
+// import frc.team670.robot.commands.auton.ToTrenchRunAndShoot;
+// import frc.team670.robot.commands.auton.baseline.ShootThenBack;
+import frc.team670.robot.commands.turret.ZeroTurret;
+import frc.team670.robot.constants.FieldConstants;
+import frc.team670.robot.constants.OI;
+import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
@@ -73,21 +97,31 @@ public class RobotContainer extends RobotContainerBase {
   public MustangCommand getAutonomousCommand() {
     // MustangCommand autonCommand = autoSelector.getSelectedRoutine();
     // MustangCommand autonCommand = new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, vision);
-    MustangCommand autonCommand = new ShootFromBaseLineThenToTrench(StartPosition.RIGHT, driveBase, intake, conveyor,
-    shooter, indexer, turret, vision);
-    Logger.consoleLog("autonCommand: %s", autonCommand);
+    // MustangCommand autonCommand = new ShootFromBaseLineThenToTrench(StartPosition.RIGHT, driveBase, intake, conveyor,
+    // shooter, indexer, turret, vision);
+    // Logger.consoleLog("autonCommand: %s", autonCommand);
+    // MustangCommand autonCommand = new TrenchLoop3Line(StartPosition.RIGHT, driveBase, intake, conveyor, indexer, turret, shooter);
+    // MustangCommand autonCommand = new ShootThen5Diagonal(StartPosition.CENTER, driveBase, intake, conveyor, indexer, turret, shooter);
+    MustangCommand autonCommand = new TrenchShoot(StartPosition.RIGHT, driveBase, intake, conveyor, indexer, turret, shooter);
+
+    // Logger.consoleLog("autonCommand: %s", autonCommand);
+    //MustangCommand autonCommand = new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, vision);
     return autonCommand;
   }
 
   public void autonomousInit() {
     indexer.reset();
-    if (!turret.hasZeroed()) { // only zero indexer if needed
-      MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
-    }
-    m_autonomousCommand = getAutonomousCommand();
-    if (m_autonomousCommand != null) {
-    MustangScheduler.getInstance().schedule(m_autonomousCommand);
-    }
+    // 3 balls, in set positions, preloaded for auto
+    indexer.setChamberStatesForMatchInit();
+    indexer.setRotatorMode(false); // indexer to brake mode
+    MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
+    // if (!turret.hasZeroed()) { // only zero indexer if needed
+    //   MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
+    // }
+     m_autonomousCommand = getAutonomousCommand();
+     if (m_autonomousCommand != null) {
+       MustangScheduler.getInstance().schedule(m_autonomousCommand);
+     }
   }
 
   public void teleopInit() {
@@ -95,8 +129,11 @@ public class RobotContainer extends RobotContainerBase {
     indexer.stopUpdraw();
     indexer.stop();
     indexer.reset();
-    driveBase.resetOdometry(new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS,
-        FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
+    indexer.setRotatorMode(false); // indexer to brake mode
+    indexer.stopIntaking();
+    driveBase.resetOdometry(new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS, 
+    FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
+    zeroSubsystemPositions();
     driveBase.setTeleopRampRate();
     driveBase.initDefaultCommand();
     if (!turret.hasZeroed()) {
@@ -108,6 +145,7 @@ public class RobotContainer extends RobotContainerBase {
 
   public void disabled() {
     vision.turnOffLEDs();
+    driveBase.initCoastMode();
   }
 
   public static Joystick getOperatorController() {
@@ -131,7 +169,10 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void periodic() {
-   
+    SmartDashboard.putNumber("heading", driveBase.getHeading());
+    SmartDashboard.putNumber("Turret Angle", turret.getCurrentAngleInDegrees());
+    fancyLights.periodic();
+    // can comment out if not needed
   }
 
 }

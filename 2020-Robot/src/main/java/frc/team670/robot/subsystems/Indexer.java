@@ -55,8 +55,113 @@ public class Indexer extends MustangSubsystemBase {
     private static final int UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT = 9;
     private static final int UPDRAW_PEAK_CURRENT_LIMIT = 15;
 
-    public Indexer(Conveyor conveyor) {
-        super();
+    private static final double INDEXER_DEGREES_PER_CHAMBER = 72;
+
+    // Bottom (intake position) is 0, for chamber 0.
+    private static final int CHAMBER_0_AT_TOP_POS_IN_DEGREES = 180; // Shooting position for chamber 0
+    private static final int CHAMBER_0_AT_BOTTOM_POS_IN_DEGREES = 0; // Intaking position for chamber 0
+
+    private static Timer timer;
+
+    private enum IntakingState {
+        IN, MAYBE_IN, NOT_IN;
+    }
+
+    /**
+     * PID and SmartMotion constants for the indexer rotator go here.
+     */
+    public static class Config extends SparkMaxRotatingSubsystem.Config {
+
+        public int getDeviceID() {
+            return RobotMap.INDEXER_ROTATOR;
+        }
+
+        public int getSlot() {
+            return 0;
+        }
+
+        public MotorConfig.Motor_Type getMotorType() {
+            return MotorConfig.Motor_Type.NEO_550;
+        }
+
+        public double getP() {
+            return 0.00001; // Good enough for 2/16
+        }
+
+        public double getI() {
+            return 0;
+        }
+
+        public double getD() {
+            return 0;
+        }
+
+        public double getFF() { // Good enough for 2/16
+            return 0.0001 * 3; // Gearing was adjusted
+        }
+
+        public double getIz() {
+            return 0;
+        }
+
+        public double getMaxOutput() {
+            return 1;
+        }
+
+        public double getMinOutput() {
+            return -1;
+        }
+
+        public double getMaxVelocity() {
+            // 2100
+            return 4000; // assuming 1 indexer rotation per second
+        }
+
+        public double getMinVelocity() {
+            return 0;
+        }
+
+        public double getMaxAcceleration() {
+            // 2100
+            return 4000;
+        }
+
+        public double getAllowedError() {
+            // return 0.0243;
+            // 0.25 degree minimum from count / 360 deg per rotation
+            return (0.25 / 360) * getRotatorGearRatio();
+        }
+
+        public boolean enableSoftLimits() {
+            return false;
+        }
+
+        public float[] setSoftLimits() {
+            return null;
+        }
+
+        public int getContinuousCurrent() {
+            return 3;
+        }
+
+        public int getPeakCurrent() {
+            return 6;
+        }
+
+        public double getRotatorGearRatio() {
+            return 150; // gearing 100 * 1.5 from belt. Changed to this from 35 gearing on 2/18.
+        }
+
+        public IdleMode setRotatorIdleMode() {
+            return IdleMode.kCoast;
+        }
+
+    }
+
+    public static final Config INDEXER_CONFIG = new Config();
+
+    public Indexer(Conveyor conveyor, Solenoid pusher) {
+        super(INDEXER_CONFIG);
 
         frontMotor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.FRONT_MOTOR, Motor_Type.NEO_550);
         backMotor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.BACK_MOTOR, Motor_Type.NEO_550);
