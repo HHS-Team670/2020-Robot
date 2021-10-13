@@ -27,7 +27,7 @@ public class RightThroughTrench_GODSPEED2021Pt2 extends Path{
                                 // new Pose2d(6.5, -0.706, Rotation2d.fromDegrees(0)),
                                 // new Pose2d(7.8, -0.706, Rotation2d.fromDegrees(0))
 
-                                new Pose2d(5.427, -0.706, Rotation2d.fromDegrees(0)),
+                                // new Pose2d(5.427, -0.706, Rotation2d.fromDegrees(0)),
                                 new Pose2d(6.5, -0.706, Rotation2d.fromDegrees(0)),
                                 new Pose2d(7.8, -0.706, Rotation2d.fromDegrees(0))
 

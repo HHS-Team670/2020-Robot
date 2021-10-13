@@ -37,6 +37,8 @@ import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.Vision;
+import frc.team670.robot.commands.indexer.RunIndexer;
+
 
 /**
  * Trench Shoot routine for Chezy 2021 (workshop 10/12/2021)
@@ -81,10 +83,12 @@ public class ChezyTrenchShoot extends SequentialCommandGroup implements MustangC
                 //1) shoot 3 balls from initiation line
                 new StartShooterByDistance(shooter, driveBase),
                 new RotateTurret(turret, driveBase, coprocessor),
+                new RunIndexer(indexer),
                 new Shoot(shooter),
                 //TODO: see if shooter needs to be stopped while traversing and not shooting
 
                 //2) goes through the trench and intakes
+                new DeployIntake(true, intake),
                 new ParallelCommandGroup(
                     getTrajectoryFollowerCommand(trajectory1, driveBase),
                     new AutoIndex(intake, conveyor, indexer)
