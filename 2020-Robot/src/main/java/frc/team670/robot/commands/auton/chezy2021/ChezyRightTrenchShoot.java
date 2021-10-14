@@ -40,8 +40,8 @@ import frc.team670.robot.commands.indexer.RunIndexer;
 
 /**
  * Trench Shoot routine for Chezy 2021 (workshop 10/12/2021) google doc link:
- * https://docs.google.com/document/d/1AsYxFidJCVz2cBFPJEAD1MU-b7dWLGTkcGLwushU1f8/edit?usp=sharing
- * 
+ * https://docs.google.com/document/d/1GCqiZlTvnIp7UbRZ-_Gu2sK9tljfNCpqdYkApQ3Qdtk/edit?usp=sharing
+ * back of robot on initiation line
  * @author Elise V justin h rishabh b
  */
 public class ChezyRightTrenchShoot extends SequentialCommandGroup implements MustangCommand {
@@ -89,7 +89,7 @@ public class ChezyRightTrenchShoot extends SequentialCommandGroup implements Mus
                 new DeployIntake(true, intake), 
                 new ParallelCommandGroup(
                         getTrajectoryFollowerCommand(trajectory1, driveBase), 
-                        new AutoIndex(intake, conveyor, indexer))
+                        new AutoIndex(intake, conveyor, indexer, 3))
 
         // //shoot all balls from baseline
         // new StartShooterByDistance(shooter, driveBase),
