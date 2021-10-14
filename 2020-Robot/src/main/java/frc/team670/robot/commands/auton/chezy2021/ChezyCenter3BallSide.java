@@ -98,7 +98,7 @@ public class ChezyCenter3BallSide extends SequentialCommandGroup implements Must
                 new DeployIntake(true, intake),
                 new ParallelCommandGroup(
                     getTrajectoryFollowerCommand(trajectory, driveBase),
-                    new AutoIndex(intake, conveyor, indexer)
+                    new AutoIndex(intake, conveyor, indexer, 3)
                 )
         );
 
