@@ -18,7 +18,9 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.AutoSelector;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.auton.baseline.ShootThenForward;
+import frc.team670.robot.commands.auton.chezy2021.ChezyLeft2BallSide;
 import frc.team670.robot.commands.auton.chezy2021.ChezyRightTrenchShoot;
+import frc.team670.robot.commands.auton.chezy2021.ChezyCenter3BallSide;
 import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToTrench;
 import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.constants.FieldConstants;
@@ -75,6 +77,7 @@ public class RobotContainer extends RobotContainerBase {
     // MustangCommand autonCommand = autoSelector.getSelectedRoutine();
     // MustangCommand autonCommand = new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, vision);
     MustangCommand autonCommand = new ChezyRightTrenchShoot(driveBase, intake, conveyor, indexer, turret, shooter, vision);
+    // MustangCommand autonCommand = new ChezyLeft2BallSide(StartPosition.LEFT, driveBase, intake, conveyor, indexer, turret, shooter);
     Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
   }
