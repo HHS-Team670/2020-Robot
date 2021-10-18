@@ -1,4 +1,4 @@
-package frc.team670.robot.commands.auton.chezy2021;
+package frc.team670.robot.commands.auton.left;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,19 +8,11 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.paths.Path;
-import frc.team670.paths.chezy2021.Left2Line;
-import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
-import frc.team670.robot.commands.intake.DeployIntake;
-import frc.team670.robot.commands.intake.StopIntake;
+import frc.team670.paths.left.Left2Line;
 import frc.team670.robot.commands.routines.AutoIndex;
-import frc.team670.robot.commands.shooter.SetRPMTarget;
 import frc.team670.robot.commands.shooter.Shoot;
-import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StartShooterByDistance;
-import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.commands.turret.RotateToAngle;
-import frc.team670.robot.commands.turret.RotateToHome;
-import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
@@ -33,22 +25,19 @@ import frc.team670.robot.subsystems.Turret;
  * Autonomous routine starting by shooting 3 balls depending on start position (left or center), go to switch, intake 2
  * front of robot starts in line with initiation line
  * for 2021 field
- * @author elisevbp
+ * @author elisevbp 
  */
-public class ChezyLeft2BallSide extends SequentialCommandGroup implements MustangCommand {
+public class LeftShoot2BallSide extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-    // private DriveBase driveBase;
     private Path trajectory;
     
-    public ChezyLeft2BallSide(StartPosition startPosition, DriveBase driveBase, Intake intake, Conveyor conveyor, 
-    Indexer indexer, Turret turret, Shooter shooter) {
+    public LeftShoot2BallSide(DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Turret turret, Shooter shooter) {
         
         //TODO: check if there needs to be a center turret? or it is automatically straight forward
-        //double turretAng = RobotConstants.;
         double turretAng = 0;
 
-        // this.driveBase = driveBase;
+     
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
@@ -56,10 +45,9 @@ public class ChezyLeft2BallSide extends SequentialCommandGroup implements Mustan
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(turret, HealthState.GREEN);
-        if (startPosition == StartPosition.LEFT) {
-            trajectory = new Left2Line(driveBase);
-            turretAng = RobotConstants.leftTurretAng;
-        }
+        
+        trajectory = new Left2Line(driveBase);
+        turretAng = RobotConstants.leftTurretAng;
 
         driveBase.resetOdometry(trajectory.getStartingPose());
 
@@ -85,7 +73,6 @@ public class ChezyLeft2BallSide extends SequentialCommandGroup implements Mustan
     public void initialize() {
         super.initialize();
         // // Front faces away from wall, heading is 180
-        // driveBase.resetOdometry(new Pose2d(FieldConstants.TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS, FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(0)));
     }
 
     @Override

@@ -1,4 +1,4 @@
-package frc.team670.paths.chezy2021;
+package frc.team670.paths.right;
 
 import java.util.List;
 
@@ -13,11 +13,11 @@ import frc.team670.robot.constants.RobotConstants;
  * first part of godspeed trajectory
  * Trajectory starting from the right of the field in line with the trench then through the trench to the last ball (3 balls total)
  * google doc link: https://docs.google.com/document/d/1AsYxFidJCVz2cBFPJEAD1MU-b7dWLGTkcGLwushU1f8/edit?usp=sharing
- * @author meganchoy, elisevbp, tarini
+ * @author meganchoy, elisevbp, tarini, rishabh b
  */
-public class RightThroughTrench_GODSPEED2021Pt1 extends Path{
+public class RightThroughTrench extends Path{
 
-        public RightThroughTrench_GODSPEED2021Pt1(DriveBase driveBase) {
+        public RightThroughTrench(DriveBase driveBase) {
                 super(
 
                         List.of(
