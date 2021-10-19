@@ -108,6 +108,14 @@ public class Indexer extends MustangSubsystemBase {
         }
     }
 
+    public void runReversed(boolean isOuttake) {
+        frontMotor.set(-1 * INDEXER_SPEED);
+        backMotor.set(INDEXER_SPEED);
+        if (isOuttake) {
+            updraw.set(ControlMode.PercentOutput, -1 * UPDRAW_SPEED);
+        }
+    }
+
     public void stop() {
         frontMotor.stopMotor();
         backMotor.stopMotor();
@@ -264,7 +272,7 @@ public class Indexer extends MustangSubsystemBase {
                     // logSensorVals();
                 }
             } catch (Exception e) {
-                // TODO: handle exception
+                serialport = null;
             }
         }
     }

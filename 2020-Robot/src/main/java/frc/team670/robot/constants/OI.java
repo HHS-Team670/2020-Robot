@@ -10,6 +10,7 @@ import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.climb.Climb;
 import frc.team670.robot.commands.climb.ExtendClimber;
 import frc.team670.robot.commands.indexer.RunIndexer;
+import frc.team670.robot.commands.indexer.ManualRunIndexer;
 // import frc.team670.robot.commands.indexer.ShootAllBalls;
 // import frc.team670.robot.commands.indexer.ShootBall;
 // import frc.team670.robot.commands.indexer.ToggleUpdraw;
@@ -20,7 +21,6 @@ import frc.team670.robot.commands.routines.ShootAllBalls;
 import frc.team670.robot.commands.shooter.SetRPMAdjuster;
 import frc.team670.robot.commands.shooter.ToggleShooter;
 import frc.team670.robot.commands.turret.GetLatestDataAndAlignTurret;
-import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.dataCollection.XKeys;
 import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.subsystems.Conveyor;
@@ -31,14 +31,14 @@ import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.Vision;
 
-public class OI extends OIBase{
+public class OI extends OIBase {
 
   private static MustangController driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
-  private static Joystick operatorController  = new Joystick(RobotMap.OPERATOR_CONTROLLER_PORT);
+  private static Joystick operatorController = new Joystick(RobotMap.OPERATOR_CONTROLLER_PORT);
 
   private static XKeys xkeys;
 
-  //operator buttons
+  // operator buttons
   private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), 1);
   private static JoystickButton runIntakeOut = new JoystickButton(getOperatorController(), 5);
   private static JoystickButton runIntakeIn = new JoystickButton(getOperatorController(), 3);
@@ -48,15 +48,18 @@ public class OI extends OIBase{
   private static JoystickButton runIndexer = new JoystickButton(getOperatorController(), 2);
   private static JoystickButton autoIntake = new JoystickButton(getOperatorController(), 7);
   private static JoystickButton autoOuttake = new JoystickButton(getOperatorController(), 8);
-  
-  //xbox buttons
+  private static JoystickButton manualRunIndexerIn = new JoystickButton(getOperatorController(), 10);
+  private static JoystickButton manualRunIndexerOut = new JoystickButton(getOperatorController(), 9);
+
+  // xbox buttons
   private static JoystickButton xboxVision = new JoystickButton(getDriverController(), XboxButtons.A);
   private static JoystickButton xboxIncreaseSpeed = new JoystickButton(getDriverController(), XboxButtons.B);
   private static JoystickButton xboxDecreaseSpeed = new JoystickButton(getDriverController(), XboxButtons.X);
-  private static JoystickButton xboxRaiseClimber = new JoystickButton(getDriverController(), XboxButtons.LEFT_JOYSTICK_BUTTON);
-  private static JoystickButton xboxLowerClimber = new JoystickButton(getDriverController(), XboxButtons.RIGHT_JOYSTICK_BUTTON);
+  private static JoystickButton xboxRaiseClimber = new JoystickButton(getDriverController(),
+      XboxButtons.LEFT_JOYSTICK_BUTTON);
+  private static JoystickButton xboxLowerClimber = new JoystickButton(getDriverController(),
+      XboxButtons.RIGHT_JOYSTICK_BUTTON);
   private static JoystickButton toggleReverseDrive = new JoystickButton(driverController, XboxButtons.LEFT_BUMPER);
-
 
   public boolean isQuickTurnPressed() {
     return driverController.getRightBumper();
@@ -80,15 +83,15 @@ public class OI extends OIBase{
     return operatorController;
   }
 
-  public void configureButtonBindings(MustangSubsystemBase... subsystemBases){
-    DriveBase drivebase = (DriveBase)subsystemBases[0];
-    Intake intake = (Intake)subsystemBases[1];
-    Conveyor conveyor = (Conveyor)subsystemBases[2];
-    Indexer indexer = (Indexer)subsystemBases[3];
-    Turret turret = (Turret)subsystemBases[4];
-    Shooter shooter = (Shooter)subsystemBases[5];
-    Climber climber = (Climber)subsystemBases[6];
-    Vision vision = (Vision)subsystemBases[7];
+  public void configureButtonBindings(MustangSubsystemBase... subsystemBases) {
+    DriveBase drivebase = (DriveBase) subsystemBases[0];
+    Intake intake = (Intake) subsystemBases[1];
+    Conveyor conveyor = (Conveyor) subsystemBases[2];
+    Indexer indexer = (Indexer) subsystemBases[3];
+    Turret turret = (Turret) subsystemBases[4];
+    Shooter shooter = (Shooter) subsystemBases[5];
+    Climber climber = (Climber) subsystemBases[6];
+    Vision vision = (Vision) subsystemBases[7];
 
     toggleIntake.whenPressed(new ToggleIntake(intake));
     runIntakeIn.toggleWhenPressed((new RunIntakeConveyor(intake, conveyor, indexer, false)));
@@ -97,8 +100,10 @@ public class OI extends OIBase{
     extendClimb.whenPressed(new ExtendClimber(climber));
     retractClimb.whenPressed(new Climb(climber));
     autoOuttake.whenPressed(new ShootAllBalls(indexer, conveyor, shooter, drivebase));
-    runIndexer.whenPressed(new RunIndexer(indexer));
+    // runIndexer.whenPressed(new RunIndexer(indexer));
     autoIntake.whenPressed(new AutoIndex(intake, conveyor, indexer));
+    manualRunIndexerIn.whileHeld(new ManualRunIndexer(indexer, conveyor, intake, false));
+    manualRunIndexerOut.whileHeld(new ManualRunIndexer(indexer, conveyor, intake, true));
 
     xboxVision.whenPressed(new GetLatestDataAndAlignTurret(turret, drivebase, vision));
     xboxIncreaseSpeed.whenPressed(new SetRPMAdjuster(100, shooter));
