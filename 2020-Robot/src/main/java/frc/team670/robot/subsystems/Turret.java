@@ -5,6 +5,7 @@ import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.subsystems.SparkMaxRotatingSubsystem;
 import frc.team670.mustanglib.utils.Logger;
@@ -167,6 +168,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     public void mustangPeriodic() {
         // TODO Auto-generated method stub
         // Logger.consoleLog("Forward: %s Backward %s", isForwardLimitSwitchTripped(), isReverseLimitSwitchTripped());
+        SmartDashboard.putNumber("Turret Angle", getCurrentAngleInDegrees());
 
     }
 

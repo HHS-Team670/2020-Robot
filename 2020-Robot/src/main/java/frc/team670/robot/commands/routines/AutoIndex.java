@@ -1,13 +1,17 @@
 package frc.team670.robot.commands.routines;
 
+import java.sql.Driver;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
+import frc.team670.robot.RobotContainer;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Intake;
@@ -25,6 +29,11 @@ public class AutoIndex extends CommandBase implements MustangCommand {
 	private int countWasJammed;
 	private int targetBalls; 
 
+	private DriverStation ds;
+	private boolean isAuto;
+	private long startTime;
+
+	private int i = 0;
 	/**
 	 * @param reversed true to run the intake in reverse (out), false to run it normally (in)
 	 */
@@ -40,6 +49,7 @@ public class AutoIndex extends CommandBase implements MustangCommand {
         healthReqs.put(conveyor, HealthState.YELLOW);
 		addRequirements(intake, conveyor);
 		countWasJammed = 0;
+		ds = DriverStation.getInstance();
 	}
 
 	public AutoIndex(Intake intake, Conveyor conveyor, Indexer indexer) {
@@ -49,6 +59,8 @@ public class AutoIndex extends CommandBase implements MustangCommand {
 	public void initialize() {
 		intake.roll(reversed);
         conveyor.run(false);
+		isAuto = ds.isAutonomousEnabled();
+		startTime = RobotController.getFPGATime();
 	}
 
 	public void execute() {
@@ -66,7 +78,13 @@ public class AutoIndex extends CommandBase implements MustangCommand {
 
 	@Override
 	public boolean isFinished(){
-		return indexer.getTotalNumBalls() == targetBalls;
+		// i++;
+		// if(isAuto && i%50==0 && RobotController.getFPGATime()-startTime >= 12500000){
+		// 	return true;
+		// }	
+		// else{
+			return indexer.getTotalNumBalls() == targetBalls;
+		//}
 	}
 
 	@Override
