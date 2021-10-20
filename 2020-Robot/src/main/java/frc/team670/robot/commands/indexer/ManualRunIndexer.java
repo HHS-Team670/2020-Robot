@@ -51,10 +51,11 @@ public class ManualRunIndexer extends CommandBase implements MustangCommand {
      */
     @Override
     public void execute() {
-        if (reversed) {
-            indexer.runReversed(true);
-        } else {
+        if(!reversed && indexer.updrawIsUpToSpeed()){
             indexer.run(true);
+        }
+        else {
+            indexer.runReversed(true);
         }
         conveyor.run(reversed);
         intake.roll(reversed);

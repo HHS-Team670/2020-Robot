@@ -36,7 +36,7 @@ public class GetVisionData extends CommandBase implements MustangCommand {
     @Override
     public void initialize() {
         runVisionOnce =  false;
-        coprocessor.triggerVision();
+        coprocessor.getLatestVisionData();
         // SmartDashboard.putNumberArray(coprocessor.VISION_RETURN_NETWORK_KEY, new double[] { RobotConstants.VISION_ERROR_CODE,
         //         RobotConstants.VISION_ERROR_CODE, RobotConstants.VISION_ERROR_CODE }); // Clears vision data so we don't
         //         
@@ -60,7 +60,7 @@ public class GetVisionData extends CommandBase implements MustangCommand {
 
     @Override
     public void end(boolean interrupted) {
-        double distanceFromTargetMeters = coprocessor.getDistanceToTargetMeters() * 100;
+        double distanceFromTargetMeters = coprocessor.getDistanceToTargetCm();
         double angleFromTargetForwardDegrees = coprocessor.getAngleToTarget();
         double xToTargetForward = distanceFromTargetMeters * Math.sin(Math.toRadians(angleFromTargetForwardDegrees));
         double yToTargetForward = distanceFromTargetMeters * Math.cos(Math.toRadians(angleFromTargetForwardDegrees));

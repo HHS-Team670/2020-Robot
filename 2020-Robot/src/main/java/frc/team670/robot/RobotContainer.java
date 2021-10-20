@@ -81,7 +81,7 @@ public class RobotContainer extends RobotContainerBase {
 
   public void autonomousInit() {
     indexer.reset();
-    if (!turret.hasZeroed()) { // only zero indexer if needed
+    if (!turret.hasZeroed()) { // only zero turret if needed
       MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
     }
     m_autonomousCommand = getAutonomousCommand();
@@ -103,7 +103,7 @@ public class RobotContainer extends RobotContainerBase {
       MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
     }
     turret.initDefaultCommand();
-    // vision.turnOnLEDs();
+    vision.turnOnLEDs();
   }
 
   public void disabled() {

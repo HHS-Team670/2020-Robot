@@ -88,7 +88,7 @@ public class Indexer extends MustangSubsystemBase {
         NetworkTableInstance instance = NetworkTableInstance.getDefault();
         NetworkTable table = instance.getTable("/SmartDashboard");
         NetworkTableEntry gameData = table.getEntry("Balls");
-        gameData.forceSetNumber(totalNumBalls);
+        gameData.setNumber(totalNumBalls);
     }
 
     public void updateChamberStates() {
