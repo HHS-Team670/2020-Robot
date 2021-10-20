@@ -14,6 +14,7 @@ import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.routines.AutoIndex;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooterByDistance;
+import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.RotateTurret;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.*;
@@ -53,16 +54,16 @@ public class RightShootTrench extends SequentialCommandGroup implements MustangC
         addCommands(
                 // 1) shoot 3 balls from initiation line
                 new StartShooterByDistance(shooter, driveBase), // flywheel starts turning
-                new RotateTurret(turret, driveBase, coprocessor), //
+                new RotateToAngle(turret, -25), //
                 new RunIndexer(indexer), // indexer runs lol
-                new Shoot(shooter),
-                // TODO: see if shooter needs to be stopped while traversing and not shooting
-
-                // 2) goes through the trench and intakes
                 new DeployIntake(true, intake), 
                 new ParallelCommandGroup(
                         getTrajectoryFollowerCommand(trajectory1, driveBase), 
-                        new AutoIndex(intake, conveyor, indexer, 3))
+                        new AutoIndex(intake, conveyor, indexer, 3)),
+                new StartShooterByDistance(shooter, driveBase), // flywheel starts turning
+                new RotateToAngle(turret, -10.75), //
+                new RunIndexer(indexer) // indexer runs lol
+                
 
         );
     }
