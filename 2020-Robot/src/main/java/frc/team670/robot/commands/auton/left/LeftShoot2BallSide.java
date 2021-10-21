@@ -2,6 +2,7 @@ package frc.team670.robot.commands.auton.left;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team670.mustanglib.commands.MustangCommand;
@@ -9,9 +10,10 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.paths.Path;
 import frc.team670.paths.left.Left2Line;
+import frc.team670.robot.commands.indexer.RunIndexer;
+import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.routines.AutoIndex;
-import frc.team670.robot.commands.shooter.Shoot;
-import frc.team670.robot.commands.shooter.StartShooterByDistance;
+import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.Conveyor;
@@ -35,7 +37,7 @@ public class LeftShoot2BallSide extends SequentialCommandGroup implements Mustan
     public LeftShoot2BallSide(DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Turret turret, Shooter shooter) {
         
         //TODO: check if there needs to be a center turret? or it is automatically straight forward
-        double turretAng = 0;
+        // double turretAng = 17.5;
 
      
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -47,18 +49,17 @@ public class LeftShoot2BallSide extends SequentialCommandGroup implements Mustan
         healthReqs.put(turret, HealthState.GREEN);
         
         trajectory = new Left2Line(driveBase);
-        turretAng = RobotConstants.leftTurretAng;
 
         driveBase.resetOdometry(trajectory.getStartingPose());
 
         addCommands(
             //shoot all balls from baseline
-             new StartShooterByDistance(shooter, driveBase),
-             new RotateToAngle(turret, turretAng),
-             new Shoot(shooter),
-
-            //TODO: see if shooter needs to be stopped while traversing and not shooting
+             new StartShooter(shooter),
+             new RotateToAngle(turret, 21),
+             new RunIndexer(indexer), // indexer runs lol
                 
+             new DeployIntake(true, intake),
+
             //from initiation line to 2 balls in line under switch
             new ParallelCommandGroup(
                 getTrajectoryFollowerCommand(trajectory, driveBase),

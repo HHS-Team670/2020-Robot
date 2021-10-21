@@ -10,15 +10,19 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.paths.Path;
 import frc.team670.paths.right.RightThroughTrench;
+import frc.team670.robot.commands.indexer.RunIndexer;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.routines.AutoIndex;
-import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.turret.RotateToAngle;
-import frc.team670.robot.commands.turret.RotateTurret;
-import frc.team670.robot.constants.RobotConstants;
-import frc.team670.robot.subsystems.*;
-import frc.team670.robot.commands.indexer.RunIndexer;
+import frc.team670.robot.commands.turret.ZeroTurret;
+import frc.team670.robot.subsystems.Conveyor;
+import frc.team670.robot.subsystems.DriveBase;
+import frc.team670.robot.subsystems.Indexer;
+import frc.team670.robot.subsystems.Intake;
+import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Turret;
+import frc.team670.robot.subsystems.Vision;
 
 /**
  * Trench Shoot routine for Chezy 2021 (workshop 10/12/2021) google doc link:
@@ -53,6 +57,7 @@ public class RightShootTrench extends SequentialCommandGroup implements MustangC
 
         addCommands(
                 // 1) shoot 3 balls from initiation line
+                new ZeroTurret(turret),
                 new StartShooterByDistance(shooter, driveBase), // flywheel starts turning
                 new RotateToAngle(turret, -25), //
                 new RunIndexer(indexer), // indexer runs lol

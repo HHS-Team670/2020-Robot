@@ -17,6 +17,8 @@ import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.AutoSelector;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
+import frc.team670.robot.commands.auton.center.CenterShoot3BallSide;
+import frc.team670.robot.commands.auton.left.LeftShoot2BallSide;
 import frc.team670.robot.commands.auton.right.RightShootTrench;
 import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.constants.FieldConstants;
@@ -71,13 +73,16 @@ public class RobotContainer extends RobotContainerBase {
    */
   public MustangCommand getAutonomousCommand() {
     // MustangCommand autonCommand = autoSelector.getSelectedRoutine();
-    MustangCommand autonCommand = new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, vision);
+    MustangCommand autonCommand = new LeftShoot2BallSide(driveBase, intake, conveyor, indexer, turret, shooter);
     Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
   }
 
   public void autonomousInit() {
     indexer.reset();
+    if (!turret.hasZeroed()) {
+      MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
+    }
     m_autonomousCommand = getAutonomousCommand();
     if (m_autonomousCommand != null) {
     MustangScheduler.getInstance().schedule(m_autonomousCommand);

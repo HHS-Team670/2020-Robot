@@ -61,7 +61,7 @@ public class RunIndexer extends CommandBase implements MustangCommand {
         if(indexer.getTotalNumBalls() == 0 && microSecondsSinceZeroBalls == -1){
             microSecondsSinceZeroBalls =  RobotController.getFPGATime();
         }
-        if(microSecondsSinceZeroBalls != -1 && RobotController.getFPGATime() - microSecondsSinceZeroBalls >= 500000){
+        if(microSecondsSinceZeroBalls != -1 && RobotController.getFPGATime() - microSecondsSinceZeroBalls >= 1000000){
             microSecondsSinceZeroBalls = -1;
             return true;
         }

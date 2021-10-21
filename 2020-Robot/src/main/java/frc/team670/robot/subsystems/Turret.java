@@ -23,7 +23,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
     private static final double TURRET_MAX_DEGREES = 18; // from front, past straight forward
 
     private static final double SOFT_MINIMUM_DEGREES = TURRET_MIN_DEGREES + 3;
-    private static final double SOFT_MAXIMUM_DEGREES = 0;
+    private static final double SOFT_MAXIMUM_DEGREES = 22; // can go past max 0ing point/sensor, that's only for zeroing. This is needed for left auton path
 
     private CANDigitalInput forwardLimit;
     private CANDigitalInput reverseLimit;
@@ -217,9 +217,10 @@ public class Turret extends SparkMaxRotatingSubsystem {
      * one we move to for zeroing
      */
     public void resetRotatorEncoderFromLimitSwitch() {
+        forwardLimit.enableLimitSwitch(true);
         if (isForwardLimitSwitchTripped()) {
             rotator_encoder.setPosition(getMotorRotationsFromAngle(TURRET_MAX_DEGREES));
-            this.rotator.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float)(getMotorRotationsFromAngle(TURRET_MAX_DEGREES)));
+            this.rotator.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float)(getMotorRotationsFromAngle(SOFT_MAXIMUM_DEGREES)));
         }
 
         if (isReverseLimitSwitchTripped()) {
