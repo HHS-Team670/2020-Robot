@@ -72,8 +72,8 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    // MustangCommand autonCommand = autoSelector.getSelectedRoutine();
-    MustangCommand autonCommand = new LeftShoot2BallSide(driveBase, intake, conveyor, indexer, turret, shooter);
+    MustangCommand autonCommand = autoSelector.getSelectedRoutine();
+    // MustangCommand autonCommand = new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, vision);
     Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
   }
