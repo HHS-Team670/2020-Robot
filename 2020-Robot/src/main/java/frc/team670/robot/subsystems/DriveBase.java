@@ -361,7 +361,7 @@ public class DriveBase extends TankDriveBase {
   @Override
   public void mustangPeriodic() {
     // Update the odometry in the periodic block
-    SmartDashboard.putNumber("Heading: %s", getHeading());
+    // SmartDashboard.putNumber("Heading: %s", getHeading());
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
   }
 
@@ -384,19 +384,19 @@ public class DriveBase extends TankDriveBase {
     m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
     CANError lE = left1Encoder.setPosition(0);
     CANError rE = right1Encoder.setPosition(0);
-    Logger.consoleLog("Encoder return value %s %s", lE, rE);
-    Logger.consoleLog("Encoder positions %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
+    // Logger.consoleLog("Encoder return value %s %s", lE, rE);
+    // Logger.consoleLog("Encoder positions %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
     int counter = 0;
     while ((left1Encoder.getPosition() != 0 || right1Encoder.getPosition() != 0) && counter < 30) {
       lE = left1Encoder.setPosition(0);
       rE = right1Encoder.setPosition(0);
       counter++;
     }
-    Logger.consoleLog("Encoder return value %s %s", lE, rE);
-    Logger.consoleLog("Encoder positions %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
-    Logger.consoleLog("Drivebase pose reset %s", pose);
-    Logger.consoleLog("Drivebase get position after reset %s %s", left1Encoder.getPosition(),
-        right1Encoder.getPosition());
+    // Logger.consoleLog("Encoder return value %s %s", lE, rE);
+    // Logger.consoleLog("Encoder positions %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
+    // Logger.consoleLog("Drivebase pose reset %s", pose);
+    // Logger.consoleLog("Drivebase get position after reset %s %s", left1Encoder.getPosition(),
+        // right1Encoder.getPosition());
   }
 
   public void resetOdometry() {

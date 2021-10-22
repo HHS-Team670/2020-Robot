@@ -97,7 +97,7 @@ public class OI extends OIBase{
     extendClimb.whenPressed(new ExtendClimber(climber));
     retractClimb.whenPressed(new Climb(climber));
     autoOuttake.whenPressed(new ShootAllBalls(indexer, conveyor, shooter, drivebase));
-    runIndexer.whenPressed(new RunIndexer(indexer));
+    runIndexer.whenPressed(new RunIndexer(indexer, conveyor));
     autoIntake.whenPressed(new AutoIndex(intake, conveyor, indexer));
 
     xboxVision.whenPressed(new GetLatestDataAndAlignTurret(turret, drivebase, vision));

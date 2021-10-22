@@ -60,7 +60,7 @@ public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implemen
                 ),
                 new Shoot(shooter), 
                     // new StageOneBallToShoot(indexer),
-                new RunIndexer(indexer),
+                new RunIndexer(indexer, conveyor),
 
                 new WaitCommand(waitTime), // Delay moving after shot if needed
 

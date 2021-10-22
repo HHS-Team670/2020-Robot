@@ -13,7 +13,10 @@ import frc.team670.paths.right.RightThroughTrench;
 import frc.team670.robot.commands.indexer.RunIndexer;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.routines.AutoIndex;
+import frc.team670.robot.commands.shooter.SetRPMTarget;
+import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StartShooterByDistance;
+import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.subsystems.Conveyor;
@@ -58,16 +61,18 @@ public class RightShootTrench extends SequentialCommandGroup implements MustangC
         addCommands(
                 // 1) shoot 3 balls from initiation line
                 new ZeroTurret(turret),
-                new StartShooterByDistance(shooter, driveBase), // flywheel starts turning
-                new RotateToAngle(turret, -25), //
-                new RunIndexer(indexer), // indexer runs lol
+                new RotateToAngle(turret, -30), //
+                new StartShooter(shooter), // flywheel starts turning
+                new RunIndexer(indexer, conveyor), // indexer runs lol
+                // new StopShooter(shooter),
                 new DeployIntake(true, intake), 
                 new ParallelCommandGroup(
                         getTrajectoryFollowerCommand(trajectory1, driveBase), 
                         new AutoIndex(intake, conveyor, indexer, 3)),
-                new StartShooterByDistance(shooter, driveBase), // flywheel starts turning
                 new RotateToAngle(turret, -10.75), //
-                new RunIndexer(indexer) // indexer runs lol
+                new SetRPMTarget(3300, shooter),
+                // new StartShooter(shooter),
+                new RunIndexer(indexer, conveyor) // indexer runs lol
                 
 
         );

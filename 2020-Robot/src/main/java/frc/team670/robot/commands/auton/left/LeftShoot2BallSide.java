@@ -56,7 +56,7 @@ public class LeftShoot2BallSide extends SequentialCommandGroup implements Mustan
             //shoot all balls from baseline
              new StartShooter(shooter),
              new RotateToAngle(turret, 21),
-             new RunIndexer(indexer), // indexer runs lol
+             new RunIndexer(indexer, conveyor), // indexer runs lol
                 
              new DeployIntake(true, intake),
 

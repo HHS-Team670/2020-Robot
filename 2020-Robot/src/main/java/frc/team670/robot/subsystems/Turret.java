@@ -141,8 +141,6 @@ public class Turret extends SparkMaxRotatingSubsystem {
         rotator.setInverted(true);
         forwardLimit = rotator.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
         reverseLimit = rotator.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
-        forwardLimit.enableLimitSwitch(true);
-        reverseLimit.enableLimitSwitch(true);
     }
 
     @Override
@@ -155,6 +153,11 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
     public boolean hasZeroed() {
         return this.zeroedAlready;
+    }
+
+    public void setLimitSwitch(boolean enabled){
+        forwardLimit.enableLimitSwitch(enabled);
+        reverseLimit.enableLimitSwitch(enabled);
     }
 
     /**
@@ -217,7 +220,6 @@ public class Turret extends SparkMaxRotatingSubsystem {
      * one we move to for zeroing
      */
     public void resetRotatorEncoderFromLimitSwitch() {
-        forwardLimit.enableLimitSwitch(true);
         if (isForwardLimitSwitchTripped()) {
             rotator_encoder.setPosition(getMotorRotationsFromAngle(TURRET_MAX_DEGREES));
             this.rotator.setSoftLimit(CANSparkMax.SoftLimitDirection.kForward, (float)(getMotorRotationsFromAngle(SOFT_MAXIMUM_DEGREES)));
