@@ -61,6 +61,9 @@ public class OI extends OIBase {
       XboxButtons.RIGHT_JOYSTICK_BUTTON);
   private static JoystickButton toggleReverseDrive = new JoystickButton(driverController, XboxButtons.LEFT_BUMPER);
 
+private static JoystickButton xboxVison = new JoystickButton(getDriverController(),XboxButtons);
+private static JoystickButton shoot  = new JoystickButton(getDriverController9), 10)
+
   public boolean isQuickTurnPressed() {
     return driverController.getRightBumper();
   }
