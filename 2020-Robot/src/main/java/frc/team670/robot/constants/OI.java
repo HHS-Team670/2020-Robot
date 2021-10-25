@@ -40,27 +40,11 @@ public class OI extends OIBase {
 
   // operator buttons
   private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), 1);
-  private static JoystickButton runIntakeOut = new JoystickButton(getOperatorController(), 5);
-  private static JoystickButton runIntakeIn = new JoystickButton(getOperatorController(), 3);
-  private static JoystickButton toggleShooter = new JoystickButton(getOperatorController(), 6);
-  private static JoystickButton extendClimb = new JoystickButton(getOperatorController(), 11);
-  private static JoystickButton retractClimb = new JoystickButton(getOperatorController(), 12);
-  private static JoystickButton runIndexer = new JoystickButton(getOperatorController(), 2);
-  private static JoystickButton autoIntake = new JoystickButton(getOperatorController(), 7);
-  private static JoystickButton autoOuttake = new JoystickButton(getOperatorController(), 8);
-  private static JoystickButton manualRunIndexerIn = new JoystickButton(getOperatorController(), 10);
-  private static JoystickButton manualRunIndexerOut = new JoystickButton(getOperatorController(), 9);
+  
 
   // xbox buttons
   private static JoystickButton xboxVision = new JoystickButton(getDriverController(), XboxButtons.A);
-  private static JoystickButton xboxIncreaseSpeed = new JoystickButton(getDriverController(), XboxButtons.B);
-  private static JoystickButton xboxDecreaseSpeed = new JoystickButton(getDriverController(), XboxButtons.X);
-  private static JoystickButton xboxRaiseClimber = new JoystickButton(getDriverController(),
-      XboxButtons.LEFT_JOYSTICK_BUTTON);
-  private static JoystickButton xboxLowerClimber = new JoystickButton(getDriverController(),
-      XboxButtons.RIGHT_JOYSTICK_BUTTON);
-  private static JoystickButton toggleReverseDrive = new JoystickButton(driverController, XboxButtons.LEFT_BUMPER);
-
+  
   public boolean isQuickTurnPressed() {
     return driverController.getRightBumper();
   }
@@ -94,23 +78,10 @@ public class OI extends OIBase {
     Vision vision = (Vision) subsystemBases[7];
 
     toggleIntake.whenPressed(new ToggleIntake(intake));
-    runIntakeIn.toggleWhenPressed((new RunIntakeConveyor(intake, conveyor, indexer, false)));
-    runIntakeOut.toggleWhenPressed((new RunIntakeConveyor(intake, conveyor, indexer, true)));
-    toggleShooter.toggleWhenPressed(new ToggleShooter(shooter, drivebase));
-    extendClimb.whenPressed(new ExtendClimber(climber));
-    retractClimb.whenPressed(new Climb(climber));
-    autoOuttake.whenPressed(new ShootAllBalls(indexer, conveyor, shooter, drivebase));
-    // runIndexer.whenPressed(new RunIndexer(indexer));
-    autoIntake.whenPressed(new AutoIndex(intake, conveyor, indexer));
-    manualRunIndexerIn.whileHeld(new ManualRunIndexer(indexer, conveyor, intake, false));
-    manualRunIndexerOut.whileHeld(new ManualRunIndexer(indexer, conveyor, intake, true));
+    
 
     xboxVision.whenPressed(new GetLatestDataAndAlignTurret(turret, drivebase, vision));
-    xboxIncreaseSpeed.whenPressed(new SetRPMAdjuster(100, shooter));
-    xboxDecreaseSpeed.whenPressed(new SetRPMAdjuster(-100, shooter));
-    xboxLowerClimber.whenPressed(new Climb(climber));
-    xboxRaiseClimber.whenPressed(new ExtendClimber(climber));
-    toggleReverseDrive.whenPressed(new FlipDriveDirection());
+    
 
     xkeys = new XKeys(drivebase, intake, conveyor, indexer, shooter, climber, turret, vision);
   }
