@@ -36,7 +36,6 @@ public class Vision extends MustangSubsystemBase{
 
     // These are for sending vision health to dashboard
     private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
-    private static NetworkTable healthTable = instance.getTable("/SmartDashboard");
 
     // table for vision
     NetworkTable visionTable = instance.getTable(VISION_TABLE_NAME);
@@ -189,6 +188,9 @@ public class Vision extends MustangSubsystemBase{
 
     @Override
     public HealthState checkHealth() {
+        if(keyData.getEntry(1) == RobotConstants.VISION_ERROR_CODE){
+            return HealthState.RED;
+        }
         return HealthState.GREEN;
     }
 
