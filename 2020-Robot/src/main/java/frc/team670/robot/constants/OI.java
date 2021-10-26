@@ -9,7 +9,6 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.climb.Climb;
 import frc.team670.robot.commands.climb.ExtendClimber;
-import frc.team670.robot.commands.indexer.RunIndexer;
 import frc.team670.robot.commands.indexer.ManualRunIndexer;
 // import frc.team670.robot.commands.indexer.ShootAllBalls;
 // import frc.team670.robot.commands.indexer.ShootBall;
@@ -20,7 +19,7 @@ import frc.team670.robot.commands.routines.AutoIndex;
 import frc.team670.robot.commands.routines.ShootAllBalls;
 import frc.team670.robot.commands.shooter.SetRPMAdjuster;
 import frc.team670.robot.commands.shooter.ToggleShooter;
-import frc.team670.robot.commands.turret.GetLatestDataAndAlignTurret;
+import frc.team670.robot.commands.turret.RotateTurret;
 import frc.team670.robot.dataCollection.XKeys;
 import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.subsystems.Conveyor;
@@ -105,7 +104,7 @@ public class OI extends OIBase {
     manualRunIndexerIn.whileHeld(new ManualRunIndexer(indexer, conveyor, intake, false));
     manualRunIndexerOut.whileHeld(new ManualRunIndexer(indexer, conveyor, intake, true));
 
-    xboxVision.whenPressed(new GetLatestDataAndAlignTurret(turret, drivebase, vision));
+    xboxVision.whenPressed(new RotateTurret(turret, drivebase, vision));
     xboxIncreaseSpeed.whenPressed(new SetRPMAdjuster(100, shooter));
     xboxDecreaseSpeed.whenPressed(new SetRPMAdjuster(-100, shooter));
     xboxLowerClimber.whenPressed(new Climb(climber));
