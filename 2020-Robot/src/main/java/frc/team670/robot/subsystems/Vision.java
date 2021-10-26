@@ -7,11 +7,11 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team670.robot.constants.FieldConstants;
-import frc.team670.robot.constants.RobotConstants;
-import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangNotifications;
+import frc.team670.mustanglib.utils.math.interpolable.PolynomialRegression;
+import frc.team670.robot.constants.RobotConstants;
+import frc.team670.robot.constants.RobotMap;
 
 /**
  * Stores values off of NetworkTables for easy retrieval and gives them
@@ -24,8 +24,6 @@ public class Vision extends MustangSubsystemBase{
     private NetworkTableObject keyData;
 
     private Solenoid cameraLEDs;
-
-    private boolean currentlyUsingVision;
 
     // The name of the subtable set on the Pi
     public static final String VISION_TABLE_NAME = "SmartDashboard";
@@ -46,13 +44,36 @@ public class Vision extends MustangSubsystemBase{
     // Vision Constants
     public static final double OUTER_TARGET_CENTER = 249; // centimeters
 
+    private static final double[] measuredDistancesMeters = {
+        3.05, //10ft 
+        3.66, 
+        4.27,
+        4.88, 
+        5.49, 
+        6.1, 
+        6.71, 
+        7.32 //24ft
+      };
+    
+      private static final double[] measuredContourArea = {
+        4365, 
+        3526, 
+        2590, 
+        2046, 
+        1593, 
+        1325, 
+        1104, 
+        924
+      };
+    
+      private static final PolynomialRegression distanceRegression = new PolynomialRegression(measuredDistancesMeters, measuredContourArea, 4);
+
     public Vision() {
         this(VISION_RETURN_NETWORK_KEY);
     }
 
     private Vision(String key) {
         keyData = new NetworkTableObject(key);
-        this.currentlyUsingVision = false;
         cameraLEDs = new Solenoid(RobotMap.PCMODULE, RobotMap.VISION_LED_PCM);
         SmartDashboard.putBoolean("LEDs on", false);
     }
@@ -64,29 +85,14 @@ public class Vision extends MustangSubsystemBase{
     public void getCameraToTargetInfo() {
         try{
             double IMAGE_WIDTH = keyData.getEntry(2);
-            double IMAGE_HEIGHT = keyData.getEntry(3);
     
             double xPixel = keyData.getEntry(0);
-            double yPixel = keyData.getEntry(1);
     
             double nX = xPixel - IMAGE_WIDTH/2;
-            double nY = yPixel - IMAGE_HEIGHT/2;
 
             horizontalAngle = nX/(IMAGE_WIDTH/2) * (RobotConstants.kHorizontalFOV/2);
-    
-            // double x = RobotConstants.kVPW/2 * nX;
-            // double y = RobotConstants.kVPH/2 * nY;
-    
 
-            SmartDashboard.putNumber("nX", nX);
-            SmartDashboard.putNumber("xPixel", xPixel);
-
-            SmartDashboard.putNumber("imageWidth", IMAGE_WIDTH);
-
-            // horizontalAngle = Math.atan2(1,x);
-            // double verticalAngle = Math.atan2(1,y);
-    
-            // distance = (FieldConstants.TARGET_CENTER_HEIGHT-RobotConstants.TURRET_CAMERA_HEIGHT) / Math.tan(RobotConstants.TILT_ANGLE+verticalAngle);
+            distance = distanceRegression.predict(keyData.getEntry(4));
         }
         catch (Exception e){
             MustangNotifications.reportWarning(e.getMessage());
@@ -169,29 +175,6 @@ public class Vision extends MustangSubsystemBase{
 
     }
 
-    /**
-     * Sets whether to use vision
-     * 
-     * @param enabled true for vision, false for no vision
-     */
-    public void enableVision(boolean enabled) {
-        NetworkTableEntry visionHealth = healthTable.getEntry("vision");
-        if (enabled) {
-            this.currentlyUsingVision = true;
-            visionHealth.forceSetString("green");
-        } else {
-            this.currentlyUsingVision = false;
-            visionHealth.forceSetString("red");
-        }
-    }
-
-    /**
-     * @return whether or not vision is currently running/in use
-     */
-    public boolean isVisionEnabled(){
-        return this.currentlyUsingVision;
-    }
-
     public void turnOnLEDs() {
         cameraLEDs.set(true);
     }
@@ -211,11 +194,10 @@ public class Vision extends MustangSubsystemBase{
 
     @Override
     public void mustangPeriodic() {
-        // if(keyData.getEntry(2) != previousTimestamp){
-        //     getCameraToTargetInfo();
-        //     previousTimestamp = (long)keyData.getEntry(2);
-        // }
-        getCameraToTargetInfo();
+        if(keyData.getEntry(5) != previousTimestamp){
+            getCameraToTargetInfo();
+            previousTimestamp = (long)keyData.getEntry(5);
+        }
         SmartDashboard.putNumber("Distance", distance);
         SmartDashboard.putNumber("Angle", horizontalAngle);
     }
