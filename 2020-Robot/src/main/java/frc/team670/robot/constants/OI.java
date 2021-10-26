@@ -83,6 +83,18 @@ public class OI extends OIBase{
     return operatorController;
   }
 
+  public static JoystickButton getRunIntakeIn() {
+    return runIntakeIn;
+  }
+
+  public static JoystickButton getToggleShooter(){
+    return ToggleShooter;
+  }
+
+  public static JoystickButton getExtendClimb(){
+    return extendClimb;
+  }
+
   public void configureButtonBindings(MustangSubsystemBase... subsystemBases){
     DriveBase drivebase = (DriveBase)subsystemBases[0];
     Intake intake = (Intake)subsystemBases[1];
