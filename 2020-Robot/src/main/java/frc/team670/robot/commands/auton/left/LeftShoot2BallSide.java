@@ -15,7 +15,7 @@ import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.routines.AutoIndex;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.turret.RotateToAngle;
-import frc.team670.robot.constants.RobotConstants;
+import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
@@ -54,16 +54,19 @@ public class LeftShoot2BallSide extends SequentialCommandGroup implements Mustan
 
         addCommands(
             //shoot all balls from baseline
-             new StartShooter(shooter),
-             new RotateToAngle(turret, 21),
+            new ZeroTurret(turret),
+            new ParallelCommandGroup(
+                new StartShooter(shooter), // flywheel starts turning
+                new RotateToAngle(turret, 0) //
+            ),
              new RunIndexer(indexer, conveyor), // indexer runs lol
                 
-             new DeployIntake(true, intake),
+            //  new DeployIntake(true, intake),
 
             //from initiation line to 2 balls in line under switch
             new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory, driveBase),
-                new AutoIndex(intake, conveyor, indexer, 2)     
+                getTrajectoryFollowerCommand(trajectory, driveBase)
+                // new AutoIndex(intake, conveyor, indexer, 2)     
             )
 
             
