@@ -80,7 +80,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getMaxRotatorRPM() {
-            return 200; // TODO: probably needs to be adjusted
+            return 170; // TODO: probably needs to be adjusted
         }
 
         public double getMinRotatorRPM() {
@@ -88,7 +88,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public double getMaxAcceleration() {
-            return 200; // TODO: probably needs to be adjusted
+            return 170; // TODO: probably needs to be adjusted
         }
 
         public double getAllowedError() {

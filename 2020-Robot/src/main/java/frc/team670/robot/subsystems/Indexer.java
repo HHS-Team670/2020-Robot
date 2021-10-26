@@ -88,7 +88,7 @@ public class Indexer extends MustangSubsystemBase {
         NetworkTableInstance instance = NetworkTableInstance.getDefault();
         NetworkTable table = instance.getTable("/SmartDashboard");
         NetworkTableEntry gameData = table.getEntry("Balls");
-        gameData.forceSetNumber(totalNumBalls);
+        gameData.setNumber(totalNumBalls);
     }
 
     public void updateChamberStates() {
@@ -105,6 +105,14 @@ public class Indexer extends MustangSubsystemBase {
         backMotor.set(-1 * INDEXER_SPEED);
         if (isOuttake) {
             updraw.set(ControlMode.PercentOutput, UPDRAW_SPEED);
+        }
+    }
+
+    public void runReversed(boolean isOuttake) {
+        frontMotor.set(-1 * INDEXER_SPEED);
+        backMotor.set(INDEXER_SPEED);
+        if (isOuttake) {
+            updraw.set(ControlMode.PercentOutput, -1 * UPDRAW_SPEED);
         }
     }
 
@@ -264,7 +272,7 @@ public class Indexer extends MustangSubsystemBase {
                     // logSensorVals();
                 }
             } catch (Exception e) {
-                // TODO: handle exception
+                serialport = null;
             }
         }
     }
