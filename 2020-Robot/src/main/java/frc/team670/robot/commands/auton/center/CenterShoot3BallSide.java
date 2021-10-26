@@ -62,15 +62,16 @@ public class CenterShoot3BallSide extends SequentialCommandGroup implements Must
 
                 // 1) shoot 3 balls from initiation line
                 new ZeroTurret(turret),
-                new StartShooter(shooter), // flywheel starts turning
-                new RotateToAngle(turret, 0), //
-                new RunIndexer(indexer, conveyor), // indexer runs lol
-
-                // 2) goes under switch and intakes 3 balls under switch
-                new DeployIntake(true, intake),
                 new ParallelCommandGroup(
-                    getTrajectoryFollowerCommand(trajectory, driveBase),
-                    new AutoIndex(intake, conveyor, indexer, 3)
+                    new StartShooter(shooter), // flywheel starts turning
+                    new RotateToAngle(turret, 0) //
+                ),
+                new RunIndexer(indexer, conveyor), // indexer runs lol
+                // 2) goes under switch and intakes 3 balls under switch
+                // new DeployIntake(true, intake),
+                new ParallelCommandGroup(
+                    getTrajectoryFollowerCommand(trajectory, driveBase)
+                    // new AutoIndex(intake, conveyor, indexer, 3)
                 )
         );
 
