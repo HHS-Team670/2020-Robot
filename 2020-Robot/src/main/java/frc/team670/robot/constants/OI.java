@@ -95,6 +95,12 @@ public class OI extends OIBase{
     return extendClimb;
   }
 
+  public static void randomDrive(){
+
+    drivebase.tankDrive(0.5,0.5);
+
+  }
+
   public void configureButtonBindings(MustangSubsystemBase... subsystemBases){
     DriveBase drivebase = (DriveBase)subsystemBases[0];
     Intake intake = (Intake)subsystemBases[1];
@@ -106,7 +112,8 @@ public class OI extends OIBase{
     Vision vision = (Vision)subsystemBases[7];
 
     toggleIntake.whenPressed(new ToggleIntake(intake));
-    runIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
+    //runIntakeIn.whenPressed(new IntakeBallToIndexer(intake, conveyor, indexer));
+    runIntakeIn.whenPressed(randomDrive());
     runIntakeIn.whenReleased(new StopIntaking(intake, conveyor, indexer));
     runIntakeOut.toggleWhenPressed((new ReverseIntakeConveyor(intake, conveyor)));
     toggleShooter.toggleWhenPressed(new ToggleShooter(shooter, drivebase));
