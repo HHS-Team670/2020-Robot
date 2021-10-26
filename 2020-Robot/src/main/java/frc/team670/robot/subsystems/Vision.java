@@ -69,16 +69,24 @@ public class Vision extends MustangSubsystemBase{
             double xPixel = keyData.getEntry(0);
             double yPixel = keyData.getEntry(1);
     
-            double nX = xPixel + IMAGE_WIDTH/2;
-            double nY= yPixel + IMAGE_HEIGHT/2;
+            double nX = xPixel - IMAGE_WIDTH/2;
+            double nY = yPixel - IMAGE_HEIGHT/2;
+
+            horizontalAngle = nX/(IMAGE_WIDTH/2) * (RobotConstants.kHorizontalFOV/2);
     
-            double x = RobotConstants.kVPW/2 * nX;
-            double y = RobotConstants.kVPH/2 * nY;
+            // double x = RobotConstants.kVPW/2 * nX;
+            // double y = RobotConstants.kVPH/2 * nY;
     
-            horizontalAngle = Math.atan2(1,x);
-            double verticalAngle = Math.atan2(1,y);
+
+            SmartDashboard.putNumber("nX", nX);
+            SmartDashboard.putNumber("xPixel", xPixel);
+
+            SmartDashboard.putNumber("imageWidth", IMAGE_WIDTH);
+
+            // horizontalAngle = Math.atan2(1,x);
+            // double verticalAngle = Math.atan2(1,y);
     
-            distance = (FieldConstants.TARGET_CENTER_HEIGHT-RobotConstants.TURRET_CAMERA_HEIGHT) / Math.tan(RobotConstants.TILT_ANGLE+verticalAngle);
+            // distance = (FieldConstants.TARGET_CENTER_HEIGHT-RobotConstants.TURRET_CAMERA_HEIGHT) / Math.tan(RobotConstants.TILT_ANGLE+verticalAngle);
         }
         catch (Exception e){
             MustangNotifications.reportWarning(e.getMessage());

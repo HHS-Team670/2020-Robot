@@ -35,7 +35,7 @@ public class OI extends OIBase {
   private static MustangController driverController = new MustangController(RobotMap.DRIVER_CONTROLLER_PORT);
   private static Joystick operatorController = new Joystick(RobotMap.OPERATOR_CONTROLLER_PORT);
 
-  private static XKeys xkeys;
+  // private static XKeys xkeys;
 
   // operator buttons
   private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), 1);
@@ -111,6 +111,6 @@ public class OI extends OIBase {
     xboxRaiseClimber.whenPressed(new ExtendClimber(climber));
     toggleReverseDrive.whenPressed(new FlipDriveDirection());
 
-    xkeys = new XKeys(drivebase, intake, conveyor, indexer, shooter, climber, turret, vision);
+    // xkeys = new XKeys(drivebase, intake, conveyor, indexer, shooter, climber, turret, vision);
   }
 }
