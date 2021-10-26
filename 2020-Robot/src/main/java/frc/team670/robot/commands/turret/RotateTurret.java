@@ -1,17 +1,19 @@
 package frc.team670.robot.commands.turret;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.robot.constants.FieldConstants;
+import frc.team670.robot.constants.RobotConstants;
+import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
-import frc.team670.robot.constants.RobotConstants;
-import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.Vision;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /**
  * Rotates the turret to an angle with the goal of having the turret pointed in
@@ -19,7 +21,7 @@ import frc.team670.robot.subsystems.Vision;
  * 
  * @author ctychen
  */
-public class RotateTurret extends InstantCommand implements MustangCommand {
+public class RotateTurret extends CommandBase implements MustangCommand {
 
     private Turret turret;
     private DriveBase driveBase;
@@ -31,6 +33,7 @@ public class RotateTurret extends InstantCommand implements MustangCommand {
     private boolean validData = false;
 
     public RotateTurret(Turret turret, DriveBase driveBase, Vision pi) {
+        addRequirements(turret);
         this.turret = turret;
         this.driveBase = driveBase;
         this.coprocessor = pi;
@@ -70,6 +73,17 @@ public class RotateTurret extends InstantCommand implements MustangCommand {
         }
         targetAngle = turret.relativeAngleToAbsoluteInDegrees(relativeAngleToTarget);
         turret.setSystemTargetAngleInDegrees(targetAngle);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return (turret.hasReachedTargetPosition() || !validData);
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        turret.moveByPercentOutput(0);
+        turret.initDefaultCommand();
     }
 
     public double getDrivebaseAngle() {
