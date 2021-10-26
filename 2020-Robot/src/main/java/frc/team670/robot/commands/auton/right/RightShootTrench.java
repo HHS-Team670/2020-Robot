@@ -60,11 +60,11 @@ public class RightShootTrench extends SequentialCommandGroup implements MustangC
 
         addCommands(
                 // 1) shoot 3 balls from initiation line
-                new ZeroTurret(turret),
                 new ParallelCommandGroup(
-                    new RotateToAngle(turret, -30), //
+                    new ZeroTurret(turret),
                     new StartShooter(shooter) // flywheel starts turning
                 ),
+                new RotateToAngle(turret, -30), //
                 new RunIndexer(indexer, conveyor), // indexer runs lol
                 // new StopShooter(shooter),
                 new DeployIntake(true, intake), 
