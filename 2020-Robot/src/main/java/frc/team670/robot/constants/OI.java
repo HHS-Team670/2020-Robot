@@ -100,7 +100,6 @@ public class OI extends OIBase {
     extendClimb.whenPressed(new ExtendClimber(climber));
     retractClimb.whenPressed(new Climb(climber));
     autoOuttake.whenPressed(new ShootAllBalls(indexer, conveyor, shooter, drivebase));
-    // runIndexer.whenPressed(new RunIndexer(indexer));
     autoIntake.whenPressed(new AutoIndex(intake, conveyor, indexer));
     manualRunIndexerIn.whileHeld(new ManualRunIndexer(indexer, conveyor, intake, false));
     manualRunIndexerOut.whileHeld(new ManualRunIndexer(indexer, conveyor, intake, true));

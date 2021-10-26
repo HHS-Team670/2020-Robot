@@ -17,8 +17,9 @@ import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.robot.commands.auton.AutoSelector;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
-import frc.team670.robot.commands.auton.baseline.ShootThenForward;
-import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToTrench;
+import frc.team670.robot.commands.auton.center.CenterShoot3BallSide;
+import frc.team670.robot.commands.auton.left.LeftShoot2BallSide;
+import frc.team670.robot.commands.auton.right.RightShootTrench;
 import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.OI;
@@ -49,8 +50,8 @@ public class RobotContainer extends RobotContainerBase {
   private static Climber climber = new Climber();
   private static Vision vision = new Vision();
 
-  private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
-      vision);
+  // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
+  //     vision);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -72,15 +73,14 @@ public class RobotContainer extends RobotContainerBase {
    */
   public MustangCommand getAutonomousCommand() {
     // MustangCommand autonCommand = autoSelector.getSelectedRoutine();
-    // MustangCommand autonCommand = new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, vision);
-    MustangCommand autonCommand = new ShootFromBaseLineThenToTrench(StartPosition.RIGHT, driveBase, intake, conveyor,
-    shooter, indexer, turret, vision);
+    MustangCommand autonCommand = new CenterShoot3BallSide(driveBase, intake, conveyor, indexer, turret, shooter, vision);
     Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
   }
 
   public void autonomousInit() {
     indexer.reset();
+    turret.setLimitSwitch(false);
     if (!turret.hasZeroed()) { // only zero turret if needed
       MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
     }
@@ -99,6 +99,7 @@ public class RobotContainer extends RobotContainerBase {
         FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
     driveBase.setTeleopRampRate();
     driveBase.initDefaultCommand();
+    turret.setLimitSwitch(true);
     if (!turret.hasZeroed()) {
       MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
     }

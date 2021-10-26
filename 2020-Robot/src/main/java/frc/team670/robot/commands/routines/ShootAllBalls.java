@@ -34,7 +34,7 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
         addCommands(
             new StartShooterByDistance(shooter, driveBase),
             new ParallelCommandGroup(
-                new RunIndexer(indexer),
+                new RunIndexer(indexer, conveyor),
                 new RunConveyor(false, conveyor, indexer))
             );
     }

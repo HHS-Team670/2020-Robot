@@ -72,10 +72,17 @@ public class RobotConstants extends RobotConstantsBase{
     public static final double kMaxSpeedMetersPerSecond = 1.2;// 1; //0.305;
     public static final double kMaxAccelerationMetersPerSecondSquared = 1.22;// 1; //0.305;
 
-    public static final DifferentialDriveKinematicsConstraint kAutoPathConstraints = new DifferentialDriveKinematicsConstraint(
-            kDriveKinematics, kMaxSpeedMetersPerSecond);
+    public static final double kMaxSpeedMetersPerSecond2 = 0.6;// 1; //0.305;
+    public static final double kMaxAccelerationMetersPerSecondSquared2 = 0.6;// 1; //0.305;
+    public static final double endVelocityMetersPerSecond2 = 0.4;
 
-    //The turret angles depending on the robot start position
+    public static final DifferentialDriveKinematicsConstraint kAutoPathConstraints = new DifferentialDriveKinematicsConstraint(
+            kDriveKinematics, kMaxSpeedMetersPerSecond2);
+
+        public static final DifferentialDriveKinematicsConstraint kAutoPathConstraintsIntaking = new DifferentialDriveKinematicsConstraint(
+                kDriveKinematics, kMaxSpeedMetersPerSecond);
+
+    //The turret angles depending on the robot start position 
     public static final double leftTurretAng = 0;
     public static final double rightTurretAng = -25;
 
