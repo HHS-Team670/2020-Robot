@@ -33,6 +33,7 @@ public class RotateTurret extends CommandBase implements MustangCommand {
     private boolean validData = false;
 
     public RotateTurret(Turret turret, DriveBase driveBase, Vision pi) {
+        addRequirements(turret);
         this.turret = turret;
         this.driveBase = driveBase;
         this.coprocessor = pi;

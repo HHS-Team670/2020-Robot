@@ -107,6 +107,7 @@ public class RobotContainer extends RobotContainerBase {
     vision.turnOnLEDs();
   }
 
+  @Override
   public void disabled() {
     vision.turnOffLEDs();
   }
