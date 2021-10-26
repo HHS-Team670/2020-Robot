@@ -9,8 +9,9 @@ import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangController.XboxButtons;
 import frc.team670.robot.commands.climb.Climb;
 import frc.team670.robot.commands.climb.ExtendClimber;
-import frc.team670.robot.commands.indexer.RunIndexer;
+import frc.team670.robot.commands.indexer.*;
 import frc.team670.robot.commands.indexer.ManualRunIndexer;
+import frc.team670.robot.commands.*;
 // import frc.team670.robot.commands.indexer.ShootAllBalls;
 // import frc.team670.robot.commands.indexer.ShootBall;
 // import frc.team670.robot.commands.indexer.ToggleUpdraw;
@@ -18,9 +19,9 @@ import frc.team670.robot.commands.intake.RunIntakeConveyor;
 import frc.team670.robot.commands.intake.ToggleIntake;
 import frc.team670.robot.commands.routines.AutoIndex;
 import frc.team670.robot.commands.routines.ShootAllBalls;
-import frc.team670.robot.commands.shooter.SetRPMAdjuster;
+import frc.team670.robot.commands.shooter.*;
 import frc.team670.robot.commands.shooter.ToggleShooter;
-import frc.team670.robot.commands.turret.GetLatestDataAndAlignTurret;
+import frc.team670.robot.commands.turret.*;
 import frc.team670.robot.dataCollection.XKeys;
 import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.subsystems.Conveyor;
@@ -41,16 +42,17 @@ public class OI extends OIBase {
   // operator buttons
   private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), 1);
   private static JoystickButton shoot = new JoystickButton(getOperatorController(), 4);
-  private static JoystickButton intakeSwitch = new JoystickButton(getOperatorController(), 2);
   private static JoystickButton conveyorSwitch = new JoystickButton(getOperatorController(), 3);
+  private static JoystickButton indexerSwitch = new JoystickButton(getOperatorController(), 8);
   private static JoystickButton climber = new JoystickButton(getOperatorController(), 5);
   private static JoystickButton stopAll = new JoystickButton(getOperatorController(), 6);
   private static JoystickButton accelerateShooter = new JoystickButton(getOperatorController(), 7);
+  private static JoystickButton turnTurret = new JoystickButton(getOperatorController(), 2);
   
 
   // xbox buttons
   private static JoystickButton xboxVision = new JoystickButton(getDriverController(), XboxButtons.A);
-  private static JoystickButton stopAll = new JoystickButton(getDriverController(), XboxButtons.X);
+  private static JoystickButton stop = new JoystickButton(getDriverController(), XboxButtons.X);
   
   public boolean isQuickTurnPressed() {
     return driverController.getRightBumper();
@@ -85,6 +87,18 @@ public class OI extends OIBase {
     Vision vision = (Vision) subsystemBases[7];
 
     toggleIntake.whenPressed(new ToggleIntake(intake));
+    shoot.whenPressed(new Shoot(shooter));
+    conveyorSwitch.whenPressed(new RunConveyor(conveyor));
+    this.climber.whenPressed(new Climb(climber));
+    indexerSwitch.whenPressed(new RunIndexer(indexer));
+    stopAll.whenPressed(null);
+    stop.whenPressed(null);
+    accelerateShooter.whenPressed(new StartShooter(shooter));
+    turnTurret.whenPressed(new AutoRotate(turret));
+
+
+    
+
     
 
     xboxVision.whenPressed(new GetLatestDataAndAlignTurret(turret, drivebase, vision));
