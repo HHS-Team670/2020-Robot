@@ -203,10 +203,11 @@ public class Vision extends MustangSubsystemBase{
 
     @Override
     public void mustangPeriodic() {
-        if(keyData.getEntry(2) != previousTimestamp){
-            getCameraToTargetInfo();
-            previousTimestamp = (long)keyData.getEntry(2);
-        }
+        // if(keyData.getEntry(2) != previousTimestamp){
+        //     getCameraToTargetInfo();
+        //     previousTimestamp = (long)keyData.getEntry(2);
+        // }
+        getCameraToTargetInfo();
         SmartDashboard.putNumber("Distance", distance);
         SmartDashboard.putNumber("Angle", horizontalAngle);
     }
