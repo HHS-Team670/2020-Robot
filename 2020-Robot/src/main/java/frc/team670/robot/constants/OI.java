@@ -40,10 +40,16 @@ public class OI extends OIBase {
 
   // operator buttons
   private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), 1);
+  private static JoystickButton startSooter = new JoystickButton(getOperatorController(), 2);
+  //private static JoystickButton turnTurret = new JoystickButton(getOperatorController(), //toggle turret
   
 
   // xbox buttons
   private static JoystickButton xboxVision = new JoystickButton(getDriverController(), XboxButtons.A);
+  private static JoystickButton turnLeft = new JoystickButton(getDriverController(), XboxButtons.X);
+  private static JoystickButton turnRight = new JoystickButton(getDriverController(), XboxButtons.B);
+  private static JoystickButton toggleClimber = new JoystickButton(getDriverController(), XboxButtons.Y);
+  
   
   public boolean isQuickTurnPressed() {
     return driverController.getRightBumper();
