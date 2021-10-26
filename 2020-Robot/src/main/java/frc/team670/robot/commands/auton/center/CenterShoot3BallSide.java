@@ -13,9 +13,9 @@ import frc.team670.paths.center.Center3Line;
 import frc.team670.robot.commands.indexer.RunIndexer;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.routines.AutoIndex;
-import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.turret.RotateToAngle;
+import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
@@ -61,6 +61,7 @@ public class CenterShoot3BallSide extends SequentialCommandGroup implements Must
         addCommands(
 
                 // 1) shoot 3 balls from initiation line
+                new ZeroTurret(turret),
                 new StartShooter(shooter), // flywheel starts turning
                 new RotateToAngle(turret, 0), //
                 new RunIndexer(indexer, conveyor), // indexer runs lol
