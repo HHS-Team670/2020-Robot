@@ -188,18 +188,19 @@ public class Vision extends MustangSubsystemBase{
 
     @Override
     public HealthState checkHealth() {
-        if(keyData.getEntry(1) == RobotConstants.VISION_ERROR_CODE){
-            return HealthState.RED;
-        }
+        // if(keyData.getEntry(1) == RobotConstants.VISION_ERROR_CODE){
+        //     return HealthState.RED;
+        // }
         return HealthState.GREEN;
     }
 
     @Override
     public void mustangPeriodic() {
-        if(keyData.getEntry(5) != previousTimestamp){
-            getCameraToTargetInfo();
-            previousTimestamp = (long)keyData.getEntry(5);
-        }
+        // if(keyData.getEntry(5) != previousTimestamp){
+        //     getCameraToTargetInfo();
+        //     previousTimestamp = (long)keyData.getEntry(5);
+        // }
+        getCameraToTargetInfo();
         SmartDashboard.putNumber("Distance", distance);
         SmartDashboard.putNumber("Angle", horizontalAngle);
     }

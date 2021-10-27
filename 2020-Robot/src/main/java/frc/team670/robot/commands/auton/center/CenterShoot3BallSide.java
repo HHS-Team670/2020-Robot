@@ -69,10 +69,11 @@ public class CenterShoot3BallSide extends SequentialCommandGroup implements Must
                 new RunIndexer(indexer, conveyor), // indexer runs lol
                 // 2) goes under switch and intakes 3 balls under switch
                 // new DeployIntake(true, intake),
-                new ParallelCommandGroup(
-                    getTrajectoryFollowerCommand(trajectory, driveBase)
-                    // new AutoIndex(intake, conveyor, indexer, 3)
-                )
+                // new ParallelCommandGroup(
+                //     // new AutoIndex(intake, conveyor, indexer, 3)
+                // )
+                getTrajectoryFollowerCommand(trajectory, driveBase)
+
         );
 
                 // TODO: see if shooter needs to be stopped while traversing and not shooting

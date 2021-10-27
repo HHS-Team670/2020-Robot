@@ -72,9 +72,10 @@ public class RightShootTrench extends SequentialCommandGroup implements MustangC
                     getTrajectoryFollowerCommand(trajectory1, driveBase), 
                     new AutoIndex(intake, conveyor, indexer, 3),
                     new RotateToAngle(turret, -12.75), //
-                    new SetRPMTarget(2775, shooter)
+                    new SetRPMTarget(2850, shooter),
+                    new StartShooter(shooter)
+
                 ),
-                // new StartShooter(shooter),
                 new RunIndexer(indexer, conveyor) // indexer runs lol
                 
 
