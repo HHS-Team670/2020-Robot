@@ -12,14 +12,14 @@ import frc.team670.robot.subsystems.Shooter;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
 
-public class StartShooterByDistance extends CommandBase implements MustangCommand {
+public class StartShooterByPoseDistance extends CommandBase implements MustangCommand {
 
     private Shooter shooter;
     private DriveBase driveBase;
     private double targetRPM;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public StartShooterByDistance(Shooter shooter, DriveBase driveBase){
+    public StartShooterByPoseDistance(Shooter shooter, DriveBase driveBase){
         this.shooter = shooter;
         this.driveBase = driveBase;
         addRequirements(shooter);

@@ -209,7 +209,7 @@ public class Vision extends MustangSubsystemBase{
             }
         }
         catch(Exception e){
-            MustangNotifications.reportWarning("Vision system's reporting error code");
+            MustangNotifications.reportWarning("Vision system's Reporting Error Code: %s", RobotConstants.VISION_ERROR_CODE);
         }
         return HealthState.GREEN;
     }

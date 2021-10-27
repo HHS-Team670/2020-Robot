@@ -15,7 +15,7 @@ import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.routines.AutoIndex;
 import frc.team670.robot.commands.shooter.SetRPMTarget;
 import frc.team670.robot.commands.shooter.StartShooter;
-import frc.team670.robot.commands.shooter.StartShooterByDistance;
+import frc.team670.robot.commands.shooter.StartShooterByPoseDistance;
 import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.ZeroTurret;

@@ -57,6 +57,10 @@ public class RotateTurret extends CommandBase implements MustangCommand {
     @Override
     public void initialize() {
         validData = true;
+        if(coprocessor.getHealth(true) == HealthState.RED){
+            validData = false;
+            return;
+        }
         double relativeAngleToTarget = coprocessor.getAngleToTarget();
         Logger.consoleLog("TurretAngle: %s", relativeAngleToTarget);
         // When vision can't detect the target, rotates the turret based on odometry

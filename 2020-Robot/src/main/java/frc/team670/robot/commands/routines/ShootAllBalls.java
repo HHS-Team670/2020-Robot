@@ -10,7 +10,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.indexer.RunIndexer;
 import frc.team670.robot.commands.intake.RunConveyor;
-import frc.team670.robot.commands.shooter.StartShooterByDistance;
+import frc.team670.robot.commands.shooter.StartShooterByPoseDistance;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
@@ -32,7 +32,7 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
         addCommands(
-            new StartShooterByDistance(shooter, driveBase),
+            new StartShooterByPoseDistance(shooter, driveBase),
             new ParallelCommandGroup(
                 new RunIndexer(indexer, conveyor),
                 new RunConveyor(false, conveyor, indexer))
