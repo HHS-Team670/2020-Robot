@@ -15,6 +15,7 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.paths.left.Left2Line;
 import frc.team670.robot.commands.auton.AutoSelector;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.auton.center.CenterShoot3BallSide;
@@ -73,7 +74,7 @@ public class RobotContainer extends RobotContainerBase {
    */
   public MustangCommand getAutonomousCommand() {
     // MustangCommand autonCommand = autoSelector.getSelectedRoutine();
-    MustangCommand autonCommand = new CenterShoot3BallSide(driveBase, intake, conveyor, indexer, turret, shooter, vision);
+    MustangCommand autonCommand = new LeftShoot2BallSide(driveBase, intake, conveyor, indexer, turret, shooter);
     Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
   }

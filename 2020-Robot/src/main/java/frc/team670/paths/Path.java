@@ -54,12 +54,24 @@ public class Path {
      * @param kAutoPathConstraints 
      *
      */
-    public Path(List<Pose2d> waypoints, DriveBase driveBase, DifferentialDriveKinematicsConstraint kAutoPathConstraints, double kMaxSpeedMetersPerSecond, double kMaxAccelerationMetersPerSecondSquared, double endVelocityMetersPerSecond) {
+    public Path(List<Pose2d> waypoints, DriveBase driveBase, DifferentialDriveKinematicsConstraint kAutoPathConstraints, double kMaxSpeedMetersPerSecond, double kMaxAccelerationMetersPerSecondSquared, double endVelocityMetersPerSecond, boolean reversed) {
         // Logger.consoleLog("slow trajectory");
         this.driveBase = driveBase;
         this.waypointsList = waypoints;
-        TrajectoryConfig config = getConfig(kAutoPathConstraints, kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared, endVelocityMetersPerSecond);
+        TrajectoryConfig config = getConfig(kAutoPathConstraints, kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared, endVelocityMetersPerSecond, reversed);
         trajectoryFromWaypoints(waypoints, config);
+    }
+
+        /**
+     * Used to create a path object based on a list of way points and the drivebase
+     * slower trajectory to compensate while intaking
+     * @param waypoints a list of waypoints
+     * @param driveBase the drivebase which has to follow the path
+     * @param kAutoPathConstraints 
+     *
+     */
+    public Path(List<Pose2d> waypoints, DriveBase driveBase, DifferentialDriveKinematicsConstraint kAutoPathConstraints, double kMaxSpeedMetersPerSecond, double kMaxAccelerationMetersPerSecondSquared, double endVelocityMetersPerSecond) {
+        this(waypoints, driveBase, kAutoPathConstraints, kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared, endVelocityMetersPerSecond, false);
     }
 
     private void trajectoryFromWaypoints(List<Pose2d> waypoints){
@@ -107,7 +119,7 @@ public class Path {
                 RobotConstants.kDriveKinematics, 10);
     }
 
-    private static TrajectoryConfig getConfig(DifferentialDriveKinematicsConstraint kAutoPathConstraints, double kMaxSpeedMetersPerSecond, double kMaxAccelerationMetersPerSecondSquared, double endVelocityMetersPerSecond) {
+    private static TrajectoryConfig getConfig(DifferentialDriveKinematicsConstraint kAutoPathConstraints, double kMaxSpeedMetersPerSecond, double kMaxAccelerationMetersPerSecondSquared, double endVelocityMetersPerSecond, boolean reversed) {
         return new TrajectoryConfig(kMaxSpeedMetersPerSecond,
                 kMaxAccelerationMetersPerSecondSquared)
                         // Add kinematics to ensure max speed is actually obeyed
@@ -115,7 +127,9 @@ public class Path {
                         // Apply the voltage constraint
                         .addConstraint(kAutoPathConstraints)
                         .addConstraint(AUTO_VOLTAGE_CONSTRAINT)
+                        .setReversed(reversed)
                         .setEndVelocity(endVelocityMetersPerSecond);
+                    
     }
 
     private static TrajectoryConfig getConfig() {

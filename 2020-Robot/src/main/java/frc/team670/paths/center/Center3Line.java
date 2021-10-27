@@ -5,8 +5,8 @@ import java.util.List;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import frc.team670.paths.Path;
+import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.mustanglib.utils.Logger;
 
 /**
  * 2021 field
@@ -23,6 +23,6 @@ public class Center3Line extends Path{
                                 new Pose2d(3.09, -2.628, Rotation2d.fromDegrees(0)),
                                 new Pose2d(2, -2.628, Rotation2d.fromDegrees(0))
                         ), 
-                driveBase);
+                driveBase, RobotConstants.kAutoPathConstraints, RobotConstants.kMaxSpeedMetersPerSecond2, RobotConstants.kMaxAccelerationMetersPerSecondSquared2, RobotConstants.endVelocityMetersPerSecond2, true);
         }
 }

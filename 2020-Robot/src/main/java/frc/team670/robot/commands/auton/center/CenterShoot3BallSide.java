@@ -70,9 +70,10 @@ public class CenterShoot3BallSide extends SequentialCommandGroup implements Must
                 // 2) goes under switch and intakes 3 balls under switch
                 // new DeployIntake(true, intake),
                 // new ParallelCommandGroup(
-                //     // new AutoIndex(intake, conveyor, indexer, 3)
+                //     new AutoIndex(intake, conveyor, indexer, 3)
                 // )
                 getTrajectoryFollowerCommand(trajectory, driveBase)
+
 
         );
 
