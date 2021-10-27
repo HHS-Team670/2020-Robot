@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangNotifications;
+import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
 import frc.team670.mustanglib.utils.math.interpolable.PolynomialRegression;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -43,6 +44,9 @@ public class Vision extends MustangSubsystemBase{
     // Vision Constants
     public static final double OUTER_TARGET_CENTER = 249; // centimeters
 
+    /**
+     * These are the points that were used for creating a regression and coming up with the function used below in the predictDistance method
+     */
     private static final double[] measuredDistancesMeters = {
         3.05, //10ft 
         3.66, 
@@ -64,8 +68,6 @@ public class Vision extends MustangSubsystemBase{
         1104, 
         924
       };
-    
-      private static final PolynomialRegression distanceRegression = new PolynomialRegression(measuredDistancesMeters, measuredContourArea, 4);
 
     public Vision() {
         this(VISION_RETURN_NETWORK_KEY);
@@ -76,6 +78,7 @@ public class Vision extends MustangSubsystemBase{
         cameraLEDs = new Solenoid(RobotMap.PCMODULE, RobotMap.VISION_LED_PCM);
         SmartDashboard.putBoolean("LEDs on", false);
     }
+
 
     /**
      * 
@@ -91,12 +94,24 @@ public class Vision extends MustangSubsystemBase{
 
             horizontalAngle = nX/(IMAGE_WIDTH/2) * (RobotConstants.kHorizontalFOV/2);
 
-            distance = distanceRegression.predict(keyData.getEntry(4));
+            distance = predictDistance(keyData.getEntry(4));
         }
         catch (Exception e){
             MustangNotifications.reportWarning(e.getMessage());
         }
         
+    }
+
+    /**
+     * We're using this predefined function and not a list of points with regression since the regression generated usually isn't
+     * accurate. We came up with this function using desmos and had to play around to perfect it. This function is more accurate when far
+     * away from the target than close. Points used to come up with this function are mentioned above. 
+     * 
+     * @param area The area of the contour as calculated by the vision system
+     * @return the predicted distance from the robot turret camera to the target (approximate)
+     */
+    public double predictDistance(double area){
+        return (4857.4/(area-2.5) + 2.29073);
     }
 
     public double getAngleToTarget(){
@@ -188,20 +203,29 @@ public class Vision extends MustangSubsystemBase{
 
     @Override
     public HealthState checkHealth() {
-        // if(keyData.getEntry(1) == RobotConstants.VISION_ERROR_CODE){
-        //     return HealthState.RED;
-        // }
+        try{
+            if(keyData.getEntry(1) == RobotConstants.VISION_ERROR_CODE){
+                return HealthState.RED;
+            }
+        }
+        catch(Exception e){
+            MustangNotifications.reportWarning("Vision system's reporting error code");
+        }
         return HealthState.GREEN;
     }
 
     @Override
     public void mustangPeriodic() {
-        // if(keyData.getEntry(5) != previousTimestamp){
-        //     getCameraToTargetInfo();
-        //     previousTimestamp = (long)keyData.getEntry(5);
-        // }
-        getCameraToTargetInfo();
-        SmartDashboard.putNumber("Distance", distance);
+        try{
+            if(keyData.getEntry(5) != previousTimestamp){
+                getCameraToTargetInfo();
+                previousTimestamp = (long)keyData.getEntry(5);
+            }
+        }
+        catch(Exception e){
+            MustangNotifications.reportWarning("Vision system's not reporting timestamps");
+        }
+        SmartDashboard.putNumber("Distance", getDistanceToTargetInches());
         SmartDashboard.putNumber("Angle", horizontalAngle);
     }
 
