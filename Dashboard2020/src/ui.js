@@ -266,11 +266,7 @@ function getFromMap(key) {
 }
 
 function getAutonFromMap() {
-    LeftShoot2BallSide(0),
-
-    CenterShoot3BallSide(1),
-    RightShootTrench(2),
-    UNKNOWN(-1);
+   
 
 
     switch (document.querySelector('input[name="start-position"]:checked').value) {
