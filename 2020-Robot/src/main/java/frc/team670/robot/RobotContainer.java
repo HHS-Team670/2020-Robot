@@ -50,6 +50,7 @@ public class RobotContainer extends RobotContainerBase {
   private static Shooter shooter = new Shooter();
   private static Climber climber = new Climber();
   private static Vision vision = new Vision();
+  private static AutoSelector autoSelector =  new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret, vision);
 
   // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
   //     vision);
@@ -73,8 +74,8 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    // MustangCommand autonCommand = autoSelector.getSelectedRoutine();
-    MustangCommand autonCommand = new LeftShoot2BallSide(driveBase, intake, conveyor, indexer, turret, shooter);
+    MustangCommand autonCommand = autoSelector.getSelectedRoutine();
+    //MustangCommand autonCommand = new LeftShoot2BallSide(driveBase, intake, conveyor, indexer, turret, shooter);
     Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
   }

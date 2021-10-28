@@ -69,8 +69,9 @@ public class AutoSelector {
     }
 
     public static enum AutoRoutine {
-      CenterShoot3BallSide(0),
-      LeftShoot2BallSide(1),
+      LeftShoot2BallSide(0),
+
+      CenterShoot3BallSide(1),
       RightShootTrench(2),
       UNKNOWN(-1);
 
