@@ -33,6 +33,8 @@ public class Vision extends MustangSubsystemBase{
 
     private double distance, horizontalAngle;
 
+    private double slantDistanceMultiplier = -1;
+
     private long previousTimestamp = 0;
 
     // These are for sending vision health to dashboard
@@ -79,6 +81,10 @@ public class Vision extends MustangSubsystemBase{
         SmartDashboard.putBoolean("LEDs on", false);
     }
 
+    public void setSlantDistanceMultiplier(double multiplier){
+        this.slantDistanceMultiplier = multiplier;
+    }
+
 
     /**
      * 
@@ -119,7 +125,14 @@ public class Vision extends MustangSubsystemBase{
     }
 
     public double getDistanceToTargetM(){
-        return distance;
+        if(slantDistanceMultiplier != -1){
+            return (distance+1.3);
+        }
+        else{
+            double dist = distance/slantDistanceMultiplier;
+            slantDistanceMultiplier = -1;
+            return dist;
+        }
     }
 
     /**
