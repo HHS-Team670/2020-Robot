@@ -145,13 +145,13 @@ public class AutoSelector {
         AutoRoutine result = select();
 
           switch(result) {
+            case LeftShoot2BallSide:
+              return new LeftShoot2BallSide(driveBase, intake, conveyor, indexer, turret, shooter); 
             case CenterShoot3BallSide:
               return new CenterShoot3BallSide(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
             case RightShootTrench:
               return new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
-            case LeftShoot2BallSide:
-              return new LeftShoot2BallSide(driveBase, intake, conveyor, indexer, turret, shooter); 
-           
+            
             default:
               return new CenterShoot3BallSide(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
 
