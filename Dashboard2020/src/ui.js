@@ -266,9 +266,6 @@ function getFromMap(key) {
 }
 
 function getAutonFromMap() {
-   
-
-
     switch (document.querySelector('input[name="start-position"]:checked').value) {
         case "Left":
             return 0;

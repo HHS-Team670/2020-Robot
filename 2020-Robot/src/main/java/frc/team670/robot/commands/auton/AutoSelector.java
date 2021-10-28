@@ -81,7 +81,7 @@ public class AutoSelector {
             ID = id;
         }
 
-        public int getID() {
+        public double getID() {
             return this.ID;
         }
 
