@@ -10,11 +10,11 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.robot.commands.indexer.RunIndexer;
 import frc.team670.robot.commands.intake.RunConveyor;
-import frc.team670.robot.commands.shooter.StartShooterByPoseDistance;
+import frc.team670.robot.commands.shooter.StartShooterByVisionDistance;
 import frc.team670.robot.subsystems.Conveyor;
-import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
 import frc.team670.robot.subsystems.Shooter;
+import frc.team670.robot.subsystems.Vision;
 
 public class ShootAllBalls extends SequentialCommandGroup implements MustangCommand {
 
@@ -23,7 +23,7 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
     private Shooter shooter;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public ShootAllBalls(Indexer indexer, Conveyor conveyor, Shooter shooter, DriveBase driveBase){
+    public ShootAllBalls(Indexer indexer, Conveyor conveyor, Shooter shooter, Vision vision){
         this.indexer = indexer;
         this.shooter = shooter;
         this.conveyor = conveyor;
@@ -32,7 +32,7 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
         addCommands(
-            new StartShooterByPoseDistance(shooter, driveBase),
+            new StartShooterByVisionDistance(shooter, vision),
             new ParallelCommandGroup(
                 new RunIndexer(indexer, conveyor),
                 new RunConveyor(false, conveyor, indexer))
