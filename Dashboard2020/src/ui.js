@@ -188,7 +188,7 @@ NetworkTables.addKeyListener('/Vision/vision-data', (key, value) => {
     }
 });
 
-document.getElementById("").onclick = function() {
+document.getElementById("confirm-button").onclick = function() {
   sendAuton();
 };
 
@@ -266,61 +266,42 @@ function getFromMap(key) {
 }
 
 function getAutonFromMap() {
+    LeftShoot2BallSide(0),
 
-    // LEFT_TO_GENERATOR_2_BALL_SIDE(0),
-    // LEFT_TO_GENERATOR_3_BALL_SIDE(1),
-    // LEFT_TO_TRENCH(2),
-    // LEFT_TO_GENERATOR_2_TO_TRENCH(3),
-    // LEFT_TO_GENERATOR_3_TO_2_BALL_SIDE(4),
-
-    // CENTER_TO_GENERATOR_2_BALL_SIDE(5),
-    // CENTER_TO_GENERATOR_3_BALL_SIDE(6),
-    // CENTER_TO_TRENCH(7),
-    // CENTER_TO_GENERATOR_2_TO_TRENCH(8),
-    // CENTER_TO_GENERATOR_3_TO_2_BALL_SIDE(9),
-
-    // RIGHT_TO_GENERATOR_2_BALL_SIDE(10),
-    // RIGHT_TO_GENERATOR_3_BALL_SIDE(11),
-    // RIGHT_TO_TRENCH(12),
-    // RIGHT_TO_GENERATOR_2_TO_TRENCH(13),
-    // RIGHT_TO_GENERATOR_3_TO_2_BALL_SIDE(14),
-
-    // UNKNOWN(-1);
-
-    // LEFT_EMPTY_THEN_BACK(0),
-    // LEFT_EMPTY_THEN_FRONT(1),
-
-    // CENTER_EMPTY_THEN_BACK(2),
-    // CENTER_EMPTY_THEN_FRONT(3),
-
-    // RIGHT_EMPTY_THEN_BACK(4),
-    // RIGHT_EMPTY_THEN_FRONT(5),
-
-    // RIGHT_TO_TRENCH_SHOT(6),
-
+    CenterShoot3BallSide(1),
+    RightShootTrench(2),
+    UNKNOWN(-1);
 
 
     switch (document.querySelector('input[name="start-position"]:checked').value) {
         case "Left":
-            return getLocation(0, document.querySelector('input[name="location"]:checked').value)
+            return 0;
         case "Center":
-            return getLocation(1, document.querySelector('input[name="location"]:checked').value)
+            return 1;
         case "Right":
-            return getLocation(2, document.querySelector('input[name="location"]:checked').value)
-    }
-}
-
-function getLocation(offset, value) {
-    switch (value) {
-        case "Generator 2":
-            return 0 + offset;
-        case "Generator 3":
-            return 3 + offset;
-        case "Trench":
-            return 6 + offset;
+            return 2;
+        // case "Left":
+        //     return getLocation(0, document.querySelector('input[name="location"]:checked').value)
+        // case "Center":
+        //     return getLocation(1, document.querySelector('input[name="location"]:checked').value)
+        // case "Right":
+        //     return getLocation(2, document.querySelector('input[name="location"]:checked').value)
     }
     return -1;
+
 }
+
+// function getLocation(offset, value) {
+//     switch (value) {
+//         case "Generator 2":
+//             return 0 + offset;
+//         case "Generator 3":
+//             return 3 + offset;
+//         case "Trench":
+//             return 6 + offset;
+//     }
+//     return -1;
+// }
 
 function sendAuton() {
     var autonCommand = getAutonFromMap();
