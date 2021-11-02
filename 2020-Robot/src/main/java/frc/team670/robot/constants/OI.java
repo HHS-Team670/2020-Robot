@@ -41,6 +41,7 @@ public class OI extends OIBase {
   // operator buttons
   private static JoystickButton toggleIntake = new JoystickButton(getOperatorController(), 1);
   private static JoystickButton startSooter = new JoystickButton(getOperatorController(), 2);
+  private static XboxTankDrive tankDrive;
   //private static JoystickButton turnTurret = new JoystickButton(getOperatorController(), //toggle turret
   
 
@@ -82,6 +83,8 @@ public class OI extends OIBase {
     Shooter shooter = (Shooter) subsystemBases[5];
     Climber climber = (Climber) subsystemBases[6];
     Vision vision = (Vision) subsystemBases[7];
+    tankDrive = new XboxTankDrive(drivebase, getDriverController());
+    //XboxTankDrive XboxTankDrive = (XboxTankDrive) subsystemBases[8];
 
     toggleIntake.whenPressed(new ToggleIntake(intake));
     
