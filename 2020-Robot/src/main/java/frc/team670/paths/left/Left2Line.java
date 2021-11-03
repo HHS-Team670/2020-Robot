@@ -10,7 +10,7 @@ import frc.team670.robot.subsystems.DriveBase;
 
 /**
  * 2021 field
- * trajectory starting to the left of the port (in perspective of the driver) and going under the switch to pick up 2 balls in a line
+ * trajectory starting to the left of the port (in perspective of the driver) and going forwards towards port off init line
  * front of robot starts on initiation line
  * google doc link: https://docs.google.com/document/d/1AsYxFidJCVz2cBFPJEAD1MU-b7dWLGTkcGLwushU1f8/edit?usp=sharing
  * @author megchoy

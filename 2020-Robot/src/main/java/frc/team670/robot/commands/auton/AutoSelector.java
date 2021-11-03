@@ -130,15 +130,6 @@ public class AutoSelector {
 
     /**
      * 
-     * @return the delay between shooting and moving for this command as entered by the driver
-     */
-    private double getWaitTime(){
-        // TODO
-        return 0;
-    }
-
-    /**
-     * 
      * @return the command corresponding to the autonomous routine selected by the driver
      */
     public MustangCommand getSelectedRoutine(){
@@ -146,46 +137,14 @@ public class AutoSelector {
 
           switch(result) {
             case LeftShoot2BallSide:
-              return new LeftShoot2BallSide(driveBase, intake, conveyor, indexer, turret, shooter); 
+              return new LeftShootMoveOffInitiation(driveBase, intake, conveyor, indexer, turret, shooter); 
             case CenterShoot3BallSide:
-              return new CenterShoot3BallSide(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
+              return new CenterShootMoveOffInitiation(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
             case RightShootTrench:
               return new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
             
             default:
-              return new CenterShoot3BallSide(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
-
-           
-            //TODO: check start position! -> only left or do a case&enum for each of the 3 directions?
-            // case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_LEFT:
-            //   return new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            // case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_CENTER:
-            //   return new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            // case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_2_BALL_SIDE_RIGHT:
-            //   return new ShootFromBaseLineThenToGenerator2BallSide(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-
-            // case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_LEFT:
-            //   return new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            // case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_CENTER:
-            //   return new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            // case SHOOT_FROM_BASELINE_THEN_TO_GENERATOR_3_BALL_MID_RIGHT:
-            //   return new ShootFromBaseLineThenToGenerator3BallMid(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-
-            // case SHOOT_FROM_BASELINE_THEN_TO_TRENCH_LEFT:
-            //   return new ShootFromBaseLineThenToTrench(StartPosition.LEFT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            // case SHOOT_FROM_BASELINE_THEN_TO_TRENCH_CENTER:
-            //   return new ShootFromBaseLineThenToTrench(StartPosition.CENTER, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            // case SHOOT_FROM_BASELINE_THEN_TO_TRENCH_RIGHT:
-            //   return new ShootFromBaseLineThenToTrench(StartPosition.RIGHT, driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-              
-            // case SHOOT_THEN_BACK:
-            //   return new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            // case GENERATOR_2_BALL_SIDE_TO_TRENCH_THEN_SHOOT:
-            //   return new Generator2BallSideToTrenchThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            // case GENERATOR_3_BALL_MID_TO_GENERATOR_2_BALL_MID_THEN_SHOOT:
-            //   return new Generator3BallMidToGenerator2BallMidThenShoot(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
-            // default:
-            //   return new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, coprocessor);
+              return new CenterShootMoveOffInitiation(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
           }
     }
 

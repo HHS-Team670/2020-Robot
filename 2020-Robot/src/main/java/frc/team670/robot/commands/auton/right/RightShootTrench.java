@@ -15,8 +15,6 @@ import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.routines.AutoIndex;
 import frc.team670.robot.commands.shooter.SetRPMTarget;
 import frc.team670.robot.commands.shooter.StartShooter;
-import frc.team670.robot.commands.shooter.StartShooterByPoseDistance;
-import frc.team670.robot.commands.shooter.StopShooter;
 import frc.team670.robot.commands.turret.RotateToAngle;
 import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.subsystems.Conveyor;
@@ -30,21 +28,16 @@ import frc.team670.robot.subsystems.Vision;
 /**
  * Trench Shoot routine for Chezy 2021 (workshop 10/12/2021) google doc link:
  * https://docs.google.com/document/d/1GCqiZlTvnIp7UbRZ-_Gu2sK9tljfNCpqdYkApQ3Qdtk/edit?usp=sharing
- * back of robot on initiation line
+ * back of robot on initiation line (closer to trenc)
  * @author Elise V, justin h, rishabh b
  */
 public class RightShootTrench extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-    private DriveBase driveBase;
     private Path trajectory1;
 
     public RightShootTrench(DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Turret turret,
             Shooter shooter, Vision coprocessor) {
-
-        // double turretAng = 0;
-
-        this.driveBase = driveBase;
 
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
@@ -54,7 +47,6 @@ public class RightShootTrench extends SequentialCommandGroup implements MustangC
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(turret, HealthState.GREEN);
         trajectory1 = new RightThroughTrench(driveBase);
-        // turretAng = RobotConstants.rightTurretAng;
 
         driveBase.resetOdometry(trajectory1.getStartingPose());
 
@@ -71,14 +63,12 @@ public class RightShootTrench extends SequentialCommandGroup implements MustangC
                 new ParallelCommandGroup(
                     getTrajectoryFollowerCommand(trajectory1, driveBase), 
                     new AutoIndex(intake, conveyor, indexer, 3),
-                    new RotateToAngle(turret, -12.75), //
+                    new RotateToAngle(turret, -12.75),
                     new SetRPMTarget(2850, shooter),
                     new StartShooter(shooter)
 
                 ),
-                new RunIndexer(indexer, conveyor) // indexer runs lol
-                
-
+                new RunIndexer(indexer, conveyor)
         );
     }
 
