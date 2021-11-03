@@ -67,7 +67,7 @@ public class XKeys {
         public static final double INCREASE_SHOOTER_RPM = 8;
         public static final double DECREASE_SHOOTER_RPM = 9;
 
-        // public static final double INDEXER_INTAKE = 10;
+        public static final double INDEXER_INTAKE = 10;
 
         public static final double EXTEND_CLIMBER = 12;
         public static final double RETRACT_CLIMBER = 13;
@@ -148,8 +148,8 @@ public class XKeys {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            //if (s == xkeysCommands.INDEXER_INTAKE)
-                // indexerAtIntake();
+            if (s == xkeysCommands.INDEXER_INTAKE)
+                indexerAtIntake();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-climber", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
@@ -214,6 +214,10 @@ public class XKeys {
 
     private void shootAll() {
         // MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer));
+    }
+    private void indexerIntake()
+    {
+        MustangScheduler.getInstance().schedule(new indexerAtIntake(indexer));
     }
 
     private void toggleIntake() {
