@@ -10,7 +10,7 @@ import frc.team670.robot.subsystems.DriveBase;
 
 /**
  * 2021 field
- * trajectory starting to the left of the port (in perspective of the driver) and going under the switch to pick up 2 balls in a line
+ * trajectory starting to the left of the port (in perspective of the driver) and going forwards towards port off init line
  * front of robot starts on initiation line
  * google doc link: https://docs.google.com/document/d/1AsYxFidJCVz2cBFPJEAD1MU-b7dWLGTkcGLwushU1f8/edit?usp=sharing
  * @author megchoy
@@ -23,6 +23,6 @@ public class Left2Line extends Path{
                                 new Pose2d(3.09, -2.628, Rotation2d.fromDegrees(0)),
                                 new Pose2d(1, -2.628, Rotation2d.fromDegrees(-30))
                         ), 
-                driveBase, RobotConstants.kAutoPathConstraints, RobotConstants.kMaxSpeedMetersPerSecond2, RobotConstants.kMaxAccelerationMetersPerSecondSquared2, RobotConstants.endVelocityMetersPerSecond2, true);
+                driveBase, RobotConstants.kAutoPathConstraints, true);
         }
 }

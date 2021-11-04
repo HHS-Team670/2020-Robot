@@ -130,15 +130,6 @@ public class AutoSelector {
 
     /**
      * 
-     * @return the delay between shooting and moving for this command as entered by the driver
-     */
-    private double getWaitTime(){
-        // TODO
-        return 0;
-    }
-
-    /**
-     * 
      * @return the command corresponding to the autonomous routine selected by the driver
      */
     public MustangCommand getSelectedRoutine(){
@@ -147,9 +138,9 @@ public class AutoSelector {
 
           switch(result) {
             case LeftShoot2BallSide:
-              return new LeftShoot2BallSide(driveBase, intake, conveyor, indexer, turret, shooter); 
+              return new LeftShootMoveOffInitiation(driveBase, intake, conveyor, indexer, turret, shooter); 
             case CenterShoot3BallSide:
-              return new CenterShoot3BallSide(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
+              return new CenterShootMoveOffInitiation(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
             case RightShootTrench:
               return new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
             

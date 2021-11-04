@@ -10,9 +10,7 @@ import frc.team670.robot.subsystems.DriveBase;
 
 /**
  * 2021 field
- * trajectory starting at center and going under the switch to pick up 3 balls in a line
- * front of robot starts on initiation line
- * google doc link: https://docs.google.com/document/d/1AsYxFidJCVz2cBFPJEAD1MU-b7dWLGTkcGLwushU1f8/edit?usp=sharing
+ * trajectory starting at center and going off init line and towards port
  * @author elisevbp (copied from akshat-elise-2021-newpaths branch on 10/13)
  */
 public class Center3Line extends Path{
@@ -23,6 +21,6 @@ public class Center3Line extends Path{
                                 new Pose2d(3.09, -2.628, Rotation2d.fromDegrees(0)),
                                 new Pose2d(2, -2.628, Rotation2d.fromDegrees(0))
                         ), 
-                driveBase, RobotConstants.kAutoPathConstraints, RobotConstants.kMaxSpeedMetersPerSecond2, RobotConstants.kMaxAccelerationMetersPerSecondSquared2, RobotConstants.endVelocityMetersPerSecond2, true);
+                driveBase, RobotConstants.kAutoPathConstraints, true);
         }
 }
