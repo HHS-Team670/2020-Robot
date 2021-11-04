@@ -61,6 +61,7 @@ public class RobotConstants extends RobotConstantsBase{
     public static final double kVPW = 2.0 * Math.tan(Math.toRadians(kHorizontalFOV / 2.0));
     public static final double kVPH = 2.0 * Math.tan(Math.toRadians(kVerticalFOV / 2.0));
     public static final double TILT_ANGLE = 25; //degrees
+    public static final double CAMERA_HEIGHT = 0.95;
 
     // Autonomous Constants
 

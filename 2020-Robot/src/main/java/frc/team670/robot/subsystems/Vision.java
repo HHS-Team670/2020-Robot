@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangNotifications;
+import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
@@ -54,8 +55,8 @@ public class Vision extends MustangSubsystemBase{
 
         double range =
         PhotonUtils.calculateDistanceToTargetMeters(
-                37.5,
-                58,
+                RobotConstants.CAMERA_HEIGHT,
+                FieldConstants.TARGET_CENTER_HEIGHT,
                 RobotConstants.TILT_ANGLE,
                 Units.degreesToRadians(result.getBestTarget().getPitch()));
 
