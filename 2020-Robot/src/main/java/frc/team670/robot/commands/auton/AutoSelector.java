@@ -81,7 +81,7 @@ public class AutoSelector {
             ID = id;
         }
 
-        public double getID() {
+        public int getID() {
             return this.ID;
         }
 
@@ -143,6 +143,7 @@ public class AutoSelector {
      */
     public MustangCommand getSelectedRoutine(){
         AutoRoutine result = select();
+        Logger.consoleLog("Auton %s", result);
 
           switch(result) {
             case LeftShoot2BallSide:
@@ -153,7 +154,7 @@ public class AutoSelector {
               return new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
             
             default:
-              return new CenterShoot3BallSide(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
+              return new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
 
            
             //TODO: check start position! -> only left or do a case&enum for each of the 3 directions?

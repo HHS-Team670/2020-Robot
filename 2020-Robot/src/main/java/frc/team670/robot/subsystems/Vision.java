@@ -7,12 +7,14 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Units;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.MustangNotifications;
-import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
-import frc.team670.mustanglib.utils.math.interpolable.PolynomialRegression;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
 
 /**
  * Stores values off of NetworkTables for easy retrieval and gives them
@@ -22,117 +24,24 @@ import frc.team670.robot.constants.RobotMap;
  */
 public class Vision extends MustangSubsystemBase{
 
-    private NetworkTableObject keyData;
-
     private Solenoid cameraLEDs;
 
-    // The name of the subtable set on the Pi
-    public static final String VISION_TABLE_NAME = "SmartDashboard";
-    public static final String VISION_RETURN_NETWORK_KEY = "vision_values";
-    public static final String VISION_TRIGGER_NETWORK_KEY = "vision-data";
-
-    private double distance, horizontalAngle;
-
-    private double slantDistanceMultiplier = -1;
-
-    private long previousTimestamp = 0;
+    PhotonCamera camera = new PhotonCamera("photonvision");
 
     // These are for sending vision health to dashboard
     private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
 
-    // table for vision
-    NetworkTable visionTable = instance.getTable(VISION_TABLE_NAME);
-
-    // Vision Constants
-    public static final double OUTER_TARGET_CENTER = 249; // centimeters
-
-    /**
-     * These are the points that were used for creating a regression and coming up with the function used below in the predictDistance method
-     */
-    private static final double[] measuredDistancesMeters = {
-        3.05, //10ft 
-        3.66, 
-        4.27,
-        4.88, 
-        5.49, 
-        6.1, 
-        6.71, 
-        7.32 //24ft
-      };
-    
-      private static final double[] measuredContourArea = {
-        4365, 
-        3526, 
-        2590, 
-        2046, 
-        1593, 
-        1325, 
-        1104, 
-        924
-      };
-
-    public Vision() {
-        this(VISION_RETURN_NETWORK_KEY);
-    }
-
-    private Vision(String key) {
-        keyData = new NetworkTableObject(key);
-        cameraLEDs = new Solenoid(RobotMap.PCMODULE, RobotMap.VISION_LED_PCM);
-        SmartDashboard.putBoolean("LEDs on", false);
-    }
-
-    public void setSlantDistanceMultiplier(double multiplier){
-        this.slantDistanceMultiplier = multiplier;
-    }
-
-
-    /**
-     * 
-     * @return the horizontal angle between the camera-forward to the robot-target line
-     */
-    public void getCameraToTargetInfo() {
-        try{
-            double IMAGE_WIDTH = keyData.getEntry(2);
-    
-            double xPixel = keyData.getEntry(0);
-    
-            double nX = xPixel - IMAGE_WIDTH/2;
-
-            horizontalAngle = nX/(IMAGE_WIDTH/2) * (RobotConstants.kHorizontalFOV/2);
-
-            distance = predictDistance(keyData.getEntry(4));
-        }
-        catch (Exception e){
-            MustangNotifications.reportWarning(e.getMessage());
-        }
-        
-    }
-
-    /**
-     * We're using this predefined function and not a list of points with regression since the regression generated usually isn't
-     * accurate. We came up with this function using desmos and had to play around to perfect it. This function is more accurate when far
-     * away from the target than close. Points used to come up with this function are mentioned above. 
-     * 
-     * @param area The area of the contour as calculated by the vision system
-     * @return the predicted distance from the robot turret camera to the target (approximate)
-     */
-    public double predictDistance(double area){
-        return (4857.4/(area-2.5) + 2.29073);
-    }
 
     public double getAngleToTarget(){
-        return horizontalAngle;
+        return instance.getTable("photonvision").getSubTable("Microsoft_LifeCam_HD-3000").getEntry("targetYaw").getDouble(-1);
     }
 
     public double getDistanceToTargetM(){
-        if(slantDistanceMultiplier != -1){
-            return (distance+1.3);
-        }
-        else{
-            double dist = distance/slantDistanceMultiplier;
-            slantDistanceMultiplier = -1;
-            return dist;
-        }
+        return getDistanceToTargetInches() * 2.54 / 100;
+    }
+
+    public boolean hasTarget(){
+        return camera.getLatestResult().hasTargets();
     }
 
     /**
@@ -140,7 +49,17 @@ public class Vision extends MustangSubsystemBase{
      * @return distance, in inches, from the camera to the target
      */
     public double getDistanceToTargetInches() {
-        return getDistanceToTargetCm() / 2.54;
+        // return getDistanceToTargetCm() / 2.54;
+        var result = camera.getLatestResult();
+
+        double range =
+        PhotonUtils.calculateDistanceToTargetMeters(
+                37.5,
+                58,
+                RobotConstants.TILT_ANGLE,
+                Units.degreesToRadians(result.getBestTarget().getPitch()));
+
+            return range;
     }
 
     /**
@@ -149,57 +68,6 @@ public class Vision extends MustangSubsystemBase{
      */
     public double getDistanceToTargetCm() {
         return getDistanceToTargetM() * 100;
-    }
-
-    private class NetworkTableObject {
-
-        private NetworkTableEntry entry;
-        private String key;
-
-        /**
-         * The key of the NetworkTableEntry that this Object will be attached to.
-         */
-        public NetworkTableObject(String key) {
-            entry = instance.getEntry(key);
-            visionTable.addEntryListener(key, (table2, key2, entry, value, flags) -> {
-                this.entry = entry;
-            }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-            this.key = key;
-        }
-
-        /**
-         * Gets the value of the entry, this will be returned as a Double Array. Make
-         * sure to have a try/catch block for the Exception
-         * 
-         * @return A Double Array with the value or values last received from the pi.
-         *         Fills with Vision Error Code if it can't get it. Format is [angle to
-         *         target, angle for straight on to target, distance from target]
-         */
-        public double[] getValue() {
-            if (entry.getType().equals(NetworkTableType.kDoubleArray)) {
-                return entry.getDoubleArray(new double[] { RobotConstants.VISION_ERROR_CODE,
-                        RobotConstants.VISION_ERROR_CODE, RobotConstants.VISION_ERROR_CODE });
-            }
-            return new double[] { RobotConstants.VISION_ERROR_CODE, RobotConstants.VISION_ERROR_CODE,
-                    RobotConstants.VISION_ERROR_CODE };
-        }
-
-        /**
-         * @return the entry at the given index in the array at the NetworkTable entry
-         *         that corresponds to this object's key.
-         */
-        public double getEntry(int index) {
-            if (entry == null) {
-                return RobotConstants.VISION_ERROR_CODE; // If no data found, returns VISION_ERROR_CODE
-            }
-            double result = getValue()[index];
-            return result;
-        }
-
-        public NetworkTableEntry getEntry() {
-            return entry;
-        }
-
     }
 
     public void turnOnLEDs() {
@@ -216,30 +84,13 @@ public class Vision extends MustangSubsystemBase{
 
     @Override
     public HealthState checkHealth() {
-        try{
-            if(keyData.getEntry(1) == RobotConstants.VISION_ERROR_CODE){
-                return HealthState.RED;
-            }
-        }
-        catch(Exception e){
-            MustangNotifications.reportWarning("Vision system's Reporting Error Code: %s", RobotConstants.VISION_ERROR_CODE);
-        }
         return HealthState.GREEN;
     }
 
     @Override
     public void mustangPeriodic() {
-        try{
-            if(keyData.getEntry(5) != previousTimestamp){
-                getCameraToTargetInfo();
-                previousTimestamp = (long)keyData.getEntry(5);
-            }
-        }
-        catch(Exception e){
-            MustangNotifications.reportWarning("Vision system's not reporting timestamps");
-        }
         SmartDashboard.putNumber("Distance", getDistanceToTargetInches());
-        SmartDashboard.putNumber("Angle", horizontalAngle);
+        SmartDashboard.putNumber("Angle", getAngleToTarget());
     }
 
 }

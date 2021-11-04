@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 
 /*
@@ -101,6 +102,7 @@ public class Intake extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
+        // SmartDashboard.putNumber("IntakeCurrent", roller.getOutputCurrent());
     }
 
 }

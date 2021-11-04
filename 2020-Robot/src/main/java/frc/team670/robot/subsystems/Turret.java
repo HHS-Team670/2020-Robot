@@ -136,9 +136,12 @@ public class Turret extends SparkMaxRotatingSubsystem {
     public static final Config turretConfig = new Config();
     private final double DEGREES_PER_MOTOR_ROTATION = 360 / turretConfig.getRotatorGearRatio();
 
-    public Turret() {
+    private Vision vision;
+
+    public Turret(Vision vision) {
         super(turretConfig);
         rotator.setInverted(true);
+        this.vision = vision;
         forwardLimit = rotator.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
         reverseLimit = rotator.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
     }
@@ -172,7 +175,9 @@ public class Turret extends SparkMaxRotatingSubsystem {
         // TODO Auto-generated method stub
         // Logger.consoleLog("Forward: %s Backward %s", isForwardLimitSwitchTripped(), isReverseLimitSwitchTripped());
         SmartDashboard.putNumber("Turret Angle", getCurrentAngleInDegrees());
-
+        if(vision.hasTarget()){
+            setSystemTargetAngleInDegrees(vision.getAngleToTarget());
+        }
     }
 
     @Override

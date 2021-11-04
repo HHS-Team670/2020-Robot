@@ -79,11 +79,11 @@ public class RotateTurret extends CommandBase implements MustangCommand {
         }
         targetAngle = turret.relativeAngleToAbsoluteInDegrees(relativeAngleToTarget);
         turret.setSystemTargetAngleInDegrees(targetAngle);
-        if(Math.abs(turret.getCurrentAngleInDegrees()) < 5){
-            coprocessor.setSlantDistanceMultiplier(Math.pow(1+(relativeAngleToTarget/100), 2));
-        }
+        // if(Math.abs(turret.getCurrentAngleInDegrees()) < 5){
+        //     coprocessor.setSlantDistanceMultiplier(Math.pow(1+(relativeAngleToTarget/100), 2));
+        // }
         relativeAngleToTarget = coprocessor.getAngleToTarget();
-        turret.setSystemTargetAngleInDegrees(targetAngle);
+        // turret.setSystemTargetAngleInDegrees(targetAngle);
 
     }
 

@@ -44,6 +44,9 @@ public class ManualRunIndexer extends CommandBase implements MustangCommand {
     public void initialize() {
         Logger.consoleLog("Preparing to empty indexer");
         indexer.updraw(false);
+        if(reversed){
+            intake.deploy(false);
+        }
     }
 
     /**
