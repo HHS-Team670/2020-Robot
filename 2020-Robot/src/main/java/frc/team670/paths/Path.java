@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.DriveBase;
@@ -28,11 +27,11 @@ import frc.team670.robot.subsystems.DriveBase;
  */
 public class Path {
 
-    //TODO this only gets the left voltage constraint, make it get both left and right
+    //gets left voltage constraint bc left and right are very similar (even w 2020 clim)
     private static final DifferentialDriveVoltageConstraint AUTO_VOLTAGE_CONSTRAINT = getLeftAutoVoltageConstraint();
     private static final TrajectoryConfig CONFIG = getConfig();
     private Trajectory trajectory;
-    private DriveBase driveBase;
+    private DriveBase driveBase; 
     private List<Pose2d> waypointsList;
 
     /**
@@ -70,8 +69,8 @@ public class Path {
      * @param kAutoPathConstraints 
      *
      */
-    public Path(List<Pose2d> waypoints, DriveBase driveBase, DifferentialDriveKinematicsConstraint kAutoPathConstraints, double kMaxSpeedMetersPerSecond, double kMaxAccelerationMetersPerSecondSquared, double endVelocityMetersPerSecond) {
-        this(waypoints, driveBase, kAutoPathConstraints, kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared, endVelocityMetersPerSecond, false);
+    public Path(List<Pose2d> waypoints, DriveBase driveBase, DifferentialDriveKinematicsConstraint kAutoPathConstraints, boolean reversed) {
+        this(waypoints, driveBase, kAutoPathConstraints, RobotConstants.kMaxSpeedMetersPerSecond2, RobotConstants.kMaxAccelerationMetersPerSecondSquared2, RobotConstants.endVelocityMetersPerSecond2, reversed);
     }
 
     private void trajectoryFromWaypoints(List<Pose2d> waypoints){
@@ -107,15 +106,10 @@ public class Path {
         driveBase.resetOdometry(driveBase.getPose());
     }
 
+
     private static DifferentialDriveVoltageConstraint getLeftAutoVoltageConstraint() {
         return new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(RobotConstants.leftKsVolts,
                 RobotConstants.leftKvVoltSecondsPerMeter, RobotConstants.leftKaVoltSecondsSquaredPerMeter),
-                RobotConstants.kDriveKinematics, 10);
-    }
-
-    private static DifferentialDriveVoltageConstraint getRightAutoVoltageConstraint() {
-        return new DifferentialDriveVoltageConstraint(new SimpleMotorFeedforward(RobotConstants.rightKsVolts,
-                RobotConstants.rightKvVoltSecondsPerMeter, RobotConstants.rightKaVoltSecondsSquaredPerMeter),
                 RobotConstants.kDriveKinematics, 10);
     }
 

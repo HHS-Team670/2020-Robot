@@ -21,6 +21,6 @@ public class Center3Line extends Path{
                                 new Pose2d(3.09, -2.628, Rotation2d.fromDegrees(0)),
                                 new Pose2d(2, -2.628, Rotation2d.fromDegrees(0))
                         ), 
-                driveBase, RobotConstants.kAutoPathConstraints, RobotConstants.kMaxSpeedMetersPerSecond2, RobotConstants.kMaxAccelerationMetersPerSecondSquared2, RobotConstants.endVelocityMetersPerSecond2, true);
+                driveBase, RobotConstants.kAutoPathConstraints, true);
         }
 }

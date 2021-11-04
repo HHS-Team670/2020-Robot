@@ -23,6 +23,6 @@ public class RightThroughTrench extends Path{
                                 new Pose2d(6.5, -0.706, Rotation2d.fromDegrees(0)),
                                 new Pose2d(7.8, -0.706, Rotation2d.fromDegrees(0))
                         ), 
-                driveBase, RobotConstants.kAutoPathConstraints, RobotConstants.kMaxSpeedMetersPerSecond2, RobotConstants.kMaxAccelerationMetersPerSecondSquared2, RobotConstants.endVelocityMetersPerSecond2);
+                driveBase, RobotConstants.kAutoPathConstraints, false);
         }
 }
