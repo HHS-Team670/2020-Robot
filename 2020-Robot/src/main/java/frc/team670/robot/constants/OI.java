@@ -102,7 +102,7 @@ public class OI extends OIBase {
     manualRunIndexerIn.whileHeld(new ManualRunIndexer(indexer, conveyor, intake, false));
     manualRunIndexerOut.whileHeld(new ManualRunIndexer(indexer, conveyor, intake, true));
 
-    xboxVision.whenPressed(new RotateTurret(turret, drivebase, vision));
+    // xboxVision.whenPressed(new RotateTurret(turret, drivebase, vision));
     xboxIncreaseSpeed.whenPressed(new SetRPMAdjuster(50, shooter));
     xboxDecreaseSpeed.whenPressed(new SetRPMAdjuster(-50, shooter));
     xboxLowerClimber.whenPressed(new Climb(climber));

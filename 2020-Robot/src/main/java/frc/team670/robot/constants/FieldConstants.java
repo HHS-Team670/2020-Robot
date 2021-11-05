@@ -12,5 +12,6 @@ public class FieldConstants {
     public static final double EDGE_OF_BASELINE = TARGET_WALL_TO_BASELINE + 0.0508;
 
     public static final double TARGET_CENTER_HEIGHT = 2.495;
+    public static final double VISION_TARGET_CENTER_HEIGHT = 2.24;
 
 }

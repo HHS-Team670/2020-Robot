@@ -108,7 +108,7 @@ public class RobotContainer extends RobotContainerBase {
     if (!turret.hasZeroed()) {
       MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
     }
-    turret.initDefaultCommand();
+    // turret.initDefaultCommand();
     vision.turnOnLEDs();
   }
 

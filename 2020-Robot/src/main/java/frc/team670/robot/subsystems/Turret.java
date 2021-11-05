@@ -174,9 +174,11 @@ public class Turret extends SparkMaxRotatingSubsystem {
     public void mustangPeriodic() {
         // TODO Auto-generated method stub
         // Logger.consoleLog("Forward: %s Backward %s", isForwardLimitSwitchTripped(), isReverseLimitSwitchTripped());
+        // Logger.consoleLog("Turret perioidic");
         SmartDashboard.putNumber("Turret Angle", getCurrentAngleInDegrees());
-        if(vision.hasTarget()){
-            setSystemTargetAngleInDegrees(vision.getAngleToTarget());
+        if(hasZeroed() && vision.hasTarget()){
+            setSystemTargetAngleInDegrees(relativeAngleToAbsoluteInDegrees(vision.getAngleToTarget()));
+            // Logger.consoleLog("Auto align");
         }
     }
 

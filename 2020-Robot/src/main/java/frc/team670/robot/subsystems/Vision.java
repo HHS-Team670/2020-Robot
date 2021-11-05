@@ -9,7 +9,9 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangNotifications;
+import frc.team670.robot.Robot;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
@@ -25,16 +27,24 @@ import org.photonvision.PhotonUtils;
  */
 public class Vision extends MustangSubsystemBase{
 
-    private Solenoid cameraLEDs;
+    private Solenoid cameraLEDs = new Solenoid(RobotMap.PCMODULE, RobotMap.VISION_LED_PCM);
+    ;
 
-    PhotonCamera camera = new PhotonCamera("photonvision");
+    PhotonCamera camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
 
     // These are for sending vision health to dashboard
     private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
 
 
     public double getAngleToTarget(){
-        return instance.getTable("photonvision").getSubTable("Microsoft_LifeCam_HD-3000").getEntry("targetYaw").getDouble(-1);
+        try{
+            return camera.getLatestResult().getTargets().get(0).getYaw();
+
+        }
+        catch(Exception e){
+            Logger.consoleLog(e.getMessage());
+        }
+        return RobotConstants.VISION_ERROR_CODE;
     }
 
     public double getDistanceToTargetM(){
@@ -51,16 +61,30 @@ public class Vision extends MustangSubsystemBase{
      */
     public double getDistanceToTargetInches() {
         // return getDistanceToTargetCm() / 2.54;
-        var result = camera.getLatestResult();
+        try{
+            var result = camera.getLatestResult();
 
-        double range =
-        PhotonUtils.calculateDistanceToTargetMeters(
-                RobotConstants.CAMERA_HEIGHT,
-                FieldConstants.TARGET_CENTER_HEIGHT,
-                RobotConstants.TILT_ANGLE,
-                Units.degreesToRadians(result.getBestTarget().getPitch()));
+            if(hasTarget()){
+                double range =
+                PhotonUtils.calculateDistanceToTargetMeters(
+                        RobotConstants.CAMERA_HEIGHT,
+                        FieldConstants.VISION_TARGET_CENTER_HEIGHT,
+                        Units.degreesToRadians(RobotConstants.TILT_ANGLE),
+                        Units.degreesToRadians(result.getBestTarget().getPitch()));
+        
+                    return range;
+            }
+            else{
+                return RobotConstants.VISION_ERROR_CODE;
+            }
 
-            return range;
+            
+        }
+        catch(Exception e){
+            // MustangNotifications.reportWarning(e.toString());
+            Logger.consoleLog("NT for vision not found %s", e.getStackTrace());
+        }
+       return -1;
     }
 
     /**
