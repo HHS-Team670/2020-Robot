@@ -136,7 +136,7 @@ public class Shooter extends MustangSubsystemBase {
   }
 
   public void run() {
-    SmartDashboard.putNumber("Stage 2 speed", mainController.getEncoder().getVelocity());
+    SmartDashboard.putNumber("Stage 2 speed", targetRPM + speedAdjust);
     stage2_mainPIDController.setReference(targetRPM + speedAdjust, ControlType.kVelocity);
   }
 
