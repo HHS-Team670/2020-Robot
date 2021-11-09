@@ -47,8 +47,8 @@ public class Vision extends MustangSubsystemBase{
         return RobotConstants.VISION_ERROR_CODE;
     }
 
-    public double getDistanceToTargetM(){
-        return getDistanceToTargetInches() * 2.54 / 100;
+    public double getDistanceToTargetInches(){
+        return getDistanceToTargetM() * 100 / 2.54;
     }
 
     public boolean hasTarget(){
@@ -59,7 +59,7 @@ public class Vision extends MustangSubsystemBase{
      * 
      * @return distance, in inches, from the camera to the target
      */
-    public double getDistanceToTargetInches() {
+    public double getDistanceToTargetM() {
         // return getDistanceToTargetCm() / 2.54;
         try{
             var result = camera.getLatestResult();
@@ -114,7 +114,7 @@ public class Vision extends MustangSubsystemBase{
 
     @Override
     public void mustangPeriodic() {
-        SmartDashboard.putNumber("Distance", getDistanceToTargetInches());
+        SmartDashboard.putNumber("Distance", getDistanceToTargetM());
         SmartDashboard.putNumber("Angle", getAngleToTarget());
     }
 

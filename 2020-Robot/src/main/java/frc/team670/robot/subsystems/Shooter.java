@@ -185,6 +185,8 @@ public class Shooter extends MustangSubsystemBase {
     double predictedVal = speedAtDistance.predict(distance);
     double expectedSpeed = Math.max(Math.min(predictedVal, MAX_RPM), MIN_RPM);
     SmartDashboard.putNumber("expectedSpeed", expectedSpeed);
+    SmartDashboard.putNumber("predictedVal", predictedVal);
+    SmartDashboard.putNumber("distance", distance);
     return expectedSpeed;
   }
 
