@@ -247,7 +247,7 @@ public class XKeys {
         MustangScheduler.getInstance().schedule(new ExtendClimber(climber));
     }
 
-    pprivate void driveToBarAndPrepareClimb() {
+    private void driveToBarAndPrepareClimb() {
         MustangScheduler.getInstance().schedule(new DriveToBarAndPrepareClimb(drivebase, climber));
     }
 

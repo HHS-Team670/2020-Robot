@@ -262,26 +262,49 @@ function getFromMap(key) {
         public static final double UPDRAW = 37;
         public static final double CANCEL_ALL_COMMANDS = 38;
 */
-    if (key === "3") return "4";
-    if (key === "5") return "6";
-    if (key === "2") return "7";
+    if (key === "3") return "1";
+    if (key === "5") return "2";
+    if (key === "1") return "3";
 
-    if (key === "c") return "14";
-    if (key === "j") return "15";
-    if (key === "d") return "16";
+    if (key === "o") return "4";
+    if (key === "4") return "5";
+    if (key === "6") return "6";
 
-    if (key === "k") return "2";
-    if (key === "e") return "0";
-    if (key === "f") return "1";
+    if (key === "t") return "36";
+    if (key === "g") return "8";
+    if (key === "k") return "9";
 
-    if (key === "a") return "NEUTRAL";
+    if (key === "n") return "10";
 
-    if (key === "m") return "12";
-    if (key === "n") return "13";
+    if (key === "2") return "11";
+    if (key === "z") return "12";
 
-    if (key === "y") return "vision";
+    if (key === "p") return "13";
 
-    if (key === "v") return "18";
+    if (key === "q") return "14";
+
+    if (key === "r") return "15";
+    if (key === "7") return "38";
+    if (key === "8") return "31";
+
+    if (key === "y") return "18";
+    if (key === "m") return "32";
+
+    if (key === "x") return "37";
+    if (key === "e") return "21";
+    if (key === "f") return "22";
+
+    if (key === "j") return "23";
+    if (key === "i") return "24";
+    if (key === "h") return "25";
+
+    if (key === "w") return "26";
+    if (key === "a") return "27";
+    if (key === "c") return "28";
+
+    if (key === "d") return "29";
+    if (key === "v") return "30";
+
 
     return null;
 }
