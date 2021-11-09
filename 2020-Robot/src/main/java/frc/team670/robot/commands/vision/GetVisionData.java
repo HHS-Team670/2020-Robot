@@ -36,7 +36,7 @@ public class GetVisionData extends CommandBase implements MustangCommand {
     @Override
     public void initialize() {
         runVisionOnce =  false;
-        coprocessor.getLatestVisionData();
+        // coprocessor.getLatestVisionData();
         // SmartDashboard.putNumberArray(coprocessor.VISION_RETURN_NETWORK_KEY, new double[] { RobotConstants.VISION_ERROR_CODE,
         //         RobotConstants.VISION_ERROR_CODE, RobotConstants.VISION_ERROR_CODE }); // Clears vision data so we don't
         //         

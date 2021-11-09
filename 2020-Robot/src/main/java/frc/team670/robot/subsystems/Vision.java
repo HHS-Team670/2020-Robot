@@ -7,10 +7,17 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Units;
+import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
+import frc.team670.mustanglib.utils.Logger;
+import frc.team670.mustanglib.utils.MustangNotifications;
+import frc.team670.robot.Robot;
+import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
-import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
-import frc.team670.mustanglib.utils.functions.MathUtils;
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
 
 /**
  * Stores values off of NetworkTables for easy retrieval and gives them
@@ -20,64 +27,32 @@ import frc.team670.mustanglib.utils.functions.MathUtils;
  */
 public class Vision extends MustangSubsystemBase{
 
-    private NetworkTableObject keyData;
+    private Solenoid cameraLEDs = new Solenoid(RobotMap.PCMODULE, RobotMap.VISION_LED_PCM);
+    ;
 
-    private Solenoid cameraLEDs;
-
-    private boolean currentlyUsingVision;
-
-    // The name of the subtable set on the Pi
-    public static final String VISION_TABLE_NAME = "SmartDashboard";
-    public static final String VISION_RETURN_NETWORK_KEY = "vision_values";
-    public static final String VISION_TRIGGER_NETWORK_KEY = "vision-data";
+    PhotonCamera camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
 
     // These are for sending vision health to dashboard
     private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
-    private static NetworkTable healthTable = instance.getTable("/SmartDashboard");
 
-    // table for vision
-    NetworkTable visionTable = instance.getTable(VISION_TABLE_NAME);
 
-    // Vision Constants
-    public static final double OUTER_TARGET_CENTER = 249; // centimeters
+    public double getAngleToTarget(){
+        try{
+            return camera.getLatestResult().getTargets().get(0).getYaw();
 
-    public Vision() {
-        this(VISION_RETURN_NETWORK_KEY);
+        }
+        catch(Exception e){
+            Logger.consoleLog(e.getMessage());
+        }
+        return RobotConstants.VISION_ERROR_CODE;
     }
 
-    private Vision(String key) {
-        keyData = new NetworkTableObject(key);
-        this.currentlyUsingVision = false;
-        cameraLEDs = new Solenoid(RobotMap.PCMODULE, RobotMap.VISION_LED_PCM);
-        SmartDashboard.putBoolean("LEDs on", false);
+    public double getDistanceToTargetM(){
+        return getDistanceToTargetInches() * 2.54 / 100;
     }
 
-    public void getLatestVisionData() {
-        SmartDashboard.putString(VISION_TRIGGER_NETWORK_KEY, "vision");
-        // NetworkTableEntry visionTrigger = visionTable.getEntry(VISION_TRIGGER_NETWORK_KEY);
-        // visionTrigger.forceSetString("vision");
-    }
-
-    public void clearLastValues(){
-        NetworkTableEntry visionTrigger = visionTable.getEntry(VISION_RETURN_NETWORK_KEY);
-        visionTrigger.forceSetDoubleArray(new double[] { RobotConstants.VISION_ERROR_CODE, RobotConstants.VISION_ERROR_CODE, RobotConstants.VISION_ERROR_CODE });
-    }
-
-    /**
-     * 
-     * @return the horizontal angle between the camera-forward to the robot-target line
-     */
-    public double getAngleToTarget() {
-        return keyData.getEntry(0);
-    }
-
-    /**
-     * 
-     * @return the horizontal angle between the target-forward and the
-     *         robot-target line
-     */
-    public double getAngleToTargetPerpendicular() {
-        return keyData.getEntry(1);
+    public boolean hasTarget(){
+        return camera.getLatestResult().hasTargets();
     }
 
     /**
@@ -85,7 +60,31 @@ public class Vision extends MustangSubsystemBase{
      * @return distance, in inches, from the camera to the target
      */
     public double getDistanceToTargetInches() {
-        return keyData.getEntry(2);
+        // return getDistanceToTargetCm() / 2.54;
+        try{
+            var result = camera.getLatestResult();
+
+            if(hasTarget()){
+                double range =
+                PhotonUtils.calculateDistanceToTargetMeters(
+                        RobotConstants.CAMERA_HEIGHT,
+                        FieldConstants.VISION_TARGET_CENTER_HEIGHT,
+                        Units.degreesToRadians(RobotConstants.TILT_ANGLE),
+                        Units.degreesToRadians(result.getBestTarget().getPitch()));
+        
+                    return range;
+            }
+            else{
+                return RobotConstants.VISION_ERROR_CODE;
+            }
+
+            
+        }
+        catch(Exception e){
+            // MustangNotifications.reportWarning(e.toString());
+            Logger.consoleLog("NT for vision not found %s", e.getStackTrace());
+        }
+       return -1;
     }
 
     /**
@@ -93,81 +92,7 @@ public class Vision extends MustangSubsystemBase{
      * @return distance, in cm, from the camera to the target
      */
     public double getDistanceToTargetCm() {
-        return getDistanceToTargetInches() * 2.54;
-    }
-
-    private class NetworkTableObject {
-
-        private NetworkTableEntry entry;
-        private String key;
-
-        /**
-         * The key of the NetworkTableEntry that this Object will be attached to.
-         */
-        public NetworkTableObject(String key) {
-            entry = instance.getEntry(key);
-            visionTable.addEntryListener(key, (table2, key2, entry, value, flags) -> {
-                this.entry = entry;
-            }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
-            this.key = key;
-        }
-
-        /**
-         * Gets the value of the entry, this will be returned as a Double Array. Make
-         * sure to have a try/catch block for the Exception
-         * 
-         * @return A Double Array with the value or values last received from the pi.
-         *         Fills with Vision Error Code if it can't get it. Format is [angle to
-         *         target, angle for straight on to target, distance from target]
-         */
-        public double[] getValue() {
-            if (entry.getType().equals(NetworkTableType.kDoubleArray)) {
-                return entry.getDoubleArray(new double[] { RobotConstants.VISION_ERROR_CODE,
-                        RobotConstants.VISION_ERROR_CODE, RobotConstants.VISION_ERROR_CODE });
-            }
-            return new double[] { RobotConstants.VISION_ERROR_CODE, RobotConstants.VISION_ERROR_CODE,
-                    RobotConstants.VISION_ERROR_CODE };
-        }
-
-        /**
-         * @return the entry at the given index in the array at the NetworkTable entry
-         *         that corresponds to this object's key.
-         */
-        public double getEntry(int index) {
-            if (entry == null) {
-                return RobotConstants.VISION_ERROR_CODE; // If no data found, returns VISION_ERROR_CODE
-            }
-            double result = getValue()[index];
-            return result;
-        }
-
-        public NetworkTableEntry getEntry() {
-            return entry;
-        }
-
-    }
-
-    /**
-     * Sets whether to use vision
-     * 
-     * @param enabled true for vision, false for no vision
-     */
-    public void enableVision(boolean enabled) {
-        NetworkTableEntry visionHealth = healthTable.getEntry("vision");
-        if (enabled) {
-            this.currentlyUsingVision = true;
-            visionHealth.forceSetString("green");
-        } else {
-            this.currentlyUsingVision = false;
-            visionHealth.forceSetString("red");
-        }
-    }
-
-    /**
-     * @return whether or not vision is currently running/in use
-     */
-    public boolean isVisionEnabled(){
-        return this.currentlyUsingVision;
+        return getDistanceToTargetM() * 100;
     }
 
     public void turnOnLEDs() {
@@ -184,14 +109,13 @@ public class Vision extends MustangSubsystemBase{
 
     @Override
     public HealthState checkHealth() {
-        // TODO Auto-generated method stub
         return HealthState.GREEN;
     }
 
     @Override
     public void mustangPeriodic() {
-        // TODO Auto-generated method stub
-        
+        SmartDashboard.putNumber("Distance", getDistanceToTargetInches());
+        SmartDashboard.putNumber("Angle", getAngleToTarget());
     }
 
 }

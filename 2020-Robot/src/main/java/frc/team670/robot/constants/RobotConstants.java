@@ -13,6 +13,9 @@ public class RobotConstants extends RobotConstantsBase{
 
     public static final double TURRET_CENTER_TO_FRONT = 20;
 
+    // Needed for vision. In meters
+    public static final double TURRET_CAMERA_HEIGHT = 20; //TODO: FIGURE THIS OUT
+
     // Drive Base Gearing
     public static final double DRIVEBASE_GEAR_RATIO = 8.45; // 8.45 if low gear, 10.71 if high gear. TODO check which
                                                             // one it is
@@ -53,6 +56,12 @@ public class RobotConstants extends RobotConstantsBase{
     // VISION Constants
 
     public static final int VISION_ERROR_CODE = -99999;
+    public static final double kHorizontalFOV = 61; // degrees
+    public static final double kVerticalFOV = 34.3; // degrees
+    public static final double kVPW = 2.0 * Math.tan(Math.toRadians(kHorizontalFOV / 2.0));
+    public static final double kVPH = 2.0 * Math.tan(Math.toRadians(kVerticalFOV / 2.0));
+    public static final double TILT_ANGLE = 12; //degrees
+    public static final double CAMERA_HEIGHT = 0.9525; //meters
 
     // Autonomous Constants
 
@@ -72,10 +81,17 @@ public class RobotConstants extends RobotConstantsBase{
     public static final double kMaxSpeedMetersPerSecond = 1.2;// 1; //0.305;
     public static final double kMaxAccelerationMetersPerSecondSquared = 1.22;// 1; //0.305;
 
-    public static final DifferentialDriveKinematicsConstraint kAutoPathConstraints = new DifferentialDriveKinematicsConstraint(
-            kDriveKinematics, kMaxSpeedMetersPerSecond);
+    public static final double kMaxSpeedMetersPerSecond2 = 0.6;// 1; //0.305;
+    public static final double kMaxAccelerationMetersPerSecondSquared2 = 0.6;// 1; //0.305;
+    public static final double endVelocityMetersPerSecond2 = 0.4;
 
-    //The turret angles depending on the robot start position
+    public static final DifferentialDriveKinematicsConstraint kAutoPathConstraints = new DifferentialDriveKinematicsConstraint(
+            kDriveKinematics, kMaxSpeedMetersPerSecond2);
+
+        public static final DifferentialDriveKinematicsConstraint kAutoPathConstraintsIntaking = new DifferentialDriveKinematicsConstraint(
+                kDriveKinematics, kMaxSpeedMetersPerSecond);
+
+    //The turret angles depending on the robot start position 
     public static final double leftTurretAng = 0;
     public static final double rightTurretAng = -25;
 

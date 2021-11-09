@@ -15,10 +15,12 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.paths.left.Left2Line;
 import frc.team670.robot.commands.auton.AutoSelector;
 import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
-import frc.team670.robot.commands.auton.baseline.ShootThenForward;
-import frc.team670.robot.commands.auton.baseline.ShootFromBaseLineThenToTrench;
+import frc.team670.robot.commands.auton.center.CenterShootMoveOffInitiation;
+import frc.team670.robot.commands.auton.left.LeftShootMoveOffInitiation;
+import frc.team670.robot.commands.auton.right.RightShootTrench;
 import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.OI;
@@ -44,13 +46,14 @@ public class RobotContainer extends RobotContainerBase {
   private static Intake intake = new Intake();
   private static Conveyor conveyor = new Conveyor();
   private static Indexer indexer = new Indexer(conveyor);
-  private static Turret turret = new Turret();
+  private static Vision vision = new Vision();
+  private static Turret turret = new Turret(vision);
   private static Shooter shooter = new Shooter();
   private static Climber climber = new Climber();
-  private static Vision vision = new Vision();
+  private static AutoSelector autoSelector =  new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret, vision);
 
-  private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
-      vision);
+  // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
+  //     vision);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -62,6 +65,7 @@ public class RobotContainer extends RobotContainerBase {
   }
 
   public void robotInit() {
+    vision.turnOnLEDs();
 
   }
 
@@ -72,21 +76,22 @@ public class RobotContainer extends RobotContainerBase {
    */
   public MustangCommand getAutonomousCommand() {
     // MustangCommand autonCommand = autoSelector.getSelectedRoutine();
-    // MustangCommand autonCommand = new ShootThenForward(driveBase, intake, conveyor, shooter, indexer, turret, vision);
-    MustangCommand autonCommand = new ShootFromBaseLineThenToTrench(StartPosition.RIGHT, driveBase, intake, conveyor,
-    shooter, indexer, turret, vision);
+    // MustangCommand autonCommand = new LeftShoot2BallSide(driveBase, intake, conveyor, indexer, turret, shooter);
+    // MustangCommand autonCommand = new CenterSho ot3BallSide(driveBase, intake, conveyor, indexer, turret, shooter, vision);
+    MustangCommand autonCommand = new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, vision);
     Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
   }
 
   public void autonomousInit() {
     indexer.reset();
+    turret.setLimitSwitch(false);
     if (!turret.hasZeroed()) { // only zero turret if needed
       MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
     }
     m_autonomousCommand = getAutonomousCommand();
     if (m_autonomousCommand != null) {
-    MustangScheduler.getInstance().schedule(m_autonomousCommand);
+      MustangScheduler.getInstance().schedule(m_autonomousCommand);
     }
   }
 
@@ -99,13 +104,15 @@ public class RobotContainer extends RobotContainerBase {
         FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
     driveBase.setTeleopRampRate();
     driveBase.initDefaultCommand();
+    turret.setLimitSwitch(true);
     if (!turret.hasZeroed()) {
       MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
     }
-    turret.initDefaultCommand();
+    // turret.initDefaultCommand();
     vision.turnOnLEDs();
   }
 
+  @Override
   public void disabled() {
     vision.turnOffLEDs();
   }

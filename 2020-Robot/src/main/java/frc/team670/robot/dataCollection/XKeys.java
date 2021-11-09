@@ -56,27 +56,48 @@ public class XKeys {
     private Vision coprocessor;
     private class xkeysCommands { // do not use enums as getID has to be called over enum call
 
-        public static final double RUN_INTAKE_IN = 0;
-        public static final double RUN_INTAKE_OUT = 1;
-        public static final double TOGGLE_INTAKE = 2;
-        
-        public static final double INIT_SHOOTER = 4;
+        public static final double EXTEND_CLIMBER = 1;
+        public static final double DRIVE_TO_BAR_AND_PREPARE_CLIMB = 2;
+        public static final double RETRACT_CLIMBER = 3;
+        public static final double HOOK_ON_BAR = 4;
+
+        public static final double INIT_SHOOTER = 5;
         public static final double SHOOT = 6;
-        public static final double SHOOT_ALL = 7;
+        public static final double START_SHOOTER = 7;
+        public static final double VISION_SHOOTER = 8;
+        public static final double INCREASE_SHOOTER_SPEED = 9;
+        public static final double DECREASE_SHOOTER_SPEED = 10;
+        public static final double SET_CLOSE_SHOT_SPEED = 11;
+        public static final double SET_MID_SHOT_SPEED = 12;
+        public static final double SET_LONG_SHOT_SPEED = 13;
+        public static final double SHOOT_ALL = 14;
 
-        public static final double INCREASE_SHOOTER_RPM = 8;
-        public static final double DECREASE_SHOOTER_RPM = 9;
+        public static final double TOGGLE_INTAKE = 15;
+        public static final double DEPLOY_INTAKE = 16;
+        public static final double RETRACT_INTAKE = 17;
+        public static final double RUN_INTAKE_IN = 18;
+        public static final double RUN_INTAKE_CONVEYOR_IN = 19;
+        public static final double RUN_INTAKE_CONVEYOR_OUT = 20;
+        public static final double RUN_INTAKE_OUT = 21;
+        public static final double RUN_CONVEYOR_OUT = 22;
+        public static final double RUN_CONVEYOR_IN = 23;
+        public static final double STOP_INTAKE = 24;
+        public static final double AUTO_PICKUP_BALL = 25;
 
-        // public static final double INDEXER_INTAKE = 10;
+        public static final double VISION_ALIGN = 26;
+        public static final double AUTO_ROTATE = 27;
+        public static final double ALIGN_TURRET = 28;
+        public static final double ROTATE_TURRET_L = 29;
+        public static final double ROTATE_TURRET_R = 30;
+        public static final double ROTATE_TURRET_TO_HOME = 31;
+        public static final double TURN_TURRET = 32;
+        public static final double ZERO_TURRET = 33;
 
-        public static final double EXTEND_CLIMBER = 12;
-        public static final double RETRACT_CLIMBER = 13;
-
-        public static final double SHOOT_NEAR = 14;
-        public static final double SHOOT_MID = 15;
-        public static final double SHOOT_LONG = 16;
-
-        public static final double CANCEL_ALL = 18;
+        public static final double MANUAL_INDEXER = 34;
+        public static final double MANUAL_INDEXER_REV = 35;
+        public static final double INDEXER = 36;
+        public static final double UPDRAW = 37;
+        public static final double CANCEL_ALL_COMMANDS = 38;
     }
 
     /**
@@ -120,8 +141,24 @@ public class XKeys {
                 runIntakeIn();
             else if (s == xkeysCommands.RUN_INTAKE_OUT)
                 runIntakeOut();
+            else if (s == xkeysCommands.RUN_INTAKE_CONVEYOR_IN)
+                runIntakeConveyorIn();
+            else if (s == xkeysCommands.RUN_INTAKE_CONVEYOR_OUT)
+                runIntakeConveyorOut();
+            else if (s == xkeysCommands.RUN_CONVEYOR_IN)
+                runConveyorIn();
+            else if (s == xkeysCommands.RUN_CONVEYOR_OUT)
+                runConveyorOut();
             else if (s == xkeysCommands.TOGGLE_INTAKE)
                 toggleIntake();
+            else if (s == xkeysCommands.DEPLOY_INTAKE)
+                deployIntake();
+            else if (s == xkeysCommands.RETRACT_INTAKE)
+                retractIntake();
+            else if (s == xkeysCommands.STOP_INTAKE)
+                stopIntake();
+            else if (s == xkeysCommands.AUTO_PICKUP_BALL)
+                autoPickupBall();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-shooter", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
@@ -133,23 +170,49 @@ public class XKeys {
                 shoot();
             else if (s == xkeysCommands.SHOOT_ALL)
                 shootAll();
-            else if (s == xkeysCommands.INCREASE_SHOOTER_RPM)
+            else if (s == xkeysCommands.INCREASE_SHOOTER_SPEED)
                 increaseShooterSpeed();
-            else if (s == xkeysCommands.DECREASE_SHOOTER_RPM)
+            else if (s == xkeysCommands.DECREASE_SHOOTER_SPEED)
                 decreaseShooterSpeed();
-            else if (s == xkeysCommands.SHOOT_NEAR)
+            else if (s == xkeysCommands.SET_CLOSE_SHOT_SPEED)
                 setCloseShotSpeed();
-            else if (s == xkeysCommands.SHOOT_MID) 
+            else if (s == xkeysCommands.SET_MID_SHOT_SPEED) 
                 setMidShotSpeed();
-            else if (s == xkeysCommands.SHOOT_LONG)
+            else if (s == xkeysCommands.SET_LONG_SHOT_SPEED)
                 setLongShotSpeed();
+            else if (s == xkeysCommands.START_SHOOTER)
+                startShooter();
+            else if (s == xkeysCommands.VISION_SHOOTER)
+                visionShooter();
+            else if (s == xkeysCommands.AUTO_ROTATE)
+                autoRotate();
+                else if (s == xkeysCommands.VISION_ALIGN)
+                visionAlign();
+                else if (s == xkeysCommands.ALIGN_TURRET)
+                alignTurret();
+                else if (s == xkeysCommands.ROTATE_TURRET_L)
+                rotateTurretL();
+                else if (s == xkeysCommands.ROTATE_TURRET_R)
+                rotateTurretR();
+                else if (s == xkeysCommands.ROTATE_TURRET_TO_HOME)
+                rotateTurretToHome();
+                else if (s == xkeysCommands.TURN_TURRET)
+                turnTurret();
+                else if (s == xkeysCommands.ZERO_TURRET)
+                zeroTurret();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-indexer", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            //if (s == xkeysCommands.INDEXER_INTAKE)
-                // indexerAtIntake();
+            if (s == xkeysCommands.MANUAL_INDEXER)
+                manualIndexer();
+            else if (s == xkeysCommands.MANUAL_INDEXER_REV)
+                manualIndexerRev();
+                else if (s == xkeysCommands.INDEXER)
+                indexer();
+                else if (s == xkeysCommands.UPDRAW)
+                updraw();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-climber", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
@@ -159,12 +222,16 @@ public class XKeys {
                 extendClimber();
             else if (s == xkeysCommands.RETRACT_CLIMBER)
                 retractClimber();
+            else if (s == xkeysCommands.DRIVE_TO_BAR_AND_PREPARE_CLIMB)
+                driveToBarAndPrepareClimb();
+            else if (s == xkeysCommands.HOOK_ON_BAR)
+                hookOnBar();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-cancel", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            if (s == xkeysCommands.CANCEL_ALL)
+            if (s == xkeysCommands.CANCEL_ALL_COMMANDS)
                 cancelAllCommands();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-autopickup", (table2, key2, entry, value, flags) -> {
@@ -180,65 +247,149 @@ public class XKeys {
         MustangScheduler.getInstance().schedule(new ExtendClimber(climber));
     }
 
+    pprivate void driveToBarAndPrepareClimb() {
+        MustangScheduler.getInstance().schedule(new DriveToBarAndPrepareClimb(drivebase, climber));
+    }
+
     private void retractClimber() {
         MustangScheduler.getInstance().schedule(new Climb(climber));
     }
 
+    private void hookOnBar() {
+        MustangScheduler.getInstance().schedule(new HookOnBar(climber));
+    }
+
     private void initShooter() {
-        MustangScheduler.getInstance().schedule(new StartShooterByDistance(shooter, drivebase));
+        MustangScheduler.getInstance().schedule(new StartShooterByPoseDistance(shooter, drivebase));
     }
 
     private void shoot() {
         MustangScheduler.getInstance().schedule(new Shoot(shooter));
     }
 
+    private void startShooter() {
+        MustangScheduler.getInstance().schedule(new StartShooter(shooter));
+    }
+
+    private void visionShooter() {
+        MustangScheduler.getInstance().schedule(new StartShooterByVisionDistance(shooter, coprocessor));
+    }
+
     private void increaseShooterSpeed() {
-        shooter.adjustRPMAdjuster(50.0);
+        MustangScheduler.getInstance().schedule(new SetRPMAdjuster(50.0, shooter));
     }
 
     private void decreaseShooterSpeed() {
-        shooter.adjustRPMAdjuster(-50.0);
+        MustangScheduler.getInstance().schedule(new SetRPMAdjuster(-50.0, shooter));
     }
 
     private void setCloseShotSpeed() {
-        shooter.setVelocityTarget(2125);
+        MustangScheduler.getInstance().schedule(new SetRPMTarget(2125, shooter));
     }
 
     private void setMidShotSpeed() {
-        shooter.setVelocityTarget(2275);
+        MustangScheduler.getInstance().schedule(new SetRPMTarget(2275, shooter));
     }
 
     private void setLongShotSpeed() {
-        shooter.setVelocityTarget(2725);
+        MustangScheduler.getInstance().schedule(new SetRPMTarget(2725, shooter));
     }
 
     private void shootAll() {
-        // MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer));
+        MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer));
     }
 
     private void toggleIntake() {
-        MustangScheduler.getInstance().schedule(new DeployIntake(!intake.isDeployed(), intake));
+        MustangScheduler.getInstance().schedule(new ToggleIntake(intake));
+    }
+
+    private void deployIntake() {
+        MustangScheduler.getInstance().schedule(new DeployIntake(false, intake));
+    }
+
+    private void retractIntake() {
+        MustangScheduler.getInstance().schedule(new DeployIntake(true, intake));
     }
 
     private void runIntakeIn() {
         MustangScheduler.getInstance().schedule(new RunIntake(false, intake));
     }
 
+    private void runIntakeConveyorIn() {
+        MustangScheduler.getInstance().schedule(new RunIntakeConveyor(intake, conveyor, indexer, false));
+    }
+
+    private void runIntakeConveyorOut() {
+        MustangScheduler.getInstance().schedule(new RunIntakeConveyor(intake, conveyor, indexer, true));
+    }
+
     private void runIntakeOut() {
         MustangScheduler.getInstance().schedule(new RunIntake(true, intake));
     }
 
+    private void runConveyorOut() {
+        MustangScheduler.getInstance().schedule(new RunConveyor(true, conveyor, indexer));
+    }
+
+    private void runConveyorIn() {
+        MustangScheduler.getInstance().schedule(new RunConveyor(false, conveyor, indexer));
+    }
+
+    private void stopIntake() {
+        MustangScheduler.getInstance().schedule(new StopIntake(intake));
+    }
+
     private void autoPickupBall() {
-        // MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer));
+        MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer, conveyor, shooter, coprocessor));
     }
 
     private void visionAlign() {
         MustangScheduler.getInstance().schedule(new GetVisionData(coprocessor, drivebase));
     }
 
-    // private void indexerAtIntake() {
-    //     MustangScheduler.getInstance().schedule(new RotateToIntakePosition(indexer));
-    // }
+    private void autoRotate() {
+        MustangScheduler.getInstance().schedule(new AutoRotate(turret, coprocessor, drivebase));
+    }
+
+    private void alignTurret() {
+        MustangScheduler.getInstance().schedule(new GetLatestDataAndAlignTurret(turret, drivebase, coprocessor));
+    }
+
+    private void rotateTurretL() {
+        MustangScheduler.getInstance().schedule(new RotateToAngle(turret, 20.0));
+    }
+
+    private void rotateTurretR() {
+        MustangScheduler.getInstance().schedule(new RotateToAngle(turret, -20.0));
+    }
+
+    private void rotateTurretToHome() {
+        MustangScheduler.getInstance().schedule(new RotateToHome(turret));
+    }
+
+    private void turnTurret() {
+        MustangScheduler.getInstance().schedule(new RotateTurret(turret, drivebase, coprocessor));
+    }
+
+    private void zeroTurret() {
+        MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
+    }
+
+    private void manualIndexer() {
+        MustangScheduler.getInstance().schedule(new ManualRunIndexer(indexer, conveyor, intake, false));
+    }
+
+    private void manualIndexerRev() {
+        MustangScheduler.getInstance().schedule(new ManualRunIndexer(indexer, conveyor, intake, true));
+    }
+
+    private void indexer() {
+        MustangScheduler.getInstance().schedule(new Indexer(indexer, conveyor));
+    }
+
+    private void updraw() {
+        MustangScheduler.getInstance().schedule(new ToggleUpdraw(indexer));
+    }
 
     private void cancelAllCommands() {
         MustangScheduler.getInstance().schedule(new CancelAllCommands());

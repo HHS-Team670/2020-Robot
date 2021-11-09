@@ -188,7 +188,7 @@ NetworkTables.addKeyListener('/Vision/vision-data', (key, value) => {
     }
 });
 
-document.getElementById("").onclick = function() {
+document.getElementById("confirm-button").onclick = function() {
   sendAuton();
 };
 
@@ -219,28 +219,49 @@ document.addEventListener("keyup", function(event) {
 
 function getFromMap(key) {
 
-    // public static final double RUN_INTAKE_IN = 0;
-    // public static final double RUN_INTAKE_OUT = 1;
-    // public static final double TOGGLE_INTAKE = 2;
+    /*public static final double EXTEND_CLIMBER = 1;
+        public static final double DRIVE_TO_BAR_AND_PREPARE_CLIMB = 2;
+        public static final double RETRACT_CLIMBER = 3;
+        public static final double HOOK_ON_BAR = 4;
 
-    // public static final double INIT_SHOOTER = 4;
-    // public static final double SHOOT = 6;
-    // public static final double SHOOT_ALL = 7;
+        public static final double INIT_SHOOTER = 5;
+        public static final double SHOOT = 6;
+        public static final double START_SHOOTER = 7;
+        public static final double VISION_SHOOTER = 8;
+        public static final double INCREASE_SHOOTER_SPEED = 9;
+        public static final double DECREASE_SHOOTER_SPEED = 10;
+        public static final double SET_CLOSE_SHOT_SPEED = 11;
+        public static final double SET_MID_SHOT_SPEED = 12;
+        public static final double SET_LONG_SHOT_SPEED = 13;
+        public static final double SHOOT_ALL = 14;
 
-    // public static final double INCREASE_SHOOTER_RPM = 8;
-    // public static final double DECREASE_SHOOTER_RPM = 9;
+        public static final double TOGGLE_INTAKE = 15;
+        public static final double DEPLOY_INTAKE = 16;
+        public static final double RETRACT_INTAKE = 17;
+        public static final double RUN_INTAKE_IN = 18;
+        public static final double RUN_INTAKE_CONVEYOR_IN = 19;
+        public static final double RUN_INTAKE_CONVEYOR_OUT = 20;
+        public static final double RUN_INTAKE_OUT = 21;
+        public static final double RUN_CONVEYOR_OUT = 22;
+        public static final double RUN_CONVEYOR_IN = 23;
+        public static final double STOP_INTAKE = 24;
+        public static final double AUTO_PICKUP_BALL = 25;
 
-    // public static final double INDEXER_INTAKE = 10;
+        public static final double VISION_ALIGN = 26;
+        public static final double AUTO_ROTATE = 27;
+        public static final double ALIGN_TURRET = 28;
+        public static final double ROTATE_TURRET_L = 29;
+        public static final double ROTATE_TURRET_R = 30;
+        public static final double ROTATE_TURRET_TO_HOME = 31;
+        public static final double TURN_TURRET = 32;
+        public static final double ZERO_TURRET = 33;
 
-    // public static final double EXTEND_CLIMBER = 12;
-    // public static final double RETRACT_CLIMBER = 13;
-
-    // public static final double SHOOT_NEAR = 14;
-    // public static final double SHOOT_MID = 15;
-    // public static final double SHOOT_LONG = 16;
-
-    // public static final double CANCEL_ALL = 18;
-
+        public static final double MANUAL_INDEXER = 34;
+        public static final double MANUAL_INDEXER_REV = 35;
+        public static final double INDEXER = 36;
+        public static final double UPDRAW = 37;
+        public static final double CANCEL_ALL_COMMANDS = 38;
+*/
     if (key === "3") return "4";
     if (key === "5") return "6";
     if (key === "2") return "7";
@@ -266,61 +287,35 @@ function getFromMap(key) {
 }
 
 function getAutonFromMap() {
-
-    // LEFT_TO_GENERATOR_2_BALL_SIDE(0),
-    // LEFT_TO_GENERATOR_3_BALL_SIDE(1),
-    // LEFT_TO_TRENCH(2),
-    // LEFT_TO_GENERATOR_2_TO_TRENCH(3),
-    // LEFT_TO_GENERATOR_3_TO_2_BALL_SIDE(4),
-
-    // CENTER_TO_GENERATOR_2_BALL_SIDE(5),
-    // CENTER_TO_GENERATOR_3_BALL_SIDE(6),
-    // CENTER_TO_TRENCH(7),
-    // CENTER_TO_GENERATOR_2_TO_TRENCH(8),
-    // CENTER_TO_GENERATOR_3_TO_2_BALL_SIDE(9),
-
-    // RIGHT_TO_GENERATOR_2_BALL_SIDE(10),
-    // RIGHT_TO_GENERATOR_3_BALL_SIDE(11),
-    // RIGHT_TO_TRENCH(12),
-    // RIGHT_TO_GENERATOR_2_TO_TRENCH(13),
-    // RIGHT_TO_GENERATOR_3_TO_2_BALL_SIDE(14),
-
-    // UNKNOWN(-1);
-
-    // LEFT_EMPTY_THEN_BACK(0),
-    // LEFT_EMPTY_THEN_FRONT(1),
-
-    // CENTER_EMPTY_THEN_BACK(2),
-    // CENTER_EMPTY_THEN_FRONT(3),
-
-    // RIGHT_EMPTY_THEN_BACK(4),
-    // RIGHT_EMPTY_THEN_FRONT(5),
-
-    // RIGHT_TO_TRENCH_SHOT(6),
-
-
-
     switch (document.querySelector('input[name="start-position"]:checked').value) {
         case "Left":
-            return getLocation(0, document.querySelector('input[name="location"]:checked').value)
+            return 0;
         case "Center":
-            return getLocation(1, document.querySelector('input[name="location"]:checked').value)
+            return 1;
         case "Right":
-            return getLocation(2, document.querySelector('input[name="location"]:checked').value)
-    }
-}
-
-function getLocation(offset, value) {
-    switch (value) {
-        case "Generator 2":
-            return 0 + offset;
-        case "Generator 3":
-            return 3 + offset;
-        case "Trench":
-            return 6 + offset;
+            return 2;
+        // case "Left":
+        //     return getLocation(0, document.querySelector('input[name="location"]:checked').value)
+        // case "Center":
+        //     return getLocation(1, document.querySelector('input[name="location"]:checked').value)
+        // case "Right":
+        //     return getLocation(2, document.querySelector('input[name="location"]:checked').value)
     }
     return -1;
+
 }
+
+// function getLocation(offset, value) {
+//     switch (value) {
+//         case "Generator 2":
+//             return 0 + offset;
+//         case "Generator 3":
+//             return 3 + offset;
+//         case "Trench":
+//             return 6 + offset;
+//     }
+//     return -1;
+// }
 
 function sendAuton() {
     var autonCommand = getAutonFromMap();

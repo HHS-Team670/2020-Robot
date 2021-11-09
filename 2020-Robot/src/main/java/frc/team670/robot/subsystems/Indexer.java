@@ -243,6 +243,7 @@ public class Indexer extends MustangSubsystemBase {
         updateChamberStates();
         index();
         pushGameDataToDashboard();
+        // logSensorVals();
     }
 
     private void logSensorVals() {

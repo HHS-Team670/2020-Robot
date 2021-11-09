@@ -147,8 +147,8 @@ public class Climber extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        SmartDashboard.putNumber("Climber motor rotations", getUnadjustedMotorRotations());
-        SmartDashboard.putNumber("Climber motor current", getMotorCurrent());
+        // SmartDashboard.putNumber("Climber motor rotations", getUnadjustedMotorRotations());
+        // SmartDashboard.putNumber("Climber motor current", getMotorCurrent());
     }
 
     public void test() {
