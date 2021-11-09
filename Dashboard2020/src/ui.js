@@ -262,6 +262,10 @@ function getFromMap(key) {
 
     if (key === "v") return "18";
 
+    if (key == "b") return "19";
+    if (key == "g") return "20";
+    if (key == "h") return "21";
+
     return null;
 }
 
