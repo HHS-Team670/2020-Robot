@@ -77,6 +77,13 @@ public class XKeys {
         public static final double SHOOT_LONG = 16;
 
         public static final double CANCEL_ALL = 18;
+
+        public static final double TURN_TURRET_LEFT = 19;
+        public static final double TURN_TURRET_RIGHT = 20;
+
+        public static final double POSITION_COLOR_WHEEL = 21;
+        public static final double SPIN_COLOR_WHEEL = 22;
+
     }
 
     /**
@@ -143,6 +150,15 @@ public class XKeys {
                 setMidShotSpeed();
             else if (s == xkeysCommands.SHOOT_LONG)
                 setLongShotSpeed();
+            else if (s == xkeysCommands.TURN_TURRET_LEFT)
+                turnTurretLeft();
+            else if (s == xkeysCommands.TURN_TURRET_RIGHT)
+                turnTurretRight();
+            else if (s == xkeysCommands.POSITION_COLOR_WHEEL)
+                positionColorWheel();
+            else if (s == xkeysCommands.SPIN_COLOR_WHEEL)
+                spinColorWheel();
+
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-indexer", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
@@ -243,4 +259,22 @@ public class XKeys {
     private void cancelAllCommands() {
         MustangScheduler.getInstance().schedule(new CancelAllCommands());
     }
+
+    private void turnTurretLeft() {
+        //Turret.RotateToAngle(Turret, (Turret.getAngle - 1))
+    }
+
+    private void turnTurretRight() {
+        //Turret.RotateToAngle(Turret, (Turret.getAngle + 1))
+    }
+
+    private void positionColorWheel() {
+        colorWheel.positionColorWheel();
+    }
+
+    private void spinColorWheel(){
+        colorWheel.spinColorWheel();
+    }
+
+
 }
