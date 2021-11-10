@@ -243,6 +243,11 @@ document.addEventListener("keyup", function(event) {
         else if (nextTask.includes("updraw")) NetworkTables.putValue('/SmartDashboard/xkeys-updraw', nextTask);
         else if (nextTask.includes("climb")) NetworkTables.putValue('/SmartDashboard/xkeys-climber', nextTask);
         else if (nextTask.includes("vision")) NetworkTables.putValue('/Vision/vision-data', nextTask);
+
+        else if (nextTask.includes("turnLeft")) NetworkTables.putValue('/SmartDashboard/xkeys-turnLeft', nextTask);
+        else if (nextTask.includes("turnRight")) NetworkTables.putValue('/SmartDashboard/xkeys-turnRight', nextTask);
+        else if (nextTask.includes("resetTurrent")) NetworkTables.putValue('/SmartDashboard/xkeys-resetTurret', nextTask);
+
         else if (nextTask.includes("intake") || nextTask.includes("roller")) NetworkTables.putValue('/SmartDashboard/xkeys-intake', nextTask);
 
     }
@@ -292,6 +297,12 @@ function getFromMap(key) {
     if (key === "y") return "vision";
 
     if (key === "v") return "18";
+
+    if (key === "x") return "19";
+    if (key === "h") return "20";
+    if (key === "q") return "21";
+
+
 
     return null;
 }

@@ -9,21 +9,24 @@ package frc.team670.robot.dataCollection;
 
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTableType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.commands.MustangScheduler;
-import frc.team670.robot.commands.climb.ExtendClimber;
+import frc.team670.mustanglib.utils.Logger;
+import frc.team670.mustanglib.utils.MustangNotifications;
+import frc.team670.robot.commands.CancelAllCommands;
 import frc.team670.robot.commands.climb.Climb;
-import frc.team670.robot.commands.indexer.RotateToIntakePosition;
+import frc.team670.robot.commands.climb.ExtendClimber;
+// import frc.team670.robot.commands.indexer.s;
 import frc.team670.robot.commands.intake.DeployIntake;
 import frc.team670.robot.commands.intake.RunIntake;
-import frc.team670.robot.commands.routines.IntakeBallToIndexer;
-import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
-import frc.team670.robot.commands.routines.ShootAllBalls;
-import frc.team670.robot.commands.shooter.StartShooter;
+import frc.team670.robot.commands.shooter.Shoot;
+// import frc.team670.robot.commands.routines.IntakeBallToIndexer;
+// import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
 import frc.team670.robot.commands.shooter.StartShooterByDistance;
 import frc.team670.robot.commands.vision.GetVisionData;
+import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
 import frc.team670.robot.subsystems.Indexer;
@@ -31,11 +34,6 @@ import frc.team670.robot.subsystems.Intake;
 import frc.team670.robot.subsystems.Shooter;
 import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.Vision;
-import frc.team670.robot.subsystems.Climber;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team670.robot.commands.CancelAllCommands;
-import frc.team670.mustanglib.utils.Logger;
-import frc.team670.mustanglib.utils.MustangNotifications;
 
 /**
  * Listens on network tables to keys sent over by the XKeys keyboard and calls
@@ -69,7 +67,7 @@ public class XKeys {
         public static final double INCREASE_SHOOTER_RPM = 8;
         public static final double DECREASE_SHOOTER_RPM = 9;
 
-        public static final double INDEXER_INTAKE = 10;
+        // public static final double INDEXER_INTAKE = 10;
 
         public static final double EXTEND_CLIMBER = 12;
         public static final double RETRACT_CLIMBER = 13;
@@ -79,6 +77,10 @@ public class XKeys {
         public static final double SHOOT_LONG = 16;
 
         public static final double CANCEL_ALL = 18;
+
+        public static final double TURN_TURRET_RIGHT = 19;
+        public static final double TURN_TURRET_LEFT = 20;
+        public static final double RESET_TURRET = 21;
     }
 
     /**
@@ -145,13 +147,19 @@ public class XKeys {
                 setMidShotSpeed();
             else if (s == xkeysCommands.SHOOT_LONG)
                 setLongShotSpeed();
+            else if (s == xkeysCommands.TURN_TURRET_RIGHT)
+                turnTurretRight();
+            else if (s == xkeysCommands.TURN_TURRET_LEFT)
+                turnTurretLeft();
+            else if (s == xkeysCommands.RESET_TURRET)
+                resetTurret();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-indexer", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
                 return;
             double s = value.getDouble();
-            if (s == xkeysCommands.INDEXER_INTAKE)
-                indexerAtIntake();
+            //if (s == xkeysCommands.INDEXER_INTAKE)
+                // indexerAtIntake();
         }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
         table.addEntryListener("xkeys-climber", (table2, key2, entry, value, flags) -> {
             if (value.getType() != NetworkTableType.kDouble)
@@ -191,7 +199,7 @@ public class XKeys {
     }
 
     private void shoot() {
-        MustangScheduler.getInstance().schedule(new RotateIndexerToUptakeThenShoot(indexer, shooter, drivebase));
+        MustangScheduler.getInstance().schedule(new Shoot(shooter));
     }
 
     private void increaseShooterSpeed() {
@@ -215,7 +223,7 @@ public class XKeys {
     }
 
     private void shootAll() {
-        MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer, shooter, drivebase));
+        // MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer));
     }
 
     private void toggleIntake() {
@@ -231,18 +239,31 @@ public class XKeys {
     }
 
     private void autoPickupBall() {
-        MustangScheduler.getInstance().schedule(new IntakeBallToIndexer(intake, conveyor, indexer));
+        // MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer));
+    }
+
+    private void turnTurretLeft(){
+        turret.RotateToAngle(turret.currentAngle - 1);
+    }
+
+    private void turnTurretRight(){
+        turret.RotateToAngle(turret.currentAngle + 1);
+    }
+
+    private void resetTurret(){
+        turret.rotateToHome();
     }
 
     private void visionAlign() {
         MustangScheduler.getInstance().schedule(new GetVisionData(coprocessor, drivebase));
     }
 
-    private void indexerAtIntake() {
-        MustangScheduler.getInstance().schedule(new RotateToIntakePosition(indexer));
-    }
+    // private void indexerAtIntake() {
+    //     MustangScheduler.getInstance().schedule(new RotateToIntakePosition(indexer));
+    // }
 
     private void cancelAllCommands() {
         MustangScheduler.getInstance().schedule(new CancelAllCommands());
+        turret.
     }
 }
