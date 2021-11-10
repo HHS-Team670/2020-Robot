@@ -271,7 +271,7 @@ function getFromMap(key) {
     // public static final double SHOOT_LONG = 16;
 
     // public static final double CANCEL_ALL = 18;
-
+    if(key  ===  "l")return "1";
     if (key === "3") return "4";
     if (key === "5") return "6";
     if (key === "2") return "7";
@@ -281,8 +281,8 @@ function getFromMap(key) {
     if (key === "d") return "16";
 
     if (key === "k") return "2";
-    if (key === "e") return "0";
-    if (key === "f") return "1";
+    if (key === "e") return "19";
+    if (key === "f") return "20";
 
     if (key === "a") return "NEUTRAL";
 

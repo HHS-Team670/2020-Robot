@@ -57,10 +57,10 @@ public class XKeys {
     private Turret turret;
     private Vision coprocessor;
     private class xkeysCommands { // do not use enums as getID has to be called over enum call
-
-        public static final double RUN_INTAKE_IN = 0;
+        
         public static final double RUN_INTAKE_OUT = 1;
-        public static final double TOGGLE_INTAKE = 2;
+        public static final double RUN_INTAKE_IN = 2;
+        //public static final double TOGGLE_INTAKE = 2;
         
         public static final double INIT_SHOOTER = 4;
         public static final double SHOOT = 6;
@@ -79,6 +79,10 @@ public class XKeys {
         public static final double SHOOT_LONG = 16;
 
         public static final double CANCEL_ALL = 18;
+
+        public static final double ROLLER_IN=19;
+        private static final double ROLLER_OUT=20;
+
     }
 
     /**
