@@ -83,6 +83,9 @@ public class XKeys {
         public static final double ROLLER_IN=19;
         private static final double ROLLER_OUT=20;
 
+        private static final double autoClimb =21;
+        private static final double autoIntake =22;
+
     }
 
     /**

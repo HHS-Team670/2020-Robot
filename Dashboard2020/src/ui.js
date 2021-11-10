@@ -275,10 +275,12 @@ function getFromMap(key) {
     if (key === "3") return "4";
     if (key === "5") return "6";
     if (key === "2") return "7";
+    if (key === "6") return "22";
 
     if (key === "c") return "14";
     if (key === "j") return "15";
     if (key === "d") return "16";
+    if (key === "n") return "21";
 
     if (key === "k") return "2";
     if (key === "e") return "19";
