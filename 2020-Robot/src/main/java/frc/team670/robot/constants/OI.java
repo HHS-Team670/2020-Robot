@@ -17,11 +17,13 @@ import frc.team670.robot.commands.*;
 // import frc.team670.robot.commands.indexer.ToggleUpdraw;
 import frc.team670.robot.commands.intake.RunIntakeConveyor;
 import frc.team670.robot.commands.intake.ToggleIntake;
+import frc.team670.robot.commands.intake.RunConveyor;
 import frc.team670.robot.commands.routines.AutoIndex;
 import frc.team670.robot.commands.routines.ShootAllBalls;
 import frc.team670.robot.commands.shooter.*;
 import frc.team670.robot.commands.shooter.ToggleShooter;
 import frc.team670.robot.commands.turret.*;
+import frc.team670.robot.commands.indexer.*;
 import frc.team670.robot.dataCollection.XKeys;
 import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.subsystems.Conveyor;
@@ -88,13 +90,13 @@ public class OI extends OIBase {
 
     toggleIntake.whenPressed(new ToggleIntake(intake));
     shoot.whenPressed(new Shoot(shooter));
-    conveyorSwitch.whenPressed(new RunConveyor(conveyor));
+    conveyorSwitch.whenPressed(new RunConveyor(false, conveyor, indexer));
     this.climber.whenPressed(new Climb(climber));
-    indexerSwitch.whenPressed(new RunIndexer(indexer));
+    indexerSwitch.whenPressed(new RunIndexer(indexer, conveyor));
     stopAll.whenPressed(null);
     stop.whenPressed(null);
     accelerateShooter.whenPressed(new StartShooter(shooter));
-    turnTurret.whenPressed(new AutoRotate(turret));
+    turnTurret.whenPressed(new AutoRotate(turret, vision, drivebase));
 
 
     

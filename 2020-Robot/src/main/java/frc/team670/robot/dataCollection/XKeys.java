@@ -24,8 +24,15 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.shooter.Shoot;
 // import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 // import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
-import frc.team670.robot.commands.shooter.StartShooterByDistance;
-import frc.team670.robot.commands.vision.GetVisionData;
+import frc.team670.robot.commands.shooter.*;
+import frc.team670.robot.commands.vision.*;
+import frc.team670.robot.commands.intake.*;
+import frc.team670.robot.commands.routines.*;
+import frc.team670.robot.commands.routines.ShootAllBalls;
+import frc.team670.robot.commands.climb.*;
+import frc.team670.robot.commands.indexer.*;
+import frc.team670.robot.commands.indexer.RunIndexer;
+import frc.team670.robot.commands.turret.*;
 import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
@@ -296,7 +303,7 @@ public class XKeys {
     }
 
     private void shootAll() {
-        MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer));
+        MustangScheduler.getInstance().schedule(new ShootAllBalls(indexer, conveyor, shooter, coprocessor));
     }
 
     private void toggleIntake() {
@@ -384,7 +391,7 @@ public class XKeys {
     }
 
     private void indexer() {
-        MustangScheduler.getInstance().schedule(new Indexer(indexer, conveyor));
+        MustangScheduler.getInstance().schedule(new RunIndexer(indexer, conveyor));
     }
 
     private void updraw() {
