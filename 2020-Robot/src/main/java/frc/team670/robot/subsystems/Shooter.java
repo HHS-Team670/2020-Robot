@@ -15,6 +15,7 @@ import com.revrobotics.ControlType;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.RobotMap;
+import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.functions.MathUtils;
 import frc.team670.mustanglib.utils.math.interpolable.InterpolatingDouble;
@@ -23,6 +24,8 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
 import frc.team670.mustanglib.utils.math.interpolable.PolynomialRegression;
+import frc.team670.robot.constants.RobotConstants;
+
 
 /**
  * Represents a 2-stage shooter, with 1st stage using a VictorSPX and 2-NEO 2nd
@@ -61,6 +64,8 @@ public class Shooter extends MustangSubsystemBase {
   private static final double V_D = 0.0;
   private static final double V_FF = 0.000183;
   private static final double RAMP_RATE = 1.0;
+
+  private static Vision vision;
 
   private static InterpolatingTreeMap<InterpolatingDouble, InterpolatingDouble> FLYWHEEL_RPM_MAP = new InterpolatingTreeMap<>();
 
@@ -108,13 +113,15 @@ public class Shooter extends MustangSubsystemBase {
 
   private static final int VELOCITY_SLOT = 0;
 
-  public Shooter() {
+  public Shooter(Vision vision) {
 
     SmartDashboard.putNumber("Stage 2 Velocity Setpoint", 0.0);
     SmartDashboard.putNumber("Stage 2 FF", 0.0);
     SmartDashboard.putNumber("Stage 2 P", 0.0);
     SmartDashboard.putNumber("Stage 2 Ramp Rate", 0.0);
     SmartDashboard.putNumber("Stage 2 speed", 0.0);
+
+    this.vision = vision;
 
     controllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SHOOTER_MAIN,
         RobotMap.SHOOTER_FOLLOWER, true, Motor_Type.NEO);
@@ -192,6 +199,7 @@ public class Shooter extends MustangSubsystemBase {
 
   public void stop() {
     stage2_mainPIDController.setReference(0, ControlType.kDutyCycle);
+    setVelocityTarget(0);
   }
 
   public boolean isUpToSpeed() {
@@ -218,6 +226,14 @@ public class Shooter extends MustangSubsystemBase {
     // } else if (!ballHasBeenShot && !isShooting()) {
     //   ballHasBeenShot = true;
     // }
+    if(targetRPM != 0){
+      double distance = vision.getDistanceToTargetM();
+      if (distance != RobotConstants.VISION_ERROR_CODE) {
+        double targetRPM = getTargetRPMForDistance(distance);
+        setVelocityTarget(targetRPM);
+        run();
+      }
+    }   
     // SmartDashboard.putNumber("Stage 2 speed", mainController.getEncoder().getVelocity());
   }
 
