@@ -16,10 +16,9 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
-import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
+
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.DriveBase;
-import frc.team670.mustanglib.utils.Logger;
 
 /**
  * Generic representation of a path that the robot can drive.
@@ -30,30 +29,20 @@ public class Path {
 
     //gets left voltage constraint bc left and right are very similar (even w 2020 clim)
     private static final DifferentialDriveVoltageConstraint AUTO_VOLTAGE_CONSTRAINT = getLeftAutoVoltageConstraint();
-    //private static final TrajectoryConfig CONFIG = getConfig();
+    private static final TrajectoryConfig CONFIG = getConfig();
     private Trajectory trajectory;
     private DriveBase driveBase; 
     private List<Pose2d> waypointsList;
 
-    public Path(List<Pose2d> waypoints, DriveBase driveBase) {
-        Logger.consoleLog("normal trajectory");
-        this.driveBase = driveBase;
-        this.waypointsList = waypoints;
-        TrajectoryConfig config = getConfig(RobotConstants.kAutoPathConstraints, RobotConstants.kMaxSpeedMetersPerSecond2, RobotConstants.kMaxAccelerationMetersPerSecondSquared2, RobotConstants.endVelocityMetersPerSecond);
-        trajectoryFromWaypoints(waypoints, config);
-    }
-    
     /**
      * Used to create a path object based on a list of way points and the drivebase
      * @param waypoints a list of waypoints
      * @param driveBase the drivebase which has to follow the path
      */
-    public Path(List<Pose2d> waypoints, DriveBase driveBase, DifferentialDriveKinematicsConstraint kAutoPathConstraints, double kMaxSpeedMetersPerSecond, double kMaxAccelerationMetersPerSecondSquared, double endVelocityMetersPerSecond) {
-        Logger.consoleLog("slow trajectory");
+    public Path(List<Pose2d> waypoints, DriveBase driveBase) {
         this.driveBase = driveBase;
         this.waypointsList = waypoints;
-        TrajectoryConfig config = getConfig(kAutoPathConstraints, kMaxSpeedMetersPerSecond, kMaxAccelerationMetersPerSecondSquared, endVelocityMetersPerSecond);
-        trajectoryFromWaypoints(waypoints, config);
+        trajectoryFromWaypoints(waypoints);
     }
 
         /**
@@ -137,15 +126,13 @@ public class Path {
                     
     }
 
-    private static TrajectoryConfig getConfig(DifferentialDriveKinematicsConstraint kAutoPathConstraints, double kMaxSpeedMetersPerSecond, double kMaxAccelerationMetersPerSecondSquared, double endVelocityMetersPerSecond) {
-        return new TrajectoryConfig(kMaxSpeedMetersPerSecond,
-                kMaxAccelerationMetersPerSecondSquared)
+    private static TrajectoryConfig getConfig() {
+        return new TrajectoryConfig(RobotConstants.kMaxSpeedMetersPerSecond,
+                RobotConstants.kMaxAccelerationMetersPerSecondSquared)
                         // Add kinematics to ensure max speed is actually obeyed
                         .setKinematics(RobotConstants.kDriveKinematics)
                         // Apply the voltage constraint
-                        .addConstraint(kAutoPathConstraints)
-                        .addConstraint(AUTO_VOLTAGE_CONSTRAINT)
-                        .setEndVelocity(endVelocityMetersPerSecond);
+                        .addConstraint(RobotConstants.kAutoPathConstraints).addConstraint(AUTO_VOLTAGE_CONSTRAINT);
     }
 
     /**

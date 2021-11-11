@@ -161,7 +161,7 @@ public class DriveBase extends TankDriveBase {
     boolean isLeft2Error = isSparkMaxErrored(left2);
     boolean isRight1Error = isSparkMaxErrored(right1);
     boolean isRight2Error = isSparkMaxErrored(right2);
-    boolean isNavXError = !navXMicro.isConnected();
+    boolean isNavXError = (navXMicro == null);
 
     // used to check if it is green first which would be the case most of the times.
     // Then red as it is just 4 conditions and
