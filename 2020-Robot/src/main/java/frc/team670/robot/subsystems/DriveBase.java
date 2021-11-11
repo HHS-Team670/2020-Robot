@@ -15,15 +15,24 @@ import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import org.photonvision.PhotonCamera;
+import org.photonvision.targeting.PhotonPipelineResult;
+
 import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.estimator.DifferentialDrivePoseEstimator;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.wpiutil.math.VecBuilder;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
@@ -36,10 +45,14 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
-// @author lakshbhambhani
-
+/**
+ * Represents a tank drive base.
+ * 
+ * @author lakshbhambhani
+ */
 public class DriveBase extends TankDriveBase {
 
+  private PhotonCamera camera;
   private SparkMAXLite left1, left2, right1, right2;
   private CANEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
 
@@ -49,14 +62,27 @@ public class DriveBase extends TankDriveBase {
   private List<SparkMAXLite> allMotors = new ArrayList<SparkMAXLite>();;
 
   private NavX navXMicro;
+
   private DifferentialDriveOdometry m_odometry;
+  private DifferentialDrivePoseEstimator poseEstimator;
 
   private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
 
   private static final double CURRENT_WHEN_AGAINST_BAR = 5; // : FinTODOd this
   private int againstBarCount = 0;
 
+  public static final double kFarTgtXPos = Units.feetToMeters(54);
+  public static final double kFarTgtYPos =
+          Units.feetToMeters(27 / 2) - Units.inchesToMeters(43.75) - Units.inchesToMeters(48.0 / 2.0);
+  public static final Pose2d kFarTargetPose =
+          new Pose2d(new Translation2d(kFarTgtXPos, kFarTgtYPos), new Rotation2d(0.0));
+
+  public static final Pose2d TARGET_POSE = new Pose2d(0, -2.4, Rotation2d.fromDegrees(0));
+  public static final Pose2d CAMERA_OFFSET = TARGET_POSE.transformBy(new Transform2d( new Translation2d(0.23, 0), Rotation2d.fromDegrees(0)));
+
+
   public DriveBase(MustangController mustangController) {
+    camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
     mController = mustangController;
 
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
@@ -99,8 +125,14 @@ public class DriveBase extends TankDriveBase {
 
     // initialized NavX and sets Odometry
     navXMicro = new NavX(RobotMap.NAVX_PORT);
-    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(0, 0, new Rotation2d()));
+    // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
+    // m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
+    //     new Pose2d(0, 0, new Rotation2d()));
+    poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()), 
+        new Pose2d(3.8, -2.4, new Rotation2d()), // TODO: change this to be a constant with the starting position
+        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // TODO: find correct values
+        VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), // TODO: find correct values
+        VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); // TODO: find correct values
 
   }
 
@@ -129,7 +161,7 @@ public class DriveBase extends TankDriveBase {
     boolean isLeft2Error = isSparkMaxErrored(left2);
     boolean isRight1Error = isSparkMaxErrored(right1);
     boolean isRight2Error = isSparkMaxErrored(right2);
-    boolean isNavXError = (navXMicro == null);
+    boolean isNavXError = !navXMicro.isConnected();
 
     // used to check if it is green first which would be the case most of the times.
     // Then red as it is just 4 conditions and
@@ -350,8 +382,12 @@ public class DriveBase extends TankDriveBase {
     SmartDashboard.putNumber("Right S Velocity Ticks", right2Encoder.getVelocity());
   }
 
+  
+  private int count = 0;
   @Override
   public void mustangPeriodic() {
+
+    long startTime = System.currentTimeMillis();
     // Update the odometry in the periodic block
     // SmartDashboard.putNumber("Heading: %s", getHeading());
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
@@ -363,8 +399,13 @@ public class DriveBase extends TankDriveBase {
    * @return The pose.
    */
   public Pose2d getPose() {
-    return m_odometry.getPoseMeters();
+    // return m_odometry.getPoseMeters();
+    return poseEstimator.getEstimatedPosition();
   }
+
+  // public Pose2d getOdometryPose() {
+  //   return m_odometry.getPoseMeters();
+  // }
 
   /**
    * Resets the odometry to the specified pose.
@@ -373,7 +414,8 @@ public class DriveBase extends TankDriveBase {
    */
   public void resetOdometry(Pose2d pose) {
     zeroHeading();
-    m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+    // m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+    poseEstimator.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
     CANError lE = left1Encoder.setPosition(0);
     CANError rE = right1Encoder.setPosition(0);
     // Logger.consoleLog("Encoder return value %s %s", lE, rE);
@@ -395,8 +437,14 @@ public class DriveBase extends TankDriveBase {
     zeroHeading();
     left1Encoder.setPosition(0);
     right1Encoder.setPosition(0);
-    m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(0, 0, new Rotation2d()));
+    // m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()),
+    //     new Pose2d(0, 0, new Rotation2d()));
+    poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()), 
+      new Pose2d(0, 0, new Rotation2d()), 
+      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // TODO: find correct values
+      VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), // TODO: find correct values
+      VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); // TODO: find correct values
+  
   }
 
   /**

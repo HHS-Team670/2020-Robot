@@ -24,6 +24,30 @@ import frc.team670.robot.commands.auton.right.RightShootTrench;
 import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.OI;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team670.mustanglib.RobotContainerBase;
+import frc.team670.mustanglib.commands.MustangCommand;
+import frc.team670.mustanglib.commands.MustangScheduler;
+import frc.team670.mustanglib.subsystems.LEDSubsystem;
+import frc.team670.mustanglib.utils.MustangController;
+import frc.team670.robot.commands.auton.AutoSelector;
+import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
+import frc.team670.robot.commands.auton.twentytwentyone.ShootThen5Diagonal;
+import frc.team670.robot.commands.auton.twentytwentyone.ShootThen3Line;
+import frc.team670.robot.commands.auton.twentytwentyone.ShootThen2Line;
+import frc.team670.robot.commands.auton.twentytwentyone.TrenchLoop3Line;
+import frc.team670.robot.commands.auton.twentytwentyone.TrenchShoot;
+import frc.team670.robot.commands.auton.twentytwentyone.TrenchLoop2Line;
+// import frc.team670.robot.commands.auton.ShootFromAngleThenTimeDrive;
+// import frc.team670.robot.commands.auton.ToTrenchRunAndShoot;
+// import frc.team670.robot.commands.auton.baseline.ShootThenBack;
+import frc.team670.robot.commands.turret.ZeroTurret;
+import frc.team670.robot.constants.FieldConstants;
+import frc.team670.robot.constants.OI;
+import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
@@ -66,7 +90,7 @@ public class RobotContainer extends RobotContainerBase {
 
   public void robotInit() {
     vision.turnOnLEDs();
-
+    driveBase.resetOdometry(new Pose2d(3.8, -2.4, Rotation2d.fromDegrees(0)));
   }
 
   /**
@@ -110,11 +134,14 @@ public class RobotContainer extends RobotContainerBase {
     }
     // turret.initDefaultCommand();
     vision.turnOnLEDs();
+    
+    
   }
 
   @Override
   public void disabled() {
     vision.turnOffLEDs();
+    driveBase.initBrakeMode();
   }
 
   public static Joystick getOperatorController() {

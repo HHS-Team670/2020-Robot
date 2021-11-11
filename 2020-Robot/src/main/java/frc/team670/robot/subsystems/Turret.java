@@ -97,7 +97,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
         }
 
         public boolean enableSoftLimits() {
-            return true;
+            return false;
         }
 
         public float[] setSoftLimits() {

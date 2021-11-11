@@ -3,6 +3,7 @@ package frc.team670.robot.commands.shooter;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.robot.constants.FieldConstants;
@@ -31,10 +32,11 @@ public class StartShooterByPoseDistance extends CommandBase implements MustangCo
     public void initialize() {
         double currentX = driveBase.getPose().getTranslation().getX();
         double currentY = driveBase.getPose().getTranslation().getY();
-        double distanceToTarget = Math.sqrt(
-            (Math.pow(currentX - FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS, 2) +
-             Math.pow(currentY, 2))
-        );
+        double distanceToTarget = SmartDashboard.getNumber("Vision X", 5);
+
+        // Math.sqrt(
+            // (Math.pow(currentX - FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS, 2) +
+            //  Math.pow(currentY, 2)));
         Logger.consoleLog("Shooter distance to target %s", distanceToTarget);
         targetRPM = shooter.getTargetRPMForDistance(distanceToTarget);
         Logger.consoleLog("Shooter Stage 2 RPM should be %s", targetRPM);
