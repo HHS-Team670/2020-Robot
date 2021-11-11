@@ -284,3 +284,15 @@ body.login #login {
     width: 20vw;
     height: 10vh;
 }
+
+#camera-streams {
+    width: 100vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.camera-stream {
+    width: 32vw;
+}
