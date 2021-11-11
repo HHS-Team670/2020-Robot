@@ -28,7 +28,6 @@ import org.photonvision.PhotonUtils;
 public class Vision extends MustangSubsystemBase{
 
     private Solenoid cameraLEDs = new Solenoid(RobotMap.PCMODULE, RobotMap.VISION_LED_PCM);
-    ;
 
     PhotonCamera camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
 

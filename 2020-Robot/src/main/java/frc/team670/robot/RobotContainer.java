@@ -48,7 +48,7 @@ public class RobotContainer extends RobotContainerBase {
   private static Indexer indexer = new Indexer(conveyor);
   private static Vision vision = new Vision();
   private static Turret turret = new Turret(vision);
-  private static Shooter shooter = new Shooter();
+  private static Shooter shooter = new Shooter(vision);
   private static Climber climber = new Climber();
   private static AutoSelector autoSelector =  new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret, vision);
 
