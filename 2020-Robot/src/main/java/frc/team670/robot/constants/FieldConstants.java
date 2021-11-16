@@ -14,4 +14,15 @@ public class FieldConstants {
     public static final double TARGET_CENTER_HEIGHT = 2.495;
     public static final double VISION_TARGET_CENTER_HEIGHT = 2.24;
 
+    public static final double FAR_TARGET_X_POS = Units.feetToMeters(54);
+    public static final double FAR_TARGET_Y_POS =
+          Units.feetToMeters(27 / 2) - Units.inchesToMeters(43.75) - Units.inchesToMeters(48.0 / 2.0);
+    public static final Pose2d FAR_TARGET_POSE =
+          new Pose2d(new Translation2d(kFarTgtXPos, kFarTgtYPos), new Rotation2d(0.0));
+
+    public static final Pose2d TARGET_POSE = new Pose2d(0, -2.4, Rotation2d.fromDegrees(0)); 
+
+
+    
+
 }
