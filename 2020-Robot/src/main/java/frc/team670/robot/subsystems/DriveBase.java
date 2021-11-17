@@ -374,17 +374,68 @@ public class DriveBase extends TankDriveBase {
 
   @Override
   public void mustangPeriodic() {
-    long startTime = System.currentTimeMillis();
+    //FROM POSE ESTIMATOR BRANCH
+
+    // long startTime = System.currentTimeMillis();
+    // if(count%100 == 0) {
+      poseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(),
+        left1Encoder.getPosition(), right1Encoder.getPosition());
+      SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
+      SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
+
+      // SmartDashboard.putNumber("Encoder X", m_odometry.getPoseMeters().getX());
+      // SmartDashboard.putNumber("Encoder Y", m_odometry.getPoseMeters().getY());
+    
+      PhotonPipelineResult res = camera.getLatestResult();
+      // count = 0;
+      Pose2d pose = new Pose2d();
+
+      if (res.hasTargets()) {
+        // Logger.consoleWarning("Got targets!");
+
+        pose = getVisionPose(res);
+        SmartDashboard.putNumber("FinalVision X", pose.getX());
+        SmartDashboard.putNumber("FinalVision Y", pose.getY());
+
+        double imageCaptureTime = getVisionCaptureTime(res);
+        poseEstimator.addVisionMeasurement(pose, imageCaptureTime);
+        SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
+        SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
+
+      } else {
+        // Logger.consoleError("Did not find targets!");
+      }
+      //Logger.consoleLog("estimated pose: " + poseEstimator.getEstimatedPosition());}
+    // }
+    // count++;
+    // Logger.consoleLog("Dif in Time: %s", System.currentTimeMillis() - startTime);
+    // System.currentTimeMillis();
+
+
+  }
+
+
+  public Pose2d getVisionPose(PhotonPipelineResult res) {
+    Transform2d camToTargetTrans = res.getBestTarget().getCameraToTarget();
+    SmartDashboard.putNumber("PhotonVision X", camToTargetTrans.getX());
+    SmartDashboard.putNumber("PhotonVision Y", camToTargetTrans.getY());
+    Pose2d targetOffset = TARGET_POSE.transformBy(camToTargetTrans);
+    return targetOffset;
+  } 
+
+  public double getVisionCaptureTime(PhotonPipelineResult res) {
+    return Timer.getFPGATimestamp() - res.getLatencyMillis();
   }
 
   /**
    * Returns the currently-estimated pose of the robot.
    *
-   * @return the <b>pose</b>.
+   * @return The pose.
    */
   public Pose2d getPose() {
     return poseEstimator.getEstimatedPosition();
   }
+  
 
   /**
    * Resets the odometry to the specified pose.
