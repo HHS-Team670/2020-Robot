@@ -16,10 +16,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 import org.photonvision.PhotonCamera;
-import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.estimator.DifferentialDrivePoseEstimator;
@@ -28,7 +26,6 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
@@ -37,7 +34,6 @@ import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
 import frc.team670.mustanglib.subsystems.drivebase.TankDriveBase;
-import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.mustanglib.utils.MustangNotifications;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
@@ -45,6 +41,7 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
+
 /**
  * Represents a tank drive base.
  * 
@@ -65,14 +62,14 @@ public class DriveBase extends TankDriveBase {
 
   private DifferentialDrivePoseEstimator poseEstimator;
 
-  private static final double CURRENT_WHEN_AGAINST_BAR = 5; //TODO Find this
+  private static final double CURRENT_WHEN_AGAINST_BAR = 5; // TODO Find this
   private int againstBarCount = 0;
 
   // Constants used for doing robot to target pose conversion
-  
-  public static final Pose2d TARGET_POSE = new Pose2d(0, -2.4, Rotation2d.fromDegrees(0));
-  public static final Pose2d CAMERA_OFFSET = TARGET_POSE.transformBy(new Transform2d( new Translation2d(0.23, 0), Rotation2d.fromDegrees(0)));
 
+  public static final Pose2d TARGET_POSE = new Pose2d(0, -2.4, Rotation2d.fromDegrees(0));
+  public static final Pose2d CAMERA_OFFSET = TARGET_POSE
+      .transformBy(new Transform2d(new Translation2d(0.23, 0), Rotation2d.fromDegrees(0)));
 
   public DriveBase(MustangController mustangController) {
     camera = new PhotonCamera(RobotConstants.TURRET_CAMERA_NAME);
@@ -94,7 +91,8 @@ public class DriveBase extends TankDriveBase {
     right2Encoder = right2.getEncoder();
 
     left1Encoder.setVelocityConversionFactor(RobotConstants.sparkMaxVelocityConversionFactor);
-    left2Encoder.setVelocityConversionFactor(RobotConstants.sparkMaxVelocityConversionFactor); // Do not invert for right side
+    left2Encoder.setVelocityConversionFactor(RobotConstants.sparkMaxVelocityConversionFactor); // Do not invert for
+                                                                                               // right side
     right1Encoder.setVelocityConversionFactor(RobotConstants.sparkMaxVelocityConversionFactor);
     right2Encoder.setVelocityConversionFactor(RobotConstants.sparkMaxVelocityConversionFactor);
 
@@ -103,27 +101,28 @@ public class DriveBase extends TankDriveBase {
     right1Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
     right2Encoder.setPositionConversionFactor(RobotConstants.DRIVEBASE_METERS_PER_ROTATION);
 
-
     allMotors.addAll(leftControllers);
     allMotors.addAll(rightControllers);
 
-    // The DifferentialDrive inverts the right side automatically, however we want invert straight 
-    // from the Spark so that we can still use it properly with the CANPIDController, so we need to tell
+    // The DifferentialDrive inverts the right side automatically, however we want
+    // invert straight
+    // from the Spark so that we can still use it properly with the
+    // CANPIDController, so we need to tell
     // differenetial drive to not invert.
     setMotorsInvert(leftControllers, false);
     setMotorsInvert(rightControllers, true); // Invert this so it will work properly with the CANPIDController
 
-    super.setMotorControllers(new SpeedController[] {left1, left2}, new SpeedController[] {right1, right2}, false, false, .1, true);
+    super.setMotorControllers(new SpeedController[] { left1, left2 }, new SpeedController[] { right1, right2 }, false,
+        false, .1, true);
 
     // initialized NavX and sets Odometry
     navXMicro = new NavX(RobotMap.NAVX_PORT);
     // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
-    poseEstimator = new DifferentialDrivePoseEstimator(
-      Rotation2d.fromDegrees(getHeading()), 
-      new Pose2d(3.8, -2.4, new Rotation2d()), // TODO: change this to be a constant with the starting position
-      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // if u need to, find the correct values for the three vectors
-      VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)),
-      VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+    poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
+        new Pose2d(3.8, -2.4, new Rotation2d()), // TODO: change this to be a constant with the starting position
+        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // if u need to, find the correct values for the three vectors
+        VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), 
+        VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 
   }
 
@@ -135,10 +134,9 @@ public class DriveBase extends TankDriveBase {
   }
 
   /**
-   * Checks the health for driveBase. 
-   * RED if all motors are dead, 
-   * GREEN if all motors are alive and navx is connected, 
-   * YELLOW if a motor is disconnected or nav is not connected
+   * Checks the health for driveBase. RED if all motors are dead, GREEN if all
+   * motors are alive and navx is connected, YELLOW if a motor is disconnected or
+   * nav is not connected
    */
   @Override
   public HealthState checkHealth() {
@@ -374,7 +372,6 @@ public class DriveBase extends TankDriveBase {
     SmartDashboard.putNumber("Right S Velocity Ticks", right2Encoder.getVelocity());
   }
 
-
   @Override
   public void mustangPeriodic() {
     long startTime = System.currentTimeMillis();
@@ -399,34 +396,38 @@ public class DriveBase extends TankDriveBase {
     poseEstimator.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
     CANError lE = left1Encoder.setPosition(0);
     CANError rE = right1Encoder.setPosition(0);
-    // Logger.consoleLog("Encoder return value %s %s", lE, rE);
-    // Logger.consoleLog("Encoder positions %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
+    SmartDashboard.putString("Encoder return value left %s", lE.toString());
+    SmartDashboard.putString("Encoder return value right %s", rE.toString());
+    SmartDashboard.putNumber("Encoder positions left %s", left1Encoder.getPosition()); 
+    SmartDashboard.putNumber("Encoder positions left %s", right1Encoder.getPosition()); 
     int counter = 0;
     while ((left1Encoder.getPosition() != 0 || right1Encoder.getPosition() != 0) && counter < 30) {
       lE = left1Encoder.setPosition(0);
       rE = right1Encoder.setPosition(0);
       counter++;
     }
-    // Logger.consoleLog("Encoder return value %s %s", lE, rE);
-    // Logger.consoleLog("Encoder positions %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
     // Logger.consoleLog("Drivebase pose reset %s", pose);
-    // Logger.consoleLog("Drivebase get position after reset %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
+    // Logger.consoleLog("Drivebase get position after reset %s %s",
+    // left1Encoder.getPosition(), right1Encoder.getPosition());
   }
 
   public void resetOdometry() {
     zeroHeading();
     left1Encoder.setPosition(0);
     right1Encoder.setPosition(0);
-    poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()), 
-      new Pose2d(0, 0, new Rotation2d()), 
-      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // TODO: find correct values
-      VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), // TODO: find correct values
-      VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); // TODO: find correct values
-  
+    poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
+        new Pose2d(0, 0, new Rotation2d()), VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // TODO:
+                                                                                                                // find
+                                                                                                                // correct
+                                                                                                                // values
+        VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), // TODO: find correct values
+        VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); // TODO: find correct values
+
   }
 
   /**
    * Returns the heading of the robot.
+   * 
    * @return the robot's heading in degrees, in range [-180, 180]
    */
   public double getHeading() {
@@ -543,26 +544,26 @@ public class DriveBase extends TankDriveBase {
 
   @Override
   public PIDController getLeftPIDController() {
-    return new PIDController(RobotConstants.leftKPDriveVel,
-              RobotConstants.leftKIDriveVel, RobotConstants.leftKDDriveVel);
+    return new PIDController(RobotConstants.leftKPDriveVel, RobotConstants.leftKIDriveVel,
+        RobotConstants.leftKDDriveVel);
   }
 
   @Override
   public SimpleMotorFeedforward getLeftSimpleMotorFeedforward() {
     return new SimpleMotorFeedforward(RobotConstants.leftKsVolts, RobotConstants.leftKvVoltSecondsPerMeter,
-                    RobotConstants.leftKaVoltSecondsSquaredPerMeter);
+        RobotConstants.leftKaVoltSecondsSquaredPerMeter);
   }
 
   @Override
   public PIDController getRightPIDController() {
-    return new PIDController(RobotConstants.rightKPDriveVel,
-            RobotConstants.rightKIDriveVel, RobotConstants.rightKDDriveVel);
+    return new PIDController(RobotConstants.rightKPDriveVel, RobotConstants.rightKIDriveVel,
+        RobotConstants.rightKDDriveVel);
   }
 
   @Override
   public SimpleMotorFeedforward getRightSimpleMotorFeedforward() {
     return new SimpleMotorFeedforward(RobotConstants.rightKsVolts, RobotConstants.rightKvVoltSecondsPerMeter,
-                     RobotConstants.rightKaVoltSecondsSquaredPerMeter);
+        RobotConstants.rightKaVoltSecondsSquaredPerMeter);
   }
 
 }

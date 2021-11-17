@@ -8,7 +8,7 @@ public class RobotConstants extends RobotConstantsBase{
 
     /**  the id for the camera that tells you how to shoot the ball*/
     public static final String TURRET_CAMERA_NAME = "Microsoft_LifeCam_HD-3000";
-    private static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
+    public static final double sparkMaxVelocityConversionFactor = RobotConstants.DRIVEBASE_METERS_PER_ROTATION / 60;
   
 
     // Robot Dimensions in Inches
