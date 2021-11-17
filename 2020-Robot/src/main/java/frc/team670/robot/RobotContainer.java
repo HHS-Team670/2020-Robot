@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import frc.team670.mustanglib.RobotContainerBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.MustangScheduler;
+import frc.team670.mustanglib.subsystems.LEDSubsystem;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
 import frc.team670.paths.left.Left2Line;
@@ -47,11 +48,11 @@ public class RobotContainer extends RobotContainerBase {
   private static Conveyor conveyor = new Conveyor();
   private static Indexer indexer = new Indexer(conveyor);
   private static Vision vision = new Vision();
-  private static Turret turret = new Turret(vision);
+  private static LEDSubsystem leds = new LEDSubsystem(0, 97);
+  private static Turret turret = new Turret(vision, leds);
   private static Shooter shooter = new Shooter(vision);
   private static Climber climber = new Climber();
   private static AutoSelector autoSelector =  new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret, vision);
-
   // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
   //     vision);
 

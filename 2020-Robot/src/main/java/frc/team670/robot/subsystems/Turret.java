@@ -7,6 +7,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.mustanglib.commands.MustangScheduler;
+import frc.team670.mustanglib.subsystems.LEDSubsystem;
 import frc.team670.mustanglib.subsystems.SparkMaxRotatingSubsystem;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
@@ -93,7 +94,7 @@ public class Turret extends SparkMaxRotatingSubsystem {
 
         public double getAllowedError() {
             // equivalent of 0.25 degrees, in rotations
-            return (0.25 / 360) * this.getRotatorGearRatio();
+            return (0.5 / 360) * this.getRotatorGearRatio();
         }
 
         public boolean enableSoftLimits() {
@@ -137,11 +138,13 @@ public class Turret extends SparkMaxRotatingSubsystem {
     private final double DEGREES_PER_MOTOR_ROTATION = 360 / turretConfig.getRotatorGearRatio();
 
     private Vision vision;
+    private LEDSubsystem leds;
 
-    public Turret(Vision vision) {
+    public Turret(Vision vision, LEDSubsystem leds) {
         super(turretConfig);
         rotator.setInverted(true);
         this.vision = vision;
+        this.leds = leds;
         forwardLimit = rotator.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
         reverseLimit = rotator.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
     }
@@ -173,13 +176,27 @@ public class Turret extends SparkMaxRotatingSubsystem {
     @Override
     public void mustangPeriodic() {
         // TODO Auto-generated method stub
-        // Logger.consoleLog("Forward: %s Backward %s", isForwardLimitSwitchTripped(), isReverseLimitSwitchTripped());
+        // Logger.consoleLog("Forward: %s Backward %s", isForwardLimitSwitchxTripped(), isReverseLimitSwitchTripped());
         // Logger.consoleLog("Turret perioidic");
         SmartDashboard.putNumber("Turret Angle", getCurrentAngleInDegrees());
         if(hasZeroed() && vision.hasTarget()){
             setSystemTargetAngleInDegrees(relativeAngleToAbsoluteInDegrees(vision.getAngleToTarget()));
             // Logger.consoleLog("Auto align");
         }
+        if(vision.hasTarget()){
+            if(super.hasReachedTargetPosition()){
+                leds.setGreenBuffer();
+            }
+            else{
+                leds.setBlueBuffer();
+            }
+        }
+        else{
+            leds.setRedBuffer();
+        }
+
+
+
     }
 
     @Override
