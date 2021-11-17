@@ -135,7 +135,7 @@ public class OI extends OIBase {
       oldjoy = joy;
       joy = operatorController.getPOV();
       if (oldjoy != joy) {
-        MustangScheduler.getInstance().schedule(new GetLatestDataAndAlignTurret(turret, drivebase, coprocessor));
+        MustangScheduler.getInstance().schedule(new GetLatestDataAndAlignTurret(turret, drivebase, vision));
       }
     }
 
