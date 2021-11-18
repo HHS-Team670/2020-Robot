@@ -63,14 +63,20 @@ public class DriveBase extends TankDriveBase {
 
   private NavX navXMicro;
 
-  private DifferentialDrivePoseEstimator poseEstimator;
+  private DifferentialDrivePoseEstimator poseEstimator, visionPoseEstimator;
+
+  private DifferentialDrivePoseEstimator encoderOnlyPoseEstimator;
 
   private static final double CURRENT_WHEN_AGAINST_BAR = 5; // TODO Find this
   private int againstBarCount = 0;
 
+  public static final double START_X = 3.8;
+  public static final double START_Y = 2.4;
+
   // Constants used for doing robot to target pose conversion
 
-  public static final Pose2d TARGET_POSE = new Pose2d(0, -2.4, Rotation2d.fromDegrees(0));
+  public static final Pose2d TARGET_POSE = new Pose2d(0, 2.4, Rotation2d.fromDegrees(0));
+
   public static final Pose2d CAMERA_OFFSET = TARGET_POSE
       .transformBy(new Transform2d(new Translation2d(0.23, 0), Rotation2d.fromDegrees(0)));
 
@@ -122,10 +128,22 @@ public class DriveBase extends TankDriveBase {
     navXMicro = new NavX(RobotMap.NAVX_PORT);
     // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
     poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(3.8, -2.4, new Rotation2d()), // TODO: change this to be a constant with the starting position
+        new Pose2d(START_X, START_Y, new Rotation2d()), // TODO: change this to be a constant with the starting position
         VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // if u need to, find the correct values for the three vectors
         VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), 
         VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+
+    encoderOnlyPoseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
+    new Pose2d(START_X, START_Y, new Rotation2d()), // TODO: change this to be a constant with the starting position
+    VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // if u need to, find the correct values for the three vectors
+    VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), 
+    VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); 
+
+    visionPoseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
+        new Pose2d(START_X, START_Y, new Rotation2d()), // TODO: change this to be a constant with the starting position
+        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // if u need to, find the correct values for the three vectors
+        VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), 
+        VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); 
 
   }
 
@@ -386,9 +404,21 @@ public class DriveBase extends TankDriveBase {
       SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
       SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
 
+      encoderOnlyPoseEstimator.update(Rotation2d.fromDegrees(getHeading()), getWheelSpeeds(), 
+      left1Encoder.getPosition(), right1Encoder.getPosition());
+      SmartDashboard.putNumber("EO Pose Estimator X", encoderOnlyPoseEstimator.getEstimatedPosition().getX());
+      SmartDashboard.putNumber("EO Pose Estimator Y", encoderOnlyPoseEstimator.getEstimatedPosition().getY());
+
       // SmartDashboard.putNumber("Encoder X", m_odometry.getPoseMeters().getX());
       // SmartDashboard.putNumber("Encoder Y", m_odometry.getPoseMeters().getY());
     
+
+// SmartDashboard.putNumber("Encoder X - L", left1Encoder.getPosition().getX());
+// SmartDashboard.putNumber("Encoder Y - L", left1Encoder.getPosition().getY());
+// SmartDashboard.putNumber("Encoder X - R", right1Encoder.getPosition().getX());
+// SmartDashboard.putNumber("Encoder Y - R", right1Encoder.getPosition().getY());
+
+
       PhotonPipelineResult res = camera.getLatestResult();
       // count = 0;
       Pose2d pose = new Pose2d();
@@ -402,6 +432,9 @@ public class DriveBase extends TankDriveBase {
 
         double imageCaptureTime = getVisionCaptureTime(res);
         poseEstimator.addVisionMeasurement(pose, imageCaptureTime);
+        visionPoseEstimator.addVisionMeasurement(pose, imageCaptureTime);
+        SmartDashboard.putNumber("Vision Only Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
+        SmartDashboard.putNumber("Vision Only Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
         SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
         SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
 
@@ -420,9 +453,7 @@ public class DriveBase extends TankDriveBase {
 
   public Pose2d getVisionPose(PhotonPipelineResult res) {
     Transform2d camToTargetTrans = res.getBestTarget().getCameraToTarget();
-    SmartDashboard.putNumber("PhotonVision X", camToTargetTrans.getX());
-    SmartDashboard.putNumber("PhotonVision Y", camToTargetTrans.getY());
-    Pose2d targetOffset = TARGET_POSE.transformBy(camToTargetTrans);
+    Pose2d targetOffset = CAMERA_OFFSET.transformBy(camToTargetTrans);
     return targetOffset;
   } 
 
@@ -450,10 +481,10 @@ public class DriveBase extends TankDriveBase {
     poseEstimator.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
     CANError lE = left1Encoder.setPosition(0);
     CANError rE = right1Encoder.setPosition(0);
-    SmartDashboard.putString("Encoder return value left %s", lE.toString());
-    SmartDashboard.putString("Encoder return value right %s", rE.toString());
-    SmartDashboard.putNumber("Encoder positions left %s", left1Encoder.getPosition()); 
-    SmartDashboard.putNumber("Encoder positions left %s", right1Encoder.getPosition()); 
+    SmartDashboard.putString("Encoder return value left", lE.toString());
+    SmartDashboard.putString("Encoder return value right", rE.toString());
+    SmartDashboard.putNumber("Encoder positions left", left1Encoder.getPosition()); 
+    SmartDashboard.putNumber("Encoder positions left", right1Encoder.getPosition()); 
     int counter = 0;
     while ((left1Encoder.getPosition() != 0 || right1Encoder.getPosition() != 0) && counter < 30) {
       lE = left1Encoder.setPosition(0);
