@@ -70,8 +70,8 @@ public class RobotConstants extends RobotConstantsBase{
 
     // Autonomous Constants
 
-    public static final DifferentialDriveKinematics kDriveKinematics = new DifferentialDriveKinematics(
-            kTrackwidthMeters);
+    public static final DifferentialDriveKinematics 
+        kDriveKinematics = new DifferentialDriveKinematics(kTrackwidthMeters);
     public static final double leftKPDriveVel = 6;
     public static final double leftKIDriveVel = 0.00;
     public static final double leftKDDriveVel = 0.0;
