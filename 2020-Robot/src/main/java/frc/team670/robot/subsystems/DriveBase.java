@@ -15,6 +15,7 @@ import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import org.photonvision.PhotonUtils;
 // import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 
@@ -86,8 +87,8 @@ public class DriveBase extends TankDriveBase {
     // = new Pose2d(0, 2.4, Rotation2d.fromDegrees(0));
 
 
-  public static final Pose2d CAMERA_OFFSET = TARGET_POSE
-      .transformBy(new Transform2d(new Translation2d(0.23, 0), Rotation2d.fromDegrees(0)));
+  public static final Pose2d CAMERA_OFFSET = 
+    TARGET_POSE.transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
 
   public DriveBase(MustangController mustangController, Vision vision) {
     // camera = new PhotonCamera(RobotConstants.TURRET_CAMERA_NAME);
@@ -142,19 +143,19 @@ public class DriveBase extends TankDriveBase {
         new Pose2d(START_X, START_Y, START_ANGLE_RAD),
         VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // if u need to, find the correct values for the three vectors
         VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), 
-        VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
+        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1)));
 
     encoderOnlyPoseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
       new Pose2d(START_X, START_Y, START_ANGLE_RAD),
       VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // if u need to, find the correct values for the three vectors
       VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), 
-      VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); 
+      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1))); 
 
     visionPoseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
         new Pose2d(START_X, START_Y, START_ANGLE_RAD),
         VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // if u need to, find the correct values for the three vectors
         VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), 
-        VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); 
+        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1))); 
 
   }
 
@@ -443,7 +444,10 @@ public class DriveBase extends TankDriveBase {
         SmartDashboard.putNumber("Vision Pose X", pose.getTranslation().getX());
         SmartDashboard.putNumber("Vision Pose Y", pose.getTranslation().getY());
         SmartDashboard.putNumber("Vision Angle (Deg)", pose.getRotation().getDegrees());
-
+        SmartDashboard.putNumber("Image Capture Time", imageCaptureTime);
+        SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
+    
+        
         // SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
         // SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
 
@@ -461,13 +465,20 @@ public class DriveBase extends TankDriveBase {
 
 
   public Pose2d getVisionPose(PhotonPipelineResult res) {
-    Transform2d camToTargetTrans = res.getBestTarget().getCameraToTarget().inverse();
-    Pose2d targetOffset = CAMERA_OFFSET.transformBy(camToTargetTrans);
+    // Transform2d camToTargetTrans = res.getBestTarget().getCameraToTarget();
+    Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(vision.getDistanceToTargetM(), Rotation2d.fromDegrees(vision.getAngleToTarget()));
+    Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, TARGET_POSE, Rotation2d.fromDegrees(getHeading()));
+    Pose2d targetOffset = CAMERA_OFFSET.transformBy(camToTargetTrans.inverse());
+    SmartDashboard.putNumber("camToTargetTrans X", camToTargetTrans.getX());
+    SmartDashboard.putNumber("camToTargetTrans Y", camToTargetTrans.getY());
+    SmartDashboard.putNumber("targetOffset X", targetOffset.getX());
+    SmartDashboard.putNumber("targetOffset Y", targetOffset.getY());
+
     return targetOffset;
   } 
 
   public double getVisionCaptureTime(PhotonPipelineResult res) {
-    return Timer.getFPGATimestamp() - res.getLatencyMillis();
+    return Timer.getFPGATimestamp() - res.getLatencyMillis()/1000;
   }
 
   /**
