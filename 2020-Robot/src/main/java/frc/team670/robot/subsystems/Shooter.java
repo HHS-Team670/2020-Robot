@@ -20,10 +20,10 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.functions.MathUtils;
 import frc.team670.mustanglib.utils.math.interpolable.InterpolatingDouble;
 import frc.team670.mustanglib.utils.math.interpolable.InterpolatingTreeMap;
+import frc.team670.mustanglib.utils.math.interpolable.LinearRegression;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig.Motor_Type;
-import frc.team670.mustanglib.utils.math.interpolable.PolynomialRegression;
 import frc.team670.robot.constants.RobotConstants;
 
 
@@ -109,7 +109,7 @@ public class Shooter extends MustangSubsystemBase {
     3100
   };
 
-  private static final PolynomialRegression speedAtDistance = new PolynomialRegression(measuredDistancesMeters, measuredRPMs, 4);
+  private static final LinearRegression speedAtDistance = new LinearRegression(measuredDistancesMeters, measuredRPMs);
 
   private static final int VELOCITY_SLOT = 0;
 
