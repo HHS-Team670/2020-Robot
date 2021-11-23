@@ -15,7 +15,7 @@ import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import org.photonvision.PhotonCamera;
+// import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 import edu.wpi.first.wpilibj.SpeedController;
@@ -44,6 +44,7 @@ import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
+import frc.team670.robot.subsystems.Vision;
 
 /**
  * Represents a tank drive base.
@@ -52,7 +53,8 @@ import frc.team670.robot.constants.RobotMap;
  */
 public class DriveBase extends TankDriveBase {
 
-  private PhotonCamera camera;
+  // private PhotonCamera camera;
+  private Vision vision;
   private SparkMAXLite left1, left2, right1, right2;
   private CANEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
 
@@ -70,22 +72,26 @@ public class DriveBase extends TankDriveBase {
   private static final double CURRENT_WHEN_AGAINST_BAR = 5; // TODO Find this
   private int againstBarCount = 0;
 
-  public static final double START_X = 2.4;
-  public static final double START_Y = 15.983 - 3.8;
+  public static final double START_Y = 2.4;
+  public static final double START_X = 15.983 - 3.8;
+  public static final double START_ANGLE_DEG = 180;
+  public static final Rotation2d START_ANGLE_RAD = Rotation2d.fromDegrees(START_ANGLE_DEG);
+
 
   // public static final double 
 
   // Constants used for doing robot to target pose conversion
 
-  public static final Pose2d TARGET_POSE = new Pose2d(2.4, 15.983, Rotation2d.fromDegrees(0));
+  public static final Pose2d TARGET_POSE = new Pose2d(15.983, 2.4, Rotation2d.fromDegrees(0));
     // = new Pose2d(0, 2.4, Rotation2d.fromDegrees(0));
 
 
   public static final Pose2d CAMERA_OFFSET = TARGET_POSE
-      .transformBy(new Transform2d(new Translation2d(0, 2.3), Rotation2d.fromDegrees(0)));
+      .transformBy(new Transform2d(new Translation2d(0.23, 0), Rotation2d.fromDegrees(0)));
 
-  public DriveBase(MustangController mustangController) {
-    camera = new PhotonCamera(RobotConstants.TURRET_CAMERA_NAME);
+  public DriveBase(MustangController mustangController, Vision vision) {
+    // camera = new PhotonCamera(RobotConstants.TURRET_CAMERA_NAME);
+    this.vision = vision;
     mController = mustangController;
 
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
@@ -133,19 +139,19 @@ public class DriveBase extends TankDriveBase {
     // AHRS navXMicro = new AHRS(RobotMap.NAVX_PORT);
 
     poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(START_X, START_Y, new Rotation2d()), // TODO: change this to be a constant with the starting position
+        new Pose2d(START_X, START_Y, START_ANGLE_RAD),
         VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // if u need to, find the correct values for the three vectors
         VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), 
         VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 
     encoderOnlyPoseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
-      new Pose2d(START_X, START_Y, new Rotation2d()), // TODO: change this to be a constant with the starting position
+      new Pose2d(START_X, START_Y, START_ANGLE_RAD),
       VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // if u need to, find the correct values for the three vectors
       VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), 
       VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); 
 
     visionPoseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(START_X, START_Y, new Rotation2d()), // TODO: change this to be a constant with the starting position
+        new Pose2d(START_X, START_Y, START_ANGLE_RAD),
         VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // if u need to, find the correct values for the three vectors
         VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), 
         VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); 
@@ -419,19 +425,24 @@ public class DriveBase extends TankDriveBase {
       SmartDashboard.putNumber("Encoder Right", right1Encoder.getPosition());
 
 
-      PhotonPipelineResult res = camera.getLatestResult();
+      PhotonPipelineResult res = vision.getLatestResult();
       // count = 0;
       Pose2d pose = new Pose2d();
 
       if (res.hasTargets()) {
         // Logger.consoleWarning("Got targets!");
-
         pose = getVisionPose(res);
         double imageCaptureTime = getVisionCaptureTime(res);
+
         poseEstimator.addVisionMeasurement(pose, imageCaptureTime);
         visionPoseEstimator.addVisionMeasurement(pose, imageCaptureTime);
+
         SmartDashboard.putNumber("Vision Only Pose Estimator X", visionPoseEstimator.getEstimatedPosition().getX());
         SmartDashboard.putNumber("Vision Only Pose Estimator Y", visionPoseEstimator.getEstimatedPosition().getY());
+
+        SmartDashboard.putNumber("Vision Pose X", pose.getTranslation().getX());
+        SmartDashboard.putNumber("Vision Pose Y", pose.getTranslation().getY());
+        SmartDashboard.putNumber("Vision Angle (Deg)", pose.getRotation().getDegrees());
 
         // SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
         // SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());

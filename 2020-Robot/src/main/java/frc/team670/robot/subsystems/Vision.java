@@ -18,6 +18,8 @@ import frc.team670.robot.constants.RobotMap;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonPipelineResult;
+
 
 /**
  * Stores values off of NetworkTables for easy retrieval and gives them
@@ -52,6 +54,10 @@ public class Vision extends MustangSubsystemBase{
 
     public boolean hasTarget(){
         return camera.getLatestResult().hasTargets();
+    }
+
+    public PhotonPipelineResult getLatestResult() {
+        return camera.getLatestResult();
     }
 
     /**
@@ -113,8 +119,8 @@ public class Vision extends MustangSubsystemBase{
 
     @Override
     public void mustangPeriodic() {
-        SmartDashboard.putNumber("Distance", getDistanceToTargetM());
-        SmartDashboard.putNumber("Angle", getAngleToTarget());
+        // SmartDashboard.putNumber("Distance", getDistanceToTargetM());
+        // SmartDashboard.putNumber("Angle", getAngleToTarget());
     }
 
 }

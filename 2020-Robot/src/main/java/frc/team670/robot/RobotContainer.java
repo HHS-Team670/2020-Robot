@@ -60,7 +60,6 @@ public class RobotContainer extends RobotContainerBase {
 
   private MustangCommand m_autonomousCommand;
 
-  private static DriveBase driveBase = new DriveBase(getDriverController());
   private static Intake intake = new Intake();
   private static Conveyor conveyor = new Conveyor();
   private static Indexer indexer = new Indexer(conveyor);
@@ -68,6 +67,7 @@ public class RobotContainer extends RobotContainerBase {
   private static Turret turret = new Turret(vision);
   private static Shooter shooter = new Shooter(vision);
   private static Climber climber = new Climber();
+  private static DriveBase driveBase = new DriveBase(getDriverController(), vision);
   private static AutoSelector autoSelector =  new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret, vision);
 
   // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
