@@ -33,72 +33,74 @@ public class Vision extends MustangSubsystemBase{
 
     PhotonCamera camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
 
+    double distance;
+    double angle;
+    double visionCapTime;
+    boolean hasTarget;
+
     // These are for sending vision health to dashboard
     private static NetworkTableInstance instance = NetworkTableInstance.getDefault();
 
-
-    public double getAngleToTarget(){
-        try{
-            return camera.getLatestResult().getTargets().get(0).getYaw();
-
-        }
-        catch(Exception e){
-            Logger.consoleLog(e.getMessage());
-        }
-        return RobotConstants.VISION_ERROR_CODE;
-    }
-
-    public double getDistanceToTargetInches(){
-        return getDistanceToTargetM() * 100 / 2.54;
-    }
-
     public boolean hasTarget(){
-        return camera.getLatestResult().hasTargets();
-    }
-
-    public PhotonPipelineResult getLatestResult() {
-        return camera.getLatestResult();
+        return hasTarget;
     }
 
     /**
      * 
      * @return distance, in inches, from the camera to the target
      */
-    public double getDistanceToTargetM() {
-        // return getDistanceToTargetCm() / 2.54;
+    private void processImage() {
         try{
             var result = camera.getLatestResult();
 
-            if(hasTarget()){
-                double range =
-                PhotonUtils.calculateDistanceToTargetMeters(
+            if(result.hasTargets()){
+                hasTarget = true;
+                distance = PhotonUtils.calculateDistanceToTargetMeters(
                         RobotConstants.CAMERA_HEIGHT,
                         FieldConstants.VISION_TARGET_CENTER_HEIGHT,
                         Units.degreesToRadians(RobotConstants.TILT_ANGLE),
                         Units.degreesToRadians(result.getBestTarget().getPitch()));
-        
-                    return range;
+                angle = camera.getLatestResult().getTargets().get(0).getYaw();
+                visionCapTime = Timer.getFPGATimestamp() - res.getLatencyMillis()/1000;
+            } else {
+                hasTarget = false;
             }
-            else{
-                return RobotConstants.VISION_ERROR_CODE;
-            }
-
             
-        }
-        catch(Exception e){
+        } catch(Exception e){
             // MustangNotifications.reportWarning(e.toString());
             Logger.consoleLog("NT for vision not found %s", e.getStackTrace());
         }
-       return -1;
     }
 
-    /**
-     * 
-     * @return distance, in cm, from the camera to the target
-     */
+    public double getDistanceToTargetM() {
+        return hasTarget ? distance : RobotConstants.VISION_ERROR_CODE;
+    }
+
     public double getDistanceToTargetCm() {
         return getDistanceToTargetM() * 100;
     }
+
+    public double getDistanceToTargetInches(){
+        return getDistanceToTargetM() * 100 / 2.54;
+    }
+
+    public double getAngleToTarget(){
+        return hasTarget ? angle : RobotConstants.VISION_ERROR_CODE;
+    }
+
+    public VisionMeasurement getVisionMeasurements(double heading, Pose2d targetPose, Pose2d cameraOffset) {
+        if (hasTarget)
+            Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(angle));
+            Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, targetPose, Rotation2d.fromDegrees(heading));
+            Pose2d targetOffset = cameraOffset.transformBy(camToTargetTrans.inverse());
+            return new VisionMeasurement(targetOffset, visionCapTime);
+        }
+        return null;
+    }
+
+    public double getVisionCaptureTime() {
+        return visionCapTime;
+      }
 
     public void turnOnLEDs() {
         cameraLEDs.set(true);
@@ -119,8 +121,22 @@ public class Vision extends MustangSubsystemBase{
 
     @Override
     public void mustangPeriodic() {
-        // SmartDashboard.putNumber("Distance", getDistanceToTargetM());
-        // SmartDashboard.putNumber("Angle", getAngleToTarget());
+        processImage();
+        if (hasTarget) {
+            SmartDashboard.putNumber("Distance", distance);
+            SmartDashboard.putNumber("Angle", angle);
+        }
+    }
+
+    public class VisionMeasurement{
+        public Pose2d pose;
+        public double capTime;
+
+        public VisionMeasurement(Pose2d pose, double capTime){
+            this.capTime = capTime;
+            this.pose = pose;
+        }
     }
 
 }
+

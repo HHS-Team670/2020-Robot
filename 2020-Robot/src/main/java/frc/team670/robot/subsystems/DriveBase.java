@@ -66,9 +66,7 @@ public class DriveBase extends TankDriveBase {
 
   private NavX navXMicro;
 
-  private DifferentialDrivePoseEstimator poseEstimator, visionPoseEstimator;
-
-  private DifferentialDrivePoseEstimator encoderOnlyPoseEstimator;
+  private DifferentialDrivePoseEstimator poseEstimator;
 
   private static final double CURRENT_WHEN_AGAINST_BAR = 5; // TODO Find this
   private int againstBarCount = 0;
@@ -84,14 +82,11 @@ public class DriveBase extends TankDriveBase {
   // Constants used for doing robot to target pose conversion
 
   public static final Pose2d TARGET_POSE = new Pose2d(15.983, 2.4, Rotation2d.fromDegrees(0));
-    // = new Pose2d(0, 2.4, Rotation2d.fromDegrees(0));
-
 
   public static final Pose2d CAMERA_OFFSET = 
     TARGET_POSE.transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
 
   public DriveBase(MustangController mustangController, Vision vision) {
-    // camera = new PhotonCamera(RobotConstants.TURRET_CAMERA_NAME);
     this.vision = vision;
     mController = mustangController;
 
@@ -141,22 +136,9 @@ public class DriveBase extends TankDriveBase {
 
     poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
         new Pose2d(START_X, START_Y, START_ANGLE_RAD),
-        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // if u need to, find the correct values for the three vectors
-        VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), 
-        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1)));
-
-    encoderOnlyPoseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
-      new Pose2d(START_X, START_Y, START_ANGLE_RAD),
-      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // if u need to, find the correct values for the three vectors
-      VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), 
-      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1))); 
-
-    visionPoseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(START_X, START_Y, START_ANGLE_RAD),
-        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // if u need to, find the correct values for the three vectors
-        VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), 
-        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1))); 
-
+        VecBuilder.fill(0.2, 0.2, Units.degreesToRadians(5), 0.01, 0.01), //current state
+        VecBuilder.fill(0.8, 0.8, Units.degreesToRadians(90)), //gyros --> trusted the most
+        VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(1))); //vision
   }
 
   /**
@@ -407,79 +389,31 @@ public class DriveBase extends TankDriveBase {
 
   @Override
   public void mustangPeriodic() {
-    //FROM POSE ESTIMATOR BRANCH
+    SmartDashboard.putNumber("Heading", getHeading());
 
-    // long startTime = System.currentTimeMillis();
-    // if(count%100 == 0) {
-      SmartDashboard.putNumber("Heading", getHeading());
+    poseEstimator.update(Rotation2d.fromDegrees(
+      getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
+    SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
+    SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
+    SmartDashboard.putNumber("Pose Estimator Ang (deg)", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
 
-      poseEstimator.update(Rotation2d.fromDegrees(
-        getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
-      SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
-      SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
+    Vision.VisionMeasurement visionMeasurement = vision.getVisionMeasurements(getHeading(), TARGET_POSE, CAMERA_OFFSET);
 
-      encoderOnlyPoseEstimator.update(Rotation2d.fromDegrees(
-        getHeading()), getWheelSpeeds(), left1Encoder.getPosition(), right1Encoder.getPosition());
-      SmartDashboard.putNumber("EO Pose Estimator X", encoderOnlyPoseEstimator.getEstimatedPosition().getX());
-      SmartDashboard.putNumber("EO Pose Estimator Y", encoderOnlyPoseEstimator.getEstimatedPosition().getY());
-      SmartDashboard.putNumber("Encoder Left", left1Encoder.getPosition());
-      SmartDashboard.putNumber("Encoder Right", right1Encoder.getPosition());
+    if (pose != null) {
+      poseEstimator.addVisionMeasurement(visionMeasurement.pose, visionMeasurement.capTime);
 
-
-      PhotonPipelineResult res = vision.getLatestResult();
-      // count = 0;
-      Pose2d pose = new Pose2d();
-
-      if (res.hasTargets()) {
-        // Logger.consoleWarning("Got targets!");
-        pose = getVisionPose(res);
-        double imageCaptureTime = getVisionCaptureTime(res);
-
-        poseEstimator.addVisionMeasurement(pose, imageCaptureTime);
-        visionPoseEstimator.addVisionMeasurement(pose, imageCaptureTime);
-
-        SmartDashboard.putNumber("Vision Only Pose Estimator X", visionPoseEstimator.getEstimatedPosition().getX());
-        SmartDashboard.putNumber("Vision Only Pose Estimator Y", visionPoseEstimator.getEstimatedPosition().getY());
-
-        SmartDashboard.putNumber("Vision Pose X", pose.getTranslation().getX());
-        SmartDashboard.putNumber("Vision Pose Y", pose.getTranslation().getY());
-        SmartDashboard.putNumber("Vision Angle (Deg)", pose.getRotation().getDegrees());
-        SmartDashboard.putNumber("Image Capture Time", imageCaptureTime);
-        SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
-    
-        
-        // SmartDashboard.putNumber("Pose Estimator X", poseEstimator.getEstimatedPosition().getX());
-        // SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
-
-      } else {
-        Logger.consoleError("Did not find targets!");
-      }
-      //Logger.consoleLog("estimated pose: " + poseEstimator.getEstimatedPosition());}
-    // }
-    // count++;
-    // Logger.consoleLog("Dif in Time: %s", System.currentTimeMillis() - startTime);
-    // System.currentTimeMillis();
-
+      SmartDashboard.putNumber("Vision Pose X", visionMeasurement.pose.getTranslation().getX());
+      SmartDashboard.putNumber("Vision Pose Y", visionMeasurement.pose.getTranslation().getY());
+      SmartDashboard.putNumber("Vision Angle (Deg)", visionMeasurement.pose.getRotation().getDegrees());
+      SmartDashboard.putNumber("Image Capture Time", visionMeasurement.capTime);
+      SmartDashboard.putNumber("Current Time stamp", Timer.getFPGATimestamp());
+    } else {
+      Logger.consoleError("Did not find targets!");
+    }
 
   }
 
-
-  public Pose2d getVisionPose(PhotonPipelineResult res) {
-    // Transform2d camToTargetTrans = res.getBestTarget().getCameraToTarget();
-    Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(vision.getDistanceToTargetM(), Rotation2d.fromDegrees(vision.getAngleToTarget()));
-    Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, TARGET_POSE, Rotation2d.fromDegrees(getHeading()));
-    Pose2d targetOffset = CAMERA_OFFSET.transformBy(camToTargetTrans.inverse());
-    SmartDashboard.putNumber("camToTargetTrans X", camToTargetTrans.getX());
-    SmartDashboard.putNumber("camToTargetTrans Y", camToTargetTrans.getY());
-    SmartDashboard.putNumber("targetOffset X", targetOffset.getX());
-    SmartDashboard.putNumber("targetOffset Y", targetOffset.getY());
-
-    return targetOffset;
-  } 
-
-  public double getVisionCaptureTime(PhotonPipelineResult res) {
-    return Timer.getFPGATimestamp() - res.getLatencyMillis()/1000;
-  }
+  
 
   /**
    * Returns the currently-estimated pose of the robot.
@@ -521,10 +455,7 @@ public class DriveBase extends TankDriveBase {
     left1Encoder.setPosition(0);
     right1Encoder.setPosition(0);
     poseEstimator = new DifferentialDrivePoseEstimator(Rotation2d.fromDegrees(getHeading()),
-        new Pose2d(0, 0, new Rotation2d()), VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01), // TODO:
-                                                                                                                // find
-                                                                                                                // correct
-                                                                                                                // values
+        new Pose2d(0, 0, new Rotation2d()), VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5), 0.01, 0.01),
         VecBuilder.fill(0.02, 0.02, Units.degreesToRadians(1)), // TODO: find correct values
         VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30))); // TODO: find correct values
 
