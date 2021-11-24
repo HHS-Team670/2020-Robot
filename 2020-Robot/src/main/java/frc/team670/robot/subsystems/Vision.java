@@ -1,24 +1,22 @@
 package frc.team670.robot.subsystems;
 
-import edu.wpi.first.networktables.EntryListenerFlags;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
+
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTableType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Units;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.utils.Logger;
-import frc.team670.mustanglib.utils.MustangNotifications;
-import frc.team670.robot.Robot;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
-
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
-import org.photonvision.targeting.PhotonPipelineResult;
 
 
 /**
@@ -61,7 +59,7 @@ public class Vision extends MustangSubsystemBase{
                         Units.degreesToRadians(RobotConstants.TILT_ANGLE),
                         Units.degreesToRadians(result.getBestTarget().getPitch()));
                 angle = camera.getLatestResult().getTargets().get(0).getYaw();
-                visionCapTime = Timer.getFPGATimestamp() - res.getLatencyMillis()/1000;
+                visionCapTime = Timer.getFPGATimestamp() - result.getLatencyMillis()/1000;
             } else {
                 hasTarget = false;
             }
@@ -89,7 +87,7 @@ public class Vision extends MustangSubsystemBase{
     }
 
     public VisionMeasurement getVisionMeasurements(double heading, Pose2d targetPose, Pose2d cameraOffset) {
-        if (hasTarget)
+        if (hasTarget){
             Translation2d camToTargetTranslation = PhotonUtils.estimateCameraToTargetTranslation(distance, Rotation2d.fromDegrees(angle));
             Transform2d camToTargetTrans = PhotonUtils.estimateCameraToTarget(camToTargetTranslation, targetPose, Rotation2d.fromDegrees(heading));
             Pose2d targetOffset = cameraOffset.transformBy(camToTargetTrans.inverse());
