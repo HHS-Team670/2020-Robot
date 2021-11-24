@@ -49,8 +49,8 @@ import frc.team670.robot.constants.RobotMap;
  */
 public class DriveBase extends TankDriveBase {
 
-  // private PhotonCamera camera;
   private Vision vision;
+  private Turret turret;
   private SparkMAXLite left1, left2, right1, right2;
   private CANEncoder left1Encoder, left2Encoder, right1Encoder, right2Encoder;
 
@@ -81,9 +81,10 @@ public class DriveBase extends TankDriveBase {
   public static final Pose2d CAMERA_OFFSET = 
     TARGET_POSE.transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
 
-  public DriveBase(MustangController mustangController, Vision vision) {
-    this.vision = vision;
+  public DriveBase(MustangController mustangController, Vision vision, Turret turret) {
     mController = mustangController;
+    this.vision = vision;
+    this.turret = turret;
 
     leftControllers = SparkMAXFactory.buildFactorySparkMAXPair(RobotMap.SPARK_LEFT_MOTOR_1, RobotMap.SPARK_LEFT_MOTOR_2,
         false, MotorConfig.Motor_Type.NEO);
@@ -392,7 +393,7 @@ public class DriveBase extends TankDriveBase {
     SmartDashboard.putNumber("Pose Estimator Y", poseEstimator.getEstimatedPosition().getY());
     SmartDashboard.putNumber("Pose Estimator Ang (deg)", poseEstimator.getEstimatedPosition().getRotation().getDegrees());
 
-    Vision.VisionMeasurement visionMeasurement = vision.getVisionMeasurements(getHeading(), TARGET_POSE, CAMERA_OFFSET);
+    Vision.VisionMeasurement visionMeasurement = vision.getVisionMeasurements(getHeading() - turret.getCurrentAngleInDegrees(), TARGET_POSE, CAMERA_OFFSET);
 
     if (visionMeasurement != null) {
       poseEstimator.addVisionMeasurement(visionMeasurement.pose, visionMeasurement.capTime);
