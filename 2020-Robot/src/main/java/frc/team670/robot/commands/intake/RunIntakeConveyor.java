@@ -34,8 +34,7 @@ public class RunIntakeConveyor extends ParallelCommandGroup implements MustangCo
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-        // TODO Auto-generated method stub
-        return null;
+        return healthReqs;
     }
 
 }

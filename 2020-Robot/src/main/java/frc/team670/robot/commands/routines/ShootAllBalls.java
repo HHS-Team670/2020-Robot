@@ -35,8 +35,9 @@ public class ShootAllBalls extends SequentialCommandGroup implements MustangComm
             new StartShooterByVisionDistance(shooter, vision),
             new ParallelCommandGroup(
                 new RunIndexer(indexer, conveyor),
-                new RunConveyor(false, conveyor, indexer))
-            );
+                new RunConveyor(false, conveyor, indexer)
+            )
+        );
     }
 
     /**

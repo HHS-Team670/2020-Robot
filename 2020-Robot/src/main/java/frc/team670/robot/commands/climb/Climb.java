@@ -20,9 +20,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
  * Brings the robot up and off the ground by retracting the climber pull.
  */
 public class Climb extends CommandBase implements MustangCommand {
+  
   private Climber climber;
-  private static final double MAX_CLIMBING_DISTANCE_CM = 1; // Estimate 2/27: Height 114cm, min bar height 128 cm, 4cm
-                                                             // allow
+  private static final double MAX_CLIMBING_DISTANCE_CM = 1;
+    // Estimate 2/27: Height 114cm, min bar height 128 cm, 4cm allow
   private Map<MustangSubsystemBase, HealthState> healthReqs;
 
   public Climb(Climber climber) {

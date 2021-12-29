@@ -41,8 +41,8 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
      * @param initAng angle (degrees) the turret should turn to for shooting from baseline at beginning
      * @param trenchAng angle (degrees) the turret should be turned to when ready to shoot from the trench
      */
-    public ToTrenchRunAndShoot(double initAng, DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Turret turret, Shooter shooter) {
-        
+    public ToTrenchRunAndShoot(double initAng, DriveBase driveBase, Intake intake, 
+        Conveyor conveyor, Indexer indexer, Turret turret, Shooter shooter) {
         this.driveBase = driveBase;
 
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
@@ -54,30 +54,29 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
         healthReqs.put(turret, HealthState.GREEN);
 
         addCommands(
-                // Shoots balls from baseline
-                new RotateToHome(turret),
-                new ParallelCommandGroup(
-                    new StartShooter(shooter), 
-                    new RotateToAngle(turret, initAng) // turret angle for shooting when starting on baseline to right
-                ),
-                new Shoot(shooter), 
-                new RunIndexer(indexer, conveyor),
-
-                // Going to trench to pick up balls, shooter can still be running
-                new DeployIntake(true, intake),
-                new ParallelCommandGroup(     
-                    new TimedDrive(1, 0.3, driveBase),
-                    new SetRPMTarget(2850, shooter)
-                ),
-                new ParallelCommandGroup(
-                    new RunIndexer(indexer, conveyor).withTimeout(5.2),
-                    new TimedDrive(4.2, 0.12, driveBase),
-                    new RotateToAngle(turret, FROM_TRENCH_TURRET_ANGLE)
-                ),
-                new StartShooter(shooter),
-                new Shoot(shooter),
-                new RunIndexer(indexer, conveyor),
-                new StopShooter(shooter)
+            // Shoots balls from baseline
+            new RotateToHome(turret),
+            new ParallelCommandGroup(
+                new StartShooter(shooter), 
+                new RotateToAngle(turret, initAng) // turret angle for shooting when starting on baseline to right
+            ),
+            new Shoot(shooter), 
+            new RunIndexer(indexer, conveyor),
+            // Going to trench to pick up balls, shooter can still be running
+            new DeployIntake(true, intake),
+            new ParallelCommandGroup(     
+                new TimedDrive(1, 0.3, driveBase),
+                new SetRPMTarget(2850, shooter)
+            ),
+            new ParallelCommandGroup(
+                new RunIndexer(indexer, conveyor).withTimeout(5.2),
+                new TimedDrive(4.2, 0.12, driveBase),
+                new RotateToAngle(turret, FROM_TRENCH_TURRET_ANGLE)
+            ),
+            new StartShooter(shooter),
+            new Shoot(shooter),
+            new RunIndexer(indexer, conveyor),
+            new StopShooter(shooter)
         );
 
     }
@@ -91,7 +90,7 @@ public class ToTrenchRunAndShoot extends SequentialCommandGroup implements Musta
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-        return new HashMap<MustangSubsystemBase, HealthState>();
+        return healthReqs;
     }
 
 }

@@ -32,7 +32,7 @@ public class RunConveyor extends CommandBase implements MustangCommand {
 
     @Override
     public void execute() {
-			conveyor.run(reversed);
+		conveyor.run(reversed);
     }
 
     @Override

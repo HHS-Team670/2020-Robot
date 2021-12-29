@@ -30,8 +30,8 @@ public class CenterShootMoveOffInitiation extends SequentialCommandGroup impleme
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Path trajectory;
 
-    public CenterShootMoveOffInitiation(DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Turret turret,
-            Shooter shooter, Vision coprocessor) {
+    public CenterShootMoveOffInitiation(DriveBase driveBase, Intake intake, Conveyor 
+        conveyor, Indexer indexer, Turret turret,Shooter shooter, Vision coprocessor) {
 
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
@@ -40,32 +40,31 @@ public class CenterShootMoveOffInitiation extends SequentialCommandGroup impleme
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(turret, HealthState.GREEN);
+        
         trajectory = new Center3Line(driveBase);
 
         driveBase.resetOdometry(trajectory.getStartingPose());
 
         addCommands(
-
-                // 1) shoot 3 balls from initiation line
-                new ZeroTurret(turret),
-                new ParallelCommandGroup(
-                    new StartShooter(shooter), // flywheel starts turning
-                    new RotateToAngle(turret, 0)
-                ),
-                new RunIndexer(indexer, conveyor),
-                getTrajectoryFollowerCommand(trajectory, driveBase)
+            // shoot 3 balls from initiation line
+            new ZeroTurret(turret),
+            new ParallelCommandGroup(
+                new StartShooter(shooter), // flywheel starts turning
+                new RotateToAngle(turret, 0)
+            ),
+            new RunIndexer(indexer, conveyor),
+            getTrajectoryFollowerCommand(trajectory, driveBase)
         );
     }
 
     @Override
     public void initialize() {
         super.initialize();
-        // // Front faces away from wall, heading is 180
+        // Front faces away from wall, heading is 180
     }
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-        // TODO Auto-generated method stub
-        return null;
+        return healthReqs;
     }
 }

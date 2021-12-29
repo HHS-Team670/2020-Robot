@@ -23,16 +23,17 @@ import frc.team670.robot.subsystems.Turret;
 
 /**
  * Autonomous routine starting by shooting 3 balls from the left then goes forward towards the port and off initiation line
- * front of robot starts in line with initiation line
- * for 2021 field
+ * front of robot starts in line with initiation line for 2021 field
  * @author elisevbp 
-e */
+ */
 public class LeftShootMoveOffInitiation extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Path trajectory;
     
-    public LeftShootMoveOffInitiation(DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Turret turret, Shooter shooter) {
+    public LeftShootMoveOffInitiation(DriveBase driveBase, Intake intake, 
+        Conveyor conveyor, Indexer indexer, Turret turret, Shooter shooter) {
+
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
@@ -49,24 +50,20 @@ public class LeftShootMoveOffInitiation extends SequentialCommandGroup implement
                 new StartShooter(shooter), // flywheel starts turning
                 new RotateToAngle(turret, 0) 
             ),
-             new RunIndexer(indexer, conveyor), // indexer runs 
+            new RunIndexer(indexer, conveyor), // indexer runs 
             //from initiation line forwards toward port
-            new ParallelCommandGroup(
-                getTrajectoryFollowerCommand(trajectory, driveBase)
-            )
-
-            
+            getTrajectoryFollowerCommand(trajectory, driveBase)
         );
     }
 
 	@Override
     public void initialize() {
         super.initialize();
-        // // Front faces away from wall, heading is 180
+        // Front faces away from wall, heading is 180
     }
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-        return new HashMap<MustangSubsystemBase, HealthState>();
+        return healthReqs;
     }
 }

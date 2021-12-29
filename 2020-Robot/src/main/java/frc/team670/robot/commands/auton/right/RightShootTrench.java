@@ -29,12 +29,13 @@ import frc.team670.robot.subsystems.Vision;
  * Trench Shoot routine for Chezy 2021 (workshop 10/12/2021) google doc link:
  * https://docs.google.com/document/d/1GCqiZlTvnIp7UbRZ-_Gu2sK9tljfNCpqdYkApQ3Qdtk/edit?usp=sharing
  * back of robot on initiation line (closer to trenc)
+ * 
  * @author Elise V, justin h, rishabh b
  */
 public class RightShootTrench extends SequentialCommandGroup implements MustangCommand {
 
     private Map<MustangSubsystemBase, HealthState> healthReqs;
-    private Path trajectory1;
+    private Path trajectory;
 
     public RightShootTrench(DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Turret turret,
             Shooter shooter, Vision coprocessor) {
@@ -46,30 +47,19 @@ public class RightShootTrench extends SequentialCommandGroup implements MustangC
         healthReqs.put(conveyor, HealthState.GREEN);
         healthReqs.put(indexer, HealthState.GREEN);
         healthReqs.put(turret, HealthState.GREEN);
-        trajectory1 = new RightThroughTrench(driveBase);
 
-        driveBase.resetOdometry(trajectory1.getStartingPose());
+        trajectory = new RightThroughTrench(driveBase);
+
+        driveBase.resetOdometry(trajectory.getStartingPose());
 
         addCommands(
-                // 1) shoot 3 balls from initiation line
-                new ParallelCommandGroup(
-                    new ZeroTurret(turret),
-                    new StartShooter(shooter) // flywheel starts turning
-                ),
-                new RotateToAngle(turret, -30), //
-                new RunIndexer(indexer, conveyor), // indexer runs lol
-                // new StopShooter(shooter),
-                new DeployIntake(true, intake), 
-                new ParallelCommandGroup(
-                    getTrajectoryFollowerCommand(trajectory1, driveBase), 
-                    new AutoIndex(intake, conveyor, indexer, 3),
-                    new RotateToAngle(turret, -12.75),
-                    new SetRPMTarget(2850, shooter),
-                    new StartShooter(shooter)
-
-                ),
-                new RunIndexer(indexer, conveyor)
-        );
+                // shoot 3 balls from initiation line
+                new ParallelCommandGroup(new ZeroTurret(turret), new StartShooter(shooter) // flywheel starts turning
+                ), new RotateToAngle(turret, -30), new RunIndexer(indexer, conveyor), new DeployIntake(true, intake),
+                new ParallelCommandGroup(getTrajectoryFollowerCommand(trajectory, driveBase),
+                        new AutoIndex(intake, conveyor, indexer, 3), new RotateToAngle(turret, -12.75),
+                        new SetRPMTarget(2850, shooter), new StartShooter(shooter)),
+                new RunIndexer(indexer, conveyor));
     }
 
     @Override
@@ -79,6 +69,6 @@ public class RightShootTrench extends SequentialCommandGroup implements MustangC
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-        return new HashMap<MustangSubsystemBase, HealthState>();
+        return healthReqs;
     }
 }

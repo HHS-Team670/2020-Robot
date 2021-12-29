@@ -32,4 +32,5 @@ public class ToggleIntake extends InstantCommand implements MustangCommand {
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
         return healthReqs;
     }
+    
 }
