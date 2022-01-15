@@ -11,8 +11,9 @@ import frc.team670.robot.subsystems.DriveBase;
 public class Taxi extends Path{
     public Taxi(DriveBase driveBase) {
         super(List.of(
-            new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
-            new Pose2d(0, 0, Rotation2d.fromDegrees(0))),
-            driveBase, RobotConstants.kAutoPathConstraints, true);
+            new Pose2d(7.07575732243747, -3.55751201127157, Rotation2d.fromDegrees(143.343891584033)),
+            new Pose2d(4.38135323649172, -1.63909630207819, Rotation2d.fromDegrees(150.478638165418))),
+            driveBase, RobotConstants.kAutoPathConstraints, true
+        );
     }
 }
