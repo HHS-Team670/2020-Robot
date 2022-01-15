@@ -22,6 +22,7 @@ import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
 import frc.team670.robot.commands.auton.center.CenterShootMoveOffInitiation;
 import frc.team670.robot.commands.auton.left.LeftShootMoveOffInitiation;
 import frc.team670.robot.commands.auton.right.RightShootTrench;
+import frc.team670.robot.commands.auton.test2022.Taxi;
 import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.OI;
@@ -79,7 +80,7 @@ public class RobotContainer extends RobotContainerBase {
     // MustangCommand autonCommand = autoSelector.getSelectedRoutine();
     // MustangCommand autonCommand = new LeftShoot2BallSide(driveBase, intake, conveyor, indexer, turret, shooter);
     // MustangCommand autonCommand = new CenterSho ot3BallSide(driveBase, intake, conveyor, indexer, turret, shooter, vision);
-    MustangCommand autonCommand = new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, vision);
+    MustangCommand autonCommand = new Taxi(driveBase);
     Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
   }
