@@ -5,6 +5,7 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
@@ -32,7 +33,7 @@ public class LeftShootMoveOffInitiation extends SequentialCommandGroup implement
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Path trajectory;
     
-    public LeftShootMoveOffInitiation(DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Turret turret, Shooter shooter) {
+    public LeftShootMoveOffInitiation(DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Turret turret, Shooter shooter, double initialDelay) {
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
@@ -44,6 +45,7 @@ public class LeftShootMoveOffInitiation extends SequentialCommandGroup implement
 
         addCommands(
             //shoot all balls from baseline
+            new WaitCommand(initialDelay),
             new ZeroTurret(turret),
             new ParallelCommandGroup(
                 new StartShooter(shooter), // flywheel starts turning

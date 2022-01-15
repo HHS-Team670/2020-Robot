@@ -5,6 +5,7 @@ import java.util.Map;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
@@ -30,8 +31,8 @@ public class CenterShootMoveOffInitiation extends SequentialCommandGroup impleme
     private Map<MustangSubsystemBase, HealthState> healthReqs;
     private Path trajectory;
 
-    public CenterShootMoveOffInitiation(DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Turret turret,
-            Shooter shooter, Vision coprocessor) {
+    public CenterShootMoveOffInitiation(DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer,
+            Turret turret, Shooter shooter, Vision coprocessor, double initialDelay) {
 
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
@@ -47,14 +48,13 @@ public class CenterShootMoveOffInitiation extends SequentialCommandGroup impleme
         addCommands(
 
                 // 1) shoot 3 balls from initiation line
+                new WaitCommand(initialDelay),
                 new ZeroTurret(turret),
                 new ParallelCommandGroup(
-                    new StartShooter(shooter), // flywheel starts turning
-                    new RotateToAngle(turret, 0)
-                ),
+                        new StartShooter(shooter), // flywheel starts turning
+                        new RotateToAngle(turret, 0)),
                 new RunIndexer(indexer, conveyor),
-                getTrajectoryFollowerCommand(trajectory, driveBase)
-        );
+                getTrajectoryFollowerCommand(trajectory, driveBase));
     }
 
     @Override

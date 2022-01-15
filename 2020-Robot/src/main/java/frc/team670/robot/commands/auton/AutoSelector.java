@@ -27,18 +27,18 @@ import frc.team670.robot.subsystems.Vision;
  */
 public class AutoSelector {
 
-    private static NetworkTableInstance instance;
-    private static NetworkTable table;
+    // private static NetworkTableInstance instance;
+    // private static NetworkTable table;
 
-    private DriveBase driveBase;
-    private Intake intake;
-    private Conveyor conveyor;
-    private Indexer indexer;
-    private Shooter shooter;
-    private Turret turret;
-    private Vision coprocessor;
+    // private DriveBase driveBase;
+    // private Intake intake;
+    // private Conveyor conveyor;
+    // private Indexer indexer;
+    // private Shooter shooter;
+    // private Turret turret;
+    // private Vision coprocessor;
 
-    private Timer timer;
+    // private Timer timer;
     
     AutoRoutine selectedRoutine = AutoRoutine.UNKNOWN;
 
@@ -52,20 +52,20 @@ public class AutoSelector {
      * @param turret the turret of the robot
      * @param coprocessor the raspberry pi
      */
-    public AutoSelector(DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Turret turret, Vision coprocessor){
+    // public AutoSelector(DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, Shooter shooter, Turret turret, Vision coprocessor){
+    public AutoSelector() {
+        // instance = NetworkTableInstance.getDefault();
+        // table = instance.getTable("SmartDashboard");
         
-        instance = NetworkTableInstance.getDefault();
-        table = instance.getTable("SmartDashboard");
-        
-        this.driveBase = driveBase;
-        this.intake = intake;
-        this.conveyor = conveyor;
-        this.indexer = indexer;
-        this.shooter = shooter;
-        this.turret = turret;
-        this.coprocessor = coprocessor;
+        // this.driveBase = driveBase;
+        // this.intake = intake;
+        // this.conveyor = conveyor;
+        // this.indexer = indexer;
+        // this.shooter = shooter;
+        // this.turret = turret;
+        // this.coprocessor = coprocessor;
 
-        timer = new Timer();
+        // timer = new Timer();
     }
 
     public static enum AutoRoutine {
@@ -107,15 +107,11 @@ public class AutoSelector {
      * 
      * @return
      */
-    public AutoRoutine select() {
+     // used to be called select()
+    public AutoRoutine getSelection() {
         Number autoID = SmartDashboard.getNumber("auton-chooser", -1);
-        timer.start();
-        while (autoID.intValue() == -1) {
-          autoID = SmartDashboard.getNumber("auton-chooser", -1);
-          Logger.consoleLog("trying to get different value");
-          if (timer.hasPeriodPassed(5))
-            break;
-        }
+        // timer.start();
+      
         // NetworkTableEntry value = table.getEntry("auton-chooser");
         // if (value.getType() != NetworkTableType.kDouble) {
         //   Logger.consoleLog("value: %s" , value.getType());
@@ -128,24 +124,31 @@ public class AutoSelector {
         return this.selectedRoutine;
     }
 
+    public double getDelayTime() {
+      return SmartDashboard.getNumber("delayTime", -1);
+    }
+
     /**
      * 
      * @return the command corresponding to the autonomous routine selected by the driver
      */
-    public MustangCommand getSelectedRoutine(){
-        AutoRoutine result = select();
-        Logger.consoleLog("Auton %s", result);
+     // used to be called getSelectedRoutine()
+    public MustangCommand getCommandFromRoutine(AutoRoutine routine,
+    DriveBase driveBase, Intake intake, Conveyor conveyor, Indexer indexer, 
+    Turret turret, Shooter shooter, Vision coprocessor, double delayTime){
+        // AutoRoutine result = select();
+        Logger.consoleLog("Auton %s", routine);
 
-          switch(result) {
+          switch(routine) {
             case LeftShoot2BallSide:
-              return new LeftShootMoveOffInitiation(driveBase, intake, conveyor, indexer, turret, shooter); 
+              return new LeftShootMoveOffInitiation(driveBase, intake, conveyor, indexer, turret, shooter, delayTime); 
             case CenterShoot3BallSide:
-              return new CenterShootMoveOffInitiation(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
+              return new CenterShootMoveOffInitiation(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor, delayTime);
             case RightShootTrench:
-              return new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
+              return new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor, delayTime);
             
             default:
-              return new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor);
+              return new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, coprocessor, delayTime);
           }
     }
 

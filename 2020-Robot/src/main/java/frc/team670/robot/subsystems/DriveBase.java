@@ -15,6 +15,7 @@ import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -39,6 +40,8 @@ import frc.team670.mustanglib.utils.MustangNotifications;
 import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
+import frc.team670.robot.commands.auton.AutoSelector;
+import frc.team670.robot.commands.auton.AutoSelector.AutoRoutine;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
@@ -80,6 +83,11 @@ public class DriveBase extends TankDriveBase {
 
   public static final Pose2d CAMERA_OFFSET = 
     TARGET_POSE.transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
+
+
+  private AutoSelector autoSelector = new AutoSelector();
+  private AutoRoutine autoRoutine = AutoRoutine.UNKNOWN;
+  private double delayTime = -1;
 
   public DriveBase(MustangController mustangController, Vision vision, Turret turret) {
     mController = mustangController;
@@ -407,6 +415,17 @@ public class DriveBase extends TankDriveBase {
       Logger.consoleError("Did not find targets!");
     }
 
+    AutoRoutine routine = autoSelector.getSelection();
+    double time = autoSelector.getDelayTime();
+    if (routine != AutoRoutine.UNKNOWN) {
+      autoRoutine = routine;
+    }
+    if (time != -1) {
+      delayTime = time;
+    }
+
+
+
   }
 
   
@@ -498,6 +517,20 @@ public class DriveBase extends TankDriveBase {
       }
     }
     return false;
+  }
+
+  public AutoRoutine getSelectedRoutine() {
+    while (autoRoutine == AutoRoutine.UNKNOWN) {
+      continue;
+    }
+    return autoRoutine;
+  }
+
+  public double getDelayTime() {
+    while (delayTime == -1) {
+      continue;
+    }
+    return delayTime;
   }
 
   @Override

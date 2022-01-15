@@ -265,6 +265,7 @@ function getFromMap(key) {
     return null;
 }
 
+
 function getAutonFromMap() {
     switch (document.querySelector('input[name="start-position"]:checked').value) {
         case "Left":
@@ -284,6 +285,10 @@ function getAutonFromMap() {
 
 }
 
+function getDelayTime() {
+    return (document.querySelector('#delay input[name="delay-time"]').value)
+}
+
 // function getLocation(offset, value) {
 //     switch (value) {
 //         case "Generator 2":
@@ -298,6 +303,8 @@ function getAutonFromMap() {
 
 function sendAuton() {
     var autonCommand = getAutonFromMap();
+    var delayTime = getDelayTime();
     console.log(autonCommand);
     NetworkTables.putValue('/SmartDashboard/auton-chooser', autonCommand);
+    NetworkTables.putNumber('/SmartDashboard/delayTime', delayTime);
 }

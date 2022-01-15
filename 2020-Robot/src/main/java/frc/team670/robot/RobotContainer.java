@@ -15,33 +15,10 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.MustangScheduler;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.paths.left.Left2Line;
 import frc.team670.robot.commands.auton.AutoSelector;
-import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
-import frc.team670.robot.commands.auton.center.CenterShootMoveOffInitiation;
-import frc.team670.robot.commands.auton.left.LeftShootMoveOffInitiation;
-import frc.team670.robot.commands.auton.right.RightShootTrench;
 import frc.team670.robot.commands.turret.ZeroTurret;
 import frc.team670.robot.constants.FieldConstants;
 import frc.team670.robot.constants.OI;
-import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team670.mustanglib.RobotContainerBase;
-import frc.team670.mustanglib.commands.MustangCommand;
-import frc.team670.mustanglib.commands.MustangScheduler;
-import frc.team670.mustanglib.subsystems.LEDSubsystem;
-import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.robot.commands.auton.AutoSelector;
-import frc.team670.robot.commands.auton.AutoSelector.StartPosition;
-// import frc.team670.robot.commands.auton.ShootFromAngleThenTimeDrive;
-// import frc.team670.robot.commands.auton.ToTrenchRunAndShoot;
-// import frc.team670.robot.commands.auton.baseline.ShootThenBack;
-import frc.team670.robot.commands.turret.ZeroTurret;
-import frc.team670.robot.constants.FieldConstants;
-import frc.team670.robot.constants.OI;
-import frc.team670.robot.constants.RobotMap;
 import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.DriveBase;
@@ -60,6 +37,7 @@ public class RobotContainer extends RobotContainerBase {
 
   private MustangCommand m_autonomousCommand;
 
+  
   private static Intake intake = new Intake();
   private static Conveyor conveyor = new Conveyor();
   private static Indexer indexer = new Indexer(conveyor);
@@ -68,8 +46,9 @@ public class RobotContainer extends RobotContainerBase {
   private static Shooter shooter = new Shooter(vision);
   private static Climber climber = new Climber();
   private static DriveBase driveBase = new DriveBase(getDriverController(), vision, turret);
-  private static AutoSelector autoSelector =  new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret, vision);
+  // private static AutoSelector autoSelector =  new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret, vision);
 
+  private static AutoSelector autoSelector = new AutoSelector();
   // private static AutoSelector autoSelector = new AutoSelector(driveBase, intake, conveyor, indexer, shooter, turret,
   //     vision);
 
@@ -93,12 +72,26 @@ public class RobotContainer extends RobotContainerBase {
    * @return the command to run in autonomous
    */
   public MustangCommand getAutonomousCommand() {
-    // MustangCommand autonCommand = autoSelector.getSelectedRoutine();
+    AutoSelector.AutoRoutine autonRoutine = driveBase.getSelectedRoutine();
+    double delayTime = driveBase.getDelayTime();
+    MustangCommand autonCommand = autoSelector.getCommandFromRoutine(autonRoutine, 
+    driveBase, intake, conveyor, indexer, turret, shooter, vision, delayTime);
     // MustangCommand autonCommand = new LeftShoot2BallSide(driveBase, intake, conveyor, indexer, turret, shooter);
     // MustangCommand autonCommand = new CenterSho ot3BallSide(driveBase, intake, conveyor, indexer, turret, shooter, vision);
-    MustangCommand autonCommand = new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, vision);
+    // MustangCommand autonCommand = new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, vision);
     Logger.consoleLog("autonCommand: %s", autonCommand);
     return autonCommand;
+    
+    // // add key listener
+    // NetworkTable table = NetworkTableInstance.getDefault().getTable("SmartDashoard");
+    // table.addEntryListener("auton-chooser", (table2, key2, entry, value, flags) -> {
+    //     if (value.getType() != NetworkTableType.kString)
+    //           return;
+    //       String s = value.getString();
+    // }, EntryListenerFlags.kNew | EntryListenerFlags.kUpdate);
+    // MustangCommand autonCommand = new RightShootTrench(driveBase, intake, conveyor, indexer, turret, shooter, vision);
+    // Logger.consoleLog("autonCommand: %s", autonCommand);
+    // return autonCommand;
   }
 
   public void autonomousInit() {

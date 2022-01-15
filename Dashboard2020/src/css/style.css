@@ -284,3 +284,9 @@ body.login #login {
     width: 20vw;
     height: 10vh;
 }
+
+#delay {
+    position: absolute;
+    bottom: 150px;
+    left: 150px;
+}
