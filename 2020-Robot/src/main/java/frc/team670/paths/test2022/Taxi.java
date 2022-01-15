@@ -8,16 +8,11 @@ import frc.team670.paths.Path;
 import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.subsystems.DriveBase;
 
-String trajectoryJSON = "paths/Taxi.wpilib.json";
-Trajectory trajectory = new Trajectory();
-
-public class Taxi {
-    public Taxi() {
-        try {
-            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
-            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-         } catch (IOException ex) {
-            DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
-         }
+public class Taxi extends Path{
+    public Taxi(DriveBase driveBase) {
+        super(List.of(
+            new Pose2d(0, 0, Rotation2d.fromDegrees(0)),
+            new Pose2d(0, 0, Rotation2d.fromDegrees(0))),
+            driveBase, RobotConstants.kAutoPathConstraints, true);
     }
 }
