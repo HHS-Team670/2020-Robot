@@ -35,7 +35,8 @@ import frc.team670.robot.subsystems.Turret;
 import frc.team670.robot.subsystems.Vision;
 
 
-public class RobotContainer extends RobotContainerBase {
+public class RobotContainer extends RobotContainerBase 
+{
 
   private static OI oi = new OI();
 
@@ -48,7 +49,7 @@ public class RobotContainer extends RobotContainerBase {
   private static Conveyor conveyor = new Conveyor();
   private static Indexer indexer = new Indexer(conveyor);
   private static Vision vision = new Vision();
-  private static LEDSubsystem leds = new LEDSubsystem(0, 97);
+  private static LED leds = new LED(0, 97);
   private static Turret turret = new Turret(vision, leds);
   private static Shooter shooter = new Shooter(vision);
   private static Climber climber = new Climber();
@@ -65,7 +66,9 @@ public class RobotContainer extends RobotContainerBase {
     oi.configureButtonBindings(driveBase, intake, conveyor, indexer, turret, shooter, climber, vision); //climber, vision);
   }
 
-  public void robotInit() {
+  public void robotInit() 
+  {
+    leds.enable(); led.setRed();
     vision.turnOnLEDs();
 
   }
@@ -75,7 +78,9 @@ public class RobotContainer extends RobotContainerBase {
    *
    * @return the command to run in autonomous
    */
-  public MustangCommand getAutonomousCommand() {
+
+  public MustangCommand getAutonomousCommand() 
+  {
     // MustangCommand autonCommand = autoSelector.getSelectedRoutine();
     // MustangCommand autonCommand = new LeftShoot2BallSide(driveBase, intake, conveyor, indexer, turret, shooter);
     // MustangCommand autonCommand = new CenterSho ot3BallSide(driveBase, intake, conveyor, indexer, turret, shooter, vision);
@@ -84,7 +89,8 @@ public class RobotContainer extends RobotContainerBase {
     return autonCommand;
   }
 
-  public void autonomousInit() {
+  public void autonomousInit() 
+  {
     indexer.reset();
     turret.setLimitSwitch(false);
     if (!turret.hasZeroed()) { // only zero turret if needed
@@ -96,19 +102,30 @@ public class RobotContainer extends RobotContainerBase {
     }
   }
 
-  public void teleopInit() {
+  public void teleopInit() 
+  {
     shooter.stop();
     indexer.stopUpdraw();
     indexer.stop();
     indexer.reset();
+
     driveBase.resetOdometry(new Pose2d(FieldConstants.FIELD_ORIGIN_TO_OUTER_GOAL_CENTER_X_METERS,
         FieldConstants.EDGE_OF_BASELINE, Rotation2d.fromDegrees(180)));
+
     driveBase.setTeleopRampRate();
     driveBase.initDefaultCommand();
     turret.setLimitSwitch(true);
-    if (!turret.hasZeroed()) {
+
+    if(turret.checkHealth().equals(HealthState.RED))
+    {
+      led.setred();
+    }
+
+    if (!turret.hasZeroed())
+    {
       MustangScheduler.getInstance().schedule(new ZeroTurret(turret));
     }
+
     // turret.initDefaultCommand();
     vision.turnOnLEDs();
   }
