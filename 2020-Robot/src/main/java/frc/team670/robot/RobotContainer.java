@@ -101,7 +101,7 @@ public class RobotContainer extends RobotContainerBase
       MustangScheduler.getInstance().schedule(m_autonomousCommand);
     }
   }
-
+clear
   public void teleopInit() 
   {
     shooter.stop();
