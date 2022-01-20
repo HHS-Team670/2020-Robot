@@ -29,6 +29,7 @@
     <div id="v-crosshairs-left"> </div>
     <div id="v-crosshairs-right"> </div>
 
+
     <svg id="status-lights-commands" width="700" height="100">
     <rect x="0%" y="0%" width="100%" height="100%" style="stroke:rgb(0,200,0)" />
     <rect id="vision-status" x="17%" y="50%" width="40" height="20" />
@@ -40,6 +41,8 @@
     <rect id="drive-reversed-status" x="77%" y="20%" width="40" height="20" />
     <text x="80%" y="80%" style="text-anchor: middle">Reversed</text>
   </svg>
+
+
 
     <svg id="status-lights-subsystems" width="700" height="200">
     <rect x="0%" y="0" width="100%" height="100%" style="stroke:rgb(0,200,0)" />
@@ -110,11 +113,16 @@
       <image class="camera-stream" src="http://photonvision.local:1182/stream.mjpg?1636590188888"></image>
     </div>
 
-    <svg id="current-text" width="400" height="60">
-    <rect x="0%" y="0%" width="100%" height="100%" style="stroke:rgb(0,200,0)" />
-    <text id="balls-in-robot" x="20%" y="50%" style="text-anchor: start" alignment-baseline="middle">Balls in Robot:
+    <svg id="current-text" width="400" height="100">
+    <rect x="0%" y="0%" width="100%" height="50%" style="stroke:rgb(0,200,0)" />
+    <text id="timer" x="20%" y="25%" style="text-anchor: start" alignment-baseline="middle">Time of Match:
+    </text>
+    <rect x="0%" y="50%" width="100%" height="50%" style="stroke:rgb(0,200,0)" />
+    <text id="balls-in-robot" x="20%" y="75%" style="text-anchor: start" alignment-baseline="middle">Balls in Robot:
     </text>
   </svg>
+
+
 
     <div id="auton-chooser">
         <rect x="0%" y="0%" width="100%" height="100%" style="stroke:rgb(0,200,0)" />

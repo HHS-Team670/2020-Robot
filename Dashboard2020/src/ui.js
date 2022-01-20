@@ -41,6 +41,29 @@ NetworkTables.addKeyListener('/SmartDashboard/Balls', (key, value) => {
     document.getElementById('balls-in-robot').textContent = 'Balls in Robot: ' + value;
 });
 
+// TODO: add a timer widget thing
+// Set the date we're counting down to
+var countDownDate = new Date("Jan 19, 2022 18:01:04").getTime();
+
+// Update the count down every 1 second
+var countDownTimer = setInterval(function() {
+
+  // Get today's date and time
+  var now = new Date().getTime();
+    
+  // Find the distance between now and the count down date
+  var distance = countDownDate - now;
+
+  // Output the result in an element with id="demo"
+  document.getElementById("timer").textContent = 'Time of Match: ' + Math.floor(distance/1000);
+    
+  // If the count down is over, write some text 
+  if (distance < 0) {
+    clearInterval(countDownDate);
+    document.getElementById("timer").textContent = "Match Finished";
+  }
+}, 1000);
+
 // updates vision frame
 NetworkTables.addKeyListener('/SmartDashboard/vision-frame-updated', (key, value) => {
     if (value == true) {
