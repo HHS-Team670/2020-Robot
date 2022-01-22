@@ -1,5 +1,6 @@
 var date = new Date();
 var PopupClass = require('js-popup');
+var runtimer = false;
 
 document.getElementById('big-warning').style.display = "none";
 // document.getElementById('auton-chooser').style.display = "none";
@@ -43,26 +44,49 @@ NetworkTables.addKeyListener('/SmartDashboard/Balls', (key, value) => {
 
 // TODO: add a timer widget thing
 // Set the date we're counting down to
-var countDownDate = new Date("Jan 19, 2022 18:01:04").getTime();
 
-// Update the count down every 1 second
-var countDownTimer = setInterval(function() {
 
-  // Get today's date and time
-  var now = new Date().getTime();
+var countDownTimer;
+var countDownDate;
+
+function timeToMillis (timeString) {
+    let arr = timeString.split(":");
+    let min = parseFloat(arr[0]);
+    let sec = parseFloat(arr[1]);
+    return (60*min+sec)*1000;
+}
+
+document.getElementById("timer-starter").onmouseup = function() {
+    if (runtimer) return;
+    runtimer = true;
+    countDownDate = new Date().getTime() + timeToMillis("1:30");
+    document.getElementById("timer").textContent = "Time of Match: ";
     
-  // Find the distance between now and the count down date
-  var distance = countDownDate - now;
+    countDownTimer = setInterval(function() {
+        
+        
+        var now = new Date().getTime();
+            
+        var timeDifference = countDownDate - now;
+        var timeDifferenceInSeconds = timeDifference / 1000;
 
-  // Output the result in an element with id="demo"
-  document.getElementById("timer").textContent = 'Time of Match: ' + Math.floor(distance/1000);
-    
-  // If the count down is over, write some text 
-  if (distance < 0) {
-    clearInterval(countDownDate);
-    document.getElementById("timer").textContent = "Match Finished";
-  }
-}, 1000);
+        var seconds =( timeDifferenceInSeconds % 60);
+        var minutes = Math.floor( ( timeDifferenceInSeconds % (60*60)) / 60);
+
+        // TODO regex format the time
+        document.getElementById("timer").textContent = 'Time of Match: ' + minutes + ':' + Math.round(seconds);
+            
+        // If the count down is over, write some text 
+        if (timeDifference < 0) {
+            clearInterval(countDownDate);
+            document.getElementById("timer").textContent = "Match Finished";
+            runtimer = false;
+        }
+    }, 1000);
+    runtimer = true;
+};
+
+
 
 // updates vision frame
 NetworkTables.addKeyListener('/SmartDashboard/vision-frame-updated', (key, value) => {
