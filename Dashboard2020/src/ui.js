@@ -59,7 +59,7 @@ function timeToMillis (timeString) {
 document.getElementById("timer-starter").onmouseup = function() {
     if (runtimer) return;
     runtimer = true;
-    countDownDate = new Date().getTime() + timeToMillis("1:30");
+    countDownDate = new Date().getTime() + timeToMillis("1:15");
     document.getElementById("timer").textContent = "Time of Match: ";
     
     countDownTimer = setInterval(function() {
@@ -74,7 +74,9 @@ document.getElementById("timer-starter").onmouseup = function() {
         var minutes = Math.floor( ( timeDifferenceInSeconds % (60*60)) / 60);
 
         // TODO regex format the time
-        document.getElementById("timer").textContent = 'Time of Match: ' + minutes + ':' + Math.round(seconds);
+        document.getElementById("timer").textContent = 'Time of Match: ' + minutes + ':' 
+            + (Math.round(seconds) < 10 ? "0" : "") 
+                + Math.round(seconds);
             
         // If the count down is over, write some text 
         if (timeDifference < 0) {
