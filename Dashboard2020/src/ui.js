@@ -1,6 +1,5 @@
 var date = new Date();
 var PopupClass = require('js-popup');
-var runtimer = false;
 
 document.getElementById('big-warning').style.display = "none";
 // document.getElementById('auton-chooser').style.display = "none";
@@ -47,7 +46,7 @@ NetworkTables.addKeyListener('/SmartDashboard/Balls', (key, value) => {
 
 
 var countDownTimer;
-var countDownDate;
+var endTime;
 const AUTON_TIME_MILLIS = timeToMillis("0:05");
 const MATCH_LENGTH_MILLIS = timeToMillis("0:10");
 var matchPhase = document.getElementById("match-phase");
@@ -61,6 +60,14 @@ const MatchPhases = Object.freeze ({
     TELEOP: Object.freeze({text:"TELEOP",color:"rgb(0,200,0)"}),
     ENDED: Object.freeze({text:"ENDED",color:"rgb(200,0,0)"})
 });
+var runtimer = false;
+var now;
+            
+var timeDifference;
+var timeDifferenceInSeconds;
+var seconds;
+var minutes;
+var suppressTimer = false;
 
 
 function timeToMillis (timeString) {
@@ -76,42 +83,61 @@ function stopTimer () {
     runtimer = false;
 }
 
+function getTimeString (minutes, seconds) {
+    return (seconds == 60 ? minutes + 1 : minutes) + ':' 
+        + (Math.round(seconds) < 10 ? "0" : "") 
+            + (seconds == 60 ? "00" : Math.round(seconds));
+}
+
+function updateTimer(countDownDate) {
+
+    now = new Date().getTime();
+            
+    timeDifference = countDownDate - now;
+    timeDifferenceInSeconds = timeDifference / 1000;
+    seconds =( timeDifferenceInSeconds % 60);
+    minutes = Math.floor( ( timeDifferenceInSeconds % (60*60)) / 60);
+}
+
 function setMatchPhase(phase) {
     
     matchPhase.textContent = phasePrefixString + phase.text;
     matchPhase.style.backgroundColor = phase.color;
 }
 
+// TODO time pauser
+
 document.getElementById("timer-stopper").onmouseup = function() {
     stopTimer();
     setMatchPhase(MatchPhases.NOT_STARTED);
 }
 
+document.getElementById("timer-pauser").onmouseup = function() {
+    if (suppressTimer) {
+        suppressTimer = false; // TODO an effect of text changing
+    } else {
+        suppressTimer = true;
+    }
+}
+
 document.getElementById("timer-starter").onmouseup = function() {
     if (runtimer) return;
     runtimer = true;
-    countDownDate = new Date().getTime() + MATCH_LENGTH_MILLIS;
+    endTime = new Date().getTime() + MATCH_LENGTH_MILLIS;
     
-    
-    timer.textContent = timerPrefixString;
+    updateTimer(endTime);
+
+    timer.textContent = timerPrefixString + getTimeString(minutes, seconds);
     if (timeoutFunc != null) clearTimeout(timeoutFunc);
     setMatchPhase(MatchPhases.AUTON);
     
     countDownTimer = setInterval(function() {
         
-        
-        var now = new Date().getTime();
-            
-        var timeDifference = countDownDate - now;
-        var timeDifferenceInSeconds = timeDifference / 1000;
+        updateTimer(endTime);
 
-        var seconds =( timeDifferenceInSeconds % 60);
-        var minutes = Math.floor( ( timeDifferenceInSeconds % (60*60)) / 60);
 
         // TODO regex format the time
-        timer.textContent = timerPrefixString + (seconds == 60 ? minutes + 1 : minutes) + ':' 
-            + (Math.round(seconds) < 10 ? "0" : "") 
-                + (seconds == 60 ? "00" : Math.round(seconds));
+        timer.textContent = timerPrefixString + getTimeString(minutes, seconds);
             
         // If the count down is over, write some text 
         if (timeDifference < 0) {
