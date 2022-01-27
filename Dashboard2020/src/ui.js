@@ -48,6 +48,20 @@ NetworkTables.addKeyListener('/SmartDashboard/Balls', (key, value) => {
 
 var countDownTimer;
 var countDownDate;
+const AUTON_TIME_MILLIS = timeToMillis("0:15");
+const MATCH_LENGTH_MILLIS = timeToMillis("0:30");
+var matchPhase = document.getElementById("match-phase");
+var timer = document.getElementById("timer");
+var timerPrefixString = "Time of Match: ";
+var phasePrefixString = "Match Phase: ";
+var timeoutFunc = null;
+const MatchPhases = Object.freeze ({
+    NOT_STARTED: Object.freeze( {text: "NOT STARTED", color:"rgb(50,50,50)"}),
+    AUTON: Object.freeze({text: "AUTON", color:"rgb(200,200,0)"}),
+    TELEOP: Object.freeze({text:"TELEOP",color:"rgb(0,200,0)"}),
+    ENDED: Object.freeze({text:"ENDED",color:"rgb(200,0,0)"})
+});
+
 
 function timeToMillis (timeString) {
     let arr = timeString.split(":");
@@ -56,11 +70,21 @@ function timeToMillis (timeString) {
     return (60*min+sec)*1000;
 }
 
+function setMatchPhase(phase) {
+    
+    matchPhase.textContent = phasePrefixString + phase.text;
+    matchPhase.style.backgroundColor = phase.color;
+}
+
 document.getElementById("timer-starter").onmouseup = function() {
     if (runtimer) return;
     runtimer = true;
-    countDownDate = new Date().getTime() + timeToMillis("1:15");
-    document.getElementById("timer").textContent = "Time of Match: ";
+    countDownDate = new Date().getTime() + MATCH_LENGTH_MILLIS;
+    
+    
+    timer.textContent = timerPrefixString + "0:00";
+    if (timeoutFunc != null) clearTimeout(timeoutFunc);
+    setMatchPhase(MatchPhases.AUTON);
     
     countDownTimer = setInterval(function() {
         
@@ -74,15 +98,22 @@ document.getElementById("timer-starter").onmouseup = function() {
         var minutes = Math.floor( ( timeDifferenceInSeconds % (60*60)) / 60);
 
         // TODO regex format the time
-        document.getElementById("timer").textContent = 'Time of Match: ' + minutes + ':' 
+        timer.textContent = timerPrefixString + (seconds == 60 ? minutes + 1 : minutes) + ':' 
             + (Math.round(seconds) < 10 ? "0" : "") 
-                + Math.round(seconds);
+                + (seconds == 60 ? "00" : Math.round(seconds));
             
         // If the count down is over, write some text 
         if (timeDifference < 0) {
             clearInterval(countDownDate);
-            document.getElementById("timer").textContent = "Match Finished";
+            timer.textContent = timerPrefixString + "0:00";
+            setMatchPhase(MatchPhases.ENDED);
+            timeoutFunc = setTimeout(() => {
+                setMatchPhase(MatchPhases.NOT_STARTED); 
+                timeoutFunc = null;
+            }, 5000);
             runtimer = false;
+        } else if (timeDifference <= MATCH_LENGTH_MILLIS - AUTON_TIME_MILLIS) {
+            setMatchPhase(MatchPhases.TELEOP);
         }
     }, 1000);
     runtimer = true;
