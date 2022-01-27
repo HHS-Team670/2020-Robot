@@ -48,8 +48,8 @@ NetworkTables.addKeyListener('/SmartDashboard/Balls', (key, value) => {
 
 var countDownTimer;
 var countDownDate;
-const AUTON_TIME_MILLIS = timeToMillis("0:15");
-const MATCH_LENGTH_MILLIS = timeToMillis("0:30");
+const AUTON_TIME_MILLIS = timeToMillis("0:05");
+const MATCH_LENGTH_MILLIS = timeToMillis("0:10");
 var matchPhase = document.getElementById("match-phase");
 var timer = document.getElementById("timer");
 var timerPrefixString = "Time of Match: ";
@@ -70,10 +70,21 @@ function timeToMillis (timeString) {
     return (60*min+sec)*1000;
 }
 
+function stopTimer () {
+    if (countDownTimer != null) clearInterval(countDownTimer);
+    timer.textContent = timerPrefixString;
+    runtimer = false;
+}
+
 function setMatchPhase(phase) {
     
     matchPhase.textContent = phasePrefixString + phase.text;
     matchPhase.style.backgroundColor = phase.color;
+}
+
+document.getElementById("timer-stopper").onmouseup = function() {
+    stopTimer();
+    setMatchPhase(MatchPhases.NOT_STARTED);
 }
 
 document.getElementById("timer-starter").onmouseup = function() {
@@ -104,14 +115,13 @@ document.getElementById("timer-starter").onmouseup = function() {
             
         // If the count down is over, write some text 
         if (timeDifference < 0) {
-            clearInterval(countDownDate);
-            timer.textContent = timerPrefixString + "0:00";
+            stopTimer();
             setMatchPhase(MatchPhases.ENDED);
             timeoutFunc = setTimeout(() => {
                 setMatchPhase(MatchPhases.NOT_STARTED); 
+                clearTimeout(timeoutFunc);
                 timeoutFunc = null;
             }, 5000);
-            runtimer = false;
         } else if (timeDifference <= MATCH_LENGTH_MILLIS - AUTON_TIME_MILLIS) {
             setMatchPhase(MatchPhases.TELEOP);
         }

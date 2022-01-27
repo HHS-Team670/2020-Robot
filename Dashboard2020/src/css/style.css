@@ -281,16 +281,16 @@ body.login #login {
     background-color: rgb(25, 67, 75);
 }
 
-#timer-starter { 
+.timer-button { 
     background-color: rgb(25, 105, 25);
     font-size: 100%;
 }
 
-#timer-starter:hover {
+.timer-button:hover {
     background-color:rgb(23, 167, 23);
 }
 
-#timer-starter:active {
+.timer-button:active {
     background-color:rgb(8, 218, 8);
 }
 
