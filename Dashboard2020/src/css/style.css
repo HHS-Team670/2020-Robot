@@ -277,6 +277,22 @@ body.login #login {
     transform: translate(10vw, 50vh);
 }
 
+#match-phase {
+    background-color: rgb(25, 67, 75);
+}
+
+#timer-starter { 
+    background-color: rgb(25, 105, 25);
+    font-size: 100%;
+}
+
+#timer-starter:hover {
+    background-color:rgb(23, 167, 23);
+}
+
+#timer-starter:active {
+    background-color:rgb(8, 218, 8);
+}
 
 #shooter-values  {
     position: absolute;

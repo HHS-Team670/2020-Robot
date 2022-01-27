@@ -57,7 +57,7 @@ var phasePrefixString = "Match Phase: ";
 var timeoutFunc = null;
 const MatchPhases = Object.freeze ({
     NOT_STARTED: Object.freeze( {text: "NOT STARTED", color:"rgb(50,50,50)"}),
-    AUTON: Object.freeze({text: "AUTON", color:"rgb(200,200,0)"}),
+    AUTON: Object.freeze({text: "AUTON", color:"rgb(70,70,200)"}),
     TELEOP: Object.freeze({text:"TELEOP",color:"rgb(0,200,0)"}),
     ENDED: Object.freeze({text:"ENDED",color:"rgb(200,0,0)"})
 });
@@ -82,7 +82,7 @@ document.getElementById("timer-starter").onmouseup = function() {
     countDownDate = new Date().getTime() + MATCH_LENGTH_MILLIS;
     
     
-    timer.textContent = timerPrefixString + "0:00";
+    timer.textContent = timerPrefixString;
     if (timeoutFunc != null) clearTimeout(timeoutFunc);
     setMatchPhase(MatchPhases.AUTON);
     
