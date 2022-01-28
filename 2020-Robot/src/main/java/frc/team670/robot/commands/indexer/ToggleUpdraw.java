@@ -19,16 +19,13 @@ public class ToggleUpdraw extends InstantCommand implements MustangCommand {
 
     @Override
     public void initialize() {
-        // TODO Auto-generated method stub
         super.initialize();
         indexer.toggleUpdraw();
     }
 
     @Override
     public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
-        // TODO Auto-generated method stub
         return new HashMap<MustangSubsystemBase, HealthState>();
     }
-
     
 }

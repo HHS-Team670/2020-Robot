@@ -6,7 +6,6 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
@@ -43,9 +42,7 @@ public class Climber extends MustangSubsystemBase {
     private SparkMAXLite motor;
     
     private boolean onBar;
-    private boolean isExtending; // true: extending, false: retracting
     private double target;
-    private Solenoid deployer;
 
     private int currentAtHookedCount = 0;
 
@@ -55,11 +52,10 @@ public class Climber extends MustangSubsystemBase {
     private static final float SOFT_LIMIT_AT_RETRACTED = MOTOR_ROTATIONS_AT_RETRACTED + .5f;
     private static final float SOFT_LIMIT_AT_EXTENSION = MOTOR_ROTATIONS_AT_MAX_EXTENSION - 10;
 
-    public Climber(Solenoid deployer) {
+    public Climber() {
         motor = SparkMAXFactory.buildFactorySparkMAX(RobotMap.CLIMBER_MOTOR, Motor_Type.NEO);
         motor.setIdleMode(IdleMode.kBrake);
         motor.setInverted(true);
-        this.deployer = deployer;
         controller = motor.getPIDController();
         motor.enableSoftLimit(SoftLimitDirection.kForward, true);
         motor.enableSoftLimit(SoftLimitDirection.kReverse, true);
@@ -87,16 +83,8 @@ public class Climber extends MustangSubsystemBase {
         controller.setSmartMotionAllowedClosedLoopError(ALLOWED_ERR, this.SMARTMOTION_SLOT);
     }
 
-    public void solenoidOff() {
-        deployer.set(false);
-    }
-
-    public void solenoidOn() {
-        deployer.set(true);
-    }
-
     public void hookOnBar() {
-        if (isHooked() && !onBar || deployer == null) {
+        if (isHooked() && !onBar) {
             setPower(0);
             onBar = true;
         }
@@ -137,19 +125,6 @@ public class Climber extends MustangSubsystemBase {
         controller.setReference(rotations, ControlType.kSmartMotion);
     }
 
-    /**
-     * 
-     * @param isExtending true to deploy the pull (turn solenoid on)
-     */
-    public void setExtending(boolean isExtending) {
-        this.isExtending = isExtending;
-        if (isExtending) {
-            solenoidOn();
-        } else {
-            solenoidOff();
-        }
-    }
-
     @Override
     public HealthState checkHealth() {
         if (isSparkMaxErrored(motor)) {
@@ -172,13 +147,12 @@ public class Climber extends MustangSubsystemBase {
 
     @Override
     public void mustangPeriodic() {
-        SmartDashboard.putNumber("Climber motor rotations", getUnadjustedMotorRotations());
-        SmartDashboard.putNumber("Climber motor current", getMotorCurrent());
+        // SmartDashboard.putNumber("Climber motor rotations", getUnadjustedMotorRotations());
+        // SmartDashboard.putNumber("Climber motor current", getMotorCurrent());
     }
 
     public void test() {
         setPower(SmartDashboard.getNumber("Climber power", 0.0));
-        setExtending(SmartDashboard.getBoolean("Climber deploy", false));
         SmartDashboard.putNumber("Climber motor rotations", getUnadjustedMotorRotations());
     }
 

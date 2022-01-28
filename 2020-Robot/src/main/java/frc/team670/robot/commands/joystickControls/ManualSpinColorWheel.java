@@ -70,4 +70,5 @@ public class ManualSpinColorWheel extends CommandBase implements MustangCommand 
     healthReqs.put(spinner, HealthState.YELLOW);
     return healthReqs;
   }
+  
 }

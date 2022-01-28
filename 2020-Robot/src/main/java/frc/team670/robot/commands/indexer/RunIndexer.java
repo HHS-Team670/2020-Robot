@@ -3,28 +3,35 @@ package frc.team670.robot.commands.indexer;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 import frc.team670.mustanglib.utils.Logger;
+import frc.team670.robot.subsystems.Conveyor;
 import frc.team670.robot.subsystems.Indexer;
 
 /**
- * Runs the indexer (no sensor, plain control)
+ * Empties the revolver by running motors backward 3 chambers
  * 
- * @author lakshbhambhani
+ * @author palldas
  */
 public class RunIndexer extends CommandBase implements MustangCommand {
 
     private Indexer indexer;
     private Map<MustangSubsystemBase, HealthState> healthReqs;
 
-    public RunIndexer(Indexer indexer) {
+    private Conveyor conveyor;
+
+    private long microSecondsSinceZeroBalls = -1;
+
+    public RunIndexer(Indexer indexer, Conveyor conveyor) {
         this.indexer = indexer;
         addRequirements(indexer);
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(indexer, HealthState.YELLOW); // can work if all but the exit sensor is down
+        this.conveyor = conveyor;
         // can keep moving motors until the sensor doesn't sense anymore balls, or rotate until u know that 3 ball've been shot
     }
 
@@ -35,6 +42,7 @@ public class RunIndexer extends CommandBase implements MustangCommand {
     public void initialize() {
         Logger.consoleLog("Preparing to empty indexer");
         indexer.updraw(false);
+        microSecondsSinceZeroBalls = -1;
     }
 
     /**
@@ -45,6 +53,7 @@ public class RunIndexer extends CommandBase implements MustangCommand {
         if (indexer.updrawIsUpToSpeed()) {
             indexer.run(true);
         }
+        conveyor.run(false);
     }
 
     /**
@@ -53,7 +62,14 @@ public class RunIndexer extends CommandBase implements MustangCommand {
      */
     @Override
     public boolean isFinished() {
-        return indexer.getTotalNumBalls() == 0;
+        if(indexer.getTotalNumBalls() == 0 && microSecondsSinceZeroBalls == -1){
+            microSecondsSinceZeroBalls =  RobotController.getFPGATime();
+        }
+        if(microSecondsSinceZeroBalls != -1 && RobotController.getFPGATime() - microSecondsSinceZeroBalls >= 1000000){
+            microSecondsSinceZeroBalls = -1;
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -61,6 +77,7 @@ public class RunIndexer extends CommandBase implements MustangCommand {
         Logger.consoleLog("Indexer system emptied");
         indexer.stopUpdraw();
         indexer.stop();
+        conveyor.stop();
     }
 
     @Override

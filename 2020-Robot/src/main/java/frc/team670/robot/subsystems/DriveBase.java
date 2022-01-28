@@ -15,37 +15,29 @@ import com.revrobotics.CANError;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.SpeedController;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.RamseteController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import frc.team670.mustanglib.commands.MustangScheduler;
-import frc.team670.mustanglib.commands.drive.teleop.XboxTankDrive;
 import frc.team670.mustanglib.commands.drive.teleop.XboxRocketLeague.XboxRocketLeagueDrive;
-import frc.team670.robot.constants.RobotConstants;
-import frc.team670.robot.constants.RobotMap;
 import frc.team670.mustanglib.dataCollection.sensors.NavX;
+import frc.team670.mustanglib.subsystems.drivebase.TankDriveBase;
 import frc.team670.mustanglib.utils.Logger;
 import frc.team670.mustanglib.utils.MustangController;
-import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.MustangNotifications;
+import frc.team670.mustanglib.utils.motorcontroller.MotorConfig;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXFactory;
 import frc.team670.mustanglib.utils.motorcontroller.SparkMAXLite;
-import frc.team670.mustanglib.subsystems.drivebase.TankDriveBase;
-import edu.wpi.first.wpilibj.SpeedController;
+import frc.team670.robot.constants.RobotConstants;
+import frc.team670.robot.constants.RobotMap;
+// @author lakshbhambhani
 
-/**
- * Represents a tank drive base.
- * 
- * @author lakshbhambhani
- */
 public class DriveBase extends TankDriveBase {
 
   private SparkMAXLite left1, left2, right1, right2;
@@ -361,6 +353,7 @@ public class DriveBase extends TankDriveBase {
   @Override
   public void mustangPeriodic() {
     // Update the odometry in the periodic block
+    // SmartDashboard.putNumber("Heading: %s", getHeading());
     m_odometry.update(Rotation2d.fromDegrees(getHeading()), left1Encoder.getPosition(), right1Encoder.getPosition());
   }
 
@@ -383,19 +376,19 @@ public class DriveBase extends TankDriveBase {
     m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
     CANError lE = left1Encoder.setPosition(0);
     CANError rE = right1Encoder.setPosition(0);
-    Logger.consoleLog("Encoder return value %s %s", lE, rE);
-    Logger.consoleLog("Encoder positions %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
+    // Logger.consoleLog("Encoder return value %s %s", lE, rE);
+    // Logger.consoleLog("Encoder positions %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
     int counter = 0;
     while ((left1Encoder.getPosition() != 0 || right1Encoder.getPosition() != 0) && counter < 30) {
       lE = left1Encoder.setPosition(0);
       rE = right1Encoder.setPosition(0);
       counter++;
     }
-    Logger.consoleLog("Encoder return value %s %s", lE, rE);
-    Logger.consoleLog("Encoder positions %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
-    Logger.consoleLog("Drivebase pose reset %s", pose);
-    Logger.consoleLog("Drivebase get position after reset %s %s", left1Encoder.getPosition(),
-        right1Encoder.getPosition());
+    // Logger.consoleLog("Encoder return value %s %s", lE, rE);
+    // Logger.consoleLog("Encoder positions %s %s", left1Encoder.getPosition(), right1Encoder.getPosition());
+    // Logger.consoleLog("Drivebase pose reset %s", pose);
+    // Logger.consoleLog("Drivebase get position after reset %s %s", left1Encoder.getPosition(),
+        // right1Encoder.getPosition());
   }
 
   public void resetOdometry() {

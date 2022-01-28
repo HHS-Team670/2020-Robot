@@ -11,7 +11,7 @@ import frc.team670.mustanglib.commands.MustangCommand;
 import frc.team670.mustanglib.commands.drive.straight.TimedDrive;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.robot.commands.indexer.ShootAllBalls;
+import frc.team670.robot.commands.indexer.RunIndexer;
 import frc.team670.robot.commands.shooter.Shoot;
 import frc.team670.robot.commands.shooter.StartShooter;
 import frc.team670.robot.commands.shooter.StopShooter;
@@ -39,10 +39,13 @@ public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implemen
      * @param waitTime The delay (s) between shooting and driving, if no delay use 0
      * @param speed Drivebase percent output. Negative reverse, positive forward
      */
-    public ShootFromAngleThenTimeDrive(Pose2d startPose, double turretAng, double waitTime, double speed, DriveBase driveBase, Intake intake, Conveyor conveyor,
-            Shooter shooter, Indexer indexer, Turret turret) {
+    public ShootFromAngleThenTimeDrive(Pose2d startPose, double turretAng, double waitTime, 
+        double speed, DriveBase driveBase, Intake intake, Conveyor conveyor, Shooter shooter, 
+            Indexer indexer, Turret turret) {
+
         this.driveBase = driveBase;
         this.startPose = startPose;
+
         healthReqs = new HashMap<MustangSubsystemBase, HealthState>();
         healthReqs.put(driveBase, HealthState.GREEN);
         healthReqs.put(shooter, HealthState.GREEN);
@@ -52,23 +55,21 @@ public class ShootFromAngleThenTimeDrive extends SequentialCommandGroup implemen
         healthReqs.put(turret, HealthState.GREEN);
 
         addCommands(
-                // Get shooter up to speed and aim
-                new RotateToHome(turret),
-                new ParallelCommandGroup(
-                    new StartShooter(shooter), 
-                    new RotateToAngle(turret, turretAng)
-                ),
-                new Shoot(shooter), 
-                    // new StageOneBallToShoot(indexer),
-                new ShootAllBalls(indexer),
-
-                new WaitCommand(waitTime), // Delay moving after shot if needed
-
-                new ParallelCommandGroup(
-                    new TimedDrive( (Math.abs(speed) - 0.3) <= 0.1 ? 1 : 2, speed, driveBase),
-                    new StopShooter(shooter)
-                )
-            );
+            // Get shooter up to speed and aim
+            new RotateToHome(turret),
+            new ParallelCommandGroup(
+                new StartShooter(shooter), 
+                new RotateToAngle(turret, turretAng)
+            ),
+            new Shoot(shooter), 
+                // new StageOneBallToShoot(indexer),
+            new RunIndexer(indexer, conveyor),
+            new WaitCommand(waitTime), // Delay moving after shot if needed
+            new ParallelCommandGroup(
+                new TimedDrive( (Math.abs(speed) - 0.3) <= 0.1 ? 1 : 2, speed, driveBase),
+                new StopShooter(shooter)
+            )
+        );
     }
 
     @Override

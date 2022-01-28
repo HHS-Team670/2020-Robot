@@ -24,12 +24,11 @@ import frc.team670.robot.constants.RobotConstants;
 import frc.team670.robot.constants.RobotMap;
 
 /**
- * Represents the ball indexer subsystem, which tracks and stores up to 3 balls.
+ * Represents the ball indexer subsystem, which tracks and stores up to 4 balls.
  * 
  * @author pallavidas, aadityaraj
  */
 
-// NEW 2021 INDEXER
 public class Indexer extends MustangSubsystemBase {
 
     private Conveyor conveyor; // we don't actually use this; can remove it from construc
@@ -38,19 +37,14 @@ public class Indexer extends MustangSubsystemBase {
     private TalonSRX updraw; // motor
 
     private boolean[] chamberStates;
-    public int[] sensorVals;
-
-    private int frontExceededCurrentLimitCount = 0;
-    private int backExceededCurrentLimitCount = 0;
-
-    int i=0;
-
-    private boolean isSameBall = false;
+    public int[] sensorVals = { 350, 350, 350, 350 };
 
     private Long updrawStartTime;
 
-    private double UPDRAW_SPEED = -0.4;
-    private double INDEXER_SPEED = 0.4;
+    private int chamberToCheck = -1;
+
+    private double UPDRAW_SPEED = -0.9;
+    private double INDEXER_SPEED = 0.35;
 
     private int isUpdrawingCount = 0;
     private int totalNumBalls = 0;
@@ -60,8 +54,6 @@ public class Indexer extends MustangSubsystemBase {
     // touches
     private static final int UPDRAW_NORMAL_CONTINUOUS_CURRENT_LIMIT = 9;
     private static final int UPDRAW_PEAK_CURRENT_LIMIT = 15;
-    
-    // private Multiplexer multiplexer;
 
     public Indexer(Conveyor conveyor) {
         super();
@@ -79,8 +71,6 @@ public class Indexer extends MustangSubsystemBase {
         this.updraw = TalonSRXFactory.buildFactoryTalonSRX(RobotMap.UPDRAW_SPINNER, false);
 
         chamberStates = new boolean[4];
-        sensorVals = new int[4];
-
 
         updraw.setNeutralMode(NeutralMode.Coast); // free, nothing holding instead of brake
 
@@ -91,33 +81,38 @@ public class Indexer extends MustangSubsystemBase {
         updraw.configVoltageCompSaturation(12); // "full output" will now scale to 12 Volts
         updraw.enableVoltageCompensation(true);
 
-        serialport = new SerialPort(9600, SerialPort.Port.kUSB1);
+        serialport = null; // new SerialPort(9600, SerialPort.Port.kUSB1);
     }
 
     private void pushGameDataToDashboard() {
         NetworkTableInstance instance = NetworkTableInstance.getDefault();
         NetworkTable table = instance.getTable("/SmartDashboard");
         NetworkTableEntry gameData = table.getEntry("Balls");
-        gameData.forceSetNumber(totalNumBalls);
+        gameData.setNumber(totalNumBalls);
     }
 
     public void updateChamberStates() {
+        totalNumBalls = 0;
         for (int i = 0; i < sensorVals.length; i++) {
-            chamberStates[i] = sensorVals[i] < 20;
-        }
-    }
-
-    public void checkBallExit() {
-        if (chamberStates[3] && !(sensorVals[3] < 20)) {
-            totalNumBalls--;
+            chamberStates[i] = sensorVals[i] < RobotConstants.MIN_BALL_DETECTED_WIDTH_INDEXER;
+            if (chamberStates[i])
+                totalNumBalls++;
         }
     }
 
     public void run(boolean isOuttake) {
         frontMotor.set(INDEXER_SPEED);
         backMotor.set(-1 * INDEXER_SPEED);
-        if(isOuttake){
+        if (isOuttake) {
             updraw.set(ControlMode.PercentOutput, UPDRAW_SPEED);
+        }
+    }
+
+    public void runReversed(boolean isOuttake) {
+        frontMotor.set(-1 * INDEXER_SPEED);
+        backMotor.set(INDEXER_SPEED);
+        if (isOuttake) {
+            updraw.set(ControlMode.PercentOutput, -1 * UPDRAW_SPEED);
         }
     }
 
@@ -158,7 +153,7 @@ public class Indexer extends MustangSubsystemBase {
      *         updraw-ing
      */
     public boolean updrawIsUpToSpeed() {
-        double c = updraw.getMotorOutputPercent(); // We can't tell if it's actually up to speed, 
+        double c = updraw.getMotorOutputPercent(); // We can't tell if it's actually up to speed,
                                                    // but we're going off of "is it running"
         if (updrawStartTime == null) {
             return MathUtils.doublesEqual(c, UPDRAW_SPEED, 0.05);
@@ -168,9 +163,9 @@ public class Indexer extends MustangSubsystemBase {
     }
 
     @Override
-    public HealthState checkHealth() { 
-        //if either the rotator or updraw breaks, we can't use the indexer anymore.
-        //Same deal if the indexer is jammed (but that's recoverable).
+    public HealthState checkHealth() {
+        // if either the rotator or updraw breaks, we can't use the indexer anymore.
+        // Same deal if the indexer is jammed (but that's recoverable).
         CANError frontError = frontMotor.getLastError();
         CANError backError = backMotor.getLastError();
 
@@ -180,15 +175,16 @@ public class Indexer extends MustangSubsystemBase {
         boolean isUpdrawError = isPhoenixControllerErrored(updraw);
         if (isUpdrawError || isFrontError || isBackError) {
             MustangNotifications.reportError("RED Errors: front: %s, back: %s", frontError, backError);
-            return HealthState.RED; 
+            return HealthState.RED;
         }
         // if the ToF sensor, (BallSensor) breaks but nothing else,
         // the next option would be manual control -- not a fatal issue
-        // for (int i = 0; i < multiplexer.getSensors().size(); i++) {
-        //     if (multiplexer.getSensors().get(i) == null || !multiplexer.getSensors().get(i).isHealthy()) {
-        //         return HealthState.YELLOW;
-        //     }
-        // }
+        updateSensorVals();
+        for (int i = 0; i < sensorVals.length; i++) {
+            if (sensorVals[i] >= 300) {
+                return HealthState.YELLOW;
+            }
+        }
         return HealthState.GREEN;
     }
 
@@ -196,7 +192,6 @@ public class Indexer extends MustangSubsystemBase {
         frontMotor.set(output);
         backMotor.set(output);
     }
-
 
     public boolean isUpdrawing() {
         double updrawCurrent = updraw.getSupplyCurrent();
@@ -213,71 +208,94 @@ public class Indexer extends MustangSubsystemBase {
         return false;
     }
 
-    public void index(){
-        // Logger.consoleLog("Chamber1: %s Chamber2: %s Chamber3: %s ", isChamberFull(0), isChamberFull(1), isChamberFull(2));
-        if(conveyor.isBallInConveyor()){
+    public void index() {
+        if (!isChamberFull(2) && isBallInConveyor() && chamberToCheck == -1) {
             run(false);
             conveyor.run(false);
-            if(!isSameBall){
-                totalNumBalls++;
-                isSameBall = true;
+            if (isChamberFull(1)) {
+                chamberToCheck = 2;
+            } else if (isChamberFull(0)) {
+                chamberToCheck = 1;
+            } else {
+                chamberToCheck = 0;
             }
+
         }
-        else{
-            isSameBall = false;
+        if (isChamberFull(2) && isBallInConveyor()) {
+
+            conveyor.stop();
         }
-        if(totalNumBalls > 0){
-            if(isChamberFull(totalNumBalls-1)){
+        if (chamberToCheck != -1) {
+            if (isChamberFull(chamberToCheck)) {
                 stop();
+                chamberToCheck = -1;
             }
         }
+    }
+
+    public void reset() {
+        chamberToCheck = -1;
     }
 
     @Override
     public void mustangPeriodic() {
-    //     int i = 0;
-    // if(i==5){
-    //   Logger.consoleLog("Sensor0: %s Sensor1: %s Sensor2: %s", multiplexer.getSensors().get(0).getDistance(), multiplexer.getSensors().get(1).getDistance(), multiplexer.getSensors().get(2).getDistance());
-    //   i=0;
-    // }
-    // i++;
-        // updrawingMode = isUpdrawing();
-        // if (updrawingMode && !isUpdrawing()) { // We were updrawing but no current spike is detected anymore
-        //     updrawingMode = false;
-        //     chamberStates[3] = false;
-        // }
-        // checkBallEntry();
-        // checkBallExit();
-        String reading = serialport.readString();
-        if(reading.length() > 0){
-            if(i==20){
-                Logger.consoleLog("Serial Port Reading: %s", reading);
-                i=0;
-              }
-              i++;
-            serialParser(reading);
-        }
+        updateSensorVals();
         updateChamberStates();
         index();
-        // pushGameDataToDashboard();
+        pushGameDataToDashboard();
+        // logSensorVals();
     }
 
-    private void serialParser(String original) { // sd#.value   (from 0 to 255) (# is 0-3)
-        try{
-            String[] sensorData = original.split("\n");
-            for (String x : sensorData){
-                if(x.length()>0){
-                    String[] sensinfo = x.trim().split("\\.");
-                    if(sensinfo.length == 2){
-                        sensorVals[Integer.parseInt(sensinfo[0])] = Integer.parseInt(sensinfo[1]);
-                    }
-                    // Logger.consoleLog("Index: %s, Value: %s", Integer.parseInt(sensinfo[0]), Integer.parseInt(sensinfo[1]));
-                }
+    private void logSensorVals() {
+        Logger.consoleLog("0: %s, 1: %s, 2: %s, 3: %s", sensorVals[0], sensorVals[1], sensorVals[2], sensorVals[3]);
+        Logger.consoleLog("Chamber to check: %s", chamberToCheck);
+        Logger.consoleLog("Total balls: %s", getTotalNumBalls());
+    }
+
+    private void updateSensorVals() {
+        if (serialport == null) {
+            try {
+                serialport = new SerialPort(9600, SerialPort.Port.kUSB1);
+            } catch (Exception e) {
+                Logger.consoleError(e.getMessage());
             }
         }
-        catch (Exception e){
+        if (serialport != null) {
+            try {
+                String reading = serialport.readString();
+                if (reading.length() > 0) {
+                    serialParser(reading);
+                    for (int i = 0; i < sensorVals.length; i++) {
+                        if (sensorVals[i] >= 300) {
+                            serialport.reset();
+                        }
+                    }
+                    // logSensorVals();
+                }
+            } catch (Exception e) {
+                serialport = null;
+            }
+        }
+    }
+
+    private void serialParser(String original) { // sd#.value (from 0 to 255) (# is 0-3)
+        try {
+            String[] sensorData = original.split("\n");
+            for (String x : sensorData) {
+                if (x.length() > 0) {
+                    String[] sensinfo = x.trim().split("\\.");
+                    if (sensinfo.length == 2) {
+                        sensorVals[Integer.parseInt(sensinfo[0])] = Integer.parseInt(sensinfo[1]);
+                    }
+                }
+            }
+        } catch (Exception e) {
             Logger.consoleError(e.getMessage());
         }
+    }
+
+    public boolean isBallInConveyor() {
+        return sensorVals[3] < RobotConstants.MIN_BALL_DETECTED_WIDTH_TUNNEL;
     }
 
     public boolean isChamberFull(int chamber) {
@@ -285,7 +303,7 @@ public class Indexer extends MustangSubsystemBase {
     }
 
     public boolean ballInChamber(int chamber) {
-        return sensorVals[chamber] < RobotConstants.MIN_BALL_DETECTED_WIDTH;
+        return sensorVals[chamber] < RobotConstants.MIN_BALL_DETECTED_WIDTH_INDEXER;
     }
 
     public boolean isFrontRunning() {

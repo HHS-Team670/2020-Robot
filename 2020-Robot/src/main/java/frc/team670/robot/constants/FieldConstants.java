@@ -10,4 +10,8 @@ public class FieldConstants {
     public static final double TRENCH_BALL_CENTER_FROM_SIDE_WALL_METERS = 0.70485;
     public static final double TARGET_WALL_TO_BASELINE = 3.556; // Turret center to target wall distance
     public static final double EDGE_OF_BASELINE = TARGET_WALL_TO_BASELINE + 0.0508;
+
+    public static final double TARGET_CENTER_HEIGHT = 2.495;
+    public static final double VISION_TARGET_CENTER_HEIGHT = 2.24;
+
 }

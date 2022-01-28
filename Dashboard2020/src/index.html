@@ -101,13 +101,13 @@
       <circle cx="45%" cy="95%" r="5%"/>
     </svg> -->
     <div id="robot-diagram">
-        <iframe id="vision-frame" src=" http://10.6.70.26:5800 " style="width: 50%; height: 75%; " align="right"></iframe>
+        
     </div>
 
-    <div id="shooter-values" x="0%" y="0%" style="background-color:white;">
-        <text id="speed" value="" style="text-anchor: middle; color:black" >Speed:  </text><br>
-        <text id="angle" src = "angle" value="" style="text-anchor: middle; color:black">Angle: </text><br>
-        <text id="distance" src = 'distance' value="" style="text-anchor: middle; color:black">Distance: </text>
+    <div id="camera-streams">
+      <image class="camera-stream" src="http://photonvision.local:1200/stream.mjpg?1636589334582"></image>
+      <image class="camera-stream" src="http://photonvision.local:1196/stream.mjpg?1636594397806"></image>
+      <image class="camera-stream" src="http://photonvision.local:1182/stream.mjpg?1636590188888"></image>
     </div>
 
     <svg id="current-text" width="400" height="60">
@@ -127,15 +127,15 @@
                 <input style="margin:5px;" type="radio" name="start-position" value="Right" />
                 <label for="start-position-right">Right</label>
             </fieldset>
-            <fieldset>
+            <!-- <fieldset>
                 <input style="margin:5px;" type="radio" name="location" value="Generator 2" />
                 <label for="Generator-2">Generator 2</label>
                 <input style="margin:5px;" type="radio" name="location" value="Generator 3" />
                 <label for="Generator-3">Generator 3</label>
                 <input style="margin:5px;" type="radio" name="location" value="Trench" />
-                <label for="Trench">Trench</label>
-            </fieldset>
-            <fieldset id="path">
+                <label for="Trench">Trench</label> -->
+            <!-- </fieldset> -->
+            <!-- <fieldset id="path">
 
                 <input style="margin:5px;" type="radio" id="shoot-then-back" value="EmptyToBack"> Shoot Then Back</input>
 
@@ -147,9 +147,9 @@
             </fieldset>
             <fieldset id="path3">
 
-                <input style="margin:5px;" type="radio" id="shoot-then-forward" value="EmptyToFront"> Shoot Then Forward</input>
+                <input style="margin:5px;" type="radio" id="shoot-then-forward" value="EmptyToFront"> Shoot Then Forward</input> -->
 
-            </fieldset>
+            <!-- </fieldset> -->
         </form>
         <button style="margin-bottom:10px;" id="confirm-button" onclick="sendAuton();">OK</button>
     </div>

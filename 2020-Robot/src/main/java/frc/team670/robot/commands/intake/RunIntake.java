@@ -6,13 +6,12 @@ import java.util.Map;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team670.mustanglib.commands.MustangCommand;
-import frc.team670.robot.subsystems.Intake;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
-import frc.team670.mustanglib.utils.Logger;
+import frc.team670.robot.subsystems.Intake;
 
 /**
- *
+ * Runs the intake, controlls the direction based on wheter or not it is jammed
  */
 public class RunIntake extends CommandBase implements MustangCommand {
 
@@ -22,8 +21,8 @@ public class RunIntake extends CommandBase implements MustangCommand {
 	private int countWasJammed;
 
 	/**
-	 * @param reversed true to run the intake in reverse (out), false to run it
-	 *                 normally (in)
+	 * @param reversed true to run the intake in reverse (out), 
+	 * false to run it normally (in)
 	 */
 	public RunIntake(boolean reversed, Intake intake) {
 		this.reversed = reversed;

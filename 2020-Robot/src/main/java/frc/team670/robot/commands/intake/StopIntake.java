@@ -10,7 +10,7 @@ import frc.team670.mustanglib.subsystems.MustangSubsystemBase;
 import frc.team670.mustanglib.subsystems.MustangSubsystemBase.HealthState;
 
 /**
- *
+ * Stops the intake
  */
 public class StopIntake extends InstantCommand implements MustangCommand {
 
@@ -27,7 +27,6 @@ public class StopIntake extends InstantCommand implements MustangCommand {
 	public void initialize() {
 		intake.stop();
 	}
-
 
 	public Map<MustangSubsystemBase, HealthState> getHealthRequirements() {
 		return healthReqs;

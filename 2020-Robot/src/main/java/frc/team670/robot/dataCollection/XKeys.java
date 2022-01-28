@@ -24,7 +24,7 @@ import frc.team670.robot.commands.intake.RunIntake;
 import frc.team670.robot.commands.shooter.Shoot;
 // import frc.team670.robot.commands.routines.IntakeBallToIndexer;
 // import frc.team670.robot.commands.routines.RotateIndexerToUptakeThenShoot;
-import frc.team670.robot.commands.shooter.StartShooterByDistance;
+import frc.team670.robot.commands.shooter.StartShooterByPoseDistance;
 import frc.team670.robot.commands.vision.GetVisionData;
 import frc.team670.robot.subsystems.Climber;
 import frc.team670.robot.subsystems.Conveyor;
@@ -185,7 +185,7 @@ public class XKeys {
     }
 
     private void initShooter() {
-        MustangScheduler.getInstance().schedule(new StartShooterByDistance(shooter, drivebase));
+        MustangScheduler.getInstance().schedule(new StartShooterByPoseDistance(shooter, drivebase));
     }
 
     private void shoot() {
