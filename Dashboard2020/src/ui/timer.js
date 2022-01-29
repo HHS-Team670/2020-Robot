@@ -1,6 +1,4 @@
-
-// TODO: add a timer widget thing
-// Set the date we're counting down to
+// TODO connect the time to networktables
 
 
 var countDownTimer;
