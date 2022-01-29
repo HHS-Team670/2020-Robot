@@ -3,8 +3,8 @@
 
 var countDownTimer;
 var endTime;
-const AUTON_TIME_MILLIS = timeToMillis("0:05");
-const MATCH_LENGTH_MILLIS = timeToMillis("0:10");
+const AUTON_TIME_MILLIS = timeToMillis("0:15");
+const FULL_MATCH_LENGTH_MILLIS = timeToMillis("2:30");
 var matchPhase = document.getElementById("match-phase");
 var timer = document.getElementById("timer");
 var timerPrefixString = "Time of Match: ";
@@ -70,7 +70,7 @@ document.getElementById("timer-stopper").onmouseup = function() {
 document.getElementById("timer-starter").onmouseup = function() {
     if (runtimer) return;
     runtimer = true;
-    endTime = new Date().getTime() + MATCH_LENGTH_MILLIS;
+    endTime = new Date().getTime() + FULL_MATCH_LENGTH_MILLIS;
     
     updateTimer(endTime);
 
@@ -95,7 +95,7 @@ document.getElementById("timer-starter").onmouseup = function() {
                 clearTimeout(timeoutFunc);
                 timeoutFunc = null;
             }, 5000);
-        } else if (timeDifference <= MATCH_LENGTH_MILLIS - AUTON_TIME_MILLIS) {
+        } else if (timeDifference <= FULL_MATCH_LENGTH_MILLIS - AUTON_TIME_MILLIS) {
             setMatchPhase(MatchPhases.TELEOP);
         }
     }, 1000);
