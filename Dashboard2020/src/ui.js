@@ -37,7 +37,22 @@ NetworkTables.addGlobalListener((key, value) => {
 NetworkTables.addKeyListener('/SmartDashboard/Balls', (key, value) => {
     var statusLights = document.getElementById('status-lights-subsystems');
     var commands = statusLights.contentDocument;
-    document.getElementById('balls-in-robot').textContent = 'Balls in Robot: ' + value;
+    // document.getElementById('balls-in-robot').textContent = 'Balls in Robot: ' + value;
+
+    document.getElementById('indicator1').style.fill = "rgb(255,255,255)";
+    document.getElementById('indicator1').style.stroke = "rgb(255,255,255)";
+    document.getElementById('indicator2').style.fill = "rgb(255,255,255)";
+    document.getElementById('indicator2').style.stroke = "rgb(255,255,255)";
+
+    if (value > 0) {
+        document.getElementById('indicator1').style.fill = "rgb(255,255,0)";
+        document.getElementById('indicator1').style.stroke = "rgb(255,255,0)";
+    }
+    
+    if (value > 1) {
+        document.getElementById('indicator2').style.fill = "rgb(255,255,0)";
+        document.getElementById('indicator2').style.stroke = "rgb(255,255,0)";
+    }
 });
 
 
