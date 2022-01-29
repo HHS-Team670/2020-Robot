@@ -58,6 +58,12 @@ function setMatchPhase(phase) {
     
     matchPhase.textContent = phasePrefixString + phase.text;
     matchPhase.style.backgroundColor = phase.color;
+    if (phase == MatchPhases.AUTON || phase == MatchPhases.NOT_STARTED) {
+        document.getElementById("auton-chooser").style.display = "block";
+    } else {
+        
+        document.getElementById("auton-chooser").style.display = "none";
+    }
 }
 
 
