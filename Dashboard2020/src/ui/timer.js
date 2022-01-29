@@ -23,7 +23,6 @@ var timeDifference;
 var timeDifferenceInSeconds;
 var seconds;
 var minutes;
-var suppressTimer = false;
 
 
 function timeToMillis (timeString) {
@@ -61,21 +60,12 @@ function setMatchPhase(phase) {
     matchPhase.style.backgroundColor = phase.color;
 }
 
-// TODO time pauser
 
 document.getElementById("timer-stopper").onmouseup = function() {
     stopTimer();
     setMatchPhase(MatchPhases.NOT_STARTED);
 }
 
-// TODO add pause functionality
-document.getElementById("timer-pauser").onmouseup = function() {
-    if (suppressTimer) {
-        suppressTimer = false; // TODO an effect of text changing
-    } else {
-        suppressTimer = true;
-    }
-}
 
 document.getElementById("timer-starter").onmouseup = function() {
     if (runtimer) return;
