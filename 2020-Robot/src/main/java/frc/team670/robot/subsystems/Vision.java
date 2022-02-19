@@ -54,7 +54,7 @@ public class Vision extends MustangSubsystemBase{
             if(result.hasTargets()){
                 hasTarget = true;
                 distance = PhotonUtils.calculateDistanceToTargetMeters(
-                        RobotConstants.CAMERA_HEIGHT,
+                        RobotConstants.TURRET_CAMERA_HEIGHT,
                         FieldConstants.VISION_TARGET_CENTER_HEIGHT,
                         Units.degreesToRadians(RobotConstants.TILT_ANGLE),
                         Units.degreesToRadians(result.getBestTarget().getPitch()));
