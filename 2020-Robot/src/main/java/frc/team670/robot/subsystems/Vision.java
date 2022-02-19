@@ -98,7 +98,7 @@ public class Vision extends MustangSubsystemBase{
 
     public double getVisionCaptureTime() {
         return visionCapTime;
-      }
+    }
 
     public void turnOnLEDs() {
         cameraLEDs.set(true);

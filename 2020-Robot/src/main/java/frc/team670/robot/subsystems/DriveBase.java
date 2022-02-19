@@ -69,18 +69,14 @@ public class DriveBase extends TankDriveBase {
   private static final double CURRENT_WHEN_AGAINST_BAR = 5; // TODO Find this
   private int againstBarCount = 0;
 
+  // Starting position constants
   public static final double START_Y = 2.4;
   public static final double START_X = 15.983 - 3.8;
   public static final double START_ANGLE_DEG = 180;
   public static final Rotation2d START_ANGLE_RAD = Rotation2d.fromDegrees(START_ANGLE_DEG);
 
-
-  // public static final double 
-
   // Constants used for doing robot to target pose conversion
-
   public static final Pose2d TARGET_POSE = new Pose2d(15.983, 2.4, Rotation2d.fromDegrees(0));
-
   public static final Pose2d CAMERA_OFFSET = 
     TARGET_POSE.transformBy(new Transform2d(new Translation2d(-0.23, 0), Rotation2d.fromDegrees(0)));
 
